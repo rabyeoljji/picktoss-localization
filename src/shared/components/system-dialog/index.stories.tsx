@@ -1,6 +1,6 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { SystemDialog } from ".";
-import { Text } from "@/shared/components/ui/text";
+import { Meta, StoryObj } from "@storybook/react"
+import { SystemDialog } from "."
+import { Text } from "@/shared/components/ui/text"
 
 const meta: Meta<typeof SystemDialog> = {
   title: "Component/SystemDialog",
@@ -8,11 +8,11 @@ const meta: Meta<typeof SystemDialog> = {
   parameters: {
     layout: "centered",
   },
-};
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof SystemDialog>;
+type Story = StoryObj<typeof SystemDialog>
 
 export const Default: Story = {
   render: () => (
@@ -23,7 +23,7 @@ export const Default: Story = {
       onConfirm={() => {}}
     />
   ),
-};
+}
 
 export const CriticalInput: Story = {
   render: () => (
@@ -43,4 +43,4 @@ export const CriticalInput: Story = {
       onConfirm={() => {}}
     />
   ),
-};
+}

@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from "@storybook/react";
-import { Text } from ".";
+import { Meta, StoryObj } from "@storybook/react"
+import { Text } from "."
 
 export default {
   title: "UI/Text",
@@ -78,7 +78,7 @@ export default {
       control: "text",
     },
   },
-} as Meta<typeof Text>;
+} as Meta<typeof Text>
 
 export const Playground: StoryObj<typeof Text> = {
   args: {
@@ -87,4 +87,4 @@ export const Playground: StoryObj<typeof Text> = {
     as: "div",
     children: "Hello, Storybook! Customize me as you wish.",
   },
-};
+}

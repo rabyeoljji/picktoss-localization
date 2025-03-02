@@ -6,18 +6,18 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from "@/shared/components/ui/dialog";
-import { Text } from "../ui/text";
-import { cn } from "@/shared/lib/utils";
+} from "@/shared/components/ui/dialog"
+import { Text } from "../ui/text"
+import { cn } from "@/shared/lib/utils"
 
 interface SystemDialogProps {
-  trigger: React.ReactNode;
-  title: string;
-  content: React.ReactNode;
-  variant?: "default" | "critical";
-  cancelLabel?: string;
-  confirmLabel?: string;
-  onConfirm: () => void;
+  trigger: React.ReactNode
+  title: string
+  content: React.ReactNode
+  variant?: "default" | "critical"
+  cancelLabel?: string
+  confirmLabel?: string
+  onConfirm: () => void
 }
 
 export const SystemDialog = ({
@@ -51,7 +51,7 @@ export const SystemDialog = ({
             className={cn(
               "typo-button-2",
               variant === "default" && "text-text-accent",
-              variant === "critical" && "text-text-critical"
+              variant === "critical" && "text-text-critical",
             )}
             onClick={onConfirm}
           >
@@ -60,5 +60,5 @@ export const SystemDialog = ({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

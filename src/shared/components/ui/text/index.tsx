@@ -1,5 +1,5 @@
-import { cn } from "@/shared/lib/utils";
-import { ElementType, HTMLAttributes } from "react";
+import { cn } from "@/shared/lib/utils"
+import { ElementType, HTMLAttributes } from "react"
 
 const typographyStyles = {
   h1: "typo-h1",
@@ -22,7 +22,7 @@ const typographyStyles = {
   "button-4": "typo-button-4",
   "button-5": "typo-button-5",
   question: "typo-question",
-};
+}
 
 const textColorStyles = {
   "gray-white": "text-gray-white",
@@ -69,18 +69,18 @@ const textColorStyles = {
   caption: "text-text-caption",
   success: "text-text-success",
   error: "text-text-error",
-};
+}
 
-type Typo = keyof typeof typographyStyles;
-type TextColor = keyof typeof textColorStyles;
+type Typo = keyof typeof typographyStyles
+type TextColor = keyof typeof textColorStyles
 
 type TextProps<T extends ElementType> = {
-  typo: Typo;
-  color?: TextColor;
-  as?: T;
-  htmlFor?: string;
-  ref?: React.Ref<T>;
-} & HTMLAttributes<T>;
+  typo: Typo
+  color?: TextColor
+  as?: T
+  htmlFor?: string
+  ref?: React.Ref<T>
+} & HTMLAttributes<T>
 
 export function Text<T extends ElementType = "div">({
   typo,
@@ -91,7 +91,7 @@ export function Text<T extends ElementType = "div">({
   ref,
   ...props
 }: TextProps<T>) {
-  const Component = as || ("div" as ElementType);
+  const Component = as || ("div" as ElementType)
 
   return (
     <Component
@@ -99,11 +99,11 @@ export function Text<T extends ElementType = "div">({
       className={cn(
         typographyStyles[typo],
         color && textColorStyles[color],
-        className
+        className,
       )}
       {...props}
     >
       {children}
     </Component>
-  );
+  )
 }

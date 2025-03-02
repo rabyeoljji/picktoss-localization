@@ -1,4 +1,4 @@
-import { SystemDialog } from "@/shared/components/system-dialog";
+import { SystemDialog } from "@/shared/components/system-dialog"
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         onConfirm={() => {}}
       />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
