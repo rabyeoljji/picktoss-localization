@@ -1,0 +1,162 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-display: "SUIT", "sans-serif";
+
+  /* gray */
+  --color-gray-white: #ffffff;
+  --color-gray-50: #f5f5f7;
+  --color-gray-100: #ebebf3;
+  --color-gray-200: #e4e0f0;
+  --color-gray-300: #d7d3e8;
+  --color-gray-400: #9a9aaa;
+  --color-gray-500: #7b8b83;
+  --color-gray-600: #63686c;
+  --color-gray-700: #3d3d3d;
+  --color-gray-800: #1a1b1e;
+  --color-gray-900: #0d0e1f;
+  --color-gray-black: #000000;
+
+  /* blue */
+  --color-blue-50: #edf4ff;
+  --color-blue-100: #d6e2fe;
+  --color-blue-200: #c4dbff;
+  --color-blue-300: #aec7fe;
+  --color-blue-400: #84bdff;
+  --color-blue-500: #3d60ee;
+  --color-blue-600: #1e4bfd;
+  --color-blue-700: #0b2aeb;
+  --color-blue-800: #2939fa;
+  --color-blue-900: #1b276a;
+
+  /* orange */
+  --color-orange-50: #fffeec;
+  --color-orange-100: #fff1d9;
+  --color-orange-200: #fee4ac;
+  --color-orange-300: #fec47a;
+  --color-orange-400: #fcb203;
+  --color-orange-500: #eb8300;
+  --color-orange-600: #fc5c2d;
+  --color-orange-700: #c83b03;
+}
+
+@theme {
+  --color-background-base-01: var(--color-gray-white);
+  --color-background-base-02: var(--color-gray-50);
+  --color-background-base-03: var(--color-gray-100);
+  --color-background-container-01: var(--color-gray-white);
+  --color-background-container-02: var(--color-gray-50);
+  --color-background-container-03: var(--color-gray-black);
+  --color-background-container-success: var(--color-green-50);
+  --color-background-toast: var(--color-blue-50);
+  --color-background-tooltip: var(--color-gray-500);
+  --color-background-panel: var(--color-gray-200);
+  --color-background-accent: var(--color-orange-500);
+  --color-background-default: var(--color-gray-50);
+  --color-background-divider: var(--color-gray-100);
+  --color-background-focused: var(--color-blue-100);
+  --color-background-selected: var(--color-orange-400);
+  --color-background-error: var(--color-red-500);
+  --color-background-highlight: var(--color-red-500);
+
+  --color-border-border-01: var(--color-gray-50);
+  --color-border-border-02: var(--color-gray-100);
+  --color-border-border-03: var(--color-gray-300);
+  --color-border-inverted: var(--color-gray-900);
+  --color-border-focused: var(--color-blue-400);
+  --color-border-primary-inverse: var(--color-orange-400);
+  --color-border-secondary-inverse: var(--color-gray-50);
+  --color-border-sub: var(--color-gray-300);
+  --color-border-caption: var(--color-gray-300);
+  --color-border-placeholder-01: var(--color-gray-300);
+  --color-border-placeholder-02: var(--color-gray-300);
+  --color-border-highlight: var(--color-orange-500);
+  --color-border-wip: var(--color-red-500);
+  --color-border-strong: var(--color-red-500);
+  --color-border-success: var(--color-green-500);
+  --color-border-disabled: var(--color-gray-200);
+
+  --color-text-text-01: var(--color-gray-900);
+  --color-text-text-02: var(--color-gray-700);
+  --color-text-text-03: var(--color-gray-500);
+  --color-text-primary: var(--color-blue-500);
+  --color-text-secondary: var(--color-orange-500);
+  --color-text-sub: var(--color-gray-300);
+  --color-text-caption: var(--color-gray-300);
+  --color-text-success: var(--color-green-500);
+  --color-text-error: var(--color-red-500);
+
+  --color-icon-icon-01: var(--color-gray-900);
+  --color-icon-icon-02: var(--color-gray-700);
+  --color-icon-icon-03: var(--color-gray-500);
+  --color-icon-default: var(--color-orange-500);
+  --color-icon-success: var(--color-green-500);
+  --color-icon-error: var(--color-red-500);
+  --color-icon-disabled: var(--color-gray-200);
+}
+
+@layer utilities {
+  .typo-h1 {
+    @apply font-[SUIT] text-[36px] font-[700] leading-[1.2] tracking-[-0.02em];
+  }
+  .typo-h2 {
+    @apply font-[SUIT] text-[30px] font-[700] leading-[1.2] tracking-[-0.02em];
+  }
+  .typo-h3 {
+    @apply font-[SUIT] text-[24px] font-[700] leading-[1.2] tracking-[-0.02em];
+  }
+  .typo-h4 {
+    @apply font-[SUIT] text-[20px] font-[700] leading-[1.2] tracking-[-0.02em];
+  }
+
+  .typo-subtitle-1-bold {
+    @apply font-[SUIT] text-[18px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+  .typo-subtitle-2-bold {
+    @apply font-[SUIT] text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+
+  .typo-body-1-medium {
+    @apply font-[SUIT] text-[16px] font-[500] leading-[1.5] tracking-[-0.02em];
+  }
+  .typo-body-1-bold {
+    @apply font-[SUIT] text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+  .typo-body-2-medium {
+    @apply font-[SUIT] text-[14px] font-[500] leading-[1.5] tracking-[-0.02em];
+  }
+  .typo-body-2-bold {
+    @apply font-[SUIT] text-[14px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+
+  .typo-caption-1-bold {
+    @apply font-[SUIT] text-[12px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+  .typo-caption-2-bold {
+    @apply font-[SUIT] text-[12px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+
+  .typo-button-1 {
+    @apply font-[SUIT] text-[18px] font-[700] leading-[1] tracking-[-0.02em];
+  }
+  .typo-button-2 {
+    @apply font-[SUIT] text-[14px] font-[700] leading-[1] tracking-[-0.02em];
+  }
+  .typo-button-3 {
+    @apply font-[SUIT] text-[14px] font-[700] leading-[1] tracking-[-0.02em];
+  }
+  .typo-button-4 {
+    @apply font-[SUIT] text-[12px] font-[700] leading-[1] tracking-[-0.02em];
+  }
+  .typo-button-5 {
+    @apply font-[SUIT] text-[12px] font-[700] leading-[1] tracking-[-0.02em];
+  }
+
+  .typo-question {
+    @apply font-[SUIT] text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
+  }
+}
