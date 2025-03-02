@@ -32,7 +32,7 @@ export const CriticalInput: Story = {
       title="타이틀"
       variant="critical"
       content={
-        <Text typo="body1-medium" color="secondary">
+        <Text typo="body-1-medium" color="secondary">
           전공 공부 폴더와{" "}
           <span className="text-text-critical">14개의 노트</span>가 모두
           삭제됩니다

@@ -35,7 +35,7 @@ export const SystemDialog = ({
       <DialogContent className="w-[280px]">
         <DialogHeader className="text-start">
           <DialogTitle>
-            <Text typo="subtitle2-bold" color="primary">
+            <Text typo="subtitle-2-bold" color="primary">
               {title}
             </Text>
           </DialogTitle>
