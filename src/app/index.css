@@ -2,10 +2,17 @@
 
 @plugin "tailwindcss-animate";
 
+@font-face {
+  font-family: "SUIT Variable";
+  src: url("../assets/fonts/SUIT-Variable.woff2") format("woff2");
+  font-weight: 100 900; /* 가변 폰트 범위 */
+  font-display: swap; /* 렌더링 방식 */
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-display: "SUIT", "sans-serif";
+  --font-display: "SUIT Variable", "sans-serif";
 
   /* gray */
   --color-gray-white: #ffffff;
@@ -101,64 +108,70 @@
   --color-icon-disabled: var(--color-gray-200);
 }
 
+@layer base {
+  body {
+    @apply font-display;
+  }
+}
+
 @layer utilities {
   .typo-h1 {
-    @apply font-[SUIT] text-[36px] font-[700] leading-[1.2] tracking-[-0.02em];
+    @apply text-[36px] font-[700] leading-[1.2] tracking-[-0.02em];
   }
   .typo-h2 {
-    @apply font-[SUIT] text-[30px] font-[700] leading-[1.2] tracking-[-0.02em];
+    @apply text-[30px] font-[700] leading-[1.2] tracking-[-0.02em];
   }
   .typo-h3 {
-    @apply font-[SUIT] text-[24px] font-[700] leading-[1.2] tracking-[-0.02em];
+    @apply text-[24px] font-[700] leading-[1.2] tracking-[-0.02em];
   }
   .typo-h4 {
-    @apply font-[SUIT] text-[20px] font-[700] leading-[1.2] tracking-[-0.02em];
+    @apply text-[20px] font-[700] leading-[1.2] tracking-[-0.02em];
   }
 
   .typo-subtitle-1-bold {
-    @apply font-[SUIT] text-[18px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[18px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
   .typo-subtitle-2-bold {
-    @apply font-[SUIT] text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
 
   .typo-body-1-medium {
-    @apply font-[SUIT] text-[16px] font-[500] leading-[1.5] tracking-[-0.02em];
+    @apply text-[16px] font-[500] leading-[1.5] tracking-[-0.02em];
   }
   .typo-body-1-bold {
-    @apply font-[SUIT] text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
   .typo-body-2-medium {
-    @apply font-[SUIT] text-[14px] font-[500] leading-[1.5] tracking-[-0.02em];
+    @apply text-[14px] font-[500] leading-[1.5] tracking-[-0.02em];
   }
   .typo-body-2-bold {
-    @apply font-[SUIT] text-[14px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[14px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
 
   .typo-caption-1-bold {
-    @apply font-[SUIT] text-[12px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[12px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
   .typo-caption-2-bold {
-    @apply font-[SUIT] text-[12px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[12px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
 
   .typo-button-1 {
-    @apply font-[SUIT] text-[18px] font-[700] leading-[1] tracking-[-0.02em];
+    @apply text-[18px] font-[700] leading-[1] tracking-[-0.02em];
   }
   .typo-button-2 {
-    @apply font-[SUIT] text-[14px] font-[700] leading-[1] tracking-[-0.02em];
+    @apply text-[14px] font-[700] leading-[1] tracking-[-0.02em];
   }
   .typo-button-3 {
-    @apply font-[SUIT] text-[14px] font-[700] leading-[1] tracking-[-0.02em];
+    @apply text-[14px] font-[700] leading-[1] tracking-[-0.02em];
   }
   .typo-button-4 {
-    @apply font-[SUIT] text-[12px] font-[700] leading-[1] tracking-[-0.02em];
+    @apply text-[12px] font-[700] leading-[1] tracking-[-0.02em];
   }
   .typo-button-5 {
-    @apply font-[SUIT] text-[12px] font-[700] leading-[1] tracking-[-0.02em];
+    @apply text-[12px] font-[700] leading-[1] tracking-[-0.02em];
   }
 
   .typo-question {
-    @apply font-[SUIT] text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
+    @apply text-[16px] font-[700] leading-[1.5] tracking-[-0.02em];
   }
 }

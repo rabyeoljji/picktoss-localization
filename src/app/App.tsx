@@ -13,7 +13,8 @@ import { Text } from "@/shared/components/ui/text";
 function App() {
   return (
     <div>
-      <Text typo="h1">App</Text>
+      <Text typo="h1">WHAT</Text>
+      <div>SUIT</div>
       <Dialog>
         <DialogTrigger>Open Dialog</DialogTrigger>
         <DialogContent>
