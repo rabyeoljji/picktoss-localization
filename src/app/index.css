@@ -83,12 +83,14 @@
   --color-text-text-01: var(--color-gray-900);
   --color-text-text-02: var(--color-gray-700);
   --color-text-text-03: var(--color-gray-500);
-  --color-text-primary: var(--color-blue-500);
-  --color-text-secondary: var(--color-orange-500);
-  --color-text-sub: var(--color-gray-300);
+  --color-text-primary: var(--color-gray-900);
+  --color-text-secondary: var(--color-gray-700);
+  --color-text-sub: var(--color-gray-500);
   --color-text-caption: var(--color-gray-300);
   --color-text-success: var(--color-green-500);
   --color-text-error: var(--color-red-500);
+  --color-text-accent: var(--color-orange-500);
+  --color-text-critical: var(--color-red-500);
 
   --color-icon-icon-01: var(--color-gray-900);
   --color-icon-icon-02: var(--color-gray-700);
