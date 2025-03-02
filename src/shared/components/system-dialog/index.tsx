@@ -42,7 +42,7 @@ export const SystemDialog = ({
         </DialogHeader>
         <div className="mt-4">{content}</div>
         <DialogFooter className="mt-10 flex items-center gap-8">
-          <DialogClose>
+          <DialogClose asChild>
             <button className="typo-button-2 text-text-sub">
               {cancelLabel}
             </button>
