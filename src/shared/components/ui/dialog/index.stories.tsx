@@ -34,7 +34,9 @@ export const Default: Story = {
           </DialogDescription>
         </DialogHeader>
 
-        <div>Main</div>
+        <div className="py-4">
+          <div>IM Body</div>
+        </div>
 
         <DialogFooter>
           <DialogCTA label="나가기" onClick={() => {}} />
@@ -44,7 +46,7 @@ export const Default: Story = {
   ),
 }
 
-export const CTA_WITH_CLOSE: Story = {
+export const WithoutBody: Story = {
   render: (args) => (
     <Dialog {...args}>
       <DialogTrigger>Open Dialog</DialogTrigger>
@@ -56,7 +58,29 @@ export const CTA_WITH_CLOSE: Story = {
           </DialogDescription>
         </DialogHeader>
 
-        <div>Main</div>
+        <div className="py-4" />
+
+        <DialogFooter>
+          <DialogCTA label="나가기" onClick={() => {}} />
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  ),
+}
+
+export const CtaWithClose: Story = {
+  render: (args) => (
+    <Dialog {...args}>
+      <DialogTrigger>Open Dialog</DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Dialog Title</DialogTitle>
+          <DialogDescription>
+            This is a description for the dialog.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="py-4">Main</div>
 
         <DialogFooter>
           <DialogCTA label="나가기" onClick={() => {}} hasClose />
@@ -65,7 +89,7 @@ export const CTA_WITH_CLOSE: Story = {
     </Dialog>
   ),
 }
-export const CTA_B: Story = {
+export const CtaB: Story = {
   render: (args) => (
     <Dialog {...args}>
       <DialogTrigger>Open Dialog</DialogTrigger>
@@ -77,7 +101,7 @@ export const CTA_B: Story = {
           </DialogDescription>
         </DialogHeader>
 
-        <div>Main</div>
+        <div className="py-4">Main</div>
 
         <DialogFooter>
           <DialogCTA.B
