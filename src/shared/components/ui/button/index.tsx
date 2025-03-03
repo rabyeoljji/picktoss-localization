@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center rounded-full cursor-pointer gap-1 justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200",
+  "inline-flex items-center rounded-full cursor-pointer gap-1 justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200",
   {
     variants: {
       variant: {
@@ -19,7 +19,7 @@ const buttonVariants = cva(
       },
       size: {
         lg: "typo-button-1 h-[52px] w-full",
-        md: "typo-button-2 h-[44px] w-full px-10",
+        md: "typo-button-2 h-[44px] px-10 w-full",
         sm: "typo-button-3 h-[32px] min-w-[60px] px-[14px] w-fit",
       },
     },
