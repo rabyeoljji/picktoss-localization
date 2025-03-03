@@ -7,7 +7,6 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/shared/components/ui/dialog"
-import { Text } from "../ui/text"
 import { cn } from "@/shared/lib/utils"
 
 interface SystemDialogProps {
@@ -32,16 +31,14 @@ export const SystemDialog = ({
   return (
     <Dialog>
       <DialogTrigger>{trigger}</DialogTrigger>
-      <DialogContent className="w-[280px]">
+      <DialogContent className="w-[280px] rounded-[16px] p-6">
         <DialogHeader className="text-start">
-          <DialogTitle>
-            <Text typo="subtitle-2-bold" color="primary">
-              {title}
-            </Text>
+          <DialogTitle className="typo-subtitle-2-bold text-text-primary">
+            {title}
           </DialogTitle>
         </DialogHeader>
         <div className="mt-4">{content}</div>
-        <DialogFooter className="mt-10 flex items-center gap-8">
+        <DialogFooter className="mt-10 items-center justify-end gap-8">
           <DialogClose asChild>
             <button className="typo-button-2 text-text-sub">
               {cancelLabel}
