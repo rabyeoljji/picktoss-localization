@@ -5,15 +5,17 @@
 @font-face {
   font-family: "SUIT Variable";
   src: url("../assets/fonts/SUIT-Variable.woff2") format("woff2");
-  font-weight: 100 900; /* 가변 폰트 범위 */
-  font-display: swap; /* 렌더링 방식 */
+  font-weight: 100 900;
+  font-display: swap;
 }
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
+@theme font {
   --font-display: "SUIT Variable", "sans-serif";
+}
 
+@theme color {
   /* gray */
   --color-gray-white: #ffffff;
   --color-gray-50: #f5f7f9;
@@ -59,7 +61,7 @@
   --color-red-500: #f4502c;
 }
 
-@theme {
+@theme semantic-color {
   --color-background-base-01: var(--color-gray-white);
   --color-background-base-02: var(--color-gray-50);
   --color-background-base-03: var(--color-gray-100);
@@ -114,6 +116,10 @@
   --color-icon-critical: var(--color-red-500);
   --color-icon-success: var(--color-green-500);
   --color-icon-disabled: var(--color-gray-200);
+}
+
+@theme shadow {
+  --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 }
 
 @layer base {

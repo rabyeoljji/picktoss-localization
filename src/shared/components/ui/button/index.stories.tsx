@@ -39,11 +39,11 @@ export const Default: Story = {
 
 export const AllVariants: Story = {
   render: (args) => (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-16">
       <Button {...args} left={<ChevronDown />}>
         Default Button
       </Button>
-      <Button {...args} right={<ChevronDown />}>
+      <Button {...args} left={<ChevronDown />}>
         Destructive Button
       </Button>
       <Button {...args} variant="outline">
