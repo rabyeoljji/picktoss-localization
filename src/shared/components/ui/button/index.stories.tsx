@@ -1,95 +1,72 @@
 import { Meta, StoryObj } from "@storybook/react"
 import { Button } from "."
-import { ChevronDown } from "lucide-react"
+
+// 더미 아이콘 컴포넌트 (size가 sm인 경우에만 사용)
+const DummyIcon = () => (
+  <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+    <circle cx="8" cy="8" r="8" />
+  </svg>
+)
 
 const meta: Meta<typeof Button> = {
   title: "UI/Button",
   component: Button,
-  argTypes: {
-    variant: {
-      control: "select",
-      options: [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link",
-      ],
-    },
-    size: {
-      control: "select",
-      options: ["default", "sm", "lg", "icon"],
-    },
-  },
-  parameters: {
-    layout: "centered",
-  },
 }
-
 export default meta
 
-type Story = StoryObj<typeof Button>
+export const AllCases: StoryObj<typeof Button> = {
+  render: () => {
+    // Button의 variant 종류
+    const variants: Array<"primary" | "special" | "secondary" | "outline"> = [
+      "primary",
+      "special",
+      "secondary",
+      "outline",
+    ]
 
-export const Default: Story = {
-  args: {
-    children: "Click Me",
+    return (
+      <div style={{ display: "grid", gap: "40px" }}>
+        {variants.map((variant) => (
+          <div key={variant}>
+            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>
+              {variant}
+            </h3>
+            <div
+              style={{
+                display: "flex",
+                gap: "10px",
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}
+            >
+              {/* lg 사이즈 (아이콘 미포함) */}
+              <Button variant={variant} size="lg">
+                시작하기
+              </Button>
+
+              {/* md 사이즈 (아이콘 미포함) */}
+              <Button variant={variant} size="md">
+                시작하기
+              </Button>
+
+              {/* sm 사이즈 - 아이콘 없는 경우 */}
+              <Button variant={variant} size="sm">
+                시작하기
+              </Button>
+
+              {/* sm 사이즈 - 왼쪽 아이콘만 */}
+              <Button variant={variant} size="sm" left={<DummyIcon />}>
+                시작하기
+              </Button>
+
+              {/* sm 사이즈 - 오른쪽 아이콘만 */}
+              <Button variant={variant} size="sm" right={<DummyIcon />}>
+                시작하기
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
   },
-}
-
-export const AllVariants: Story = {
-  render: (args) => (
-    <div className="flex flex-col gap-16">
-      <Button {...args} left={<ChevronDown />}>
-        Default Button
-      </Button>
-      <Button {...args} left={<ChevronDown />}>
-        Destructive Button
-      </Button>
-      <Button {...args} variant="outline">
-        Outline Button
-      </Button>
-      <Button {...args} variant="secondary">
-        Secondary Button
-      </Button>
-      <Button {...args} variant="ghost">
-        Ghost Button
-      </Button>
-      <Button {...args} variant="link">
-        Link Button
-      </Button>
-    </div>
-  ),
-}
-
-export const AllSizes: Story = {
-  render: (args) => (
-    <div className="flex flex-col gap-4">
-      <Button {...args} size="sm">
-        Small Button
-      </Button>
-      <Button {...args} size="default">
-        Default Button
-      </Button>
-      <Button {...args} size="lg">
-        Large Button
-      </Button>
-      <Button {...args} size="icon">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          strokeWidth={2}
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-      </Button>
-    </div>
-  ),
 }
