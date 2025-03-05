@@ -1,15 +1,32 @@
 import { Outlet } from "react-router"
 import { isMobile, isIOS } from "react-device-detect"
 import usePWA from "@/shared/hooks/use-pwa"
+import { Button } from "@/shared/components/ui/button"
 
 export const PWAOnlyMobileLayout = () => {
   const { isPWA } = usePWA()
 
   if (isMobile && !isPWA) {
     if (isIOS) {
-      return <div>아이폰 유저에게 보여줄 설치 안내</div>
+      return (
+        <div className="px-4 py-9">
+          <div className="flex flex-col items-center">
+            <img src="/svgs/logo-padding.svg" />
+            <img src="/svgs/logo-typo.svg" />
+          </div>
+          <img src="/images/ios-pwa.png" className="mx-auto mt-12 w-[329px]" />
+        </div>
+      )
     } else {
-      return <div>그 외 모바일 기기 유저에게 보여줄 설치 안내</div>
+      return (
+        <div className="center w-full px-4">
+          <div className="flex flex-col items-center">
+            <img src="/svgs/logo-padding.svg" />
+            <img src="/svgs/logo-typo.svg" />
+          </div>
+          <Button className="mt-[66px]">앱 다운로드</Button>
+        </div>
+      )
     }
   }
 

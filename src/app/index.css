@@ -6,7 +6,7 @@
   font-family: "SUIT Variable";
   src: url("../assets/fonts/SUIT-Variable.woff2") format("woff2");
   font-weight: 100 900;
-  font-display: swap;
+  font-display: block;
 }
 
 @custom-variant dark (&:is(.dark *));
@@ -193,5 +193,14 @@
 
   .typo-question {
     @apply text-[20px] leading-[1.5] font-[700] tracking-[-0.02em];
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
   }
 }
