@@ -7,10 +7,5 @@ export const AuthLayout = () => {
     return <Navigate to="/login" />
   }
 
-  return (
-    <>
-      어라
-      <Outlet />
-    </>
-  )
+  return <Outlet />
 }
