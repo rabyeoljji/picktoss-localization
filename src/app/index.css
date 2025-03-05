@@ -124,7 +124,7 @@
 
 @layer base {
   body {
-    @apply font-display;
+    @apply font-display overscroll-y-none;
   }
 }
 
