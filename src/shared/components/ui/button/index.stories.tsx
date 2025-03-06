@@ -41,6 +41,11 @@ export const AllCases: StoryObj<typeof Button> = {
                 시작하기
               </Button>
 
+              {/* Loading State */}
+              <Button variant={variant} size="lg" data-state="loading">
+                시작하기
+              </Button>
+
               {/* md 사이즈 (아이콘 미포함) */}
               <Button variant={variant} size="md">
                 시작하기
