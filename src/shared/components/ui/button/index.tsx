@@ -13,9 +13,12 @@ const buttonVariants = cva(
           "bg-orange-500 text-gray-white hover:bg-orange-600 active:bg-orange-700 data-[state=loading]:bg-orange-400",
         special:
           "text-gray-white bg-linear-110 from-orange-500 from-40% to-blue-400",
-        secondary:
+        secondary1:
+          "text-orange-500 bg-orange-100 hover:bg-orange-200 active:bg-orange-300",
+        secondary2:
           "text-gray-700 bg-gray-100 hover:bg-gray-200 active:bg-gray-300",
-        outline: "border border-gray-100 bg-gray-white text-gray-700",
+        tertiary:
+          "border border-gray-100 bg-gray-white text-gray-700 hover:bg-gray-50 active:bg-gray-100",
       },
       size: {
         lg: "typo-button-1 h-[52px] w-full",
