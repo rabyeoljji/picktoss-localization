@@ -25,7 +25,8 @@ export default defineConfig({
     }),
   ],
   server: {
-    allowedHosts: ["a49e-1-234-247-194.ngrok-free.app"],
+    // Localhost
+    // allowedHosts: ["a49e-1-234-247-194.ngrok-free.app"],
   },
   resolve: {
     alias: {
