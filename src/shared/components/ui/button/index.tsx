@@ -58,7 +58,14 @@ function Button({
       {...props}
     >
       {left && (
-        <div className={cn(size === "sm" && "[&_svg]:size-4!")}>{left}</div>
+        <div
+          className={cn(
+            [size === "sm" && "[&_svg]:size-4!"],
+            [size === "md" && "[&_svg]:size-5!"],
+          )}
+        >
+          {left}
+        </div>
       )}
       <div
         className={cn(
@@ -83,7 +90,14 @@ function Button({
         </svg>
       </div>
       {right && (
-        <div className={cn(size === "sm" && "[&_svg]:size-3!")}>{right}</div>
+        <div
+          className={cn(
+            [size === "sm" && "[&_svg]:size-3!"],
+            [size === "md" && "[&_svg]:size-4!"],
+          )}
+        >
+          {right}
+        </div>
       )}
     </Comp>
   )

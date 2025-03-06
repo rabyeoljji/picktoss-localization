@@ -51,6 +51,16 @@ export const AllCases: StoryObj<typeof Button> = {
                 시작하기
               </Button>
 
+              {/* md 사이즈 - 왼쪽 아이콘만 */}
+              <Button variant={variant} size="md" left={<DummyIcon />}>
+                시작하기
+              </Button>
+
+              {/* md 사이즈 - 오른쪽 아이콘만 */}
+              <Button variant={variant} size="md" right={<DummyIcon />}>
+                시작하기
+              </Button>
+
               {/* sm 사이즈 - 아이콘 없는 경우 */}
               <Button variant={variant} size="sm">
                 시작하기
