@@ -5,7 +5,7 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center rounded-full cursor-pointer gap-1 justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200",
+  "inline-flex items-center rounded-full cursor-pointer justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200",
   {
     variants: {
       variant: {
@@ -22,8 +22,8 @@ const buttonVariants = cva(
       },
       size: {
         lg: "typo-button-1 h-[52px] w-full",
-        md: "typo-button-2 h-[44px] px-10 w-full",
-        sm: "typo-button-3 h-[32px] min-w-[60px] px-[14px] w-fit",
+        md: "typo-button-2 h-[44px] w-full",
+        sm: "typo-button-3 h-[32px] min-w-[60px] px-2.5 w-fit",
       },
     },
     defaultVariants: {
@@ -53,17 +53,15 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(
-        buttonVariants({ variant, size, className }),
-        [left && size === "sm" && "pr-[14px] pl-[10px]"],
-        [right && size === "sm" && "pr-[10px] pl-[14px]"],
-      )}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
       {left && (
         <div className={cn(size === "sm" && "[&_svg]:size-4!")}>{left}</div>
       )}
-      {children}
+      <div className={cn(size === "md" && "px-2", size === "sm" && "px-1")}>
+        {children}
+      </div>
       {right && (
         <div className={cn(size === "sm" && "[&_svg]:size-3!")}>{right}</div>
       )}
