@@ -6,15 +6,13 @@ declare global {
   }
 }
 
-function usePWA() {
+export const usePWA = () => {
   const [isPWA, setIsPWA] = useState(false)
 
   useEffect(() => {
     const checkPWA = () => {
       // 대부분의 브라우저용
-      const isStandalone = window.matchMedia(
-        "(display-mode: standalone)",
-      ).matches
+      const isStandalone = window.matchMedia("(display-mode: standalone)").matches
       // iOS Safari의 경우
       const isIOSStandalone = window.navigator.standalone === true
       setIsPWA(isStandalone || isIOSStandalone)
@@ -31,5 +29,3 @@ function usePWA() {
 
   return { isPWA }
 }
-
-export default usePWA

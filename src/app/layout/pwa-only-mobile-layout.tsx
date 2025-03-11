@@ -1,6 +1,6 @@
 import { Outlet } from "react-router"
 import { isMobile, isIOS } from "react-device-detect"
-import usePWA from "@/shared/hooks/use-pwa"
+import { usePWA } from "@/shared/hooks/use-pwa"
 import { Button } from "@/shared/components/ui/button"
 
 export const PWAOnlyMobileLayout = () => {
