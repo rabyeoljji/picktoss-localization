@@ -136,7 +136,7 @@ function DialogCTA_B({
       <Button onClick={onPrimaryButtonClick} size="md">
         {primaryButtonLabel}
       </Button>
-      <Button variant="secondary" onClick={onSecondaryButtonClick} size="md">
+      <Button variant="secondary2" onClick={onSecondaryButtonClick} size="md">
         {secondaryButtonLabel}
       </Button>
     </div>

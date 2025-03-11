@@ -16,13 +16,10 @@ export default meta
 
 export const AllCases: StoryObj<typeof Button> = {
   render: () => {
-    // Button의 variant 종류
-    const variants: Array<"primary" | "special" | "secondary" | "outline"> = [
-      "primary",
-      "special",
-      "secondary",
-      "outline",
-    ]
+    // 업데이트된 Button의 variant 종류
+    const variants: Array<
+      "primary" | "special" | "secondary1" | "secondary2" | "tertiary"
+    > = ["primary", "special", "secondary1", "secondary2", "tertiary"]
 
     return (
       <div style={{ display: "grid", gap: "40px" }}>
@@ -44,8 +41,23 @@ export const AllCases: StoryObj<typeof Button> = {
                 시작하기
               </Button>
 
+              {/* Loading State */}
+              <Button variant={variant} size="lg" data-state="loading">
+                시작하기
+              </Button>
+
               {/* md 사이즈 (아이콘 미포함) */}
               <Button variant={variant} size="md">
+                시작하기
+              </Button>
+
+              {/* md 사이즈 - 왼쪽 아이콘만 */}
+              <Button variant={variant} size="md" left={<DummyIcon />}>
+                시작하기
+              </Button>
+
+              {/* md 사이즈 - 오른쪽 아이콘만 */}
+              <Button variant={variant} size="md" right={<DummyIcon />}>
                 시작하기
               </Button>
 

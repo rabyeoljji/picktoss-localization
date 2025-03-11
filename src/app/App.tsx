@@ -1,5 +1,4 @@
-import { Route, Routes } from "react-router"
-import { BrowserRouter } from "react-router"
+import { Route, Routes, BrowserRouter } from "react-router"
 import { AuthLayout } from "./layout/auth-layout"
 import { LoginPage } from "@/pages/auth/login-page"
 import { PWAOnlyMobileLayout } from "./layout/pwa-only-mobile-layout"

@@ -5,7 +5,8 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/shared/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center rounded-full cursor-pointer gap-1 justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200",
+  "relative inline-flex items-center rounded-full cursor-pointer justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200 group data-[state=loading]:cursor-default",
+
   {
     variants: {
       variant: {
@@ -13,14 +14,17 @@ const buttonVariants = cva(
           "bg-orange-500 text-gray-white hover:bg-orange-600 active:bg-orange-700 data-[state=loading]:bg-orange-400",
         special:
           "text-gray-white bg-linear-110 from-orange-500 from-40% to-blue-400",
-        secondary:
+        secondary1:
+          "text-orange-500 bg-orange-100 hover:bg-orange-200 active:bg-orange-300",
+        secondary2:
           "text-gray-700 bg-gray-100 hover:bg-gray-200 active:bg-gray-300",
-        outline: "border border-gray-100 bg-gray-white text-gray-700",
+        tertiary:
+          "border border-gray-100 bg-gray-white text-gray-700 hover:bg-gray-50 active:bg-gray-100",
       },
       size: {
         lg: "typo-button-1 h-[52px] w-full",
-        md: "typo-button-2 h-[44px] px-10 w-full",
-        sm: "typo-button-3 h-[32px] min-w-[60px] px-[14px] w-fit",
+        md: "typo-button-2 h-[44px] w-full",
+        sm: "typo-button-3 h-[32px] min-w-[60px] px-2.5 w-fit",
       },
     },
     defaultVariants: {
@@ -50,19 +54,50 @@ function Button({
   return (
     <Comp
       data-slot="button"
-      className={cn(
-        buttonVariants({ variant, size, className }),
-        [left && size === "sm" && "pr-[14px] pl-[10px]"],
-        [right && size === "sm" && "pr-[10px] pl-[14px]"],
-      )}
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     >
       {left && (
-        <div className={cn(size === "sm" && "[&_svg]:size-4!")}>{left}</div>
+        <div
+          className={cn(
+            [size === "sm" && "[&_svg]:size-4!"],
+            [size === "md" && "[&_svg]:size-5!"],
+          )}
+        >
+          {left}
+        </div>
       )}
-      {children}
+      <div
+        className={cn(
+          "group-data-[state=loading]:hidden",
+          [size === "md" && "px-2"],
+          [size === "sm" && "px-1"],
+        )}
+      >
+        {children}
+      </div>
+      <div className="center hidden group-data-[state=loading]:block">
+        <svg
+          width="40"
+          height="8"
+          viewBox="0 0 40 8"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="4" cy="4" r="4" fill="#FFF7ED" />
+          <circle cx="20" cy="4" r="4" fill="#FFF1D5" />
+          <circle cx="36" cy="4" r="4" fill="#FFDEA9" />
+        </svg>
+      </div>
       {right && (
-        <div className={cn(size === "sm" && "[&_svg]:size-3!")}>{right}</div>
+        <div
+          className={cn(
+            [size === "sm" && "[&_svg]:size-3!"],
+            [size === "md" && "[&_svg]:size-4!"],
+          )}
+        >
+          {right}
+        </div>
       )}
     </Comp>
   )
