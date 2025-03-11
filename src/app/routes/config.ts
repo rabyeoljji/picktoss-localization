@@ -7,8 +7,7 @@ export const AppRoutes = {
   notes: "/note",
   noteDetail: (noteId: string = ":noteId") => `/note/${noteId}`,
   noteQuiz: (noteId: string = ":noteId") => `/note/quiz/${noteId}`,
-  noteArrange: (categoryId: string = ":categoryId") =>
-    `/note/arrange/${categoryId}`,
+  noteArrange: (directoryId: string = ":directoryId") => `/note/arrange/${directoryId}`,
   noteSearch: "/note/search",
   noteEdit: (noteId: string = ":noteId") => `/note/edit/${noteId}`,
   noteWrite: "/note/write",
@@ -31,16 +30,11 @@ export const AppRoutes = {
   bombQuiz: "/bomb-quiz",
   // 컬렉션 관련
   collections: "/collection",
-  collectionDetail: (collectionId: string = ":collectionId") =>
-    `/collection/${collectionId}`,
-  collectionQuiz: (collectionId: string = ":collectionId") =>
-    `/collection/quiz/${collectionId}`,
-  collectionComplain: (collectionId: string = ":collectionId") =>
-    `/collection/complain/${collectionId}`,
+  collectionDetail: (collectionId: string = ":collectionId") => `/collection/${collectionId}`,
+  collectionQuiz: (collectionId: string = ":collectionId") => `/collection/quiz/${collectionId}`,
+  collectionComplain: (collectionId: string = ":collectionId") => `/collection/complain/${collectionId}`,
   collectionCreate: "/collection/create",
-  collectionEditInfo: (collectionId: string = ":collectionId") =>
-    `/collection/edit/info/${collectionId}`,
-  collectionEditQuiz: (collectionId: string = ":collectionId") =>
-    `/collection/edit/quiz/${collectionId}`,
+  collectionEditInfo: (collectionId: string = ":collectionId") => `/collection/edit/info/${collectionId}`,
+  collectionEditQuiz: (collectionId: string = ":collectionId") => `/collection/edit/quiz/${collectionId}`,
   collectionSearch: "/collection/search",
 } as const

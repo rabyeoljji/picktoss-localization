@@ -2,12 +2,12 @@ import { client } from "@/shared/lib/axios/client"
 import { AUTH_ENDPOINTS } from "./config"
 
 // 로그인
-export interface LoginRequest {
+interface LoginRequest {
   accessToken: string
   socialPlatform: "KAKAO" | "GOOGLE"
 }
 
-export interface LoginResponse {
+interface LoginResponse {
   accessToken: string
   accessTokenExpiration: string // ISO 날짜 문자열
   signUp: boolean
@@ -19,7 +19,7 @@ export const login = async ({ data }: { data: LoginRequest }) => {
 }
 
 // 이메일 인증 코드 생성 및 발송
-export interface SendVerificationCodeRequest {
+interface SendVerificationCodeRequest {
   email: string
 }
 
@@ -29,7 +29,7 @@ export const sendVerificationCode = async ({ data }: { data: SendVerificationCod
 }
 
 // 이메일 코드 인증
-export interface VerifyVerificationCodeRequest {
+interface VerifyVerificationCodeRequest {
   email: string
   verificationCode: string
 }
@@ -40,7 +40,7 @@ export const verifyVerificationCode = async ({ data }: { data: VerifyVerificatio
 }
 
 // 초대 코드 유효성 검사
-export interface VerifyInviteCodeRequest {
+interface VerifyInviteCodeRequest {
   inviteCode: string
 }
 
@@ -56,7 +56,7 @@ export const rewardForInviteCode = async ({ data }: { data: VerifyInviteCodeRequ
 }
 
 // 초대 링크 생성
-export interface CreateInviteLinkResponse {
+interface CreateInviteLinkResponse {
   inviteLink: string
 }
 
@@ -66,7 +66,7 @@ export const createInviteLink = async () => {
 }
 
 // 초대 링크 생성자 정보 조회
-export interface GetInviteMemberResponse {
+interface GetInviteMemberResponse {
   name: string
 }
 
@@ -76,7 +76,7 @@ export const getInviteMemberInfo = async (inviteCode: string) => {
 }
 
 // 초대 코드로 회원가입 여부 체크
-export interface CheckInviteCodeBySignUpResponse {
+interface CheckInviteCodeBySignUpResponse {
   type: "READY" | "NONE"
 }
 
