@@ -84,7 +84,7 @@ type TextProps<T extends ElementType> = {
 
 export function Text<T extends ElementType = "div">({
   typo,
-  color = "primary",
+  color,
   className,
   as,
   children,
@@ -96,11 +96,7 @@ export function Text<T extends ElementType = "div">({
   return (
     <Component
       ref={ref}
-      className={cn(
-        typographyStyles[typo],
-        color && textColorStyles[color],
-        className,
-      )}
+      className={cn(typographyStyles[typo], color ? textColorStyles[color] : "text-inherit", className)}
       {...props}
     >
       {children}
