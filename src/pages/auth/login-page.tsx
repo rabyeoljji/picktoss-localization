@@ -1,6 +1,6 @@
 import { Navigate } from "react-router"
 
-export const LoginPage = () => {
+const LoginPage = () => {
   const token = true
 
   if (token) {
@@ -9,3 +9,5 @@ export const LoginPage = () => {
 
   return <div>login</div>
 }
+
+export default LoginPage
