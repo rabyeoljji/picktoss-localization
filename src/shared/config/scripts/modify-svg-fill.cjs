@@ -1,6 +1,6 @@
 const fs = require("fs")
 const path = require("path")
-const svgDir = path.join(__dirname, "../../assets/svg")
+const svgDir = path.join(__dirname, "../../assets/icon")
 
 const updateSvgFile = (filePath) => {
   // 파일 읽기
