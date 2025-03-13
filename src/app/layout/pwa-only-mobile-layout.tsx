@@ -2,7 +2,7 @@ import { Outlet } from "react-router"
 import { isMobile, isIOS } from "react-device-detect"
 import { usePWA } from "@/shared/hooks/use-pwa"
 import { Button } from "@/shared/components/ui/button"
-import { IcLogoPadding, IcLogoTypo } from "@/shared/assets/svg"
+import { IcLogoPadding, IcLogoTypo } from "@/shared/assets/icon"
 
 export const PWAOnlyMobileLayout = () => {
   const { isPWA } = usePWA()
