@@ -9,7 +9,7 @@ const meta: Meta<typeof TabNavigation> = {
   },
   decorators: [
     (Story) => (
-      <div className="w-[375px]">
+      <div className="h-[100px] w-[375px]">
         <Story />
       </div>
     ),
