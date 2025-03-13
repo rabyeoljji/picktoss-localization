@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { defineConfig } from "vite"
 import { VitePWA } from "vite-plugin-pwa"
+import svgr from "vite-plugin-svgr"
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -23,6 +24,7 @@ export default defineConfig({
         theme_color: "#000000",
       },
     }),
+    svgr(),
   ],
   server: {
     // Localhost
@@ -37,6 +39,7 @@ export default defineConfig({
       "@/features": path.resolve(__dirname, "./src/features"),
       "@/entities": path.resolve(__dirname, "./src/entities"),
       "@/shared": path.resolve(__dirname, "./src/shared"),
+      "@/assets": path.resolve(__dirname, "./src/assets"),
     },
   },
 })

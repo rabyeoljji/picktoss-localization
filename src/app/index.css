@@ -122,9 +122,16 @@
   --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 }
 
+@theme config {
+  --spacing-tab-navigation: 84px;
+}
+
 @layer base {
   body {
     @apply font-display overscroll-y-none select-none;
+  }
+  button {
+    @apply cursor-pointer;
   }
 }
 
