@@ -10,12 +10,9 @@ const squareButtonVariants = cva(
   {
     variants: {
       variant: {
-        primary:
-          "bg-orange-500 text-gray-white hover:bg-orange-600 active:bg-orange-700",
-        secondary:
-          "text-orange-500 bg-orange-100 hover:bg-orange-200 active:bg-orange-300",
-        tertiary:
-          "border border-gray-100 bg-gray-white text-gray-700 hover:bg-gray-50 active:bg-gray-100",
+        primary: "bg-orange-500 text-white hover:bg-orange-600 active:bg-orange-700",
+        secondary: "text-orange-500 bg-orange-100 hover:bg-orange-200 active:bg-orange-300",
+        tertiary: "border border-gray-100 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100",
       },
       size: {
         lg: "typo-button-2 h-[48px] w-full rounded-[12px]",
@@ -48,23 +45,9 @@ function SquareButton({
   const Comp = asChild ? Slot : "button"
 
   return (
-    <Comp
-      data-slot="button"
-      className={cn(squareButtonVariants({ variant, size, className }))}
-      {...props}
-    >
-      {left && (
-        <div
-          className={cn("[&_svg]:size-4!]", [
-            size === "lg" && "[&_svg]:size-5!",
-          ])}
-        >
-          {left}
-        </div>
-      )}
-      <div className={cn([size === "lg" && "px-2"], [size === "md" && "px-1"])}>
-        {children}
-      </div>
+    <Comp data-slot="button" className={cn(squareButtonVariants({ variant, size, className }))} {...props}>
+      {left && <div className={cn("[&_svg]:size-4!]", [size === "lg" && "[&_svg]:size-5!"])}>{left}</div>}
+      <div className={cn([size === "lg" && "px-2"], [size === "md" && "px-1"])}>{children}</div>
       {right && <div className="[&_svg]:size-4!">{right}</div>}
     </Comp>
   )

@@ -33,7 +33,7 @@ export default {
     color: {
       control: "select",
       options: [
-        "gray-white",
+        "white",
         "gray-50",
         "gray-100",
         "gray-200",
@@ -44,7 +44,7 @@ export default {
         "gray-700",
         "gray-800",
         "gray-900",
-        "gray-black",
+        "black",
         "blue-50",
         "blue-100",
         "blue-200",

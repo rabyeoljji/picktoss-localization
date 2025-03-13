@@ -25,7 +25,7 @@ const typographyStyles = {
 }
 
 const textColorStyles = {
-  "gray-white": "text-gray-white",
+  white: "text-gray-white",
   "gray-50": "text-gray-50",
   "gray-100": "text-gray-100",
   "gray-200": "text-gray-200",
@@ -36,7 +36,7 @@ const textColorStyles = {
   "gray-700": "text-gray-700",
   "gray-800": "text-gray-800",
   "gray-900": "text-gray-900",
-  "gray-black": "text-gray-black",
+  black: "text-gray-black",
 
   // Blue 계열
   "blue-50": "text-blue-50",
@@ -60,15 +60,22 @@ const textColorStyles = {
   "orange-600": "text-orange-600",
   "orange-700": "text-orange-700",
 
-  "text-01": "text-text-01",
-  "text-02": "text-text-02",
-  "text-03": "text-text-03",
-  primary: "text-text-primary",
-  secondary: "text-text-secondary",
-  sub: "text-text-sub",
-  caption: "text-text-caption",
-  success: "text-text-success",
-  error: "text-text-error",
+  primary: "text-primary",
+  inverse: "text-inverse",
+  secondary: "text-secondary",
+  "secondary-inverse": "text-secondary-inverse",
+  sub: "text-sub",
+  caption: "text-caption",
+  success: "text-success",
+  critical: "text-critical",
+  info: "text-info",
+  accent: "text-accent",
+  selected: "text-selected",
+  placeholder: "text-placeholder",
+  disabled: "text-disabled",
+  right: "text-right",
+  wrong: "text-wrong",
+  error: "text-error",
 }
 
 type Typo = keyof typeof typographyStyles
