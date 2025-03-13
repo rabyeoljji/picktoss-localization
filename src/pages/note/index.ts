@@ -1,8 +1,19 @@
-export * from "./note-arrange-page"
-export * from "./note-detail-page"
-export * from "./note-edit-page"
-export * from "./note-quiz-page"
-export * from "./note-search-page"
-export * from "./note-upload-page"
-export * from "./note-write-page"
-export * from "./notes-page"
+import NoteArrangePage from "./note-arrange-page"
+import NoteDetailPage from "./note-detail-page"
+import NoteEditPage from "./note-edit-page"
+import NoteQuizPage from "./note-quiz-page"
+import NoteSearchPage from "./note-search-page"
+import NoteUploadPage from "./note-upload-page"
+import NoteWritePage from "./note-write-page"
+import NotesPage from "./notes-page"
+
+export {
+  NoteArrangePage,
+  NoteDetailPage,
+  NoteEditPage,
+  NoteQuizPage,
+  NoteSearchPage,
+  NoteUploadPage,
+  NoteWritePage,
+  NotesPage,
+}

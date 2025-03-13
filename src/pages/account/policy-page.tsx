@@ -1,3 +1,5 @@
-export const PolicyPage = () => {
+const PolicyPage = () => {
   return <div>policy</div>
 }
+
+export default PolicyPage

@@ -1,12 +1,27 @@
-export * from "./account-page"
-export * from "./account-info-page"
-export * from "./faq-page"
-export * from "./policy-page"
-export * from "./withdraw-page"
-export * from "./contact-page"
-export * from "./notice-page"
-export * from "./quiz-record-page"
-export * from "./payment-history-page"
-export * from "./notification-config-page"
-export * from "./quiz-analysis-page"
-export * from "./daily-quiz-attendance-page"
+import AccountPage from "./account-page"
+import AccountInfoPage from "./account-info-page"
+import FaQPage from "./faq-page"
+import PolicyPage from "./policy-page"
+import WithdrawPage from "./withdraw-page"
+import ContactPage from "./contact-page"
+import NoticePage from "./notice-page"
+import QuizRecordPage from "./quiz-record-page"
+import PaymentHistoryPage from "./payment-history-page"
+import NotificationConfigPage from "./notification-config-page"
+import QuizAnalysisPage from "./quiz-analysis-page"
+import DailyQuizAttendancePage from "./daily-quiz-attendance-page"
+
+export {
+  AccountPage,
+  AccountInfoPage,
+  FaQPage,
+  PolicyPage,
+  WithdrawPage,
+  ContactPage,
+  NoticePage,
+  QuizRecordPage,
+  PaymentHistoryPage,
+  NotificationConfigPage,
+  QuizAnalysisPage,
+  DailyQuizAttendancePage,
+}

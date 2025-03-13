@@ -8,6 +8,8 @@ const updateSvgFile = (filePath) => {
 
   // fill 속성을 currentColor로 변경
   let updatedContent = svgContent.replace(/<svg([^>]+)fill="[^"]*"/, '<svg$1fill="currentColor"')
+  // circle 태그 내의 fill 속성을 currentColor로 변경
+  updatedContent = updatedContent.replace(/<circle([^>]+)fill="[^"]*"/g, "<circle$1fill='currentColor'")
 
   // path 태그 내의 fill 속성 제거
   updatedContent = updatedContent.replace(/<path([^>]+)fill="[^"]*"/g, "<path$1")

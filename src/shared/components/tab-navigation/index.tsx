@@ -34,7 +34,7 @@ interface TabNavigationProps {
 
 export const TabNavigation = ({ activeTab = "홈" }: TabNavigationProps) => {
   return (
-    <div className="h-tab-navigation">
+    <div className="h-tab-navigation fixed bottom-0 w-full max-w-xl">
       <div className="flex justify-between px-[30px] pt-2.5">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} active={item.label === activeTab} />

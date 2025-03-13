@@ -1,2 +1,4 @@
-export * from "./random-quiz-page"
-export * from "./bomb-quiz-page"
+import RandomQuizPage from "./random-quiz-page"
+import BombQuizPage from "./bomb-quiz-page"
+
+export { RandomQuizPage, BombQuizPage }

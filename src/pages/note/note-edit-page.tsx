@@ -1,3 +1,5 @@
-export const NoteEditPage = () => {
+const NoteEditPage = () => {
   return <div>note-edit</div>
 }
+
+export default NoteEditPage

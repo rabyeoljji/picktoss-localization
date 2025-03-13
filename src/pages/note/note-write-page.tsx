@@ -1,3 +1,5 @@
-export const NoteWritePage = () => {
+const NoteWritePage = () => {
   return <div>note-write</div>
 }
+
+export default NoteWritePage

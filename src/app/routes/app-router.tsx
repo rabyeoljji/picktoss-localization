@@ -3,7 +3,7 @@ import { AuthLayout } from "@/app/layout/auth-layout"
 import { LoginPage } from "@/pages/auth"
 import { PWAOnlyMobileLayout } from "@/app/layout/pwa-only-mobile-layout"
 import { RootLayout } from "@/app/layout/root-layout"
-import { HomePage } from "@/pages/home-page"
+import HomePage from "@/pages/home-page"
 import { AppRoutes } from "@/app/routes/config"
 import { BombQuizPage, RandomQuizPage } from "@/pages/theme-quiz"
 import {

@@ -1,3 +1,5 @@
-export const QuizRecordPage = () => {
+const QuizRecordPage = () => {
   return <div>QuizRecordPage</div>
 }
+
+export default QuizRecordPage

@@ -1,3 +1,5 @@
-export const QuizAnalysisPage = () => {
+const QuizAnalysisPage = () => {
   return <div>QuizAnalysisPage</div>
 }
+
+export default QuizAnalysisPage
