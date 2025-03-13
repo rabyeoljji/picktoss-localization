@@ -2,27 +2,28 @@ import { usePWA } from "@/shared/hooks/use-pwa"
 import { useRouter } from "@/shared/hooks/use-router"
 import { Text } from "@/shared/components/ui/text"
 import { cn } from "@/shared/lib/utils"
-import { IcGnbHome, IcGnbNote, IcGnbCollection, IcGnbMy } from "@/assets/svg"
+import { IcGnbHome, IcGnbNote, IcGnbCollection, IcGnbMy } from "@/shared/assets/svg"
+import { AppRoutes } from "@/app/routes/config"
 
 const navItems = [
   {
     label: "홈",
-    to: "/",
+    to: AppRoutes.root,
     icon: <IcGnbHome />,
   },
   {
     label: "퀴즈노트",
-    to: "/",
+    to: AppRoutes.notes,
     icon: <IcGnbNote />,
   },
   {
     label: "컬렉션",
-    to: "/",
+    to: AppRoutes.collections,
     icon: <IcGnbCollection />,
   },
   {
     label: "마이",
-    to: "/",
+    to: AppRoutes.account,
     icon: <IcGnbMy />,
   },
 ] as const

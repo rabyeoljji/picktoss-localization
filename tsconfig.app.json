@@ -30,8 +30,7 @@
       "@/widgets/*": ["./src/widgets/*"],
       "@/features/*": ["./src/features/*"],
       "@/entities/*": ["./src/entities/*"],
-      "@/shared/*": ["./src/shared/*"],
-      "@/assets/*": ["./src/assets/*"]
+      "@/shared/*": ["./src/shared/*"]
     }
   },
   "include": ["src"]
