@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@plugin "tailwindcss-animate";
+
+@font-face {
+  font-family: "SUIT Variable";
+  src: url("../assets/fonts/SUIT-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: block;
+}
+
+@theme font {
+  --font-display: "SUIT Variable", "sans-serif";
+}
+
+@theme shadow {
+  --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
+}
+
+@theme config {
+  --spacing-tab-navigation: 84px;
+}
+
+@layer base {
+  body {
+    @apply font-display overscroll-y-none select-none;
+  }
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .center {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
+}
