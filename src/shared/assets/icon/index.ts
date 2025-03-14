@@ -1,8 +1,17 @@
-import IcLogoPadding from "@/shared/assets/icon/ic_logo_padding.svg?react"
-import IcLogoTypo from "@/shared/assets/icon/ic_logo_typo.svg?react"
-import IcHome from "@/shared/assets/icon/ic_home.svg?react"
-import IcCollection from "@/shared/assets/icon/ic_collection.svg?react"
-import IcMy from "@/shared/assets/icon/ic_my.svg?react"
-import IcQuiznote from "@/shared/assets/icon/ic_quiznote.svg?react"
+// This file is auto-generated. Do not edit manually
 
-export { IcHome, IcCollection, IcMy, IcQuiznote, IcLogoPadding, IcLogoTypo }
+import IcCollection from './ic_collection.svg?react'
+import IcHome from './ic_home.svg?react'
+import IcLogoPadding from './ic_logo_padding.svg?react'
+import IcLogoTypo from './ic_logo_typo.svg?react'
+import IcMy from './ic_my.svg?react'
+import IcQuiznote from './ic_quiznote.svg?react'
+
+export {
+  IcCollection,
+  IcHome,
+  IcLogoPadding,
+  IcLogoTypo,
+  IcMy,
+  IcQuiznote,
+}
