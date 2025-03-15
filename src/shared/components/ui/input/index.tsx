@@ -1,8 +1,7 @@
-import * as React from "react"
-
 import { cn } from "@/shared/lib/utils"
 import { Text } from "../text"
 import { Label } from "@/shared/components/ui/label"
+import { useEffect, useId, useRef, useState } from "react"
 
 interface InputProps extends React.ComponentProps<"input"> {
   label?: string
@@ -19,16 +18,47 @@ function Input({
   right,
   required = false,
   helperText,
+  ref,
   ...props
 }: InputProps) {
-  const id = React.useId()
+  const id = useId()
+  const inputRef = useRef<HTMLInputElement>(null)
+  const rightRef = useRef<HTMLDivElement>(null)
+  const [_, forceUpdate] = useState({})
+
+  const setInputRef = (node: HTMLInputElement) => {
+    inputRef.current = node
+    if (ref) {
+      if (typeof ref === "function") {
+        ref(node)
+      } else {
+        ;(ref as React.MutableRefObject<HTMLInputElement | null>).current = node
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (!inputRef.current) return
+    forceUpdate({})
+  }, [inputRef])
 
   return (
-    <div className={"flex flex-col"}>
+    <div
+      className="flex flex-col"
+      style={{
+        width: inputRef.current?.offsetWidth ? inputRef.current.offsetWidth : undefined,
+      }}
+    >
       {label && <InputLabel id={id} hasError={hasError} label={label} required={required} />}
-      <div className="relative w-full">
+      <div
+        className="relative w-full"
+        style={{
+          width: inputRef.current?.offsetWidth ? inputRef.current.offsetWidth : undefined,
+        }}
+      >
         <input
           id={id}
+          ref={setInputRef}
           type={type}
           data-slot="input"
           className={cn(
@@ -36,9 +66,16 @@ function Input({
             hasError && "border-error focus:border-error",
             className,
           )}
+          style={{
+            paddingRight: rightRef.current?.offsetWidth ? rightRef.current.offsetWidth + 24 : 12,
+          }}
           {...props}
         />
-        <div className="absolute right-3 bottom-1/2 translate-y-1/2">{right}</div>
+        {right && (
+          <div ref={rightRef} className="absolute right-3 bottom-1/2 translate-y-1/2">
+            {right}
+          </div>
+        )}
       </div>
       {helperText && <InputHelper hasError={hasError} helperText={helperText} />}
     </div>
