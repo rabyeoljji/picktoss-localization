@@ -26,7 +26,7 @@
     @apply font-display overscroll-y-none select-none;
   }
   button {
-    @apply cursor-pointer;
+    @apply cursor-pointer focus:outline-none;
   }
 }
 
