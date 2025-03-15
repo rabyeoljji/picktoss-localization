@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from "@storybook/react"
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "."
-import { Badge, Check } from "lucide-react"
+import { IcCheck, IcDelete } from "@/shared/assets/icon"
 
 const meta: Meta<typeof DropdownMenu> = {
   title: "UI/DropdownMenu",
@@ -22,12 +22,12 @@ export const Default: StoryObj<typeof DropdownMenu> = {
         <button className="border p-3">Open Menu</button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem right={<Check />}>Item 1</DropdownMenuItem>
-        <DropdownMenuItem right={<Check />}>Item 2</DropdownMenuItem>
-        <DropdownMenuItem color="critical" right={<Badge />}>
+        <DropdownMenuItem right={<IcCheck />}>Item 1</DropdownMenuItem>
+        <DropdownMenuItem right={<IcCheck />}>Item 2</DropdownMenuItem>
+        <DropdownMenuItem color="critical" right={<IcDelete />}>
           Item 3
         </DropdownMenuItem>
-        <DropdownMenuItem disabled color="critical" right={<Badge />}>
+        <DropdownMenuItem disabled color="critical" right={<IcDelete />}>
           Item 4
         </DropdownMenuItem>
       </DropdownMenuContent>
