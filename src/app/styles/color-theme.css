@@ -73,12 +73,12 @@
 @theme border-color {
   --border-color-container: var(--color-gray-200);
   --border-color-divider: var(--color-gray-100);
-  --border-color-active: var(--color-blue-400);
+  --border-color-active: var(--color-gray-500);
   --border-color-accent: var(--color-orange-400);
-  --border-color-success: var(--color-red-500);
-  --border-color-error: var(--color-green-500);
+  --border-color-success: var(--color-green-500);
+  --border-color-error: var(--color-red-500);
   --border-color-correct: var(--color-green-500);
-  --border-color-incorrect: var(--color-green-500);
+  --border-color-incorrect: var(--color-red-500);
 }
 
 @theme text-color {

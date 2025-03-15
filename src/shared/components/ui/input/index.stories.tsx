@@ -1,46 +1,57 @@
 import { Meta, StoryObj } from "@storybook/react"
 import { Input } from "."
+import { SquareButton } from "../square-button"
 
 const meta: Meta<typeof Input> = {
   title: "UI/Input",
   component: Input,
+  parameters: {
+    docs: {
+      page: null,
+    },
+  },
 }
 export default meta
 
 export const AllCases: StoryObj<typeof Input> = {
-  render: () => {
-    return (
-      <div style={{ display: "grid", gap: "20px", maxWidth: "400px" }}>
-        {/* 기본 텍스트 입력 (required 상태 포함) */}
-        <Input label="이름" placeholder="이름을 입력하세요" type="text" helperText="이름을 입력해주세요." required />
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "20px", maxWidth: "400px" }}>
+      {/* With label and helper text */}
+      <Input
+        label="Name"
+        placeholder="Enter your full name"
+        type="text"
+        helperText="Please enter your first and last name"
+      />
 
-        {/* 비밀번호 입력 */}
-        <Input
-          label="비밀번호"
-          placeholder="비밀번호를 입력하세요"
-          type="password"
-          helperText="최소 8자 이상 입력해주세요."
-        />
+      {/* With label and error */}
+      <Input
+        label="Email"
+        placeholder="Enter a valid email address"
+        type="email"
+        helperText="This email is invalid"
+        hasError
+      />
 
-        {/* 에러 상태 */}
-        <Input
-          label="이메일"
-          placeholder="이메일을 입력하세요"
-          value="error text"
-          type="email"
-          helperText="유효한 이메일 주소를 입력해주세요."
-          hasError
-        />
+      {/* With right */}
+      <Input
+        label="Verify"
+        placeholder="Enter a valid code"
+        type="email"
+        right={
+          <SquareButton variant="tertiary" size="sm">
+            인증하기
+          </SquareButton>
+        }
+      />
 
-        {/* 비활성화 상태 */}
-        <Input
-          label="전화번호"
-          placeholder="전화번호를 입력하세요"
-          type="tel"
-          helperText="현재 입력할 수 없는 상태입니다."
-          disabled
-        />
-      </div>
-    )
-  },
+      {/* Without label but with helper text */}
+      <Input placeholder="No label provided" type="text" helperText="This field can work without a label" />
+
+      {/* Without label and helper text */}
+      <Input placeholder="Just a basic input" type="text" />
+
+      <Input placeholder="Disabled" type="text" disabled />
+    </div>
+  ),
 }
