@@ -1,6 +1,7 @@
 import { withHOC } from "@/app/hoc/with-page-config"
 import { Button } from "@/shared/components/ui/button"
 import { Text } from "@/shared/components/ui/text"
+import { toast } from "sonner"
 
 const HomePage = () => {
   return (
@@ -9,7 +10,22 @@ const HomePage = () => {
       <Button variant="secondary1">호에에엥</Button>
       <Button variant="secondary2">호에에엥</Button>
       <Button variant="tertiary">호에에엥</Button>
-      <div className="size-8">alsjdlas</div>
+      <div className="bg-surface-1 size-8">alsjdlas</div>
+      <div
+        className="bg-surface-1 size-8"
+        onClick={() =>
+          toast("헤헿", {
+            action: {
+              label: "버튼",
+              onClick: () => {
+                console.log("click")
+              },
+            },
+          })
+        }
+      >
+        토스트
+      </div>
     </div>
   )
 }

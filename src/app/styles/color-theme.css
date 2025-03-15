@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 @theme color {
   /* gray */
   --color-white: #ffffff;
@@ -45,62 +47,63 @@
 }
 
 @theme background-color {
-  --background-color-base-01: var(--color-white);
-  --background-color-base-02: var(--color-gray-50);
-  --background-color-base-03: var(--color-gray-100);
-  --background-color-base-inverse: var(--color-black);
-
-  --background-color-container-01: var(--color-gray-200);
-  --background-color-container-02: var(--color-orange-50);
-  --background-color-container-03: var(--color-blue-50);
-
-  --background-color-container-alert: var(--color-red-200);
-  --background-color-container-success: var(--color-green-200);
-
-  --background-color-menu: var(--color-white);
-  --background-color-toast: var(--color-gray-700);
+  --background-color-surface-1: var(--color-white);
+  --background-color-surface-2: var(--color-gray-50);
+  --background-color-surface-3: var(--color-gray-100);
+  --background-color-surface-inverse: var(--color-gray-800);
+  --background-color-surface-orange: var(--color-orange-100);
+  --background-color-surface-blue: var(--color-blue-100);
+  --background-color-surface-dim: color-mix(in srgb, var(--color-black) 75%, transparent);
+  --background-color-active: var(--color-gray-50);
   --background-color-disabled: var(--color-gray-100);
-  --background-color-tooltip: var(--color-blue-500);
-  --background-color-critical: var(--color-red-500);
-  --background-color-accent: var(--color-orange-500);
+  --background-color-inverse: var(--color-gray-800);
+  --background-color-orange-strong: var(--color-orange-500);
+  --background-color-orange: var(--color-orange-400);
+  --background-color-orange-weak: var(--color-orange-200);
+  --background-color-orange-strong: var(--color-blue-500);
+  --background-color-blue-strong: var(--color-blue-500);
+  --background-color-blue: var(--color-blue-400);
+  --background-color-blue-weak: var(--color-blue-200);
+  --background-color-accent: var(--color-orange-100);
+  --background-color-info: var(--color-orange-50);
+  --background-color-correct: var(--color-green-200);
+  --background-color-incorrect: var(--color-red-200);
 }
 
 @theme border-color {
-  --border-color-outline: var(--color-gray-100);
+  --border-color-container: var(--color-gray-200);
   --border-color-divider: var(--color-gray-100);
-  --border-color-focused: var(--color-blue-400);
-  --border-color-selected: var(--color-orange-400);
-  --border-color-error: var(--color-red-500);
-  --border-color-right: var(--color-green-500);
+  --border-color-active: var(--color-blue-400);
+  --border-color-accent: var(--color-orange-400);
+  --border-color-success: var(--color-red-500);
+  --border-color-error: var(--color-green-500);
+  --border-color-correct: var(--color-green-500);
+  --border-color-incorrect: var(--color-green-500);
 }
 
 @theme text-color {
   --text-color-primary: var(--color-gray-900);
-  --text-color-inverse: var(--color-white);
   --text-color-secondary: var(--color-gray-700);
-  --text-color-secondary-inverse: var(--color-gray-100);
   --text-color-sub: var(--color-gray-500);
   --text-color-caption: var(--color-gray-300);
+  --text-color-inverse: var(--color-white);
+  --text-color-inverse-dim: var(--color-gray-100);
+  --text-color-disabled: var(--color-gray-200);
   --text-color-success: var(--color-green-500);
   --text-color-critical: var(--color-red-500);
+  --text-color-error: var(--color-red-500);
+  --text-color-success: var(--color-green-500);
   --text-color-info: var(--color-blue-500);
   --text-color-accent: var(--color-orange-500);
   --text-color-selected: var(--color-orange-600);
-  --text-color-placeholder: var(--color-gray-300);
-  --text-color-disabled: var(--color-gray-300);
-  --text-color-right: var(--color-green-500);
-  --text-color-wrong: var(--color-red-500);
-  --text-color-error: var(--color-red-500);
+  --text-color-correct: var(--color-green-500);
+  --text-color-incorrect: var(--color-red-500);
 
-  --text-color-icon-system: var(--color-gray-900);
-  --text-color-icon-primary: var(--color-orange-500);
-  --text-color-icon-primary-inverse: var(--color-white);
+  --text-color-icon-primary: var(--color-gray-900);
   --text-color-icon-secondary: var(--color-gray-700);
-  --text-color-icon-secondary-inverse: var(--color-gray-100);
-  --text-color-icon-tertiary: var(--color-gray-300);
-  --text-color-icon-accent-01: var(--color-orange-600);
-  --text-color-icon-accent-02: var(--color-blue-500);
+  --text-color-icon-inverse: var(--color-white);
+  --text-color-icon-inverse-dim: var(--color-gray-100);
+  --text-color-icon-accent: var(--color-orange-500);
   --text-color-icon-critical: var(--color-red-500);
-  --text-color-icon-success: var(--color-green-500);
   --text-color-icon-disabled: var(--color-gray-200);
 }
