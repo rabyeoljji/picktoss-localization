@@ -27,6 +27,9 @@ export const Default: StoryObj<typeof DropdownMenu> = {
         <DropdownMenuItem color="critical" right={<Badge />}>
           Item 3
         </DropdownMenuItem>
+        <DropdownMenuItem disabled color="critical" right={<Badge />}>
+          Item 4
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   ),
