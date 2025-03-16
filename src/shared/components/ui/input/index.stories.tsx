@@ -1,46 +1,103 @@
 import { Meta, StoryObj } from "@storybook/react"
 import { Input } from "."
+import { SquareButton } from "../square-button"
 
 const meta: Meta<typeof Input> = {
   title: "UI/Input",
   component: Input,
+  parameters: {
+    docs: {
+      page: null,
+    },
+  },
 }
 export default meta
 
 export const AllCases: StoryObj<typeof Input> = {
-  render: () => {
-    return (
-      <div style={{ display: "grid", gap: "20px", maxWidth: "400px" }}>
-        {/* 기본 텍스트 입력 (required 상태 포함) */}
-        <Input label="이름" placeholder="이름을 입력하세요" type="text" helperText="이름을 입력해주세요." required />
-
-        {/* 비밀번호 입력 */}
+  render: () => (
+    <div style={{ display: "flex", flexDirection: "column", gap: "40px", maxWidth: "400px" }}>
+      {/* With label and helper text */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 1: With label and helper text</p>
         <Input
-          label="비밀번호"
-          placeholder="비밀번호를 입력하세요"
-          type="password"
-          helperText="최소 8자 이상 입력해주세요."
-        />
-
-        {/* 에러 상태 */}
-        <Input
-          label="이메일"
-          placeholder="이메일을 입력하세요"
-          value="error text"
-          type="email"
-          helperText="유효한 이메일 주소를 입력해주세요."
-          hasError
-        />
-
-        {/* 비활성화 상태 */}
-        <Input
-          label="전화번호"
-          placeholder="전화번호를 입력하세요"
-          type="tel"
-          helperText="현재 입력할 수 없는 상태입니다."
-          disabled
+          label="Name"
+          placeholder="Enter your full name"
+          type="text"
+          helperText="Please enter your first and last name"
         />
       </div>
-    )
-  },
+      <hr />
+
+      {/* With label and error */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 2: With label and error state</p>
+        <Input
+          label="Email"
+          placeholder="Enter a valid email address"
+          type="email"
+          helperText="This email is invalid"
+          hasError
+        />
+      </div>
+      <hr />
+
+      {/* With right component */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 3: With a right-aligned SquareButton</p>
+        <Input
+          label="Verify"
+          placeholder="Enter a valid code"
+          type="email"
+          right={
+            <SquareButton variant="tertiary" size="sm">
+              인증하기
+            </SquareButton>
+          }
+        />
+      </div>
+      <hr />
+
+      {/* Without label but with helper text */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 4: Without label but with helper text</p>
+        <Input placeholder="No label provided" type="text" helperText="This field can work without a label" />
+      </div>
+      <hr />
+
+      {/* With custom width and right component */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 5: With custom width and right component</p>
+        <Input
+          label="Custom width"
+          placeholder="Enter a valid code"
+          className="w-[200px]"
+          type="email"
+          right={
+            <SquareButton variant="tertiary" size="sm">
+              인증하기
+            </SquareButton>
+          }
+        />
+      </div>
+      <hr />
+
+      {/* Repeated case: With label and helper text */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 6: Repeated with label and helper text</p>
+        <Input
+          label="Name"
+          placeholder="Enter your full name"
+          type="text"
+          helperText="Please enter your first and last name"
+        />
+      </div>
+      <hr />
+
+      {/* Disabled input */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        <p style={{ margin: 0 }}>Case 7: Disabled input</p>
+        <Input placeholder="Disabled" type="text" disabled />
+      </div>
+    </div>
+  ),
 }

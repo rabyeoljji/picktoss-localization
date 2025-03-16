@@ -1,6 +1,9 @@
 import React from "react"
 import { BrowserRouter } from "react-router"
-import "../src/app/index.css"
+import "../src/app/styles/index.css"
+import "../src/app/styles/color-theme.css"
+import "../src/app/styles/typo.css"
+import { Providers } from "../src/app/providers"
 import type { Preview } from "@storybook/react"
 
 const preview: Preview = {
@@ -12,7 +15,15 @@ const preview: Preview = {
       },
     },
   },
-  decorators: [(Story) => <BrowserRouter>{Story()}</BrowserRouter>],
+  decorators: [
+    (Story) => (
+      <BrowserRouter>
+        <Providers>
+          <Story />
+        </Providers>
+      </BrowserRouter>
+    ),
+  ],
 }
 
 export default preview
