@@ -1,5 +1,19 @@
 {
   "semi": false,
   "printWidth": 120,
-  "plugins": ["prettier-plugin-tailwindcss"]
+  "singleQuote": true,
+
+  "importOrder": [
+    "^react",
+    "<THIRD_PARTY_MODULES>",
+    "^@/app",
+    "^@/widget",
+    "^@/features",
+    "^@/entities",
+    "^@/shared",
+    "^[./]"
+  ],
+  "importOrderSeparation": true,
+  "importOrderSortSpecifiers": true,
+  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"]
 }

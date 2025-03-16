@@ -1,5 +1,6 @@
-import { Meta, StoryObj } from "@storybook/react"
-import { Button } from "."
+import { Meta, StoryObj } from '@storybook/react'
+
+import { Button } from '.'
 
 // 더미 아이콘 컴포넌트 (size가 sm인 경우에만 사용)
 const DummyIcon = () => (
@@ -9,7 +10,7 @@ const DummyIcon = () => (
 )
 
 const meta: Meta<typeof Button> = {
-  title: "UI/Button",
+  title: 'UI/Button',
   component: Button,
 }
 export default meta
@@ -17,25 +18,25 @@ export default meta
 export const AllCases: StoryObj<typeof Button> = {
   render: () => {
     // 업데이트된 Button의 variant 종류
-    const variants: Array<"primary" | "special" | "secondary1" | "secondary2" | "tertiary"> = [
-      "primary",
-      "special",
-      "secondary1",
-      "secondary2",
-      "tertiary",
+    const variants: Array<'primary' | 'special' | 'secondary1' | 'secondary2' | 'tertiary'> = [
+      'primary',
+      'special',
+      'secondary1',
+      'secondary2',
+      'tertiary',
     ]
 
     return (
-      <div style={{ display: "grid", gap: "40px" }}>
+      <div style={{ display: 'grid', gap: '40px' }}>
         {variants.map((variant) => (
           <div key={variant}>
-            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>{variant}</h3>
+            <h3 style={{ textTransform: 'capitalize', marginBottom: '16px' }}>{variant}</h3>
             <div
               style={{
-                display: "flex",
-                gap: "10px",
-                flexWrap: "wrap",
-                alignItems: "center",
+                display: 'flex',
+                gap: '10px',
+                flexWrap: 'wrap',
+                alignItems: 'center',
               }}
             >
               {/* lg 사이즈 (아이콘 미포함) */}

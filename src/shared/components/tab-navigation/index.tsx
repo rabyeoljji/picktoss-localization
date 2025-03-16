@@ -1,38 +1,39 @@
-import { usePWA } from "@/shared/hooks/use-pwa"
-import { useRouter } from "@/shared/hooks/use-router"
-import { Text } from "@/shared/components/ui/text"
-import { cn } from "@/shared/lib/utils"
-import { AppRoutes } from "@/app/routes/config"
-import { IcCollection, IcHome, IcMy, IcQuiznote } from "@/shared/assets/icon"
+import { AppRoutes } from '@/app/routes/config'
+
+import { IcCollection, IcHome, IcMy, IcQuiznote } from '@/shared/assets/icon'
+import { Text } from '@/shared/components/ui/text'
+import { usePWA } from '@/shared/hooks/use-pwa'
+import { useRouter } from '@/shared/hooks/use-router'
+import { cn } from '@/shared/lib/utils'
 
 const navItems = [
   {
-    label: "홈",
+    label: '홈',
     to: AppRoutes.root,
     icon: <IcHome />,
   },
   {
-    label: "퀴즈노트",
+    label: '퀴즈노트',
     to: AppRoutes.notes,
     icon: <IcQuiznote />,
   },
   {
-    label: "컬렉션",
+    label: '컬렉션',
     to: AppRoutes.collections,
     icon: <IcCollection />,
   },
   {
-    label: "마이",
+    label: '마이',
     to: AppRoutes.account,
     icon: <IcMy />,
   },
 ] as const
 
 interface TabNavigationProps {
-  activeTab: (typeof navItems)[number]["label"]
+  activeTab: (typeof navItems)[number]['label']
 }
 
-export const TabNavigation = ({ activeTab = "홈" }: TabNavigationProps) => {
+export const TabNavigation = ({ activeTab = '홈' }: TabNavigationProps) => {
   return (
     <div className="h-tab-navigation bg-base-01 fixed bottom-0 w-full max-w-xl">
       <div className="mx-auto flex max-w-[500px] justify-between px-[30px] pt-2.5">
@@ -67,8 +68,8 @@ const NavItem = ({ to, icon, label, active = false }: NavItemProps) => {
     <button
       onClick={handleNavigation}
       className={cn(
-        "flex-center text-icon-disabled h-[46px] w-[48px] flex-col gap-1 [&_svg]:size-6",
-        active && "text-accent",
+        'flex-center text-icon-disabled h-[46px] w-[48px] flex-col gap-1 [&_svg]:size-6',
+        active && 'text-accent',
       )}
     >
       {icon}

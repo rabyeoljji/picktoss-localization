@@ -1,4 +1,4 @@
-import { NavigateOptions, useNavigate } from "react-router"
+import { NavigateOptions, useNavigate } from 'react-router'
 
 export const useRouter = () => {
   const navigate = useNavigate()

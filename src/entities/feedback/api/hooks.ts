@@ -1,6 +1,7 @@
-import { useMutation } from "@tanstack/react-query"
-import { createFeedback } from "./index"
-import { FEEDBACK_KEYS } from "./config"
+import { useMutation } from '@tanstack/react-query'
+
+import { FEEDBACK_KEYS } from './config'
+import { createFeedback } from './index'
 
 export const useCreateFeedback = () => {
   return useMutation({

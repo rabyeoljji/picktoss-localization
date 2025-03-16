@@ -1,6 +1,7 @@
-import { useQuery } from "@tanstack/react-query"
-import { getNotifications, getNotificationByNotificationKey } from "./index"
-import { NOTIFICATION_KEYS } from "./config"
+import { useQuery } from '@tanstack/react-query'
+
+import { NOTIFICATION_KEYS } from './config'
+import { getNotificationByNotificationKey, getNotifications } from './index'
 
 export const useGetNotifications = () => {
   return useQuery({

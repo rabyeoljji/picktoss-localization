@@ -1,16 +1,16 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const DOCUMENT = "document"
+const DOCUMENT = 'document'
 
 export const DOCUMENT_ENDPOINTS = {
   // POST
-  createDocument: () => "/documents",
+  createDocument: () => '/documents',
   // GET
   getSingleDocument: (documentId: number) => `/documents/${documentId}`,
   // GET (퀴즈 다운로드)
   downloadQuiz: (documentId: number) => `/documents/${documentId}/download-quiz`,
   // POST (문서 검색)
-  searchDocument: () => "/documents/search",
+  searchDocument: () => '/documents/search',
   // POST (문서에서 추가 퀴즈 생성)
   addQuizzes: (documentId: number) => `/documents/${documentId}/add-quizzes`,
   // PATCH: 문서 이름 변경
@@ -18,9 +18,9 @@ export const DOCUMENT_ENDPOINTS = {
   // PATCH: 문서 내용 업데이트
   updateDocumentContent: (documentId: number) => `/documents/${documentId}/update-content`,
   // PATCH: 문서 이동
-  moveDocument: () => "/documents/move",
+  moveDocument: () => '/documents/move',
   // GET: 복습 필수 문서 조회
-  getDocumentsNeedingReview: () => "/documents/review-need-documents",
+  getDocumentsNeedingReview: () => '/documents/review-need-documents',
 }
 
 export const DOCUMENT_KEYS = {

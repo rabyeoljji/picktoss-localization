@@ -1,20 +1,21 @@
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+import { AUTH_KEYS } from './config'
 import {
-  login,
-  sendVerificationCode,
-  verifyVerificationCode,
-  verifyInviteCode,
-  rewardForInviteCode,
+  checkInviteCodeBySignUp,
   createInviteLink,
   getInviteMemberInfo,
-  checkInviteCodeBySignUp,
-} from "./index"
-import { AUTH_KEYS } from "./config"
+  login,
+  rewardForInviteCode,
+  sendVerificationCode,
+  verifyInviteCode,
+  verifyVerificationCode,
+} from './index'
 
 export const useLogin = () => {
   return useMutation({
     mutationKey: AUTH_KEYS.postLogin,
-    mutationFn: ({ data }: { data: Parameters<typeof login>[0]["data"] }) => login({ data }),
+    mutationFn: ({ data }: { data: Parameters<typeof login>[0]['data'] }) => login({ data }),
   })
 }
 

@@ -1,16 +1,17 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+import { DOCUMENT_KEYS } from './config'
 import {
-  createDocument,
-  searchDocument,
-  getSingleDocument,
   addQuizzes,
+  createDocument,
   downloadQuiz,
-  updateDocumentName,
-  updateDocumentContent,
-  moveDocument,
   getDocumentsNeedingReview,
-} from "./index"
-import { DOCUMENT_KEYS } from "./config"
+  getSingleDocument,
+  moveDocument,
+  searchDocument,
+  updateDocumentContent,
+  updateDocumentName,
+} from './index'
 
 export const useCreateDocument = () => {
   return useMutation({

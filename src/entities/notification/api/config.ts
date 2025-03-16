@@ -1,9 +1,9 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const NOTIFICATION = "notification"
+const NOTIFICATION = 'notification'
 
 export const NOTIFICATION_ENDPOINTS = {
-  getNotifications: () => "/notifications",
+  getNotifications: () => '/notifications',
   getNotificationByKey: (notificationKey: string) => `/api/v2/notifications/${notificationKey}/check`,
 }
 

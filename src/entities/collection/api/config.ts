@@ -1,22 +1,22 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const COLLECTION = "collection"
+const COLLECTION = 'collection'
 
 export const COLLECTION_ENDPOINTS = {
   // GET
-  getAllCollections: () => "/collections",
-  getCollectionCategories: () => "/collections/categories",
-  getBookmarkedCollections: () => "/collections/bookmarked-collections",
-  getInterestCategoryCollections: () => "/collections/interest-category-collection",
+  getAllCollections: () => '/collections',
+  getCollectionCategories: () => '/collections/categories',
+  getBookmarkedCollections: () => '/collections/bookmarked-collections',
+  getInterestCategoryCollections: () => '/collections/interest-category-collection',
   searchCollections: (keyword: string) => `/collections/${keyword}`,
   getCollectionInfoByCollectionId: (collectionId: number) => `/collections/${collectionId}/info`,
   getQuizzesInCollectionByCollectionCategory: (collectionCategory: string) =>
     `/collections/${collectionCategory}/quizzes`,
   getCollectionContainingQuiz: (quizId: number) => `/collections/quizzes/${quizId}`,
-  getMyCollections: () => "/collections/my-collections",
+  getMyCollections: () => '/collections/my-collections',
 
   // POST
-  createCollection: () => "/collections",
+  createCollection: () => '/collections',
   createCollectionBookmark: (collectionId: number) => `/collections/${collectionId}/create-bookmark`,
   createCollectionComplaint: (collectionId: number) => `/collections/${collectionId}/complaint`,
   createCollectionQuizSet: (collectionId: number) => `/collections/${collectionId}/collection-quizzes`,
@@ -24,7 +24,7 @@ export const COLLECTION_ENDPOINTS = {
   // PATCH
   updateCollectionQuizzes: (collectionId: number) => `/collections/${collectionId}/update-quizzes`,
   updateCollectionInfo: (collectionId: number) => `/collections/${collectionId}/update-info`,
-  updateCollectionRandomQuizResult: () => "/collections/random-quiz/result",
+  updateCollectionRandomQuizResult: () => '/collections/random-quiz/result',
   addQuizToCollection: (collectionId: number) => `/collection/${collectionId}/add-quiz`,
 
   // DELETE

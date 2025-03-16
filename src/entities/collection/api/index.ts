@@ -1,5 +1,6 @@
-import { client } from "@/shared/lib/axios/client"
-import { COLLECTION_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { COLLECTION_ENDPOINTS } from './config'
 
 // GET: 모든 컬렉션 조회 (탐색)
 interface CollectionDto {
@@ -9,16 +10,16 @@ interface CollectionDto {
   description: string
   bookmarkCount: number
   collectionCategory:
-    | "IT"
-    | "LAW"
-    | "BUSINESS_ECONOMY"
-    | "SOCIETY_POLITICS"
-    | "LANGUAGE"
-    | "MEDICINE_PHARMACY"
-    | "ART"
-    | "SCIENCE_ENGINEERING"
-    | "HISTORY_PHILOSOPHY"
-    | "OTHER"
+    | 'IT'
+    | 'LAW'
+    | 'BUSINESS_ECONOMY'
+    | 'SOCIETY_POLITICS'
+    | 'LANGUAGE'
+    | 'MEDICINE_PHARMACY'
+    | 'ART'
+    | 'SCIENCE_ENGINEERING'
+    | 'HISTORY_PHILOSOPHY'
+    | 'OTHER'
   solvedMemberCount: number
   bookmarked: boolean
   totalQuizCount: number
@@ -30,10 +31,10 @@ interface CollectionResponseDto {
 }
 
 export const getAllCollections = async (params?: {
-  "collection-sort-option"?: "POPULARITY" | "UPDATED"
-  "collection-category"?: string[]
-  "quiz-type"?: "MIX_UP" | "MULTIPLE_CHOICE"
-  "quiz-count"?: number
+  'collection-sort-option'?: 'POPULARITY' | 'UPDATED'
+  'collection-category'?: string[]
+  'quiz-type'?: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  'quiz-count'?: number
 }) => {
   const response = await client.get<CollectionResponseDto>(COLLECTION_ENDPOINTS.getAllCollections(), { params })
   return response.data
@@ -43,16 +44,16 @@ export const getAllCollections = async (params?: {
 interface GetCollectionCategoriesResponse {
   collectionCategories: {
     collectionCategory:
-      | "IT"
-      | "LAW"
-      | "BUSINESS_ECONOMY"
-      | "SOCIETY_POLITICS"
-      | "LANGUAGE"
-      | "MEDICINE_PHARMACY"
-      | "ART"
-      | "SCIENCE_ENGINEERING"
-      | "HISTORY_PHILOSOPHY"
-      | "OTHER"
+      | 'IT'
+      | 'LAW'
+      | 'BUSINESS_ECONOMY'
+      | 'SOCIETY_POLITICS'
+      | 'LANGUAGE'
+      | 'MEDICINE_PHARMACY'
+      | 'ART'
+      | 'SCIENCE_ENGINEERING'
+      | 'HISTORY_PHILOSOPHY'
+      | 'OTHER'
     categoryName: string
     emoji: string
     collections: { id: number; name: string }[]
@@ -90,7 +91,7 @@ interface GetSingleCollectionResponse extends CollectionDto {
     answer: string
     explanation: string
     options: string[]
-    quizType: "MIX_UP" | "MULTIPLE_CHOICE"
+    quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
   }[]
 }
 
@@ -109,7 +110,7 @@ interface GetQuizzesInCollectionByCollectionCategoryResponse {
     answer: string
     explanation: string
     options: string[]
-    quizType: "MIX_UP" | "MULTIPLE_CHOICE"
+    quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
     collection: { id: number; name: string }
   }[]
 }
@@ -151,16 +152,16 @@ interface CreateCollectionRequest {
   emoji: string
   description: string
   collectionCategory:
-    | "IT"
-    | "LAW"
-    | "BUSINESS_ECONOMY"
-    | "SOCIETY_POLITICS"
-    | "LANGUAGE"
-    | "MEDICINE_PHARMACY"
-    | "ART"
-    | "SCIENCE_ENGINEERING"
-    | "HISTORY_PHILOSOPHY"
-    | "OTHER"
+    | 'IT'
+    | 'LAW'
+    | 'BUSINESS_ECONOMY'
+    | 'SOCIETY_POLITICS'
+    | 'LANGUAGE'
+    | 'MEDICINE_PHARMACY'
+    | 'ART'
+    | 'SCIENCE_ENGINEERING'
+    | 'HISTORY_PHILOSOPHY'
+    | 'OTHER'
   quizzes: number[]
 }
 
@@ -187,12 +188,12 @@ interface CreateCollectionComplaintRequest {
 
 export const createCollectionComplaint = async (collectionId: number, data: CreateCollectionComplaintRequest) => {
   const formData = new FormData()
-  formData.append("content", data.content)
+  formData.append('content', data.content)
   if (data.files) {
-    data.files.forEach((file) => formData.append("files", file))
+    data.files.forEach((file) => formData.append('files', file))
   }
   const response = await client.post<void>(COLLECTION_ENDPOINTS.createCollectionComplaint(collectionId), formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { 'Content-Type': 'multipart/form-data' },
   })
   return response.data
 }
@@ -219,16 +220,16 @@ interface UpdateCollectionInfoRequest {
   emoji: string
   description: string
   collectionCategory:
-    | "IT"
-    | "LAW"
-    | "BUSINESS_ECONOMY"
-    | "SOCIETY_POLITICS"
-    | "LANGUAGE"
-    | "MEDICINE_PHARMACY"
-    | "ART"
-    | "SCIENCE_ENGINEERING"
-    | "HISTORY_PHILOSOPHY"
-    | "OTHER"
+    | 'IT'
+    | 'LAW'
+    | 'BUSINESS_ECONOMY'
+    | 'SOCIETY_POLITICS'
+    | 'LANGUAGE'
+    | 'MEDICINE_PHARMACY'
+    | 'ART'
+    | 'SCIENCE_ENGINEERING'
+    | 'HISTORY_PHILOSOPHY'
+    | 'OTHER'
 }
 
 export const updateCollectionInfo = async (collectionId: number, data: UpdateCollectionInfoRequest) => {

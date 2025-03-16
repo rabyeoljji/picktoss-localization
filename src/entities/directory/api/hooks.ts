@@ -1,6 +1,7 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
-import { getAllDirectories, createDirectory, getSingleDirectory, deleteDirectory, updateDirectoryInfo } from "./index"
-import { DIRECTORY_KEYS } from "./config"
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+import { DIRECTORY_KEYS } from './config'
+import { createDirectory, deleteDirectory, getAllDirectories, getSingleDirectory, updateDirectoryInfo } from './index'
 
 // GET: 모든 디렉토리 조회
 export const useGetAllDirectories = () => {

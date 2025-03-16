@@ -1,19 +1,19 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const AUTH = "auth"
+const AUTH = 'auth'
 
 export const AUTH_ENDPOINTS = {
   // GET
-  getAuthInvite: "/auth/invite",
+  getAuthInvite: '/auth/invite',
   getAuthInviteCreator: (inviteCode: string) => `/auth/invite/${inviteCode}/creator`,
-  getAuthInviteStatus: "/auth/invite/status",
+  getAuthInviteStatus: '/auth/invite/status',
 
   // POST
-  postLogin: "/login",
-  postAuthVerification: "/auth/verification",
-  postAuthVerificationCheck: "/auth/verification/check",
-  postAuthInviteVerify: "/auth/invite/verify",
-  postAuthInviteReward: "/auth/invite/reward",
+  postLogin: '/login',
+  postAuthVerification: '/auth/verification',
+  postAuthVerificationCheck: '/auth/verification/check',
+  postAuthInviteVerify: '/auth/invite/verify',
+  postAuthInviteReward: '/auth/invite/reward',
 }
 
 export const AUTH_KEYS = {

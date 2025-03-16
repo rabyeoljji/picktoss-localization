@@ -1,14 +1,15 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+import { MEMBER_KEYS } from './config'
 import {
-  getMemberInfo,
-  getInviteLinkMember,
-  updateTodayQuizCount,
-  updateQuizNotification,
-  updateMemberName,
-  updateInterestCollectionCategories,
   deleteMember,
-} from "./index"
-import { MEMBER_KEYS } from "./config"
+  getInviteLinkMember,
+  getMemberInfo,
+  updateInterestCollectionCategories,
+  updateMemberName,
+  updateQuizNotification,
+  updateTodayQuizCount,
+} from './index'
 
 export const useGetMemberInfo = () => {
   return useQuery({

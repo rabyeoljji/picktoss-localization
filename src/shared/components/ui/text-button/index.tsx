@@ -1,28 +1,29 @@
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
-import { cva, type VariantProps } from "class-variance-authority"
+import * as React from 'react'
 
-import { cn } from "@/shared/lib/utils"
+import { Slot } from '@radix-ui/react-slot'
+import { type VariantProps, cva } from 'class-variance-authority'
+
+import { cn } from '@/shared/lib/utils'
 
 const textButtonVariants = cva(
   "inline-flex items-center w-fit cursor-pointer justify-center whitespace-nowrap disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
   {
     variants: {
       variant: {
-        default: "text-gray-700",
-        primary: "text-orange-500",
-        critical: "text-red-500",
-        secondary: "text-gray-500",
+        default: 'text-gray-700',
+        primary: 'text-orange-500',
+        critical: 'text-red-500',
+        secondary: 'text-gray-500',
       },
       size: {
-        lg: "typo-button-1 gap-2 [&_svg]:size-5",
-        md: "typo-button-2 gap-1 [&_svg]:size-4",
-        sm: "typo-button-4 gap-1 [&_svg]:size-4",
+        lg: 'typo-button-1 gap-2 [&_svg]:size-5',
+        md: 'typo-button-2 gap-1 [&_svg]:size-4',
+        sm: 'typo-button-4 gap-1 [&_svg]:size-4',
       },
     },
     defaultVariants: {
-      variant: "default",
-      size: "md",
+      variant: 'default',
+      size: 'md',
     },
   },
 )
@@ -35,13 +36,13 @@ function TextButton({
   left,
   children,
   ...props
-}: React.ComponentProps<"button"> &
+}: React.ComponentProps<'button'> &
   VariantProps<typeof textButtonVariants> & {
     left?: React.ReactNode
     right?: React.ReactNode
     asChild?: boolean
   }) {
-  const Comp = asChild ? Slot : "button"
+  const Comp = asChild ? Slot : 'button'
 
   return (
     <Comp data-slot="button" className={cn(textButtonVariants({ variant, size, className }))} {...props}>

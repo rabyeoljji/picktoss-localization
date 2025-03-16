@@ -1,10 +1,10 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const FCM = "fcm"
+const FCM = 'fcm'
 
 export const FCM_ENDPOINTS = {
-  postToken: () => "/tokens",
-  postSendMessage: () => "/send",
+  postToken: () => '/tokens',
+  postSendMessage: () => '/send',
 }
 
 export const FCM_KEYS = {

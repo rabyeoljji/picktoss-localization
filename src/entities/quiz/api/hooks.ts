@@ -1,17 +1,18 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+import { QUIZ_KEYS } from './config'
 import {
-  createTodayQuizForTest,
-  createMemberGeneratedQuizSet,
   createErrorCheckQuizSet,
-  updateRandomQuizResult,
-  updateQuizResult,
+  createMemberGeneratedQuizSet,
+  createTodayQuizForTest,
   getCurrentTodayQuizInfo,
-  getTodaySolvedQuizCount,
+  getQuizSetToday,
   getSingleQuizRecordByDate,
   getSingleQuizSetRecord,
-  getQuizSetToday,
-} from "./index"
-import { QUIZ_KEYS } from "./config"
+  getTodaySolvedQuizCount,
+  updateQuizResult,
+  updateRandomQuizResult,
+} from './index'
 
 export const useCreateTodayQuizForTest = () => {
   return useMutation({
@@ -38,7 +39,7 @@ export const useCreateErrorCheckQuizSet = (documentId: number) => {
 export const useUpdateRandomQuizResult = () => {
   return useMutation({
     mutationKey: QUIZ_KEYS.patchRandomQuizResult,
-    mutationFn: ({ data }: { data: Parameters<typeof updateRandomQuizResult>[0]["data"] }) =>
+    mutationFn: ({ data }: { data: Parameters<typeof updateRandomQuizResult>[0]['data'] }) =>
       updateRandomQuizResult({ data }),
   })
 }
@@ -46,7 +47,7 @@ export const useUpdateRandomQuizResult = () => {
 export const useUpdateQuizResult = () => {
   return useMutation({
     mutationKey: QUIZ_KEYS.patchQuizResult,
-    mutationFn: ({ data }: { data: Parameters<typeof updateQuizResult>[0]["data"] }) => updateQuizResult({ data }),
+    mutationFn: ({ data }: { data: Parameters<typeof updateQuizResult>[0]['data'] }) => updateQuizResult({ data }),
   })
 }
 
@@ -73,7 +74,7 @@ export const useGetSingleQuizRecordByDate = (solvedDate: string) => {
 
 export const useGetSingleQuizSetRecord = (
   quizSetId: string,
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET",
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
 ) => {
   return useQuery({
     queryKey: QUIZ_KEYS.getSingleQuizSetRecord(quizSetId, quizSetType),

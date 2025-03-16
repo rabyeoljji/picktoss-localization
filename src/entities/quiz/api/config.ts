@@ -1,26 +1,26 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const QUIZ = "quiz"
+const QUIZ = 'quiz'
 
 export const QUIZ_ENDPOINTS = {
   // POST
-  postTestCreateTodayQuiz: () => "/test/create-today-quiz",
+  postTestCreateTodayQuiz: () => '/test/create-today-quiz',
   postMemberGeneratedQuizSet: (documentId: number) => `/quizzes/documents/${documentId}/custom-quiz-set`,
   postErrorCheckQuizSet: (documentId: number) => `/quizzes/documents/${documentId}/check-quiz-set`,
 
   // PATCH
-  patchRandomQuizResult: () => "/random-quiz/result",
-  patchQuizResult: () => "/quiz/result",
+  patchRandomQuizResult: () => '/random-quiz/result',
+  patchQuizResult: () => '/quiz/result',
 
   // GET
-  getCurrentTodayQuizInfo: () => "/today-quiz-info",
-  getTodaySolvedQuizCount: () => "/quizzes/solved/today",
+  getCurrentTodayQuizInfo: () => '/today-quiz-info',
+  getTodaySolvedQuizCount: () => '/quizzes/solved/today',
   getSingleQuizRecordByDate: (solvedDate: string) => `/quizzes/${solvedDate}/quiz-record`,
   getSingleQuizSetRecord: (
     quizSetId: string,
-    quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET",
+    quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
   ) => `/quizzes/${quizSetId}/${quizSetType}/quiz-record`,
-  getQuizSetToday: () => "/quiz-sets/today",
+  getQuizSetToday: () => '/quiz-sets/today',
 }
 
 export const QUIZ_KEYS = {
@@ -42,7 +42,7 @@ export const QUIZ_KEYS = {
     originalCreateKey(QUIZ, QUIZ_ENDPOINTS.getSingleQuizRecordByDate(solvedDate)),
   getSingleQuizSetRecord: (
     quizSetId: string,
-    quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET",
+    quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
   ) => originalCreateKey(QUIZ, QUIZ_ENDPOINTS.getSingleQuizSetRecord(quizSetId, quizSetType)),
   getQuizSetToday: originalCreateKey(QUIZ, QUIZ_ENDPOINTS.getQuizSetToday()),
 }

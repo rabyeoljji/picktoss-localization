@@ -1,16 +1,16 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
 
 @font-face {
-  font-family: "SUIT Variable";
-  src: url("../assets/fonts/SUIT-Variable.woff2") format("woff2");
+  font-family: 'SUIT Variable';
+  src: url('../assets/fonts/SUIT-Variable.woff2') format('woff2');
   font-weight: 100 900;
   font-display: block;
 }
 
 @theme font {
-  --font-display: "SUIT Variable", "sans-serif";
+  --font-display: 'SUIT Variable', 'sans-serif';
 }
 
 @theme shadow {

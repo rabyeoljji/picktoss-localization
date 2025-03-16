@@ -1,7 +1,9 @@
-import { withHOC } from "@/app/hoc/with-page-config"
-import { Button } from "@/shared/components/ui/button"
-import { Text } from "@/shared/components/ui/text"
-import { toast } from "sonner"
+import { toast } from 'sonner'
+
+import { withHOC } from '@/app/hoc/with-page-config'
+
+import { Button } from '@/shared/components/ui/button'
+import { Text } from '@/shared/components/ui/text'
 
 const HomePage = () => {
   return (
@@ -14,11 +16,11 @@ const HomePage = () => {
       <div
         className="bg-surface-1 size-8"
         onClick={() =>
-          toast("헤헿", {
+          toast('헤헿', {
             action: {
-              label: "버튼",
+              label: '버튼',
               onClick: () => {
-                console.log("click")
+                console.log('click')
               },
             },
           })
@@ -31,5 +33,5 @@ const HomePage = () => {
 }
 
 export default withHOC(HomePage, {
-  activeTab: "홈",
+  activeTab: '홈',
 })

@@ -1,5 +1,6 @@
-import { client } from "@/shared/lib/axios/client"
-import { DOCUMENT_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { DOCUMENT_ENDPOINTS } from './config'
 
 // 문서 생성
 interface CreateDocumentRequest {
@@ -7,8 +8,8 @@ interface CreateDocumentRequest {
   directoryId: string
   documentName: string
   star: string
-  quizType: "MIX_UP" | "MULTIPLE_CHOICE"
-  documentType: "FILE" | "TEXT" | "NOTION"
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  documentType: 'FILE' | 'TEXT' | 'NOTION'
 }
 
 interface CreateDocumentResponse {
@@ -17,14 +18,14 @@ interface CreateDocumentResponse {
 
 export const createDocument = async (data: CreateDocumentRequest): Promise<CreateDocumentResponse> => {
   const formData = new FormData()
-  formData.append("file", data.file)
-  formData.append("directoryId", data.directoryId)
-  formData.append("documentName", data.documentName)
-  formData.append("star", data.star)
-  formData.append("quizType", data.quizType)
-  formData.append("documentType", data.documentType)
+  formData.append('file', data.file)
+  formData.append('directoryId', data.directoryId)
+  formData.append('documentName', data.documentName)
+  formData.append('star', data.star)
+  formData.append('quizType', data.quizType)
+  formData.append('documentType', data.documentType)
   const response = await client.post<CreateDocumentResponse>(DOCUMENT_ENDPOINTS.createDocument(), formData, {
-    headers: { "Content-Type": "multipart/form-data;charset=UTF-8" },
+    headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' },
   })
   return response.data
 }
@@ -40,7 +41,7 @@ interface SearchDocumentResponse {
     documentId: number
     documentName: string
     content: string
-    documentType: "FILE" | "TEXT" | "NOTION"
+    documentType: 'FILE' | 'TEXT' | 'NOTION'
     // 추가 필드가 있을 수 있음
   }[]
 }
@@ -56,12 +57,12 @@ interface GetSingleDocumentResponse {
   documentName: string
   content: string
   quizGenerationStatus:
-    | "UNPROCESSED"
-    | "PROCESSED"
-    | "PROCESSING"
-    | "COMPLETELY_FAILED"
-    | "PARTIAL_SUCCESS"
-    | "QUIZ_GENERATION_ERROR"
+    | 'UNPROCESSED'
+    | 'PROCESSED'
+    | 'PROCESSING'
+    | 'COMPLETELY_FAILED'
+    | 'PARTIAL_SUCCESS'
+    | 'QUIZ_GENERATION_ERROR'
   characterCount: number
   totalQuizCount: number
   updatedAt: string
@@ -76,12 +77,12 @@ export const getSingleDocument = async (documentId: number): Promise<GetSingleDo
 // 문서에 추가 퀴즈 생성
 interface CreateQuizzesRequest {
   star: number
-  quizType: "MIX_UP" | "MULTIPLE_CHOICE"
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
 }
 
 interface CreateQuizzesResponse {
   quizSetId: string
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET"
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
   createdAt: string
 }
 
@@ -114,10 +115,10 @@ interface UpdateDocumentContentRequest {
 
 export const updateDocumentContent = async (documentId: number, data: UpdateDocumentContentRequest): Promise<void> => {
   const formData = new FormData()
-  if (data.name) formData.append("name", data.name)
-  if (data.file) formData.append("file", data.file)
+  if (data.name) formData.append('name', data.name)
+  if (data.file) formData.append('file', data.file)
   const response = await client.patch<void>(DOCUMENT_ENDPOINTS.updateDocumentContent(documentId), formData, {
-    headers: { "Content-Type": "multipart/form-data" },
+    headers: { 'Content-Type': 'multipart/form-data' },
   })
   return response.data
 }

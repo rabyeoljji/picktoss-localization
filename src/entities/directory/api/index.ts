@@ -1,9 +1,10 @@
-import { client } from "@/shared/lib/axios/client"
-import { DIRECTORY_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { DIRECTORY_ENDPOINTS } from './config'
 
 // GET: 모든 디렉토리 조회
 interface GetAllDirectoriesResponse {
-  directories: { id: number; name: string; emoji: string; tag: "DEFAULT" | "NORMAL"; documentCount: number }[]
+  directories: { id: number; name: string; emoji: string; tag: 'DEFAULT' | 'NORMAL'; documentCount: number }[]
 }
 
 export const getAllDirectories = async (): Promise<GetAllDirectoriesResponse> => {
@@ -31,7 +32,7 @@ interface GetSingleDirectoryResponse {
   id: number
   name: string
   emoji: string
-  tag: "DEFAULT" | "NORMAL"
+  tag: 'DEFAULT' | 'NORMAL'
 }
 
 export const getSingleDirectory = async (directoryId: number): Promise<GetSingleDirectoryResponse> => {

@@ -1,16 +1,18 @@
-import React from "react"
-import { Meta, StoryObj } from "@storybook/react"
-import { RadioGroup, RadioGroupItem } from "."
+import React from 'react'
+
+import { Meta, StoryObj } from '@storybook/react'
+
+import { RadioGroup, RadioGroupItem } from '.'
 
 const meta: Meta<typeof RadioGroup> = {
-  title: "UI/RadioGroup",
+  title: 'UI/RadioGroup',
   component: RadioGroup,
 }
 export default meta
 
 export const AllCases: StoryObj<typeof RadioGroup> = {
   render: () => {
-    const [value, setValue] = React.useState("option1")
+    const [value, setValue] = React.useState('option1')
 
     return (
       <div className="flex flex-col gap-10">

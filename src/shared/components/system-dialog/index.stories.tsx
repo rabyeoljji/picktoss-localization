@@ -1,12 +1,14 @@
-import { Meta, StoryObj } from "@storybook/react"
-import { SystemDialog } from "."
-import { Text } from "@/shared/components/ui/text"
+import { Meta, StoryObj } from '@storybook/react'
+
+import { Text } from '@/shared/components/ui/text'
+
+import { SystemDialog } from '.'
 
 const meta: Meta<typeof SystemDialog> = {
-  title: "Component/SystemDialog",
+  title: 'Component/SystemDialog',
   component: SystemDialog,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 }
 

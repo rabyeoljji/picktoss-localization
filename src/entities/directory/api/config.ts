@@ -1,10 +1,10 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const DIRECTORY = "directory"
+const DIRECTORY = 'directory'
 
 export const DIRECTORY_ENDPOINTS = {
-  getAllDirectories: () => "/directories",
-  createDirectory: () => "/directories",
+  getAllDirectories: () => '/directories',
+  createDirectory: () => '/directories',
   getSingleDirectory: (directoryId: number) => `/directories/${directoryId}`,
   deleteDirectory: (directoryId: number) => `/directories/${directoryId}`,
   updateDirectoryInfo: (directoryId: number) => `/directories/${directoryId}/update-info`,

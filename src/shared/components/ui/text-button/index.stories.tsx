@@ -1,5 +1,8 @@
-import { Meta, StoryObj } from "@storybook/react"
-import { TextButton } from "." // 실제 경로에 맞게 수정하세요.
+import { Meta, StoryObj } from '@storybook/react'
+
+import { TextButton } from '.'
+
+// 실제 경로에 맞게 수정하세요.
 
 // 더미 아이콘 컴포넌트 (size가 sm인 경우에만 사용)
 const DummyIcon = () => (
@@ -9,7 +12,7 @@ const DummyIcon = () => (
 )
 
 const meta: Meta<typeof TextButton> = {
-  title: "UI/TextButton",
+  title: 'UI/TextButton',
   component: TextButton,
 }
 export default meta
@@ -17,25 +20,25 @@ export default meta
 export const AllCases: StoryObj<typeof TextButton> = {
   render: () => {
     // TextButton의 variant 종류
-    const variants: Array<"default" | "primary" | "critical" | "secondary"> = [
-      "default",
-      "primary",
-      "critical",
-      "secondary",
+    const variants: Array<'default' | 'primary' | 'critical' | 'secondary'> = [
+      'default',
+      'primary',
+      'critical',
+      'secondary',
     ]
 
     return (
-      <div style={{ display: "grid", gap: "40px" }}>
+      <div style={{ display: 'grid', gap: '40px' }}>
         {variants.map((variant) => (
           <div key={variant}>
-            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>{variant}</h3>
+            <h3 style={{ textTransform: 'capitalize', marginBottom: '16px' }}>{variant}</h3>
             <div className="flex flex-col gap-5">
               <div
                 style={{
-                  display: "flex",
-                  gap: "10px",
-                  flexWrap: "wrap",
-                  alignItems: "center",
+                  display: 'flex',
+                  gap: '10px',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
                 }}
               >
                 {/* lg 사이즈 (아이콘 미포함) */}
@@ -51,10 +54,10 @@ export const AllCases: StoryObj<typeof TextButton> = {
 
               <div
                 style={{
-                  display: "flex",
-                  gap: "10px",
-                  flexWrap: "wrap",
-                  alignItems: "center",
+                  display: 'flex',
+                  gap: '10px',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
                 }}
               >
                 {/* md 사이즈 (아이콘 미포함) */}
@@ -70,10 +73,10 @@ export const AllCases: StoryObj<typeof TextButton> = {
 
               <div
                 style={{
-                  display: "flex",
-                  gap: "10px",
-                  flexWrap: "wrap",
-                  alignItems: "center",
+                  display: 'flex',
+                  gap: '10px',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
                 }}
               >
                 {/* sm 사이즈 - (아이콘 미포함) */}

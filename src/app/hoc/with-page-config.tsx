@@ -1,8 +1,9 @@
-import { TabNavigation } from "@/shared/components/tab-navigation"
-import React from "react"
+import React from 'react'
+
+import { TabNavigation } from '@/shared/components/tab-navigation'
 
 interface Props {
-  activeTab?: React.ComponentProps<typeof TabNavigation>["activeTab"]
+  activeTab?: React.ComponentProps<typeof TabNavigation>['activeTab']
 }
 
 export function withHOC<P extends object>(Component: React.ComponentType<P>, config: Props) {

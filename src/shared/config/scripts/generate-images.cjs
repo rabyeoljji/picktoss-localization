@@ -1,5 +1,5 @@
-const fs = require("fs")
-const path = require("path")
+const fs = require('fs')
+const path = require('path')
 
 /**
  * Generates React components for each PNG file in the specified directory.
@@ -7,10 +7,10 @@ const path = require("path")
  */
 
 // 1. PNG 파일이 들어있는 폴더 경로 설정
-const imagesDir = path.join(__dirname, "../../assets/images")
+const imagesDir = path.join(__dirname, '../../assets/images')
 
 // 2. 최종적으로 생성할 index.tsx 파일 경로
-const indexFilePath = path.join(imagesDir, "index.tsx")
+const indexFilePath = path.join(imagesDir, 'index.tsx')
 
 /**
  * 문자열을 PascalCase로 변환해주는 함수
@@ -20,7 +20,7 @@ function toPascalCase(str) {
   return str
     .split(/[-_]/)
     .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1).toLowerCase())
-    .join("")
+    .join('')
 }
 
 /**
@@ -46,7 +46,7 @@ function generateImageComponents() {
   // (2) images 폴더 내 .png 파일만 필터링
   const pngFiles = fs.readdirSync(imagesDir).filter((file) => {
     const filePath = path.join(imagesDir, file)
-    return fs.lstatSync(filePath).isFile() && path.extname(file).toLowerCase() === ".png"
+    return fs.lstatSync(filePath).isFile() && path.extname(file).toLowerCase() === '.png'
   })
 
   // (3) 만약 .png 파일이 하나도 없다면 경고 후 종료
@@ -61,25 +61,25 @@ function generateImageComponents() {
 
   // (5) 각 PNG 파일에 대한 import 구문 생성
   pngFiles.forEach((file) => {
-    const baseName = path.basename(file, ".png")
+    const baseName = path.basename(file, '.png')
     const camelName = toCamelCase(baseName)
     content += `import ${camelName} from "./${file}"\n`
   })
 
-  content += "\n"
+  content += '\n'
 
   // (6) 각 PNG 파일에 대한 React 컴포넌트 export 구문 생성
   pngFiles.forEach((file) => {
-    const baseName = path.basename(file, ".png")
+    const baseName = path.basename(file, '.png')
     const pascalName = toPascalCase(baseName)
     const camelName = toCamelCase(baseName)
     // alt 텍스트는 "img_" 접두어 제거 (필요에 따라 가공)
-    const altText = baseName.replace(/^img_/, "")
+    const altText = baseName.replace(/^img_/, '')
     content += `export const ${pascalName} = ({ ...props }) => {\n  return <img src={${camelName}} alt="${altText}" {...props} />;\n};\n\n`
   })
 
   // (7) 최종적으로 생성된 content를 index.tsx 파일로 저장
-  fs.writeFileSync(indexFilePath, content, "utf8")
+  fs.writeFileSync(indexFilePath, content, 'utf8')
 
   console.log(`Successfully generated ${indexFilePath} with ${pngFiles.length} components.`)
 }

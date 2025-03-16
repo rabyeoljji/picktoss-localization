@@ -1,9 +1,11 @@
-import { Meta, StoryObj } from "@storybook/react"
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "."
-import { IcCheck, IcDelete } from "@/shared/assets/icon"
+import { Meta, StoryObj } from '@storybook/react'
+
+import { IcCheck, IcDelete } from '@/shared/assets/icon'
+
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '.'
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "UI/DropdownMenu",
+  title: 'UI/DropdownMenu',
   component: DropdownMenu,
   decorators: [
     (Story) => (

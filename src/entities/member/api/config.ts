@@ -1,20 +1,20 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const MEMBER = "member"
+const MEMBER = 'member'
 
 export const MEMBER_ENDPOINTS = {
   // GET
-  getMemberInfo: () => "/members/info",
-  getInviteLinkMember: () => "/members/reward",
+  getMemberInfo: () => '/members/info',
+  getInviteLinkMember: () => '/members/reward',
 
   // PATCH
-  updateTodayQuizCount: () => "/members/update-today-quiz-count",
-  updateQuizNotification: () => "/members/update-quiz-notification",
-  updateMemberName: () => "/members/update-name",
-  updateInterestCollectionCategories: () => "/members/update-collection-categories",
+  updateTodayQuizCount: () => '/members/update-today-quiz-count',
+  updateQuizNotification: () => '/members/update-quiz-notification',
+  updateMemberName: () => '/members/update-name',
+  updateInterestCollectionCategories: () => '/members/update-collection-categories',
 
   // DELETE
-  deleteMember: () => "/members/withdrawal",
+  deleteMember: () => '/members/withdrawal',
 }
 
 export const MEMBER_KEYS = {

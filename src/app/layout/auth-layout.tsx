@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router"
+import { Navigate, Outlet } from 'react-router'
 
 export const AuthLayout = () => {
   const token = false

@@ -1,9 +1,11 @@
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
+import * as React from 'react'
 
-import { cn } from "@/shared/lib/utils"
-import { TextButton } from "../text-button"
-import { Button } from "../button"
+import * as DialogPrimitive from '@radix-ui/react-dialog'
+
+import { cn } from '@/shared/lib/utils'
+
+import { Button } from '../button'
+import { TextButton } from '../text-button'
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -26,7 +28,7 @@ function DialogOverlay({ className, ...props }: React.ComponentProps<typeof Dial
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
       className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/75",
+        'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/75',
         className,
       )}
       {...props}
@@ -41,7 +43,7 @@ function DialogContent({ className, children, ...props }: React.ComponentProps<t
       <DialogPrimitive.Content
         data-slot="dialog-content"
         className={cn(
-          "bg-background-base-01 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[343px] translate-x-[-50%] translate-y-[-50%] rounded-[20px] px-6 pt-8 pb-5 shadow-md duration-200",
+          'bg-background-base-01 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[343px] translate-x-[-50%] translate-y-[-50%] rounded-[20px] px-6 pt-8 pb-5 shadow-md duration-200',
           className,
         )}
         {...props}
@@ -56,15 +58,15 @@ function DialogContent({ className, children, ...props }: React.ComponentProps<t
   )
 }
 
-function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-header" className={cn("flex flex-col gap-2 text-center", className)} {...props} />
+function DialogHeader({ className, ...props }: React.ComponentProps<'div'>) {
+  return <div data-slot="dialog-header" className={cn('flex flex-col gap-2 text-center', className)} {...props} />
 }
 
-function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
-  return <div data-slot="dialog-footer" className={cn("flex", className)} {...props} />
+function DialogFooter({ className, ...props }: React.ComponentProps<'div'>) {
+  return <div data-slot="dialog-footer" className={cn('flex', className)} {...props} />
 }
 
-function DialogCloseTextButton({ label = "닫기" }: { label?: string }) {
+function DialogCloseTextButton({ label = '닫기' }: { label?: string }) {
   return (
     <DialogClose asChild>
       <TextButton variant="secondary" className="mt-4 h-5 w-full">
@@ -78,8 +80,8 @@ function DialogCTA({
   label,
   onClick,
   hasClose = false,
-  closeLabel = "닫기",
-}: React.ComponentProps<"button"> & {
+  closeLabel = '닫기',
+}: React.ComponentProps<'button'> & {
   label: string
   onClick: () => void
   hasClose?: boolean
@@ -120,7 +122,7 @@ DialogCTA.B = DialogCTA_B
 
 function DialogTitle({ className, ...props }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
-    <DialogPrimitive.Title data-slot="dialog-title text-text-primary" className={cn("typo-h4", className)} {...props} />
+    <DialogPrimitive.Title data-slot="dialog-title text-text-primary" className={cn('typo-h4', className)} {...props} />
   )
 }
 
@@ -128,7 +130,7 @@ function DialogDescription({ className, ...props }: React.ComponentProps<typeof 
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn("typo-subtitle-2-medium text-text-sub", className)}
+      className={cn('typo-subtitle-2-medium text-text-sub', className)}
       {...props}
     />
   )

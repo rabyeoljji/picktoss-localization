@@ -1,13 +1,14 @@
-import { client } from "@/shared/lib/axios/client"
-import { MEMBER_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { MEMBER_ENDPOINTS } from './config'
 
 // GET: 회원 정보 조회
 interface GetMemberInfoResponse {
   id: number
   name: string
   email: string
-  socialPlatform: "KAKAO" | "GOOGLE"
-  role: "ROLE_USER" | "ROLE_ADMIN"
+  socialPlatform: 'KAKAO' | 'GOOGLE'
+  role: 'ROLE_USER' | 'ROLE_ADMIN'
   interestCategories: string[]
   documentUsage: {
     possessDocumentCount: number
@@ -72,7 +73,7 @@ export const updateInterestCollectionCategories = async (
 
 // DELETE: 회원 탈퇴
 interface DeleteMemberRequest {
-  reason: "UNSATISFACTORY_RESULT" | "INCONVENIENT_SERVICE" | "SYSTEM_ISSUE" | "SECURITY_CONCERNS"
+  reason: 'UNSATISFACTORY_RESULT' | 'INCONVENIENT_SERVICE' | 'SYSTEM_ISSUE' | 'SECURITY_CONCERNS'
   detail: string
 }
 

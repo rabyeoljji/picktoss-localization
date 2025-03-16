@@ -1,12 +1,13 @@
-import { Meta, StoryObj } from "@storybook/react"
-import { Toaster } from "."
-import { Button } from "../button"
-import { toast } from "sonner"
+import { Meta, StoryObj } from '@storybook/react'
+import { toast } from 'sonner'
+
+import { Toaster } from '.'
+import { Button } from '../button'
 
 const meta: Meta = {
-  title: "UI/Toast",
+  title: 'UI/Toast',
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
   decorators: [
     (Story) => (
@@ -21,23 +22,23 @@ export default meta
 // AllCases story displaying all scenarios together
 export const AllCases: StoryObj<typeof Toaster> = {
   render: () => (
-    <div style={{ display: "flex", flexDirection: "column", gap: "30px" }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
       {/* Case 1: Default Toast */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <p style={{ margin: 0 }}>Case 1: Default Toast</p>
-        <Button onClick={() => toast("This is a default toast")}>Open Default Toast</Button>
+        <Button onClick={() => toast('This is a default toast')}>Open Default Toast</Button>
       </div>
       <hr />
 
       {/* Case 2: Toast with Action Button */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <p style={{ margin: 0 }}>Case 2: Toast with Action Button</p>
         <Button
           onClick={() =>
-            toast("This toast has an action button", {
+            toast('This toast has an action button', {
               action: {
-                label: "Action",
-                onClick: () => alert("Action clicked"),
+                label: 'Action',
+                onClick: () => alert('Action clicked'),
               },
             })
           }
@@ -48,14 +49,14 @@ export const AllCases: StoryObj<typeof Toaster> = {
       <hr />
 
       {/* Case 3: Toast with Cancel Button */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <p style={{ margin: 0 }}>Case 3: Toast with Cancel Button</p>
         <Button
           onClick={() =>
-            toast("This toast has a cancel button", {
+            toast('This toast has a cancel button', {
               cancel: {
-                label: "X",
-                onClick: () => alert("Cancel clicked"),
+                label: 'X',
+                onClick: () => alert('Cancel clicked'),
               },
             })
           }
@@ -66,12 +67,12 @@ export const AllCases: StoryObj<typeof Toaster> = {
       <hr />
 
       {/* Case 4: Toast with Long Title */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <p style={{ margin: 0 }}>Case 4: Toast with Long Title</p>
         <Button
           onClick={() =>
             toast(
-              "This is a very long toast message that should wrap nicely and display all of the content without breaking the layout. Enjoy reading the long message!",
+              'This is a very long toast message that should wrap nicely and display all of the content without breaking the layout. Enjoy reading the long message!',
             )
           }
         >

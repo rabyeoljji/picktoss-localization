@@ -1,9 +1,11 @@
-import { cn } from "@/shared/lib/utils"
-import { Text } from "../text"
-import { Label } from "@/shared/components/ui/label"
-import { useId } from "react"
+import { useId } from 'react'
 
-interface TextareaProps extends React.ComponentProps<"textarea"> {
+import { Label } from '@/shared/components/ui/label'
+import { cn } from '@/shared/lib/utils'
+
+import { Text } from '../text'
+
+interface TextareaProps extends React.ComponentProps<'textarea'> {
   label?: string
   hasError?: boolean
   helperText?: string
@@ -19,8 +21,8 @@ function Textarea({ className, hasError = false, label, required = false, helper
         id={id}
         data-slot="textarea"
         className={cn(
-          "bg-surface-1 border-container placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 h-[194px] w-full resize-none rounded-[8px] border p-3 outline-none disabled:border-none",
-          hasError && "border-error focus:border-error",
+          'bg-surface-1 border-container placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 h-[194px] w-full resize-none rounded-[8px] border p-3 outline-none disabled:border-none',
+          hasError && 'border-error focus:border-error',
           className,
         )}
         {...props}
@@ -43,7 +45,7 @@ const TextareaLabel = ({
 }) => {
   return (
     <div className="mb-2 flex items-start gap-0.5">
-      <Label htmlFor={id} className={cn(hasError && "text-error")}>
+      <Label htmlFor={id} className={cn(hasError && 'text-error')}>
         {label}
       </Label>
       {required && (
@@ -62,7 +64,7 @@ const TextareaLabel = ({
 
 const TextareaHelper = ({ hasError, helperText }: { hasError: boolean; helperText: string }) => {
   return (
-    <div className={cn("text-caption mt-2 flex items-center gap-[5px]", hasError && "text-error")}>
+    <div className={cn('text-caption mt-2 flex items-center gap-[5px]', hasError && 'text-error')}>
       {hasError && (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="6" cy="6" r="6" fill="#F4502C" />

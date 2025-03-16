@@ -1,12 +1,13 @@
-import { client } from "@/shared/lib/axios/client"
-import { NOTIFICATION_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { NOTIFICATION_ENDPOINTS } from './config'
 
 // GET: 모든 알림 조회
 interface GetNotificationsDto {
   notificationKey: string
   title: string
   content: string
-  notificationType: "GENERAL" | "TODAY_QUIZ" | "COLLECTION" | "STAR_REWARD" | "UPDATE_NEWS"
+  notificationType: 'GENERAL' | 'TODAY_QUIZ' | 'COLLECTION' | 'STAR_REWARD' | 'UPDATE_NEWS'
   receivedTime: string // ISO 문자열
 }
 

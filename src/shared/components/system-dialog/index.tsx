@@ -1,19 +1,19 @@
 import {
   Dialog,
-  DialogTrigger,
+  DialogClose,
   DialogContent,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "@/shared/components/ui/dialog"
-import { cn } from "@/shared/lib/utils"
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
+import { cn } from '@/shared/lib/utils'
 
 interface SystemDialogProps {
   trigger: React.ReactNode
   title: string
   content: React.ReactNode
-  variant?: "default" | "critical"
+  variant?: 'default' | 'critical'
   cancelLabel?: string
   confirmLabel?: string
   onConfirm: () => void
@@ -23,9 +23,9 @@ export const SystemDialog = ({
   trigger,
   title,
   content,
-  variant = "default",
-  cancelLabel = "취소",
-  confirmLabel = "버튼명",
+  variant = 'default',
+  cancelLabel = '취소',
+  confirmLabel = '버튼명',
   onConfirm,
 }: SystemDialogProps) => {
   return (
@@ -42,9 +42,9 @@ export const SystemDialog = ({
           </DialogClose>
           <button
             className={cn(
-              "typo-button-2",
-              variant === "default" && "text-text-accent",
-              variant === "critical" && "text-text-critical",
+              'typo-button-2',
+              variant === 'default' && 'text-text-accent',
+              variant === 'critical' && 'text-text-critical',
             )}
             onClick={onConfirm}
           >

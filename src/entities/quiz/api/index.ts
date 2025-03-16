@@ -1,5 +1,6 @@
-import { client } from "@/shared/lib/axios/client"
-import { QUIZ_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { QUIZ_ENDPOINTS } from './config'
 
 // POST: 오늘의 퀴즈 생성 (테스트 및 예외처리용)
 export const createTodayQuizForTest = async (): Promise<string> => {
@@ -15,7 +16,7 @@ interface CreateQuizzesByDocumentRequest {
 
 interface CreateQuizzesResponse {
   quizSetId: string
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET"
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
   createdAt: string
 }
 
@@ -53,7 +54,7 @@ interface UpdateQuizResultQuizDto {
 
 interface UpdateQuizResultRequest {
   quizSetId: string
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET"
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
   quizzes: UpdateQuizResultQuizDto[]
 }
 
@@ -102,7 +103,7 @@ interface GetSingleQuizRecordByDateResponse {
     name: string
     quizCount: number
     score: number
-    quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET"
+    quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
   }[]
 }
 
@@ -119,13 +120,13 @@ interface GetSingleQuizSetRecordDto {
   question: string
   answer: string
   explanation: string
-  quizType: "MIX_UP" | "MULTIPLE_CHOICE"
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
   options: string[]
   choseAnswer: string
   documentName: string
   directoryName: string
   collectionName?: string
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET"
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
 }
 
 interface GetSingleQuizSetRecordResponse {
@@ -136,7 +137,7 @@ interface GetSingleQuizSetRecordResponse {
 
 export const getSingleQuizSetRecord = async (
   quizSetId: string,
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET",
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
 ): Promise<GetSingleQuizSetRecordResponse> => {
   const response = await client.get<GetSingleQuizSetRecordResponse>(
     QUIZ_ENDPOINTS.getSingleQuizSetRecord(quizSetId, quizSetType),
@@ -147,8 +148,8 @@ export const getSingleQuizSetRecord = async (
 // GET: 오늘의 퀴즈 세트 정보 조회
 interface GetQuizSetTodayResponse {
   quizSetId: string
-  quizSetType: "TODAY_QUIZ_SET" | "DOCUMENT_QUIZ_SET" | "COLLECTION_QUIZ_SET" | "FIRST_QUIZ_SET"
-  type: "READY" | "NOT_READY" | "DONE"
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
+  type: 'READY' | 'NOT_READY' | 'DONE'
   createdAt: string
 }
 

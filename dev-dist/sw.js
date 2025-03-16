@@ -20,12 +20,12 @@ if (!self.define) {
   let nextDefineUri
 
   const singleRequire = (uri, parentUri) => {
-    uri = new URL(uri + ".js", parentUri).href
+    uri = new URL(uri + '.js', parentUri).href
     return (
       registry[uri] ||
       new Promise((resolve) => {
-        if ("document" in self) {
-          const script = document.createElement("script")
+        if ('document' in self) {
+          const script = document.createElement('script')
           script.src = uri
           script.onload = resolve
           document.head.appendChild(script)
@@ -45,7 +45,7 @@ if (!self.define) {
   }
 
   self.define = (depsNames, factory) => {
-    const uri = nextDefineUri || ("document" in self ? document.currentScript.src : "") || location.href
+    const uri = nextDefineUri || ('document' in self ? document.currentScript.src : '') || location.href
     if (registry[uri]) {
       // Module is already loading or loaded.
       return
@@ -63,8 +63,8 @@ if (!self.define) {
     })
   }
 }
-define(["./workbox-86c9b217"], function (workbox) {
-  "use strict"
+define(['./workbox-86c9b217'], function (workbox) {
+  'use strict'
 
   self.skipWaiting()
   workbox.clientsClaim()
@@ -77,19 +77,19 @@ define(["./workbox-86c9b217"], function (workbox) {
   workbox.precacheAndRoute(
     [
       {
-        url: "registerSW.js",
-        revision: "3ca0b8505b4bec776b69afdba2768812",
+        url: 'registerSW.js',
+        revision: '3ca0b8505b4bec776b69afdba2768812',
       },
       {
-        url: "index.html",
-        revision: "0.gp0fhi8r82g",
+        url: 'index.html',
+        revision: '0.gp0fhi8r82g',
       },
     ],
     {},
   )
   workbox.cleanupOutdatedCaches()
   workbox.registerRoute(
-    new workbox.NavigationRoute(workbox.createHandlerBoundToURL("index.html"), {
+    new workbox.NavigationRoute(workbox.createHandlerBoundToURL('index.html'), {
       allowlist: [/^\/$/],
     }),
   )

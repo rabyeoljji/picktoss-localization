@@ -1,11 +1,13 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/shared/lib/utils"
+import * as React from 'react'
 
-const labelVariants = cva("typo-body-2-medium text-gray-500")
+import * as LabelPrimitive from '@radix-ui/react-label'
+import { type VariantProps, cva } from 'class-variance-authority'
+
+import { cn } from '@/shared/lib/utils'
+
+const labelVariants = cva('typo-body-2-medium text-gray-500')
 
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,

@@ -1,9 +1,11 @@
-import { cn } from "@/shared/lib/utils"
-import { Text } from "../text"
-import { Label } from "@/shared/components/ui/label"
-import { useEffect, useId, useRef, useState } from "react"
+import { useEffect, useId, useRef, useState } from 'react'
 
-interface InputProps extends React.ComponentProps<"input"> {
+import { Label } from '@/shared/components/ui/label'
+import { cn } from '@/shared/lib/utils'
+
+import { Text } from '../text'
+
+interface InputProps extends React.ComponentProps<'input'> {
   label?: string
   hasError?: boolean
   helperText?: string
@@ -29,7 +31,7 @@ function Input({
   const setInputRef = (node: HTMLInputElement) => {
     inputRef.current = node
     if (ref) {
-      if (typeof ref === "function") {
+      if (typeof ref === 'function') {
         ref(node)
       } else {
         ;(ref as React.MutableRefObject<HTMLInputElement | null>).current = node
@@ -62,8 +64,8 @@ function Input({
           type={type}
           data-slot="input"
           className={cn(
-            "bg-surface-1 border-container placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none",
-            hasError && "border-error focus:border-error",
+            'bg-surface-1 border-container placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none',
+            hasError && 'border-error focus:border-error',
             className,
           )}
           style={{
@@ -95,7 +97,7 @@ const InputLabel = ({
 }) => {
   return (
     <div className="mb-2 flex items-start gap-0.5">
-      <Label htmlFor={id} className={cn(hasError && "text-error")}>
+      <Label htmlFor={id} className={cn(hasError && 'text-error')}>
         {label}
       </Label>
       {required && (
@@ -114,7 +116,7 @@ const InputLabel = ({
 
 const InputHelper = ({ hasError, helperText }: { hasError: boolean; helperText: string }) => {
   return (
-    <div className={cn("text-caption mt-2 flex items-center gap-[5px]", hasError && "text-error")}>
+    <div className={cn('text-caption mt-2 flex items-center gap-[5px]', hasError && 'text-error')}>
       {hasError && (
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="6" cy="6" r="6" fill="#F4502C" />

@@ -1,10 +1,11 @@
-import { client } from "@/shared/lib/axios/client"
-import { AUTH_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { AUTH_ENDPOINTS } from './config'
 
 // 로그인
 interface LoginRequest {
   accessToken: string
-  socialPlatform: "KAKAO" | "GOOGLE"
+  socialPlatform: 'KAKAO' | 'GOOGLE'
 }
 
 interface LoginResponse {
@@ -77,7 +78,7 @@ export const getInviteMemberInfo = async (inviteCode: string) => {
 
 // 초대 코드로 회원가입 여부 체크
 interface CheckInviteCodeBySignUpResponse {
-  type: "READY" | "NONE"
+  type: 'READY' | 'NONE'
 }
 
 export const checkInviteCodeBySignUp = async () => {

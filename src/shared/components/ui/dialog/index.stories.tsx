@@ -1,20 +1,21 @@
-import { Meta, StoryObj } from "@storybook/react"
+import { Meta, StoryObj } from '@storybook/react'
+
 import {
   Dialog,
-  DialogTrigger,
+  DialogCTA,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
-  DialogCTA,
-} from "."
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '.'
 
 const meta: Meta<typeof Dialog> = {
-  title: "UI/Dialog",
+  title: 'UI/Dialog',
   component: Dialog,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
   },
 }
 

@@ -1,32 +1,33 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
+import { useMutation, useQuery } from '@tanstack/react-query'
+
+import { COLLECTION_KEYS } from './config'
 import {
-  getAllCollections,
-  getCollectionCategories,
-  getBookmarkedCollections,
-  getInterestCategoryCollections,
-  searchCollections,
-  getCollectionInfoByCollectionId,
-  getQuizzesInCollectionByCollectionCategory,
-  getCollectionContainingQuiz,
-  getMyCollections,
+  addQuizToCollection,
   createCollection,
   createCollectionBookmark,
   createCollectionComplaint,
   createCollectionQuizSet,
-  updateCollectionQuizzes,
-  updateCollectionInfo,
-  updateCollectionRandomQuizResult,
-  addQuizToCollection,
   deleteCollection,
   deleteCollectionBookmark,
-} from "./index"
-import { COLLECTION_KEYS } from "./config"
+  getAllCollections,
+  getBookmarkedCollections,
+  getCollectionCategories,
+  getCollectionContainingQuiz,
+  getCollectionInfoByCollectionId,
+  getInterestCategoryCollections,
+  getMyCollections,
+  getQuizzesInCollectionByCollectionCategory,
+  searchCollections,
+  updateCollectionInfo,
+  updateCollectionQuizzes,
+  updateCollectionRandomQuizResult,
+} from './index'
 
 interface GetAllCollectionsParams {
-  "collection-sort-option"?: "POPULARITY" | "UPDATED"
-  "collection-category"?: string[]
-  "quiz-type"?: "MIX_UP" | "MULTIPLE_CHOICE"
-  "quiz-count"?: number
+  'collection-sort-option'?: 'POPULARITY' | 'UPDATED'
+  'collection-category'?: string[]
+  'quiz-type'?: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  'quiz-count'?: number
 }
 
 export const useGetAllCollections = (params?: GetAllCollectionsParams) => {
@@ -138,7 +139,7 @@ export const useUpdateCollectionInfo = (collectionId: number) => {
 export const useUpdateCollectionRandomQuizResult = () => {
   return useMutation({
     mutationKey: COLLECTION_KEYS.updateCollectionRandomQuizResult,
-    mutationFn: ({ data }: { data: Parameters<typeof updateCollectionRandomQuizResult>[0]["data"] }) =>
+    mutationFn: ({ data }: { data: Parameters<typeof updateCollectionRandomQuizResult>[0]['data'] }) =>
       updateCollectionRandomQuizResult({ data }),
   })
 }

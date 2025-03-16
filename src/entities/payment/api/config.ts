@@ -1,11 +1,11 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const PAYMENT = "payment"
+const PAYMENT = 'payment'
 
 export const PAYMENT_ENDPOINTS = {
-  verifyPayment: () => "/payments/verify",
-  createPayments: () => "/payments/save",
-  cancelPayments: () => "/payments/cancel",
+  verifyPayment: () => '/payments/verify',
+  createPayments: () => '/payments/save',
+  cancelPayments: () => '/payments/cancel',
 }
 
 export const PAYMENT_KEYS = {

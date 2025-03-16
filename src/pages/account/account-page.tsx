@@ -1,9 +1,9 @@
-import { withHOC } from "@/app/hoc/with-page-config"
+import { withHOC } from '@/app/hoc/with-page-config'
 
 const AccountPage = () => {
   return <div>AccountPage</div>
 }
 
 export default withHOC(AccountPage, {
-  activeTab: "마이",
+  activeTab: '마이',
 })

@@ -1,21 +1,5 @@
-import { Route, Routes, BrowserRouter } from "react-router"
-import { AuthLayout } from "@/app/layout/auth-layout"
-import { LoginPage } from "@/pages/auth"
-import { PWAOnlyMobileLayout } from "@/app/layout/pwa-only-mobile-layout"
-import { RootLayout } from "@/app/layout/root-layout"
-import HomePage from "@/pages/home-page"
-import { AppRoutes } from "@/app/routes/config"
-import { BombQuizPage, RandomQuizPage } from "@/pages/theme-quiz"
-import {
-  NoteArrangePage,
-  NoteDetailPage,
-  NoteEditPage,
-  NoteQuizPage,
-  NoteSearchPage,
-  NotesPage,
-  NoteUploadPage,
-  NoteWritePage,
-} from "@/pages/note"
+import { BrowserRouter, Route, Routes } from 'react-router'
+
 import {
   AccountInfoPage,
   AccountPage,
@@ -29,7 +13,8 @@ import {
   QuizAnalysisPage,
   QuizRecordPage,
   WithdrawPage,
-} from "@/pages/account"
+} from '@/pages/account'
+import { LoginPage } from '@/pages/auth'
 import {
   CollectionComplainPage,
   CollectionCreatePage,
@@ -39,7 +24,24 @@ import {
   CollectionQuizPage,
   CollectionSearchPage,
   CollectionsPage,
-} from "@/pages/collection"
+} from '@/pages/collection'
+import HomePage from '@/pages/home-page'
+import {
+  NoteArrangePage,
+  NoteDetailPage,
+  NoteEditPage,
+  NoteQuizPage,
+  NoteSearchPage,
+  NoteUploadPage,
+  NoteWritePage,
+  NotesPage,
+} from '@/pages/note'
+import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
+
+import { AuthLayout } from '@/app/layout/auth-layout'
+import { PWAOnlyMobileLayout } from '@/app/layout/pwa-only-mobile-layout'
+import { RootLayout } from '@/app/layout/root-layout'
+import { AppRoutes } from '@/app/routes/config'
 
 export const AppRouter = () => {
   return (

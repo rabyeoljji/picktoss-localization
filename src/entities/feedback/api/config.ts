@@ -1,9 +1,9 @@
-import { createKey as originalCreateKey } from "@/shared/api/lib/create-key"
+import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
 
-const FEEDBACK = "feedback"
+const FEEDBACK = 'feedback'
 
 export const FEEDBACK_ENDPOINTS = {
-  postFeedback: () => "/feedback",
+  postFeedback: () => '/feedback',
 }
 
 export const FEEDBACK_KEYS = {

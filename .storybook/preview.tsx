@@ -1,10 +1,12 @@
-import React from "react"
-import { BrowserRouter } from "react-router"
-import "../src/app/styles/index.css"
-import "../src/app/styles/color-theme.css"
-import "../src/app/styles/typo.css"
-import { Providers } from "../src/app/providers"
-import type { Preview } from "@storybook/react"
+import React from 'react'
+import { BrowserRouter } from 'react-router'
+
+import type { Preview } from '@storybook/react'
+
+import { Providers } from '../src/app/providers'
+import '../src/app/styles/color-theme.css'
+import '../src/app/styles/index.css'
+import '../src/app/styles/typo.css'
 
 const preview: Preview = {
   parameters: {

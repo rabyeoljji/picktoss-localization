@@ -1,9 +1,11 @@
-import { useState } from "react"
-import { Meta, StoryObj } from "@storybook/react"
-import { Switch } from "."
+import { useState } from 'react'
+
+import { Meta, StoryObj } from '@storybook/react'
+
+import { Switch } from '.'
 
 const meta: Meta<typeof Switch> = {
-  title: "UI/Switch",
+  title: 'UI/Switch',
   component: Switch,
 }
 export default meta

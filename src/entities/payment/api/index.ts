@@ -1,5 +1,6 @@
-import { client } from "@/shared/lib/axios/client"
-import { PAYMENT_ENDPOINTS } from "./config"
+import { client } from '@/shared/lib/axios/client'
+
+import { PAYMENT_ENDPOINTS } from './config'
 
 // 결제 정보 검증
 interface VerifyPaymentRequest {
