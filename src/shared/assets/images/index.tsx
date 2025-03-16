@@ -32,6 +32,7 @@ import imgSpeechbubble from './img_speechbubble.png'
 import imgStar from './img_star.png'
 import imgStarEmpty from './img_star_empty.png'
 import imgStopwatch from './img_stopwatch.png'
+import imgSymbol from './img_symbol.png'
 import imgTodayquiz from './img_todayquiz.png'
 import imgTreasure from './img_treasure.png'
 import imgTreasurebox from './img_treasurebox.png'
@@ -162,6 +163,10 @@ export const ImgStarEmpty = ({ ...props }) => {
 
 export const ImgStopwatch = ({ ...props }) => {
   return <img src={imgStopwatch} alt="stopwatch" {...props} />
+}
+
+export const ImgSymbol = ({ ...props }) => {
+  return <img src={imgSymbol} alt="symbol" {...props} />
 }
 
 export const ImgTodayquiz = ({ ...props }) => {
