@@ -35,8 +35,39 @@ const QuizCardMultiple = ({ children }: { children: React.ReactNode }) => {
   return <div className="px-4 mt-4">{children}</div>
 }
 
-const QuizCardOX = ({ children }: { children: React.ReactNode }) => {
-  return <div className="px-4 mt-4">{children}</div>
+const QuizCardOX = ({
+  answer,
+  showIndexs,
+  disabledIndexs,
+}: {
+  answer: 'O' | 'X'
+  showIndexs?: number[]
+  disabledIndexs?: number[]
+}) => {
+  return (
+    <div className="px-4 mt-4 flex-center">
+      <div className="px-[11.5px] flex items-center gap-2 w-full">
+        <div
+          className={cn(
+            'bg-surface-2 rounded-[8px] text-icon-secondary aspect-[140/44] flex-1 flex-center',
+            showIndexs?.includes(0) && (answer === 'O' ? 'bg-correct text-green-500' : 'bg-incorrect text-red-500'),
+            disabledIndexs?.includes(0) && 'bg-disabled text-icon-disabled',
+          )}
+        >
+          O
+        </div>
+        <div
+          className={cn(
+            'bg-surface-2 rounded-[8px] text-icon-secondary aspect-[140/44] flex-1 flex-center',
+            showIndexs?.includes(1) && (answer === 'X' ? 'bg-correct text-green-500' : 'bg-incorrect text-red-500'),
+            disabledIndexs?.includes(1) && 'bg-disabled text-icon-disabled',
+          )}
+        >
+          X
+        </div>
+      </div>
+    </div>
+  )
 }
 
 const QuizCardExplanation = ({
