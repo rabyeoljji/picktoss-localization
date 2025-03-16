@@ -2,7 +2,7 @@ import { Outlet } from "react-router"
 import { isMobile, isIOS } from "react-device-detect"
 import { usePWA } from "@/shared/hooks/use-pwa"
 import { Button } from "@/shared/components/ui/button"
-import { ImgMeteor } from "@/shared/assets/image"
+import { ImgMeteor } from "@/shared/assets/images"
 
 export const PWAOnlyMobileLayout = () => {
   const { isPWA } = usePWA()
