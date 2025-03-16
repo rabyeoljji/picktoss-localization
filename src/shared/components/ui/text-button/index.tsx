@@ -44,11 +44,7 @@ function TextButton({
   const Comp = asChild ? Slot : "button"
 
   return (
-    <Comp
-      data-slot="button"
-      className={cn(textButtonVariants({ variant, size, className }))}
-      {...props}
-    >
+    <Comp data-slot="button" className={cn(textButtonVariants({ variant, size, className }))} {...props}>
       {left}
       {children}
     </Comp>

@@ -33,16 +33,12 @@ export const SystemDialog = ({
       <DialogTrigger>{trigger}</DialogTrigger>
       <DialogContent className="w-[280px] rounded-[16px] p-6">
         <DialogHeader className="text-start">
-          <DialogTitle className="typo-subtitle-2-bold text-text-primary">
-            {title}
-          </DialogTitle>
+          <DialogTitle className="typo-subtitle-2-bold text-text-primary">{title}</DialogTitle>
         </DialogHeader>
         <div className="mt-4">{content}</div>
         <DialogFooter className="mt-10 items-center justify-end gap-8">
           <DialogClose asChild>
-            <button className="typo-button-2 text-text-sub">
-              {cancelLabel}
-            </button>
+            <button className="typo-button-2 text-text-sub">{cancelLabel}</button>
           </DialogClose>
           <button
             className={cn(

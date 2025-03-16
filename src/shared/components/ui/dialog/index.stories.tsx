@@ -29,9 +29,7 @@ export const Default: Story = {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
-          <DialogDescription>
-            This is a description for the dialog.
-          </DialogDescription>
+          <DialogDescription>This is a description for the dialog.</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">
@@ -53,9 +51,7 @@ export const WithoutBody: Story = {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
-          <DialogDescription>
-            This is a description for the dialog.
-          </DialogDescription>
+          <DialogDescription>This is a description for the dialog.</DialogDescription>
         </DialogHeader>
 
         <div className="py-4" />
@@ -75,9 +71,7 @@ export const CtaWithClose: Story = {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
-          <DialogDescription>
-            This is a description for the dialog.
-          </DialogDescription>
+          <DialogDescription>This is a description for the dialog.</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">Main</div>
@@ -96,9 +90,7 @@ export const CtaB: Story = {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Dialog Title</DialogTitle>
-          <DialogDescription>
-            This is a description for the dialog.
-          </DialogDescription>
+          <DialogDescription>This is a description for the dialog.</DialogDescription>
         </DialogHeader>
 
         <div className="py-4">Main</div>

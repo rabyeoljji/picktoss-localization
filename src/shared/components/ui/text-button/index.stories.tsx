@@ -28,9 +28,7 @@ export const AllCases: StoryObj<typeof TextButton> = {
       <div style={{ display: "grid", gap: "40px" }}>
         {variants.map((variant) => (
           <div key={variant}>
-            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>
-              {variant}
-            </h3>
+            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>{variant}</h3>
             <div className="flex flex-col gap-5">
               <div
                 style={{

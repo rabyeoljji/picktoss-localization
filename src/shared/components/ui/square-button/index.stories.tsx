@@ -16,27 +16,17 @@ export default meta
 
 export const AllCases: StoryObj<typeof SquareButton> = {
   render: () => {
-    const variants: Array<"primary" | "secondary" | "tertiary"> = [
-      "primary",
-      "secondary",
-      "tertiary",
-    ]
+    const variants: Array<"primary" | "secondary" | "tertiary"> = ["primary", "secondary", "tertiary"]
     const sizes: Array<"lg" | "md" | "sm"> = ["lg", "md", "sm"]
 
     return (
       <div style={{ display: "grid", gap: "40px" }}>
         {variants.map((variant) => (
           <div key={variant}>
-            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>
-              {variant}
-            </h3>
+            <h3 style={{ textTransform: "capitalize", marginBottom: "16px" }}>{variant}</h3>
             {sizes.map((size) => (
               <div key={size}>
-                <h4
-                  style={{ textTransform: "capitalize", marginBottom: "8px" }}
-                >
-                  {size}
-                </h4>
+                <h4 style={{ textTransform: "capitalize", marginBottom: "8px" }}>{size}</h4>
                 <div
                   style={{
                     display: "flex",
@@ -51,21 +41,13 @@ export const AllCases: StoryObj<typeof SquareButton> = {
                   </SquareButton>
                   {/* 왼쪽 아이콘 */}
                   {size !== "sm" && (
-                    <SquareButton
-                      variant={variant}
-                      size={size}
-                      left={<DummyIcon />}
-                    >
+                    <SquareButton variant={variant} size={size} left={<DummyIcon />}>
                       전체보기
                     </SquareButton>
                   )}
                   {/* 오른쪽 아이콘 */}
                   {size !== "sm" && (
-                    <SquareButton
-                      variant={variant}
-                      size={size}
-                      right={<DummyIcon />}
-                    >
+                    <SquareButton variant={variant} size={size} right={<DummyIcon />}>
                       전체보기
                     </SquareButton>
                   )}

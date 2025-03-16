@@ -17,11 +17,7 @@ export const AllCases: StoryObj<typeof RadioGroup> = {
         {/* 기본 상태 */}
         <div>
           <h3 className="mb-4">Default</h3>
-          <RadioGroup
-            value={value}
-            onValueChange={setValue}
-            className="flex gap-2"
-          >
+          <RadioGroup value={value} onValueChange={setValue} className="flex gap-2">
             <RadioGroupItem value="option1" />
             <RadioGroupItem value="option2" />
             <RadioGroupItem value="option3" />
@@ -31,11 +27,7 @@ export const AllCases: StoryObj<typeof RadioGroup> = {
         {/* 비활성화 상태 */}
         <div>
           <h3 className="mb-4">Disabled</h3>
-          <RadioGroup
-            value={value}
-            onValueChange={setValue}
-            className="flex gap-2"
-          >
+          <RadioGroup value={value} onValueChange={setValue} className="flex gap-2">
             <RadioGroupItem value="disabled" disabled />
           </RadioGroup>
         </div>

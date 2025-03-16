@@ -1,5 +1,4 @@
 import { withHOC } from "@/app/hoc/with-page-config"
-import { ImgBookmark } from "@/shared/assets/images"
 import { Button } from "@/shared/components/ui/button"
 import { Text } from "@/shared/components/ui/text"
 import { toast } from "sonner"

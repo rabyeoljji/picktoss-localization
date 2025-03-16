@@ -20,11 +20,7 @@ export const AllCases: StoryObj<typeof Switch> = {
           <h3 className="text-lg font-medium">Switch (Size: md)</h3>
           <div className="flex flex-col gap-2">
             <span className="text-sm">Interactive</span>
-            <Switch
-              size="md"
-              checked={checkedMd}
-              onCheckedChange={setCheckedMd}
-            />
+            <Switch size="md" checked={checkedMd} onCheckedChange={setCheckedMd} />
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-sm">Default Checked</span>
@@ -37,11 +33,7 @@ export const AllCases: StoryObj<typeof Switch> = {
           <h3 className="text-lg font-medium">Switch (Size: sm)</h3>
           <div className="flex flex-col gap-2">
             <span className="text-sm">Interactive</span>
-            <Switch
-              size="sm"
-              checked={checkedSm}
-              onCheckedChange={setCheckedSm}
-            />
+            <Switch size="sm" checked={checkedSm} onCheckedChange={setCheckedSm} />
           </div>
           <div className="flex flex-col gap-2">
             <span className="text-sm">Default Checked</span>
