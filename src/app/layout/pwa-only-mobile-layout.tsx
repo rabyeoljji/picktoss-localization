@@ -2,7 +2,7 @@ import { Outlet } from "react-router"
 import { isMobile, isIOS } from "react-device-detect"
 import { usePWA } from "@/shared/hooks/use-pwa"
 import { Button } from "@/shared/components/ui/button"
-import { IcLogoPadding, IcLogoTypo } from "@/shared/assets/icon"
+import { ImgMeteor } from "@/shared/assets/image"
 
 export const PWAOnlyMobileLayout = () => {
   const { isPWA } = usePWA()
@@ -12,8 +12,8 @@ export const PWAOnlyMobileLayout = () => {
       return (
         <div className="px-4 py-9">
           <div className="flex flex-col items-center">
-            <IcLogoPadding />
-            <IcLogoTypo />
+            <ImgMeteor />
+            <div>Picktoss</div>
           </div>
           <img src="/images/ios-pwa.png" className="mx-auto mt-12 w-[329px]" />
         </div>
@@ -22,8 +22,8 @@ export const PWAOnlyMobileLayout = () => {
       return (
         <div className="center w-full px-4">
           <div className="flex flex-col items-center">
-            <IcLogoPadding />
-            <IcLogoTypo />
+            <ImgMeteor />
+            <div>Picktoss</div>
           </div>
           <Button className="mt-[66px]">앱 다운로드</Button>
         </div>

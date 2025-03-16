@@ -13,7 +13,9 @@
     "chromatic": "pnpm dlx chromatic --project-token=chpt_db6fc810cf9f7ab --exit-zero-on-changes --auto-accept-changes",
     "modify-svg": "node src/shared/config/scripts/modify-svg-fill.cjs",
     "generate-icons": "node src/shared/config/scripts/generate-icons.cjs",
-    "svg": "pnpm modify-svg && pnpm generate-icons"
+    "svg": "pnpm modify-svg && pnpm generate-icons",
+    "generate-images": "node src/shared/config/scripts/generate-images.cjs",
+    "img": "pnpm generate-images"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.1.4",

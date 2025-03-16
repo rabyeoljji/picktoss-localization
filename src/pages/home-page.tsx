@@ -1,4 +1,5 @@
 import { withHOC } from "@/app/hoc/with-page-config"
+import { ImgCalender } from "@/shared/assets/image"
 import { Button } from "@/shared/components/ui/button"
 import { Text } from "@/shared/components/ui/text"
 import { toast } from "sonner"
@@ -26,6 +27,7 @@ const HomePage = () => {
       >
         토스트
       </div>
+      <ImgCalender />
     </div>
   )
 }
