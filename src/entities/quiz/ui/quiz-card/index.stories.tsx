@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useState } from 'react'
 
 import { Meta, StoryObj } from '@storybook/react'
@@ -5,7 +6,7 @@ import { Meta, StoryObj } from '@storybook/react'
 import { QuizCard } from '.'
 
 const meta: Meta<typeof QuizCard> = {
-  title: 'Quiz/QuizCard',
+  title: 'Card/QuizCard',
   component: QuizCard,
   parameters: {
     docs: {
@@ -42,46 +43,7 @@ export const MultipleChoiceQuizCard: StoryObj<typeof QuizCard> = {
   },
 }
 
-// Case 1: 하나만 show이고 정답일 때 (Only "O" is highlighted as correct)
-export const OXQuizCard_하나만_show이고_정답일_때: StoryObj<typeof QuizCard> = {
-  render: () => {
-    const [open, setOpen] = useState(false)
-    return (
-      <div className="p-10">
-        <QuizCard>
-          <QuizCard.Header order={1} right={<button className="text-[0.8rem]">Info</button>} />
-          <QuizCard.Question>식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?</QuizCard.Question>
-          <QuizCard.OX answer="O" showIndexs={[0]} />
-          <QuizCard.Explanation open={open} onOpenChange={setOpen}>
-            설명: 정답인 "O"만 강조되어 있습니다.
-          </QuizCard.Explanation>
-        </QuizCard>
-      </div>
-    )
-  },
-}
-
-// Case 2: 하나만 show이고 오답일 때 (Only "X" is highlighted, but it's incorrect)
-export const OXQuizCard_하나만_show이고_오답일_때: StoryObj<typeof QuizCard> = {
-  render: () => {
-    const [open, setOpen] = useState(false)
-    return (
-      <div className="p-10">
-        <QuizCard>
-          <QuizCard.Header order={2} right={<button className="text-[0.8rem]">Info</button>} />
-          <QuizCard.Question>식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?</QuizCard.Question>
-          <QuizCard.OX answer="O" showIndexs={[1]} />
-          <QuizCard.Explanation open={open} onOpenChange={setOpen}>
-            설명: 오답인 "X"만 강조되어 있습니다.
-          </QuizCard.Explanation>
-        </QuizCard>
-      </div>
-    )
-  },
-}
-
-// Case 3: 둘다 보여주고 answer이 존재할 때 (Both options are shown; "O" is correct)
-export const OXQuizCard_둘다_보여주고_answer이_존재할_때: StoryObj<typeof QuizCard> = {
+export const OXDefault: StoryObj<typeof QuizCard> = {
   render: () => {
     const [open, setOpen] = useState(false)
     return (
@@ -89,7 +51,7 @@ export const OXQuizCard_둘다_보여주고_answer이_존재할_때: StoryObj<ty
         <QuizCard>
           <QuizCard.Header order={3} right={<button className="text-[0.8rem]">Info</button>} />
           <QuizCard.Question>식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?</QuizCard.Question>
-          <QuizCard.OX answer="O" showIndexs={[0, 1]} />
+          <QuizCard.OX answer="O" />
           <QuizCard.Explanation open={open} onOpenChange={setOpen}>
             설명: 두 옵션("O"와 "X") 모두 표시되며, 정답은 "O"입니다.
           </QuizCard.Explanation>
@@ -99,8 +61,7 @@ export const OXQuizCard_둘다_보여주고_answer이_존재할_때: StoryObj<ty
   },
 }
 
-// Case 4: 하나만 show이고 정답이면서 하나는 disabled일 때 (Show only "O" as correct; "X" is disabled)
-export const OXQuizCard_하나만_show이고_정답이면서_하나는_disabled일_때: StoryObj<typeof QuizCard> = {
+export const OXQuizCollect: StoryObj<typeof QuizCard> = {
   render: () => {
     const [open, setOpen] = useState(false)
     return (
@@ -118,8 +79,7 @@ export const OXQuizCard_하나만_show이고_정답이면서_하나는_disabled�
   },
 }
 
-// Case 5: 하나만 show이고 오답이면서 하나는 disabled일 때 (Show only "X" as highlighted, incorrect; "O" is disabled)
-export const OXQuizCard_하나만_show이고_오답이면서_하나는_disabled일_때: StoryObj<typeof QuizCard> = {
+export const OXQuizIncorrect: StoryObj<typeof QuizCard> = {
   render: () => {
     const [open, setOpen] = useState(false)
     return (
@@ -130,6 +90,24 @@ export const OXQuizCard_하나만_show이고_오답이면서_하나는_disabled�
           <QuizCard.OX answer="O" showIndexs={[1]} disabledIndexs={[0]} />
           <QuizCard.Explanation open={open} onOpenChange={setOpen}>
             설명: 오답인 "X"만 강조되고, 정답인 "O"는 비활성화 처리되었습니다.
+          </QuizCard.Explanation>
+        </QuizCard>
+      </div>
+    )
+  },
+}
+
+export const ShowBoth: StoryObj<typeof QuizCard> = {
+  render: () => {
+    const [open, setOpen] = useState(false)
+    return (
+      <div className="p-10">
+        <QuizCard>
+          <QuizCard.Header order={3} right={<button className="text-[0.8rem]">Info</button>} />
+          <QuizCard.Question>식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?</QuizCard.Question>
+          <QuizCard.OX answer="O" showIndexs={[0, 1]} />
+          <QuizCard.Explanation open={open} onOpenChange={setOpen}>
+            설명: 두 옵션("O"와 "X") 모두 표시되며, 정답은 "O"입니다.
           </QuizCard.Explanation>
         </QuizCard>
       </div>

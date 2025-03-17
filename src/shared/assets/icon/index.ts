@@ -1,5 +1,7 @@
 // This file is auto-generated. Do not edit manually
 
+import IcO from './ic_O.svg?react'
+import IcX from './ic_X.svg?react'
 import IcAdd from './ic_add.svg?react'
 import IcArrange from './ic_arrange.svg?react'
 import IcBack from './ic_back.svg?react'
@@ -50,6 +52,8 @@ import IcUpload from './ic_upload.svg?react'
 import IcWrite from './ic_write.svg?react'
 
 export {
+  IcO,
+  IcX,
   IcAdd,
   IcArrange,
   IcBack,

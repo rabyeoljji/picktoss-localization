@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { motion } from 'framer-motion'
 
-import { IcChevronDown, IcChevronUp } from '@/shared/assets/icon'
+import { IcChevronDown, IcChevronUp, IcO, IcX } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
@@ -54,7 +54,7 @@ const QuizCardOX = ({
             disabledIndexs?.includes(0) && 'bg-disabled text-icon-disabled',
           )}
         >
-          O
+          <IcO className="size-6" />
         </div>
         <div
           className={cn(
@@ -63,7 +63,7 @@ const QuizCardOX = ({
             disabledIndexs?.includes(1) && 'bg-disabled text-icon-disabled',
           )}
         >
-          X
+          <IcX className="size-6" />
         </div>
       </div>
     </div>
@@ -116,7 +116,11 @@ const QuizCardExplanation = ({
           <Text typo="body-1-medium" color="sub">
             {_open ? '닫기' : '해설 보기'}
           </Text>
-          {_open ? <IcChevronUp className="size-3" /> : <IcChevronDown className="size-3" />}
+          {_open ? (
+            <IcChevronUp className="size-4 text-icon-sub" />
+          ) : (
+            <IcChevronDown className="size-4 text-icon-sub" />
+          )}
         </div>
       </button>
     </div>
