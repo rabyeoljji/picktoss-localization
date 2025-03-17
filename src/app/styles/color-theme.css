@@ -1,19 +1,19 @@
 @import 'tailwindcss';
 
 @theme color {
-  /* gray */
   --color-white: #ffffff;
-  --color-gray-50: #f5f7f9;
-  --color-gray-100: #ebeff3;
+  --color-black: #000000;
+  /* gray */
+  --color-gray-50: #f2f4f6;
+  --color-gray-100: #e3e9ee;
   --color-gray-200: #d3dce4;
-  --color-gray-300: #b6c1c9;
+  --color-gray-300: #99a3aa;
   --color-gray-400: #99a3aa;
   --color-gray-500: #7b8083;
   --color-gray-600: #63686c;
   --color-gray-700: #4c5052;
   --color-gray-800: #393b3d;
   --color-gray-900: #1d1e1f;
-  --color-black: #000000;
 
   /* blue */
   --color-blue-50: #edf4ff;
@@ -53,27 +53,30 @@
   --background-color-surface-inverse: var(--color-gray-800);
   --background-color-surface-orange: var(--color-orange-100);
   --background-color-surface-blue: var(--color-blue-100);
-  --background-color-surface-dim: color-mix(in srgb, var(--color-black) 75%, transparent);
+  --background-color-surface-dim: var(--color-black);
+  --background-color-base-1: var(--color-white);
+  --background-color-base-2: var(--color-gray-50);
+  --background-color-base-3: var(--color-gray-100);
   --background-color-active: var(--color-gray-50);
-  --background-color-disabled: var(--color-gray-100);
+  --background-color-disabled: var(--color-gray-50);
   --background-color-inverse: var(--color-gray-800);
   --background-color-orange-strong: var(--color-orange-500);
   --background-color-orange: var(--color-orange-400);
   --background-color-orange-weak: var(--color-orange-200);
-  --background-color-orange-strong: var(--color-blue-500);
   --background-color-blue-strong: var(--color-blue-500);
   --background-color-blue: var(--color-blue-400);
   --background-color-blue-weak: var(--color-blue-200);
-  --background-color-accent: var(--color-orange-100);
+  --background-color-accent: var(--color-orange-50);
   --background-color-info: var(--color-orange-50);
   --background-color-correct: var(--color-green-200);
   --background-color-incorrect: var(--color-red-200);
 }
 
 @theme border-color {
-  --border-color-container: var(--color-gray-200);
+  --border-color-outline: var(--color-gray-100);
   --border-color-divider: var(--color-gray-100);
-  --border-color-active: var(--color-gray-500);
+  --border-color-box: var(--color-gray-200);
+  --border-color-active: var(--color-gray-600);
   --border-color-accent: var(--color-orange-400);
   --border-color-success: var(--color-green-500);
   --border-color-error: var(--color-red-500);
@@ -95,15 +98,18 @@
   --text-color-success: var(--color-green-500);
   --text-color-info: var(--color-blue-500);
   --text-color-accent: var(--color-orange-500);
-  --text-color-selected: var(--color-orange-600);
   --text-color-correct: var(--color-green-500);
   --text-color-incorrect: var(--color-red-500);
 
   --text-color-icon-primary: var(--color-gray-900);
-  --text-color-icon-secondary: var(--color-gray-700);
+  --text-color-icon-secondary: var(--color-gray-500);
+  --text-color-icon-sub: var(--color-gray-300);
   --text-color-icon-inverse: var(--color-white);
   --text-color-icon-inverse-dim: var(--color-gray-100);
   --text-color-icon-accent: var(--color-orange-500);
+  --text-color-icon-info: var(--color-blue-500);
   --text-color-icon-critical: var(--color-red-500);
   --text-color-icon-disabled: var(--color-gray-200);
+  --text-color-icon-correct: var(--color-green-500);
+  --text-color-icon-incorrect: var(--color-red-500);
 }

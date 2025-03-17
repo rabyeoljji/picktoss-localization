@@ -12,11 +12,11 @@ import IcChevronDown from './ic_chevron_down.svg?react'
 import IcChevronLeft from './ic_chevron_left.svg?react'
 import IcChevronRight from './ic_chevron_right.svg?react'
 import IcChevronUp from './ic_chevron_up.svg?react'
+import IcClear from './ic_clear.svg?react'
 import IcClock from './ic_clock.svg?react'
 import IcClose from './ic_close.svg?react'
 import IcCollection from './ic_collection.svg?react'
 import IcControl from './ic_control.svg?react'
-import IcCreate from './ic_create.svg?react'
 import IcDateNext from './ic_date_next.svg?react'
 import IcDatePrevious from './ic_date_previous.svg?react'
 import IcDelete from './ic_delete.svg?react'
@@ -35,11 +35,9 @@ import IcLogo from './ic_logo.svg?react'
 import IcMedal from './ic_medal.svg?react'
 import IcMove from './ic_move.svg?react'
 import IcMy from './ic_my.svg?react'
-import IcNext from './ic_next.svg?react'
 import IcNote from './ic_note.svg?react'
 import IcNotification from './ic_notification.svg?react'
 import IcNotion from './ic_notion.svg?react'
-import IcPrevious from './ic_previous.svg?react'
 import IcQuestion from './ic_question.svg?react'
 import IcQuiznote from './ic_quiznote.svg?react'
 import IcRefresh from './ic_refresh.svg?react'
@@ -64,11 +62,11 @@ export {
   IcChevronLeft,
   IcChevronRight,
   IcChevronUp,
+  IcClear,
   IcClock,
   IcClose,
   IcCollection,
   IcControl,
-  IcCreate,
   IcDateNext,
   IcDatePrevious,
   IcDelete,
@@ -87,11 +85,9 @@ export {
   IcMedal,
   IcMove,
   IcMy,
-  IcNext,
   IcNote,
   IcNotification,
   IcNotion,
-  IcPrevious,
   IcQuestion,
   IcQuiznote,
   IcRefresh,
