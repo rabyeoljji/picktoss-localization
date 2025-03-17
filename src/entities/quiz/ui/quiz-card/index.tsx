@@ -31,8 +31,45 @@ const QuizCardQuestion = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-const QuizCardMultiple = ({ children }: { children: React.ReactNode }) => {
-  return <div className="px-4 mt-4">{children}</div>
+const QuizCardMultiple = ({
+  options,
+  answerIndex,
+  showIndexs,
+}: {
+  options: string[]
+  answerIndex?: number
+  showIndexs?: number[]
+}) => {
+  return (
+    <div className="px-4 mt-4">
+      <div className="flex flex-col gap-2">
+        {options.map((option, index) => (
+          <div key={index} className="flex gap-2 items-start">
+            <div
+              className={cn(
+                'bg-base-2 rounded-[4px] shrink-0 size-5 flex-center',
+                showIndexs?.includes(index) &&
+                  (answerIndex === index ? 'bg-correct text-correct' : 'bg-incorrect text-incorrect'),
+                showIndexs?.length && !showIndexs.includes(index) && 'bg-base-2 text-disabled',
+              )}
+            >
+              <Text typo="body-2-bold">{String.fromCharCode(65 + index)}</Text>
+            </div>
+            <Text
+              typo="body-1-medium"
+              className={cn(
+                'text-secondary',
+                showIndexs?.includes(index) && (answerIndex === index ? 'text-correct' : 'text-incorrect'),
+                showIndexs?.length && !showIndexs.includes(index) && 'text-disabled',
+              )}
+            >
+              {option}
+            </Text>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
 }
 
 const QuizCardOX = ({
@@ -45,7 +82,7 @@ const QuizCardOX = ({
   disabledIndexs?: number[]
 }) => {
   return (
-    <div className="px-4 mt-4 flex-center">
+    <div className="px-4 mt-4">
       <div className="px-[11.5px] flex items-center gap-2 w-full">
         <div
           className={cn(
