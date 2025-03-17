@@ -1,5 +1,5 @@
+import { AppRouter } from '@/app/app-router'
 import { Providers } from '@/app/providers'
-import { AppRouter } from '@/app/routes/app-router'
 
 function App() {
   return (

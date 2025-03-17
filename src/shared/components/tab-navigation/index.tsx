@@ -1,30 +1,29 @@
-import { AppRoutes } from '@/app/routes/config'
-
 import { IcCollection, IcHome, IcMy, IcQuiznote } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { usePWA } from '@/shared/hooks/use-pwa'
-import { useRouter } from '@/shared/hooks/use-router'
+import { RoutePath } from '@/shared/lib/router'
+import { useRouter } from '@/shared/lib/router/hooks/use-router'
 import { cn } from '@/shared/lib/utils'
 
 const navItems = [
   {
     label: '홈',
-    to: AppRoutes.root,
+    to: RoutePath.root,
     icon: <IcHome />,
   },
   {
     label: '퀴즈노트',
-    to: AppRoutes.notes,
+    to: RoutePath.notes,
     icon: <IcQuiznote />,
   },
   {
     label: '컬렉션',
-    to: AppRoutes.collections,
+    to: RoutePath.collections,
     icon: <IcCollection />,
   },
   {
     label: '마이',
-    to: AppRoutes.account,
+    to: RoutePath.account,
     icon: <IcMy />,
   },
 ] as const
@@ -47,7 +46,7 @@ export const TabNavigation = ({ activeTab = '홈' }: TabNavigationProps) => {
 
 interface NavItemProps {
   label: string
-  to: string
+  to: (typeof navItems)[number]['to']
   icon: React.ReactNode
   active?: boolean
 }
