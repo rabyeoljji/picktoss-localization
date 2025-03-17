@@ -7,7 +7,7 @@ import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
 export const QuizCard = ({ children }: { children: React.ReactNode }) => {
-  return <div className="pt-5 pb-3 rounded-[12px] bg-surface-1 border border-container">{children}</div>
+  return <div className="pt-5 rounded-[12px] bg-surface-1 border border-outline">{children}</div>
 }
 
 const QuizCardHeader = ({ order, right }: { order: number; right?: React.ReactNode }) => {
@@ -109,12 +109,12 @@ const QuizCardExplanation = ({
       </motion.div>
 
       <button
-        className="w-full pt-3 flex justify-center items-end border-t border-divider mt-3"
+        className="w-full py-3 flex justify-center items-end border-t border-divider mt-3"
         onClick={() => _openChange(!_open)}
       >
         <div className="flex items-center gap-1">
           <Text typo="body-1-medium" color="sub">
-            해설 보기
+            {_open ? '닫기' : '해설 보기'}
           </Text>
           {_open ? <IcChevronUp className="size-3" /> : <IcChevronDown className="size-3" />}
         </div>

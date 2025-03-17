@@ -61,7 +61,12 @@ export const AllCases: StoryObj<typeof Input> = {
       {/* Without label but with helper text */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         <p style={{ margin: 0 }}>Case 4: Without label but with helper text</p>
-        <Input placeholder="No label provided" type="text" helperText="This field can work without a label" />
+        <Input
+          placeholder="입력해주세요"
+          clear={() => {}}
+          type="text"
+          helperText="This field can work without a label"
+        />
       </div>
       <hr />
 

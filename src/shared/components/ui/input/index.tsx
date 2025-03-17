@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
 
+import { IcClear } from '@/shared/assets/icon'
 import { Label } from '@/shared/components/ui/label'
 import { cn } from '@/shared/lib/utils'
 
@@ -10,6 +11,7 @@ interface InputProps extends React.ComponentProps<'input'> {
   hasError?: boolean
   helperText?: string
   right?: React.ReactNode
+  clear?: () => void
 }
 
 function Input({
@@ -20,6 +22,7 @@ function Input({
   right,
   required = false,
   helperText,
+  clear,
   ref,
   ...props
 }: InputProps) {
@@ -64,7 +67,7 @@ function Input({
           type={type}
           data-slot="input"
           className={cn(
-            'bg-surface-1 border-container placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none',
+            'bg-surface-1 border-outline placeholder:typo-subtitle-2-medium placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none',
             hasError && 'border-error focus:border-error',
             className,
           )}
@@ -73,6 +76,16 @@ function Input({
           }}
           {...props}
         />
+        {/* clear right 둘 중 하나만 사용된다. */}
+        {clear != null && (
+          <div
+            ref={rightRef}
+            role="button"
+            className="text-icon-inverse-dim size-5 cursor-pointer absolute right-3 bottom-1/2 translate-y-1/2"
+          >
+            <IcClear className="size-full" onClick={clear} />
+          </div>
+        )}
         {right && (
           <div ref={rightRef} className="absolute right-3 bottom-1/2 translate-y-1/2">
             {right}

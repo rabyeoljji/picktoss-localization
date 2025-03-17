@@ -42,7 +42,7 @@ import { AuthLayout } from '@/app/layout/auth-layout'
 import { PWAOnlyMobileLayout } from '@/app/layout/pwa-only-mobile-layout'
 import { RootLayout } from '@/app/layout/root-layout'
 
-import { RoutePath } from '../shared/lib/router/hooks/config'
+import { RoutePath } from '@/shared/lib/router'
 
 export const AppRouter = () => {
   return (

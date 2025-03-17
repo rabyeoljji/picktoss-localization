@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { withHOC } from '@/app/hoc/with-page-config'
 
 import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
 import { Text } from '@/shared/components/ui/text'
 import { useRouter } from '@/shared/lib/router'
 
@@ -33,6 +34,7 @@ const HomePage = () => {
       >
         토스트
       </div>
+      <Input clear={() => {}} />
     </div>
   )
 }
