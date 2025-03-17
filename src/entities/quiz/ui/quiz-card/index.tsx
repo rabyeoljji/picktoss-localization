@@ -40,7 +40,7 @@ const QuizCardOX = ({
   showIndexs,
   disabledIndexs,
 }: {
-  answer: 'O' | 'X'
+  answer?: 'O' | 'X'
   showIndexs?: number[]
   disabledIndexs?: number[]
 }) => {

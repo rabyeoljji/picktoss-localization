@@ -51,7 +51,7 @@ export const OXDefault: StoryObj<typeof QuizCard> = {
         <QuizCard>
           <QuizCard.Header order={3} right={<button className="text-[0.8rem]">Info</button>} />
           <QuizCard.Question>식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?</QuizCard.Question>
-          <QuizCard.OX answer="O" />
+          <QuizCard.OX />
           <QuizCard.Explanation open={open} onOpenChange={setOpen}>
             설명: 두 옵션("O"와 "X") 모두 표시되며, 정답은 "O"입니다.
           </QuizCard.Explanation>
