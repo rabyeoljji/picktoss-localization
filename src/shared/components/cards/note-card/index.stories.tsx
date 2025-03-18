@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import { Meta, StoryObj } from '@storybook/react'
 
 import { IcDelete, IcMove } from '@/shared/assets/icon'
@@ -22,7 +21,7 @@ export default meta
 export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
     return (
-      <div className="p-10">
+      <div className="p-10 flex-center">
         <NoteCard
           id={1}
           selectMode={false}
@@ -62,7 +61,7 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
 export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
     return (
-      <div className="p-10">
+      <div className="p-10 flex-center">
         <NoteCard
           id={2}
           selectMode={false}
@@ -102,7 +101,7 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
 export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
     return (
-      <div className="p-10">
+      <div className="p-10 flex-center">
         <NoteCard
           id={3}
           selectMode={true}
@@ -142,13 +141,13 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
 export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
     return (
-      <div className="p-10">
+      <div className="p-10 flex-center">
         <NoteCard
           id={4}
           selectMode={false}
           onClick={() => {}}
           swipeOptions={[
-            <button className="flex-center w-[72px] flex-col bg-info p-2 text-info">
+            <button className="flex-center w-[72px] flex-col bg-info p-2">
               <IcMove className="mb-[4px] text-info" />
               <Text typo="body-1-medium" color="info" className="size-fit">
                 이동

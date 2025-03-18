@@ -25,36 +25,16 @@ export const NoteCard = ({ children, className, id, selectMode, onClick, swipeOp
   const controls = useAnimation()
   const router = useRouter()
 
-  // const isChecked = checkDoc.isChecked(id)
-
-  // const handleCheckedChange = (checked: boolean) => {
-  //   if (!selectMode) return
-
-  //   checked ? checkDoc.check(id) : checkDoc.unCheck(id)
-  // }
-
   const handleDragEnd = async (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x < -30) {
       setIsSwiped(true) // 30px 이상 드래그하면 스와이프
-      await controls.start({ x: -130 }) // 요소 왼쪽으로 130px 이동
+      await controls.start({ x: -(swipeOptions.length * 65) }) // 요소 왼쪽으로 이동
     } else {
       setIsSwiped(false) // 스와이프 취소
       await controls.start({ x: 0 }) // 원래 위치로 이동
     }
     setIsDragging(false)
   }
-
-  // const handleClickCard = () => {
-  //   noteClickEvent()
-
-  //   if (selectMode) {
-  //     handleCheckedChange(!isChecked)
-  //     return
-  //   }
-  //   if (!isDragging && !isSwiped) {
-  //     router.push(`/document/${id}`)
-  //   }
-  // }
 
   const handleClickCard = () => {
     onClick()
@@ -76,7 +56,7 @@ export const NoteCard = ({ children, className, id, selectMode, onClick, swipeOp
       <motion.div
         className="flex h-[104px] max-w-full items-center rounded-[16px] px-[16px] py-[17px]"
         drag={selectMode ? false : 'x'}
-        dragConstraints={{ left: -130, right: 0 }}
+        dragConstraints={{ left: -(swipeOptions.length * 65), right: 0 }}
         onDrag={() => !selectMode && setIsDragging(true)}
         onDragEnd={handleDragEnd}
         animate={controls}
@@ -88,22 +68,11 @@ export const NoteCard = ({ children, className, id, selectMode, onClick, swipeOp
         {/* Swipe로 보여지는 버튼 영역 */}
         <motion.div
           initial={false}
-          animate={{ x: isSwiped ? 144 : 160 }}
+          animate={{ x: isSwiped ? swipeOptions.length * 72 : swipeOptions.length * 80 }}
           transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           className="absolute inset-y-0 right-0 flex h-[calc(100%+2px)] flex-row overflow-hidden rounded-r-[16px]"
         >
           {swipeOptions.map((option) => option)}
-          {/* <MoveDocumentDrawer
-            triggerComponent={
-              <button className="flex-center w-[72px] flex-col rounded-lg bg-background-container-03 p-2 text-text1-medium text-text-info">
-                <Icon name="move" className="mb-[4px]" />
-                이동
-              </button>
-            }
-            documentId={id}
-            resetSwipe={handleResetSwipe}
-          />
-          <DeleteDocumentSwipeButton documentId={id} quizCount={quizCount} /> */}
         </motion.div>
       </motion.div>
     </div>
