@@ -16,10 +16,7 @@ export default meta
 export const Default: StoryObj<typeof SearchInput> = {
   render: () => (
     <div className="p-4">
-      <SearchInput 
-        onValueChange={(value) => console.log('Value changed:', value)} 
-        clear={() => console.log('Input cleared')} 
-      />
+      <SearchInput onValueChange={(value) => console.log('Value changed:', value)} />
     </div>
   ),
 }
