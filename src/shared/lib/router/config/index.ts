@@ -4,7 +4,12 @@ export const RoutePath = {
   // Auth
   login: { pathname: '/login' },
   // 노트 관련
-  notes: { pathname: '/note' },
+  notes: {
+    pathname: '/note',
+    search: {
+      sort: ['POPULARITY', 'UPDATED'],
+    },
+  },
   noteDetail: { pathname: '/note/:noteId' },
   noteQuiz: { pathname: '/note/quiz/:noteId' },
   noteArrange: { pathname: '/note/arrange/:directoryId' },
