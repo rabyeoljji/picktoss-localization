@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { NavigateOptions } from 'react-router'
+
 import { RoutePath } from '../config'
 
 /**
@@ -30,12 +30,11 @@ export type AllowedSearch<S> = {
  * 경로에서 파라미터를 tuple 형태로 추출하는 타입 헬퍼
  * 예: '/workspace/:id/details/:tabId' -> [string | number, string | number]
  */
-export type ExtractRouteParamsTuple<T extends string> =
-  T extends `${infer _Start}:${infer _Param}/${infer Rest}`
-    ? [string | number, ...ExtractRouteParamsTuple<`/${Rest}`>]
-    : T extends `${infer _Start}:${infer _Param}`
-      ? [string | number]
-      : []
+export type ExtractRouteParamsTuple<T extends string> = T extends `${infer _Start}:${infer _Param}/${infer Rest}`
+  ? [string | number, ...ExtractRouteParamsTuple<`/${Rest}`>]
+  : T extends `${infer _Start}:${infer _Param}`
+    ? [string | number]
+    : []
 
 /**
  * Options:
@@ -51,18 +50,14 @@ export type Options<T extends Pathname, S extends object = AllowedSearch<SearchO
 
 /**
  * ExtendedOptions:
- * - NavigateOptions에서 search와 replace는 별도로 처리하므로 제외
+ * - NavigateOptions에서 replace는 별도로 처리하므로 제외
  */
-export type ExtendedOptions<
-  T extends Pathname,
-  S extends object = AllowedSearch<SearchOf<T>>,
-> = Options<T, S> & Omit<NavigateOptions, 'search' | 'replace'>
+export type ExtendedOptions<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> = Options<T, S> &
+  Omit<NavigateOptions, 'replace'>
 
 /**
  * ParamOptions:
  * - 파라미터 유무에 따라 options 인자의 필요 여부를 결정
  */
 export type ParamOptions<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> =
-  ExtractRouteParamsTuple<T> extends []
-    ? [options?: ExtendedOptions<T, S>]
-    : [options: ExtendedOptions<T, S>]
+  ExtractRouteParamsTuple<T> extends [] ? [options?: ExtendedOptions<T, S>] : [options: ExtendedOptions<T, S>]
