@@ -2,28 +2,28 @@ import { IcCollection, IcHome, IcMy, IcQuiznote } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { RoutePath } from '@/shared/lib/router'
-import { useRouter } from '@/shared/lib/router/hooks/use-router'
+import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const navItems = [
   {
     label: '홈',
-    to: RoutePath.root,
+    to: RoutePath.root.pathname,
     icon: <IcHome />,
   },
   {
     label: '퀴즈노트',
-    to: RoutePath.notes,
+    to: RoutePath.notes.pathname,
     icon: <IcQuiznote />,
   },
   {
     label: '컬렉션',
-    to: RoutePath.collections,
+    to: RoutePath.collections.pathname,
     icon: <IcCollection />,
   },
   {
     label: '마이',
-    to: RoutePath.account,
+    to: RoutePath.account.pathname,
     icon: <IcMy />,
   },
 ] as const
