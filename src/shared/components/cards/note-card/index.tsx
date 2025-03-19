@@ -6,10 +6,11 @@ import { IcFolder } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-import { NoteIcon } from '../../bg-icons/note-icon'
+import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
 
 interface Props {
   children: React.ReactNode
+  id: number
   selectMode: boolean
   onSelect: () => void
   onClick: () => void
@@ -17,7 +18,7 @@ interface Props {
   className?: HTMLElement['className']
 }
 
-export const NoteCard = ({ children, className, selectMode, onSelect, onClick, swipeOptions }: Props) => {
+export const NoteCard = ({ children, id, className, selectMode, onSelect, onClick, swipeOptions }: Props) => {
   const [isSwiped, setIsSwiped] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const x = useMotionValue(0)
@@ -43,7 +44,8 @@ export const NoteCard = ({ children, className, selectMode, onSelect, onClick, s
   }
 
   return (
-    <div
+    <label
+      htmlFor={`note_${id}`}
       onClick={handleClickCard}
       className={cn(
         `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] pb-[20px] pt-[17px] shrink-0 cursor-pointer`,
@@ -73,7 +75,7 @@ export const NoteCard = ({ children, className, selectMode, onSelect, onClick, s
           {swipeOptions.map((option) => option)}
         </motion.div>
       </motion.div>
-    </div>
+    </label>
   )
 }
 
@@ -98,7 +100,7 @@ const NoteCardLeft = ({
   )
 }
 
-const NoteCardContents = ({ children }: { children: React.ReactNode }) => {
+const NoteCardContent = ({ children }: { children: React.ReactNode }) => {
   return <div className="ml-[16px] flex w-full flex-col">{children}</div>
 }
 
@@ -146,7 +148,7 @@ const NoteCardDetail = ({
 }
 
 NoteCard.Left = NoteCardLeft
-NoteCard.Contents = NoteCardContents
+NoteCard.Contents = NoteCardContent
 NoteCard.Header = NoteCardHeader
 NoteCard.Preview = NoteCardPreview
 NoteCard.Detail = NoteCardDetail

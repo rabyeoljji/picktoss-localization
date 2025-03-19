@@ -30,7 +30,7 @@ export const NoteIcon = ({ type, containerClassName, iconClassName }: Props) => 
     return (
       <div
         className={cn(
-          'flex-center size-[36px] shrink-0 rounded-full border border-border-divider bg-surface-1 text-primary',
+          'flex-center size-[36px] shrink-0 rounded-full border border-divider bg-surface-1 text-primary',
           containerClassName,
         )}
       >
@@ -43,7 +43,7 @@ export const NoteIcon = ({ type, containerClassName, iconClassName }: Props) => 
   return (
     <div
       className={cn(
-        'flex-center size-[36px] shrink-0 rounded-full bg-fill-secondary-orange text-text-primary-inverse',
+        'flex-center size-[36px] shrink-0 rounded-full bg-fill-secondary-orange text-inverse',
         containerClassName,
       )}
     >

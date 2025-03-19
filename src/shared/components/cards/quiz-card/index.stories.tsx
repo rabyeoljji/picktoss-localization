@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { QuizCard } from '.'
+import { Tag } from '../../ui/tag'
 
 const meta: Meta<typeof QuizCard> = {
   title: 'Card/QuizCard',
@@ -16,7 +17,14 @@ export const MultipleDefault: StoryObj<typeof QuizCard> = {
     return (
       <div className="p-10">
         <QuizCard>
-          <QuizCard.Header order={1} right={<button className="text-[0.8rem]">Hint</button>} />
+          <QuizCard.Header
+            order={1}
+            right={
+              <Tag size="md" color="green">
+                정답
+              </Tag>
+            }
+          />
           <QuizCard.Question>식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?</QuizCard.Question>
           <QuizCard.Multiple
             options={[

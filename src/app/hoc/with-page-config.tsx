@@ -1,5 +1,3 @@
-import React from 'react'
-
 import { TabNavigation } from '@/shared/components/tab-navigation'
 
 interface Props {
