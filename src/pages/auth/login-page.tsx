@@ -1,4 +1,4 @@
-import { Navigate, Link as ReactRouterLink } from 'react-router'
+import { Link as ReactRouterLink } from 'react-router'
 
 import { useAuthStore, useGLogin } from '@/features/auth'
 
