@@ -1,5 +1,3 @@
-import { isMobile } from 'react-device-detect'
-
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google'
 
 import { useLogin } from '@/entities/auth/api/hooks'
@@ -25,11 +23,7 @@ export const useGLogin = () => {
         })
         setToken(result.accessToken)
 
-        if (isMobile) {
-          router.push('/install-guide')
-        } else {
-          router.push('/')
-        }
+        router.replace('/')
       } catch (error) {
         console.error('Google 로그인 실패:', error)
       }
@@ -37,6 +31,8 @@ export const useGLogin = () => {
     onError: (error) => {
       console.error('Google 로그인 오류:', error)
     },
+    flow: 'implicit',
+    prompt: 'select_account',
   })
 
   return { googleLogin: login }
