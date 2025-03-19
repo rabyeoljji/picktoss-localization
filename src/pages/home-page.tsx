@@ -14,7 +14,7 @@ import { SearchInput } from '@/shared/components/ui/search-input'
 
 const HomePage = () => {
   return (
-    <div className="flex flex-col gap-6 px-10">
+    <div className="flex flex-col gap-6 px-10 h-[200vh] scrollbar-hide">
       <SearchInput />
       <Drawer>
         <DrawerTrigger asChild>
