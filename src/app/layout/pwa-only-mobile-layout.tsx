@@ -5,17 +5,16 @@ import { IcLogo } from '@/shared/assets/icon'
 import { ImgSymbol } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
-import { useInstallPWA } from '@/shared/hooks/use-install-pwa'
 import { usePWA } from '@/shared/hooks/use-pwa'
 
 export const PWAOnlyMobileLayout = () => {
-  const { isPWA } = usePWA()
+  const { isPWA, installPWA } = usePWA()
 
   if (isMobile && !isPWA) {
     if (isIOS) {
       return <AppInstallIos />
     } else {
-      return <AppInstallAos />
+      return <AppInstallAos handleInstallClick={installPWA} />
     }
   }
 
@@ -100,9 +99,11 @@ const AppInstallIos = () => {
   )
 }
 
-const AppInstallAos = () => {
-  const { handleInstallClick } = useInstallPWA()
+interface AppInstallAosProps {
+  handleInstallClick: () => Promise<void>
+}
 
+const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
   return (
     <main className="flex min-h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
       <Text typo="subtitle-1-bold" color="secondary" className="text-center">
