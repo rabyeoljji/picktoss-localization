@@ -26,7 +26,7 @@ import {
   CollectionsPage,
 } from '@/pages/collection'
 import HomePage from '@/pages/home-page'
-import { InstallInducePage } from '@/pages/install-induce-page'
+import { InstallGuidePage } from '@/pages/install-guide-page'
 import {
   NoteArrangePage,
   NoteDetailPage,
@@ -104,7 +104,7 @@ export const AppRouter = () => {
             </Route>
 
             {/* Install Induce */}
-            <Route path={RoutePath.installInduce.pathname} element={<InstallInducePage />} />
+            <Route path={RoutePath.installGuide.pathname} element={<InstallGuidePage />} />
           </Route>
           {/* Auth */}
           <Route path={RoutePath.login.pathname} element={<LoginPage />} />

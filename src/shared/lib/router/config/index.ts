@@ -3,7 +3,7 @@ export const RoutePath = {
   root: { pathname: '/' },
   // Auth
   login: { pathname: '/login' },
-  installInduce: { pathname: '/install-induce' },
+  installGuide: { pathname: '/install-guide' },
   // 노트 관련
   notes: { pathname: '/note' },
   noteDetail: { pathname: '/note/:noteId' },
