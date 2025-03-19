@@ -24,13 +24,13 @@ export const PWAOnlyMobileLayout = () => {
 
 const AppInstallIos = () => {
   return (
-    <main className="flex h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-background-base-02 px-[16px] pb-[65px] pt-[32px]">
+    <main className="flex h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-base-02 px-[16px] pb-[65px] pt-[32px]">
       <Text typo="subtitle-1-bold" color="secondary" className="text-center">
         스토어에 방문할 필요 없이 <br />
         3초만에 다운로드 받아보세요
       </Text>
 
-      <div className="flex-center mt-[40px] size-[130px] shrink-0 rounded-[30.59px] bg-surface-1">
+      <div className="flex-center mt-[40px] size-[130px] shrink-0 rounded-[30px] bg-surface-1">
         <ImgSymbol className="size-[73.41px]" />
       </div>
 
@@ -38,7 +38,7 @@ const AppInstallIos = () => {
 
       <div className="mt-[40px] flex w-[271px] flex-col items-center gap-[32px]">
         <div className="flex w-full items-center gap-[8px]">
-          <div className="flex-center size-[24px] rounded-[4px] bg-[var(--color-orange-200)]">
+          <div className="flex-center size-[24px] rounded-[4px] bg-orange-200">
             <Text typo="body-1-bold" color="accent" className="inline-block size-fit">
               1
             </Text>
@@ -69,7 +69,7 @@ const AppInstallIos = () => {
 
       <div className="mt-[63px] flex w-[271px] flex-col items-center gap-[27px]">
         <div className="flex w-full items-center gap-[8px]">
-          <div className="flex-center size-[24px] rounded-[4px] bg-[var(--color-orange-200)]">
+          <div className="flex-center size-[24px] rounded-[4px] bg-orange-200">
             <Text typo="body-1-bold" color="accent" className="inline-block size-fit">
               2
             </Text>
@@ -84,7 +84,7 @@ const AppInstallIos = () => {
 
       <div className="mt-[48px] flex w-[271px] flex-col items-center gap-[27px]">
         <div className="flex w-full items-center gap-[8px]">
-          <div className="flex-center size-[24px] rounded-[4px] bg-[var(--color-orange-200)]">
+          <div className="flex-center size-[24px] rounded-[4px] bg-orange-200">
             <Text typo="body-1-bold" color="accent" className="inline-block size-fit">
               3
             </Text>
@@ -104,7 +104,7 @@ const AppInstallAos = () => {
   const { handleInstallClick } = useInstallPWA()
 
   return (
-    <main className="flex min-h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-background-base-02 px-[16px] py-[32px]">
+    <main className="flex min-h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
       <Text typo="subtitle-1-bold" color="secondary" className="text-center">
         스토어에 방문할 필요 없이 <br />
         3초만에 다운로드 받아보세요
