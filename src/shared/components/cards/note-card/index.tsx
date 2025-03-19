@@ -3,10 +3,9 @@ import { useState } from 'react'
 import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion'
 
 import { IcFolder } from '@/shared/assets/icon'
+import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
-
-import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
 
 interface Props {
   children: React.ReactNode
@@ -148,7 +147,7 @@ const NoteCardDetail = ({
 }
 
 NoteCard.Left = NoteCardLeft
-NoteCard.Contents = NoteCardContent
+NoteCard.Content = NoteCardContent
 NoteCard.Header = NoteCardHeader
 NoteCard.Preview = NoteCardPreview
 NoteCard.Detail = NoteCardDetail
