@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 
 import { Meta, StoryObj } from '@storybook/react'
 
@@ -12,7 +12,8 @@ export default meta
 
 export const AllCases: StoryObj<typeof RadioGroup> = {
   render: () => {
-    const [value, setValue] = React.useState('option1')
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const [value, setValue] = useState('option1')
 
     return (
       <div className="flex flex-col gap-10">
