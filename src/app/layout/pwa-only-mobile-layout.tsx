@@ -13,8 +13,8 @@ export const PWAOnlyMobileLayout = () => {
     return (
       <div className="center">
         <div>모바일 픽토스는 앱에서 만날 수 있어요</div>
-        <Button onClick={() => router.push('/collection')}>컬렉션으로 이동하기</Button>
-        <Button onClick={() => router.push('/install-guide')}>지금 앱에서 전부 이용하기</Button>
+        <Button onClick={() => router.replace('/collection')}>컬렉션으로 이동하기</Button>
+        <Button onClick={() => router.replace('/install-guide')}>지금 앱에서 전부 이용하기</Button>
       </div>
     )
   }
