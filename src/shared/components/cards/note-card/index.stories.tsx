@@ -15,14 +15,24 @@ const meta: Meta<typeof NoteCard> = {
       page: null,
     },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-full bg-gray-100">
+        <Story />
+      </div>
+    ),
+  ],
 }
 export default meta
 
 export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const id = 0
+
     return (
       <div className="p-10 flex-center">
         <NoteCard
+          id={id}
           selectMode={false}
           onSelect={() => {}}
           onClick={() => {}}
@@ -43,7 +53,7 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
         >
           <NoteCard.Left
             type="TEXT"
-            checkBox={<Checkbox id={'note_1'} className="mx-[8px] size-[20px]" />}
+            checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={false}
           />
 
@@ -60,9 +70,12 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
 
 export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const id = 1
+
     return (
       <div className="p-10 flex-center">
         <NoteCard
+          id={id}
           selectMode={false}
           onSelect={() => {}}
           onClick={() => {}}
@@ -83,7 +96,7 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
         >
           <NoteCard.Left
             type="FILE"
-            checkBox={<Checkbox id={'note_2'} className="mx-[8px] size-[20px]" />}
+            checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={false}
           />
 
@@ -100,9 +113,12 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
 
 export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const id = 2
+
     return (
       <div className="p-10 flex-center">
         <NoteCard
+          id={id}
           selectMode={true}
           onSelect={() => {}}
           onClick={() => {}}
@@ -123,7 +139,7 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
         >
           <NoteCard.Left
             type="FILE"
-            checkBox={<Checkbox id={'note_3'} className="mx-[8px] size-[20px]" />}
+            checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={true}
           />
 
@@ -140,9 +156,12 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
 
 export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const id = 3
+
     return (
       <div className="p-10 flex-center">
         <NoteCard
+          id={id}
           selectMode={false}
           onSelect={() => {}}
           onClick={() => {}}
@@ -163,7 +182,7 @@ export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
         >
           <NoteCard.Left
             type="TEXT"
-            checkBox={<Checkbox id={'note_4'} className="mx-[8px] size-[20px]" />}
+            checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={false}
           />
 
