@@ -4,7 +4,7 @@ import { IcDelete, IcMove } from '@/shared/assets/icon'
 
 import { NoteCard } from '.'
 import { Checkbox } from '../../ui/checkbox'
-import Tag from '../../ui/tag'
+import { Tag } from '../../ui/tag'
 import { Text } from '../../ui/text'
 
 const meta: Meta<typeof NoteCard> = {
@@ -23,8 +23,8 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
     return (
       <div className="p-10 flex-center">
         <NoteCard
-          id={1}
           selectMode={false}
+          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2 text-info">
@@ -63,8 +63,8 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
     return (
       <div className="p-10 flex-center">
         <NoteCard
-          id={2}
           selectMode={false}
+          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2 text-info">
@@ -103,8 +103,8 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
     return (
       <div className="p-10 flex-center">
         <NoteCard
-          id={3}
           selectMode={true}
+          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2 text-info">
@@ -143,8 +143,8 @@ export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
     return (
       <div className="p-10 flex-center">
         <NoteCard
-          id={4}
           selectMode={false}
+          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2">
@@ -168,7 +168,7 @@ export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
           />
 
           <NoteCard.Contents>
-            <NoteCard.Header title="금융투자분석사 노트정리" tag={<Tag colors={'secondary'}>복습 필요 {5}</Tag>} />
+            <NoteCard.Header title="금융투자분석사 노트정리" tag={<Tag color="orange-weak">복습 필요 {5}</Tag>} />
             <NoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
             <NoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
           </NoteCard.Contents>

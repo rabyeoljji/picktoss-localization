@@ -4,26 +4,24 @@ import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion'
 
 import { IcFolder } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 import { NoteIcon } from '../../bg-icons/note-icon'
 
 interface Props {
   children: React.ReactNode
-  id: number
   selectMode: boolean
+  onSelect: () => void
   onClick: () => void
   swipeOptions: React.ReactNode[]
   className?: HTMLElement['className']
 }
 
-export const NoteCard = ({ children, className, id, selectMode, onClick, swipeOptions }: Props) => {
+export const NoteCard = ({ children, className, selectMode, onSelect, onClick, swipeOptions }: Props) => {
   const [isSwiped, setIsSwiped] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const x = useMotionValue(0)
   const controls = useAnimation()
-  const router = useRouter()
 
   const handleDragEnd = async (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x < -30) {
@@ -37,10 +35,10 @@ export const NoteCard = ({ children, className, id, selectMode, onClick, swipeOp
   }
 
   const handleClickCard = () => {
-    onClick()
+    onSelect()
 
     if (!selectMode && !isDragging && !isSwiped) {
-      router.push('/note/:noteId', { params: [id] })
+      onClick()
     }
   }
 
