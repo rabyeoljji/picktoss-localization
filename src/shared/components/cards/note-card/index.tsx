@@ -6,7 +6,7 @@ import { IcFolder } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-import { NoteIcon } from '../../bg-icons/note-icon'
+import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
 
 interface Props {
   children: React.ReactNode
