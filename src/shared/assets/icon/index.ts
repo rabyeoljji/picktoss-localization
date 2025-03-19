@@ -1,7 +1,5 @@
 // This file is auto-generated. Do not edit manually
 
-import IcO from './ic_O.svg?react'
-import IcX from './ic_X.svg?react'
 import IcAdd from './ic_add.svg?react'
 import IcArrange from './ic_arrange.svg?react'
 import IcBack from './ic_back.svg?react'
@@ -19,6 +17,7 @@ import IcClock from './ic_clock.svg?react'
 import IcClose from './ic_close.svg?react'
 import IcCollection from './ic_collection.svg?react'
 import IcControl from './ic_control.svg?react'
+import IcCreate from './ic_create.svg?react'
 import IcDateNext from './ic_date_next.svg?react'
 import IcDatePrevious from './ic_date_previous.svg?react'
 import IcDelete from './ic_delete.svg?react'
@@ -40,6 +39,7 @@ import IcMy from './ic_my.svg?react'
 import IcNote from './ic_note.svg?react'
 import IcNotification from './ic_notification.svg?react'
 import IcNotion from './ic_notion.svg?react'
+import IcO from './ic_O.svg?react'
 import IcQuestion from './ic_question.svg?react'
 import IcQuiznote from './ic_quiznote.svg?react'
 import IcRefresh from './ic_refresh.svg?react'
@@ -50,10 +50,9 @@ import IcSetting from './ic_setting.svg?react'
 import IcStopwatch from './ic_stopwatch.svg?react'
 import IcUpload from './ic_upload.svg?react'
 import IcWrite from './ic_write.svg?react'
+import IcX from './ic_X.svg?react'
 
 export {
-  IcO,
-  IcX,
   IcAdd,
   IcArrange,
   IcBack,
@@ -71,6 +70,7 @@ export {
   IcClose,
   IcCollection,
   IcControl,
+  IcCreate,
   IcDateNext,
   IcDatePrevious,
   IcDelete,
@@ -92,6 +92,7 @@ export {
   IcNote,
   IcNotification,
   IcNotion,
+  IcO,
   IcQuestion,
   IcQuiznote,
   IcRefresh,
@@ -102,4 +103,5 @@ export {
   IcStopwatch,
   IcUpload,
   IcWrite,
+  IcX,
 }
