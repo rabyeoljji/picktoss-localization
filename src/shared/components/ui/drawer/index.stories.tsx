@@ -34,10 +34,11 @@ export const Default: Story = {
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle>다른 폴더로 이동</DrawerTitle>
-          <DrawerDescription>This is a sample description for the drawer.</DrawerDescription>
+          <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
         </DrawerHeader>
 
         <div>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
           <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
         </div>
 
