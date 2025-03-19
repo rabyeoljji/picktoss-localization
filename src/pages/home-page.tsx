@@ -1,5 +1,6 @@
 import { withHOC } from '@/app/hoc/with-page-config'
 
+import { Button } from '@/shared/components/ui/button'
 import {
   Drawer,
   DrawerBody,
@@ -103,7 +104,7 @@ const HomePage = () => {
         <DrawerContent height="sm">
           <DrawerFooter>
             <DrawerClose asChild>
-              <button className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300">Close</button>
+              <Button>버튼</Button>
             </DrawerClose>
           </DrawerFooter>
         </DrawerContent>
