@@ -13,7 +13,7 @@ const LoginPage = () => {
   const { googleLogin } = useGLogin()
 
   if (token) {
-    return <Navigate to="/" />
+    // return <Navigate to="/" />
   }
 
   return (
