@@ -26,7 +26,7 @@ export const useGLogin = () => {
         setToken(result.accessToken)
 
         if (isMobile) {
-          router.push('/install-induce')
+          router.push('/install-guide')
         } else {
           router.push('/')
         }

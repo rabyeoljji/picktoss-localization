@@ -1,2 +1,2 @@
 export * from './auth-store'
-export * from './useGLogin'
+export * from './use-g-Login'
