@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'react'
+import { useId, useRef, useState } from 'react'
 
 import { IcClear } from '@/shared/assets/icon'
 import { Label } from '@/shared/components/ui/label'
@@ -12,6 +12,7 @@ interface InputProps extends React.ComponentProps<'input'> {
   helperText?: string
   right?: React.ReactNode
   clear?: () => void
+  width?: string | number
 }
 
 function Input({
@@ -24,13 +25,21 @@ function Input({
   helperText,
   clear,
   ref,
+  width,
+  value,
+  onChange,
   ...props
 }: InputProps) {
+  // 내부 상태로 value 관리 (비제어 컴포넌트를 위함)
+  const [internalValue, setInternalValue] = useState('')
+  const isControlled = value !== undefined
+  const currentValue = isControlled ? value : internalValue
+
   const id = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
-  const [_, forceUpdate] = useState({})
 
+  // ref 합치기 위한 함수
   const setInputRef = (node: HTMLInputElement) => {
     inputRef.current = node
     if (ref) {
@@ -42,29 +51,51 @@ function Input({
     }
   }
 
-  useEffect(() => {
-    if (!inputRef.current) return
-    forceUpdate({})
-  }, [inputRef])
+  // 사용자 정의 스타일과 너비 속성을 결합
+  const containerStyle = {
+    ...(width ? { width } : {}),
+  }
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isControlled) {
+      setInternalValue(e.target.value)
+    }
+
+    // 기존 onChange 이벤트 유지
+    onChange?.(e)
+  }
+
+  const handleClear = () => {
+    if (!isControlled) {
+      setInternalValue('')
+
+      // 비제어 컴포넌트일 때 input value를 직접 변경하고 change 이벤트 발생시키기
+      if (inputRef.current) {
+        inputRef.current.value = ''
+        const event = new Event('input', { bubbles: true })
+        inputRef.current.dispatchEvent(event)
+      }
+    }
+
+    // 외부 clear 함수 호출
+    clear?.()
+
+    // focus 다시 설정
+    setTimeout(() => {
+      inputRef.current?.focus()
+    }, 0)
+  }
 
   return (
-    <div
-      className="flex flex-col"
-      style={{
-        width: inputRef.current?.offsetWidth ? inputRef.current.offsetWidth : undefined,
-      }}
-    >
+    <div className="flex flex-col w-full" style={containerStyle}>
       {label && <InputLabel id={id} hasError={hasError} label={label} required={required} />}
-      <div
-        className="relative w-full"
-        style={{
-          width: inputRef.current?.offsetWidth ? inputRef.current.offsetWidth : undefined,
-        }}
-      >
+      <div className="relative w-full" style={containerStyle}>
         <input
           id={id}
           ref={setInputRef}
           type={type}
+          value={currentValue}
+          onChange={handleChange}
           data-slot="input"
           className={cn(
             'bg-surface-1 border-outline placeholder:typo-subtitle-2-medium placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none',
@@ -83,7 +114,7 @@ function Input({
             role="button"
             className="text-icon-inverse-dim size-5 cursor-pointer absolute right-3 bottom-1/2 translate-y-1/2"
           >
-            <IcClear className="size-full" onClick={clear} />
+            <IcClear className="size-full" onClick={handleClear} />
           </div>
         )}
         {right && (
