@@ -101,18 +101,6 @@ const HomePage = () => {
         </DrawerTrigger>
 
         <DrawerContent height="sm">
-          <DrawerHeader>
-            <DrawerTitle>다른 폴더로 이동</DrawerTitle>
-            <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
-          </DrawerHeader>
-
-          <DrawerBody>
-            <div>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            </div>
-          </DrawerBody>
-
           <DrawerFooter>
             <DrawerClose asChild>
               <button className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300">Close</button>
