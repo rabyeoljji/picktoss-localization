@@ -40,7 +40,7 @@ const DrawerContent = React.forwardRef<
         height === 'full' && 'h-screen',
         height === 'lg' && 'h-[80%]',
         height === 'md' && 'h-[55%]',
-        height === 'sm' && 'h-[128px]',
+        height === 'sm' && 'h-[160px]',
         className,
       )}
       {...props}
