@@ -1,5 +1,7 @@
 import { withHOC } from '@/app/hoc/with-page-config'
 
+import { useAuthStore } from '@/features/auth'
+
 import { Button } from '@/shared/components/ui/button'
 import {
   Drawer,
@@ -15,8 +17,15 @@ import {
 import { SearchInput } from '@/shared/components/ui/search-input'
 
 const HomePage = () => {
+  const clearToken = useAuthStore((state) => state.clearToken)
+
+  const handleLogout = () => {
+    clearToken()
+  }
+
   return (
     <div className="flex flex-col gap-6 px-10 h-[200vh] scrollbar-hide">
+      <Button onClick={handleLogout}>로그아웃</Button>
       <SearchInput />
       <Drawer>
         <DrawerTrigger asChild>

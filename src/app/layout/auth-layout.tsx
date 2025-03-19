@@ -1,4 +1,4 @@
-import { Outlet } from 'react-router'
+import { Navigate, Outlet } from 'react-router'
 
 import { useStore } from 'zustand'
 
@@ -8,7 +8,7 @@ export const AuthLayout = () => {
   const token = useStore(useAuthStore, (state) => state.token)
 
   if (!token) {
-    // return <Navigate to="/login" />
+    return <Navigate to="/login" />
   }
 
   return <Outlet />

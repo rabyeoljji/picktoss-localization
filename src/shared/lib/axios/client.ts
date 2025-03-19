@@ -22,5 +22,10 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error.response),
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      useAuthStore.getState().clearToken()
+    }
+    return Promise.reject(error.response)
+  },
 )

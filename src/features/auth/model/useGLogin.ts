@@ -1,10 +1,15 @@
+import { isMobile } from 'react-device-detect'
+
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google'
 
 import { useLogin } from '@/entities/auth/api/hooks'
 
+import { useRouter } from '@/shared/lib/router'
+
 import { useAuthStore } from './auth-store'
 
 export const useGLogin = () => {
+  const router = useRouter()
   const setToken = useAuthStore((state) => state.setToken)
 
   const { mutateAsync: loginMutation } = useLogin()
@@ -19,6 +24,12 @@ export const useGLogin = () => {
           },
         })
         setToken(result.accessToken)
+
+        if (isMobile) {
+          router.push('/install-induce')
+        } else {
+          router.push('/')
+        }
       } catch (error) {
         console.error('Google 로그인 실패:', error)
       }
