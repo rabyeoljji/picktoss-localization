@@ -21,9 +21,10 @@
   --background-color-blue: var(--color-blue-400);
   --background-color-blue-weak: var(--color-blue-200);
   --background-color-accent: var(--color-orange-50);
-  --background-color-info: var(--color-orange-50);
+  --background-color-info: var(--color-blue-50);
   --background-color-correct: var(--color-green-200);
   --background-color-incorrect: var(--color-red-200);
+  --background-color-critical: var(--color-red-500);
 }
 
 @theme border-color {
