@@ -16,20 +16,35 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: '픽토스-R',
+        name: '픽토스',
         short_name: 'Picktoss',
+        description: '픽토스 앱',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#000000',
+        icons: [
+          {
+            src: '/icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+          },
+          {
+            src: '/icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
+            purpose: 'maskable',
+          },
+        ],
       },
     }),
     svgr(),
   ],
-  server: {
-    // Localhost
-    // allowedHosts: ["a49e-1-234-247-194.ngrok-free.app"],
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
