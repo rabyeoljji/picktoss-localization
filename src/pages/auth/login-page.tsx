@@ -1,6 +1,6 @@
-import { Navigate, Link as ReactRouterLink } from 'react-router'
+import { Link as ReactRouterLink } from 'react-router'
 
-import { useAuthStore, useGLogin } from '@/features/auth'
+import { useGLogin } from '@/features/auth'
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgTodayquiz } from '@/shared/assets/images'
@@ -8,13 +8,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 
 const LoginPage = () => {
-  const token = useAuthStore((state) => state.token)
-
   const { googleLogin } = useGLogin()
-
-  if (token) {
-    return <Navigate to="/" />
-  }
 
   return (
     <main className="flex-center relative z-20 h-[calc(100dvh-54px)] w-full flex-col overflow-y-auto overflow-x-hidden bg-background-base-01 px-[43px] scrollbar-hide">

@@ -103,12 +103,11 @@ export const AppRouter = () => {
               <Route path={RoutePath.collectionSearch.pathname} element={<CollectionSearchPage />} />
             </Route>
 
-            {/* Auth */}
-            <Route path={RoutePath.login.pathname} element={<LoginPage />} />
-
             {/* Install Induce */}
             <Route path={RoutePath.installInduce.pathname} element={<InstallInducePage />} />
           </Route>
+          {/* Auth */}
+          <Route path={RoutePath.login.pathname} element={<LoginPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
