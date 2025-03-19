@@ -76,7 +76,7 @@ export const AllCases: StoryObj<typeof Input> = {
         <Input
           label="Custom width"
           placeholder="Enter a valid code"
-          className="w-[200px]"
+          width={200}
           type="email"
           right={
             <SquareButton variant="tertiary" size="sm">

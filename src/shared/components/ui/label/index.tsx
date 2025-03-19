@@ -7,7 +7,7 @@ import { type VariantProps, cva } from 'class-variance-authority'
 
 import { cn } from '@/shared/lib/utils'
 
-const labelVariants = cva('typo-body-2-medium text-gray-500')
+const labelVariants = cva('typo-body-1-bold text-sub')
 
 const Label = React.forwardRef<
   React.ElementRef<typeof LabelPrimitive.Root>,
