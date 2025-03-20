@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Outlet } from 'react-router'
 
@@ -6,10 +7,11 @@ import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
 
 export const PWAOnlyMobileLayout = () => {
-  const router = useRouter()
   const { isPWA } = usePWA()
+  const showFallback = useRef(isMobile && !isPWA)
+  const router = useRouter()
 
-  if (isMobile && !isPWA) {
+  if (showFallback.current) {
     return (
       <div className="center">
         <div>모바일 픽토스는 앱에서 만날 수 있어요</div>
