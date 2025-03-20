@@ -3,10 +3,9 @@ import { useSearchParams } from 'react-router'
 
 import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 
-import { Calendar as ReactCalendar } from '@/shared/components/ui/calendar'
+import { ShadcnCalendar } from '@/shared/components/ui/calendar'
 import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
-import { formatToYYYYMMDD } from '@/shared/lib/utils/date'
 
 interface Props {
   selectedDate: Date
@@ -20,7 +19,7 @@ interface Props {
 
 export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) => {
   const today = useMemo(() => new Date(), [])
-  const selectedDateString = formatToYYYYMMDD(selectedDate) ?? formatToYYYYMMDD(today)
+  const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
 
   const router = useRouter()
   const [searchParams] = useSearchParams()
@@ -35,7 +34,7 @@ export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) =
     setShowLoading(true)
 
     if (selected) {
-      const formattedDate = formatToYYYYMMDD(selected)
+      const formattedDate = format(selected, 'yyyy-MM-dd')
 
       if (selectedDateString === formattedDate) {
         setShowLoading(false)
@@ -109,7 +108,7 @@ export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) =
         </div>
       )}
 
-      <ReactCalendar
+      <ShadcnCalendar
         required
         today={today}
         mode="single"
