@@ -124,4 +124,5 @@ const HomePage = () => {
 
 export default withHOC(HomePage, {
   activeTab: '홈',
+  backgroundColor: 'bg-surface-2',
 })

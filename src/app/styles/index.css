@@ -62,8 +62,11 @@
 }
 
 @layer base {
+  html {
+    @apply h-screen w-screen;
+  }
   body {
-    @apply font-display overscroll-y-none select-none;
+    @apply font-display h-screen w-screen overscroll-y-none select-none;
   }
   button {
     @apply cursor-pointer focus:outline-none;
@@ -76,5 +79,8 @@
   }
   .center {
     @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
+  .safe-area-space {
+    @apply pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)];
   }
 }
