@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+import { useArgs } from '@storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
 
 import { IcDelete, IcMove } from '@/shared/assets/icon'
@@ -22,18 +24,29 @@ const meta: Meta<typeof NoteCard> = {
       </div>
     ),
   ],
+  argTypes: {
+    selectMode: {
+      control: 'boolean',
+    },
+  },
 }
 export default meta
 
 export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const [{ selectMode }, updateArgs] = useArgs()
     const id = 0
+
+    const changeSelectMode = (value: boolean) => {
+      updateArgs({ selectMode: value })
+    }
 
     return (
       <div className="p-10 flex-center">
         <NoteCard
           id={id}
-          selectMode={false}
+          selectMode={selectMode}
+          changeSelectMode={changeSelectMode}
           onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
@@ -54,7 +67,7 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
           <NoteCard.Left
             type="TEXT"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
-            selectMode={false}
+            selectMode={selectMode}
           />
 
           <NoteCard.Content>
@@ -70,13 +83,19 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
 
 export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const [{ selectMode }, updateArgs] = useArgs()
     const id = 1
+
+    const changeSelectMode = (value: boolean) => {
+      updateArgs({ selectMode: value })
+    }
 
     return (
       <div className="p-10 flex-center">
         <NoteCard
           id={id}
-          selectMode={false}
+          selectMode={selectMode}
+          changeSelectMode={changeSelectMode}
           onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
@@ -97,7 +116,7 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
           <NoteCard.Left
             type="FILE"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
-            selectMode={false}
+            selectMode={selectMode}
           />
 
           <NoteCard.Content>
@@ -112,14 +131,23 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
 }
 
 export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
+  args: {
+    selectMode: true, // 기본값을 true로 설정
+  },
   render: () => {
+    const [{ selectMode }, updateArgs] = useArgs()
     const id = 2
+
+    const changeSelectMode = (value: boolean) => {
+      updateArgs({ selectMode: value })
+    }
 
     return (
       <div className="p-10 flex-center">
         <NoteCard
           id={id}
-          selectMode={true}
+          selectMode={selectMode}
+          changeSelectMode={changeSelectMode}
           onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
@@ -140,7 +168,7 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
           <NoteCard.Left
             type="FILE"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
-            selectMode={true}
+            selectMode={selectMode}
           />
 
           <NoteCard.Content>
@@ -156,13 +184,19 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
 
 export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
   render: () => {
+    const [{ selectMode }, updateArgs] = useArgs()
     const id = 3
+
+    const changeSelectMode = (value: boolean) => {
+      updateArgs({ selectMode: value })
+    }
 
     return (
       <div className="p-10 flex-center">
         <NoteCard
           id={id}
-          selectMode={false}
+          selectMode={selectMode}
+          changeSelectMode={changeSelectMode}
           onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
@@ -183,7 +217,7 @@ export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
           <NoteCard.Left
             type="TEXT"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
-            selectMode={false}
+            selectMode={selectMode}
           />
 
           <NoteCard.Content>
