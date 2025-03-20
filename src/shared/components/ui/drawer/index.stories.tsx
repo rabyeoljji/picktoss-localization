@@ -2,7 +2,6 @@ import { Meta, StoryObj } from '@storybook/react'
 
 import {
   Drawer,
-  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -39,12 +38,10 @@ export const Full: Story = {
           <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
         </DrawerHeader>
 
-        <DrawerBody>
-          <div>
-            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-          </div>
-        </DrawerBody>
+        <div>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+        </div>
 
         <DrawerFooter>
           <DrawerClose asChild>
@@ -69,12 +66,10 @@ export const Large: Story = {
           <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
         </DrawerHeader>
 
-        <DrawerBody>
-          <div>
-            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-          </div>
-        </DrawerBody>
+        <div>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+        </div>
 
         <DrawerFooter>
           <DrawerClose asChild>
@@ -99,12 +94,10 @@ export const Medium: Story = {
           <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
         </DrawerHeader>
 
-        <DrawerBody>
-          <div>
-            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-          </div>
-        </DrawerBody>
+        <div>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+        </div>
 
         <DrawerFooter>
           <DrawerClose asChild>

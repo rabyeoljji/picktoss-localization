@@ -26,7 +26,7 @@ const HomePage = () => {
     <div className="flex flex-col gap-6 px-10">
       <Button onClick={handleLogout}>로그아웃</Button>
       <SearchInput />
-      <Drawer>
+      <Drawer dismissible>
         <DrawerTrigger asChild>
           <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
         </DrawerTrigger>
