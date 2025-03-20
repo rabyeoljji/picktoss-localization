@@ -33,10 +33,6 @@ export const NoteCard = ({
   const _selectMode = selectMode ?? innerSelectMode
   const _onSelectModeChange = changeSelectMode ?? setInnerSelectMode
 
-  useEffect(() => {
-    console.log(changeSelectMode)
-  }, [changeSelectMode])
-
   const [isSwiped, setIsSwiped] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const x = useMotionValue(0)
