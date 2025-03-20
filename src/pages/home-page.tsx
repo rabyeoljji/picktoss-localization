@@ -24,7 +24,7 @@ const HomePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-10">
+    <div className="flex flex-col gap-6 px-10 bg-blue-200">
       <Button onClick={handleLogout}>로그아웃</Button>
       <SearchInput />
       <Drawer>

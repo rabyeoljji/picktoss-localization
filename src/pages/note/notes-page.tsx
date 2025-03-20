@@ -6,4 +6,5 @@ const NotesPage = () => {
 
 export default withHOC(NotesPage, {
   activeTab: '퀴즈노트',
+  backgroundColor: 'bg-red-100',
 })
