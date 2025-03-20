@@ -38,7 +38,13 @@ export const RangeCalendar: StoryObj<typeof Calendar> = {
     const selectedDateString = searchParams.get('selectedDate') ?? formatToYYYYMMDD(today)
     const selectedDate = new Date(selectedDateString)
 
+    // 스토리북 화면에서 항상 ranged가 보이도록 하기 위해 이렇게 작성했습니다.
+    // date는 YYYY-MM-DD 형식의 string타입입니다.
     const dates = [
+      {
+        date: formatToYYYYMMDD(subDays(today, 6)),
+        isSolved: true,
+      },
       {
         date: formatToYYYYMMDD(subDays(today, 4)),
         isSolved: true,
