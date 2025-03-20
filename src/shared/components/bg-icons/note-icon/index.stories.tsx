@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { Meta, StoryObj } from '@storybook/react'
+import { useArgs } from 'storybook/internal/preview-api'
 
 import { NoteIcon } from '.'
 
@@ -21,14 +22,22 @@ const meta: Meta<typeof NoteIcon> = {
 export default meta
 
 export const WriteNoteIcon: StoryObj<typeof NoteIcon> = {
+  args: {
+    type: 'TEXT', // 기본값을 'TEXT'로 설정
+  },
   render: () => {
-    return <NoteIcon type="TEXT" />
+    const [{ type }] = useArgs()
+    return <NoteIcon type={type} />
   },
 }
 
 export const FileNoteIcon: StoryObj<typeof NoteIcon> = {
+  args: {
+    type: 'FILE', // 기본값을 'FILE'로 설정
+  },
   render: () => {
-    return <NoteIcon type="FILE" />
+    const [{ type }] = useArgs()
+    return <NoteIcon type={type} />
   },
 }
 
