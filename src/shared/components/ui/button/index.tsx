@@ -18,7 +18,7 @@ const buttonVariants = cva(
       },
       size: {
         lg: 'typo-button-1 h-[52px] w-full',
-        md: 'typo-button-2 h-[44px] w-full',
+        md: 'typo-button-3 h-[44px] w-full',
         sm: 'typo-button-3 h-[32px] min-w-[60px] px-2.5 w-fit',
       },
     },
