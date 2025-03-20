@@ -56,11 +56,11 @@ function Calendar({
         head_cell: 'text-muted-foreground rounded-md w-11 font-normal text-[0.8rem]',
         row: 'flex w-full mt-2',
         cell: cn(
-          'cell h-9 w-11 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-md first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20',
+          'cell h-9 w-11 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-full first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-md [&:has(.day-range-middle)]:bg-accent [&:has(.day-range-start)]:bg-accent [&:has(.day-range-start)]:rounded-l-full [&:has(.day-range-end)]:bg-accent [&:has(.day-range-end)]:rounded-r-full focus-within:relative focus-within:z-20',
         ),
         day: cn(
           // buttonVariants({ variant: 'mediumIcon' }),
-          'h-9 w-9 p-0 font-normal aria-selected:bg-orange-strong hover:bg-orange-strong hover:rounded-full hover:text-white hover:font-bold focus:bg-orange-strong focus:text-white focus:rounded-full',
+          'h-9 w-9 p-0 font-normal aria-selected:bg-orange-strong rounded-full hover:bg-orange-strong hover:rounded-full hover:text-white focus:bg-orange-strong focus:text-white focus:rounded-full',
         ),
         day_range_start: 'day-range-start rounded-l-full bg-accent hover:bg-orange-strong',
         day_range_middle: 'bg-accent aria-selected:bg-accent aria-selected:text-inverse hover:bg-orange-strong',
