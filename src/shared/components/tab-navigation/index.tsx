@@ -34,7 +34,7 @@ interface TabNavigationProps {
 
 export const TabNavigation = ({ activeTab = '홈' }: TabNavigationProps) => {
   return (
-    <div className="h-tab-navigation bg-base-01 fixed bottom-0 w-full max-w-xl">
+    <div className="h-tab-navigation bg-surface-1 fixed bottom-0 w-full max-w-xl">
       <div className="mx-auto flex max-w-[500px] justify-between px-[30px] pt-2.5">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} active={item.label === activeTab} />
@@ -68,7 +68,7 @@ const NavItem = ({ to, icon, label, active = false }: NavItemProps) => {
       onClick={handleNavigation}
       className={cn(
         'flex-center text-icon-disabled h-[46px] w-[48px] flex-col gap-1 [&_svg]:size-6',
-        active && 'text-accent',
+        active && 'text-primary',
       )}
     >
       {icon}
