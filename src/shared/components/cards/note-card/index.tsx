@@ -1,28 +1,68 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion'
 
 import { IcFolder } from '@/shared/assets/icon'
+import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
-
-import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
 
 interface Props {
   children: React.ReactNode
   id: number
   selectMode: boolean
+  changeSelectMode: (value: boolean) => void
   onSelect: () => void
   onClick: () => void
   swipeOptions: React.ReactNode[]
   className?: HTMLElement['className']
 }
 
-export const NoteCard = ({ children, id, className, selectMode, onSelect, onClick, swipeOptions }: Props) => {
+export const NoteCard = ({
+  children,
+  id,
+  className,
+  selectMode,
+  changeSelectMode,
+  onSelect,
+  onClick,
+  swipeOptions,
+}: Props) => {
+  const [innerSelectMode, setInnerSelectMode] = useState(false)
+
+  const _selectMode = selectMode ?? innerSelectMode
+  const _onSelectModeChange = changeSelectMode ?? setInnerSelectMode
+
   const [isSwiped, setIsSwiped] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const x = useMotionValue(0)
   const controls = useAnimation()
+
+  const [isLongPress, setIsLongPress] = useState(false)
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null)
+  const longPressDuration = 800 // 0.8초 이상 누르면 selectMode로 전환
+
+  useEffect(() => {
+    if (selectMode !== undefined) {
+      setInnerSelectMode(selectMode)
+    }
+  }, [selectMode])
+
+  const handlePressStart = () => {
+    setIsLongPress(false)
+
+    longPressTimer.current = setTimeout(() => {
+      _onSelectModeChange(true)
+      setIsLongPress(true)
+    }, longPressDuration)
+  }
+
+  const handlePressEnd = () => {
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current)
+      longPressTimer.current = null
+    }
+  }
 
   const handleDragEnd = async (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x < -30) {
@@ -35,10 +75,14 @@ export const NoteCard = ({ children, id, className, selectMode, onSelect, onClic
     setIsDragging(false)
   }
 
-  const handleClickCard = () => {
+  const handleClickCard = (e: React.MouseEvent) => {
+    if (isLongPress) {
+      e.preventDefault()
+    }
+
     onSelect()
 
-    if (!selectMode && !isDragging && !isSwiped) {
+    if (!_selectMode && !isDragging && !isSwiped) {
       onClick()
     }
   }
@@ -47,6 +91,12 @@ export const NoteCard = ({ children, id, className, selectMode, onSelect, onClic
     <label
       htmlFor={`note_${id}`}
       onClick={handleClickCard}
+      onMouseDown={handlePressStart}
+      onMouseUp={handlePressEnd}
+      onMouseLeave={handlePressEnd}
+      onTouchStart={handlePressStart}
+      onTouchEnd={handlePressEnd}
+      onTouchCancel={handlePressEnd}
       className={cn(
         `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] pb-[20px] pt-[17px] shrink-0 cursor-pointer`,
         className,
@@ -55,9 +105,9 @@ export const NoteCard = ({ children, id, className, selectMode, onSelect, onClic
       {/* Swipe 영역 */}
       <motion.div
         className="flex h-[104px] max-w-full items-center rounded-[16px] px-[16px] py-[17px]"
-        drag={selectMode ? false : 'x'}
+        drag={_selectMode ? false : 'x'}
         dragConstraints={{ left: -(swipeOptions.length * 65), right: 0 }}
-        onDrag={() => !selectMode && setIsDragging(true)}
+        onDrag={() => !_selectMode && setIsDragging(true)}
         onDragEnd={handleDragEnd}
         animate={controls}
         style={{ x }}
@@ -148,7 +198,7 @@ const NoteCardDetail = ({
 }
 
 NoteCard.Left = NoteCardLeft
-NoteCard.Contents = NoteCardContent
+NoteCard.Content = NoteCardContent
 NoteCard.Header = NoteCardHeader
 NoteCard.Preview = NoteCardPreview
 NoteCard.Detail = NoteCardDetail
