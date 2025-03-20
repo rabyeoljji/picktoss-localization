@@ -29,8 +29,9 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
     height?: 'full' | 'lg' | 'md' | 'sm'
+    hasHandle?: boolean
   }
->(({ className, children, height, ...props }, ref) => (
+>(({ className, children, height, hasHandle = true, ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content
@@ -45,7 +46,9 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto my-2.5 h-1 w-[32px] rounded-full bg-gray-200" />
+      <div className={cn(hasHandle ? 'pt-[10px] pb-[16px]' : 'h-[24px] flex-center')}>
+        {hasHandle && <div className="mx-auto h-1 w-[36px] rounded-full bg-gray-200" />}
+      </div>
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
@@ -53,17 +56,12 @@ const DrawerContent = React.forwardRef<
 DrawerContent.displayName = 'DrawerContent'
 
 const DrawerHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('grid gap-2 pt-[14px] pb-[18px]', className)} {...props} />
+  <div className={cn('grid gap-2', className)} {...props} />
 )
 DrawerHeader.displayName = 'DrawerHeader'
 
-const DrawerBody = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('py-[14px]', className)} {...props} />
-)
-DrawerBody.displayName = 'DrawerBody'
-
 const DrawerFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('mt-auto flex flex-col pt-3 pb-10', className)} {...props} />
+  <div className={cn('mt-auto flex flex-col', className)} {...props} />
 )
 DrawerFooter.displayName = 'DrawerFooter'
 
@@ -91,7 +89,6 @@ export {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
-  DrawerBody,
   DrawerFooter,
   DrawerTitle,
   DrawerDescription,
