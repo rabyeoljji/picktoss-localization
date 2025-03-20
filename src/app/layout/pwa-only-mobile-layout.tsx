@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 import { Outlet } from 'react-router'
 
@@ -8,10 +8,21 @@ import { useRouter } from '@/shared/lib/router'
 
 export const PWAOnlyMobileLayout = () => {
   const { isPWA } = usePWA()
-  const showFallback = useRef(isMobile && !isPWA)
   const router = useRouter()
 
-  if (showFallback.current) {
+  const [showFallback, setShowFallback] = useState(isMobile && !isPWA)
+
+  // 한 번이라도 showFallback이 false가 되면 그 상태를 유지
+  useEffect(() => {
+    if (!showFallback) return // 이미 false면 더 이상 업데이트하지 않음
+
+    // isPWA가 true가 되면 showFallback을 false로 설정
+    if (isPWA) {
+      setShowFallback(false)
+    }
+  }, [isPWA, showFallback])
+
+  if (showFallback) {
     return (
       <div className="center">
         <div>모바일 픽토스는 앱에서 만날 수 있어요</div>
