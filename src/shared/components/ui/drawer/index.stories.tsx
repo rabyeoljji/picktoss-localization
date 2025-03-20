@@ -11,6 +11,7 @@ import {
   DrawerTrigger,
 } from '.'
 import { Button } from '../button'
+import { Text } from '../text'
 
 const meta: Meta<typeof Drawer> = {
   title: 'UI/Drawer',
@@ -25,83 +26,28 @@ export default meta
 
 type Story = StoryObj<typeof Drawer>
 
-export const Full: Story = {
+export const ModalDrawer: Story = {
   render: () => (
-    <Drawer>
+    <Drawer modal={true}>
       <DrawerTrigger asChild>
-        <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
+        <Button>Modal Drawer</Button>
       </DrawerTrigger>
-
-      <DrawerContent height="full">
-        <DrawerHeader>
-          <DrawerTitle>다른 폴더로 이동</DrawerTitle>
-          <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
-        </DrawerHeader>
-
-        <div>
-          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-        </div>
-
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <button className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300">Close</button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  ),
-}
-
-export const Large: Story = {
-  render: () => (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
-      </DrawerTrigger>
-
-      <DrawerContent height="lg">
-        <DrawerHeader>
-          <DrawerTitle>다른 폴더로 이동</DrawerTitle>
-          <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
-        </DrawerHeader>
-
-        <div>
-          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-        </div>
-
-        <DrawerFooter>
-          <DrawerClose asChild>
-            <button className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300">Close</button>
-          </DrawerClose>
-        </DrawerFooter>
-      </DrawerContent>
-    </Drawer>
-  ),
-}
-
-export const Medium: Story = {
-  render: () => (
-    <Drawer>
-      <DrawerTrigger asChild>
-        <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
-      </DrawerTrigger>
-
       <DrawerContent height="md">
         <DrawerHeader>
-          <DrawerTitle>다른 폴더로 이동</DrawerTitle>
-          <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
+          <DrawerTitle>Modal Drawer</DrawerTitle>
+          <DrawerDescription>This drawer is modal (modal=true)</DrawerDescription>
         </DrawerHeader>
 
-        <div>
-          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-          <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+        <div className="p-4">
+          <Text typo="body-1-regular">
+            A modal drawer prevents interaction with the content behind it. The background content is inaccessible until
+            the drawer is closed.
+          </Text>
         </div>
 
         <DrawerFooter>
           <DrawerClose asChild>
-            <button className="rounded-md bg-gray-200 px-4 py-2 text-gray-800 hover:bg-gray-300">Close</button>
+            <Button className="w-full">Close</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
@@ -109,17 +55,28 @@ export const Medium: Story = {
   ),
 }
 
-export const Small: Story = {
+export const NonModalDrawer: Story = {
   render: () => (
-    <Drawer>
+    <Drawer modal={false}>
       <DrawerTrigger asChild>
-        <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
+        <Button>Non-Modal Drawer</Button>
       </DrawerTrigger>
+      <DrawerContent height="md">
+        <DrawerHeader>
+          <DrawerTitle>Non-Modal Drawer</DrawerTitle>
+          <DrawerDescription>This drawer is non-modal (modal=false)</DrawerDescription>
+        </DrawerHeader>
 
-      <DrawerContent height="sm">
+        <div className="p-4">
+          <Text typo="body-1-regular">
+            A non-modal drawer allows interaction with content behind it. The background content remains accessible
+            while the drawer is open.
+          </Text>
+        </div>
+
         <DrawerFooter>
           <DrawerClose asChild>
-            <Button>버튼</Button>
+            <Button className="w-full">Close</Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
