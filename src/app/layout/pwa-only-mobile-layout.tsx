@@ -2,14 +2,23 @@ import { isMobile } from 'react-device-detect'
 import { Outlet } from 'react-router'
 
 import { Button } from '@/shared/components/ui/button'
-import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
+
+// iOS Safari standalone 속성 타입 정의
+interface NavigatorWithStandalone extends Navigator {
+  standalone?: boolean
+}
+
+const isPWA =
+  window.matchMedia('(display-mode: standalone)').matches ||
+  (window.navigator as NavigatorWithStandalone).standalone === true
+
+export const SHOW_FALLBACK = isMobile && !isPWA
 
 export const PWAOnlyMobileLayout = () => {
   const router = useRouter()
-  const { isPWA } = usePWA()
 
-  if (isMobile && !isPWA) {
+  if (SHOW_FALLBACK) {
     return (
       <div className="center">
         <div>모바일 픽토스는 앱에서 만날 수 있어요</div>
