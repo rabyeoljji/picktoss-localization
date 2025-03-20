@@ -16,19 +16,19 @@ const LoginPage = () => {
       ) : (
         <>
           <div className="grid gap-3">
-            <ImgTodayquiz className="w-[160px] mx-auto" />
+            <ImgTodayquiz className="w-[180px] mx-auto" />
             <IcLogo className="w-[160px] mx-auto" />
           </div>
 
-          <div className="mt-[56px] text-center">
-            <Text typo="body-1-medium" color="sub">
+          <div className="mt-[72px] text-center">
+            <Text typo="subtitle-2-medium" color="accent">
               3초만에 픽토스 시작하기
             </Text>
             <div className="grid gap-2 mt-3">
               <GoogleLoginButton onClick={() => googleLogin()} />
               <KakaoLoginButton />
             </div>
-            <div className="mt-6">
+            <div className="mt-4">
               <Text typo="caption-medium" color="caption">
                 로그인 시{' '}
                 <ReactRouterLink
@@ -73,9 +73,12 @@ const LoadingSpinner = () => {
 
 const GoogleLoginButton = ({ ...props }) => {
   return (
-    <button className="h-[44px] relative rounded-full border flex-center bg-white border-gray-100" {...props}>
-      <ImgRoundGoogle className="absolute size-[32px] left-2 bottom-1/2 translate-y-1/2" />
-      <Text typo="button-2" color="gray-800">
+    <button
+      className="h-[48px] relative rounded-full border flex-center bg-white border-gray-100 active:bg-gray-50"
+      {...props}
+    >
+      <ImgRoundGoogle className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
+      <Text typo="button-3" color="gray-800">
         Google로 로그인
       </Text>
     </button>
@@ -84,9 +87,9 @@ const GoogleLoginButton = ({ ...props }) => {
 
 const KakaoLoginButton = ({ ...props }) => {
   return (
-    <button className="h-[44px] relative rounded-full flex-center bg-[#FFE45F]" {...props}>
-      <ImgRoundKakao className="absolute size-[32px] left-2 bottom-1/2 translate-y-1/2" />
-      <Text typo="button-2" color="gray-800">
+    <button className="h-[48px] relative rounded-full flex-center bg-[#FFE45F] active:opacity-90" {...props}>
+      <ImgRoundKakao className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
+      <Text typo="button-3" color="gray-800">
         카카오로 로그인
       </Text>
     </button>
