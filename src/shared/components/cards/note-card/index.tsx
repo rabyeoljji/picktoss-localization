@@ -38,6 +38,7 @@ export const NoteCard = ({
   const x = useMotionValue(0)
   const controls = useAnimation()
 
+  const [isLongPress, setIsLongPress] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
   const longPressDuration = 800 // 0.8초 이상 누르면 selectMode로 전환
 
@@ -48,8 +49,11 @@ export const NoteCard = ({
   }, [selectMode])
 
   const handlePressStart = () => {
+    setIsLongPress(false)
+
     longPressTimer.current = setTimeout(() => {
       _onSelectModeChange(true)
+      setIsLongPress(true)
     }, longPressDuration)
   }
 
@@ -71,7 +75,11 @@ export const NoteCard = ({
     setIsDragging(false)
   }
 
-  const handleClickCard = () => {
+  const handleClickCard = (e: React.MouseEvent) => {
+    if (isLongPress) {
+      e.preventDefault()
+    }
+
     onSelect()
 
     if (!_selectMode && !isDragging && !isSwiped) {
