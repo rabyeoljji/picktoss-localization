@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router'
 
 import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 
-import { Calendar as ReactCalendar } from '@/shared/components/ui/calendar'
+import { ShadcnCalendar } from '@/shared/components/ui/calendar'
 import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -108,7 +108,7 @@ export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) =
         </div>
       )}
 
-      <ReactCalendar
+      <ShadcnCalendar
         required
         today={today}
         mode="single"
