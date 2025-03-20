@@ -77,7 +77,7 @@ const GoogleLoginButton = ({ ...props }) => {
       className="h-[48px] relative rounded-full border flex-center bg-white border-gray-100 active:bg-gray-50"
       {...props}
     >
-      <ImgRoundGoogle className="absolute size-[32px] left-2 bottom-1/2 translate-y-1/2" />
+      <ImgRoundGoogle className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
         Google로 로그인
       </Text>
@@ -88,7 +88,7 @@ const GoogleLoginButton = ({ ...props }) => {
 const KakaoLoginButton = ({ ...props }) => {
   return (
     <button className="h-[48px] relative rounded-full flex-center bg-[#FFE45F] active:opacity-90" {...props}>
-      <ImgRoundKakao className="absolute size-[32px] left-2 bottom-1/2 translate-y-1/2" />
+      <ImgRoundKakao className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
         카카오로 로그인
       </Text>
