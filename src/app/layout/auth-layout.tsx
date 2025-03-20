@@ -1,9 +1,13 @@
 import { Navigate, Outlet } from 'react-router'
 
-export const AuthLayout = () => {
-  const token = false
+import { useStore } from 'zustand'
 
-  if (token) {
+import { useAuthStore } from '@/features/auth'
+
+export const AuthLayout = () => {
+  const token = useStore(useAuthStore, (state) => state.token)
+
+  if (!token) {
     return <Navigate to="/login" />
   }
 

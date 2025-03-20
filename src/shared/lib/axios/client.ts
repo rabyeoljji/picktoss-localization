@@ -1,5 +1,7 @@
 import axios from 'axios'
 
+import { useAuthStore } from '@/features/auth/model/auth-store'
+
 export const client = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
@@ -9,10 +11,10 @@ export const client = axios.create({
 
 client.interceptors.request.use(
   (config) => {
-    // const token = localStorage.getItem("token")
-    // if (token) {
-    //   config.headers.Authorization = `Bearer ${token}`
-    // }
+    const token = useAuthStore.getState().token
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`
+    }
     return config
   },
   (error) => Promise.reject(error),
@@ -20,5 +22,10 @@ client.interceptors.request.use(
 
 client.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error.response),
+  (error) => {
+    if (error.response && error.response.status === 401) {
+      useAuthStore.getState().clearToken()
+    }
+    return Promise.reject(error.response)
+  },
 )

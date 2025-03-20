@@ -26,6 +26,7 @@ import {
   CollectionsPage,
 } from '@/pages/collection'
 import HomePage from '@/pages/home-page'
+import { InstallGuidePage } from '@/pages/install-guide-page'
 import {
   NoteArrangePage,
   NoteDetailPage,
@@ -101,10 +102,11 @@ export const AppRouter = () => {
               <Route path={RoutePath.collectionEditQuiz.pathname} element={<CollectionEditQuizPage />} />
               <Route path={RoutePath.collectionSearch.pathname} element={<CollectionSearchPage />} />
             </Route>
-
-            {/* Auth */}
-            <Route path={RoutePath.login.pathname} element={<LoginPage />} />
           </Route>
+          {/* Auth */}
+          <Route path={RoutePath.login.pathname} element={<LoginPage />} />
+          {/* Install Induce */}
+          <Route path={RoutePath.installGuide.pathname} element={<InstallGuidePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

@@ -16,8 +16,9 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: '픽토스-R',
+        name: '픽토스',
         short_name: 'Picktoss',
+        description: '픽토스 앱',
         start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
@@ -26,10 +27,6 @@ export default defineConfig({
     }),
     svgr(),
   ],
-  server: {
-    // Localhost
-    // allowedHosts: ["a49e-1-234-247-194.ngrok-free.app"],
-  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
