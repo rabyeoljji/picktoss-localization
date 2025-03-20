@@ -9,7 +9,7 @@ interface Props {
   iconClassName?: HTMLElement['className']
 }
 
-export const NoteIcon = ({ type, containerClassName, iconClassName }: Props) => {
+export const NoteIcon = ({ type = 'TEXT', containerClassName, iconClassName }: Props) => {
   if (type === 'TEXT') {
     return (
       <div className={cn('flex-center size-[36px] shrink-0 rounded-full bg-orange text-inverse', containerClassName)}>
@@ -38,16 +38,4 @@ export const NoteIcon = ({ type, containerClassName, iconClassName }: Props) => 
       </div>
     )
   }
-
-  // default
-  return (
-    <div
-      className={cn(
-        'flex-center size-[36px] shrink-0 rounded-full bg-fill-secondary-orange text-inverse',
-        containerClassName,
-      )}
-    >
-      <IcNote className={cn('size-[20px]', iconClassName)} />
-    </div>
-  )
 }
