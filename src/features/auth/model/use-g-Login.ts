@@ -31,8 +31,6 @@ export const useGLogin = () => {
     onError: (error) => {
       console.error('Google 로그인 오류:', error)
     },
-    flow: 'implicit',
-    prompt: 'select_account',
   })
 
   return { googleLogin: login }
