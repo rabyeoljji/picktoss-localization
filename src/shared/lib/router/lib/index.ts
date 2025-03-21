@@ -1,3 +1,4 @@
+import { RoutePath } from '../config'
 import type { ExtendedOptions, Pathname } from '../model/type'
 
 /**
@@ -19,7 +20,9 @@ const stringifySearch = (search: object): string => {
  * 주어진 경로와 옵션(search, hash, params)을 이용해 최종 URL을 생성
  */
 export const buildUrl = <T extends Pathname, S extends object>(path: T, options: ExtendedOptions<T, S>): string => {
-  let url: string = path
+  // 실제 pathname을 가져옵니다. (예: '/workspace/:id' -> '/workspace/:id')
+  const pathString = RoutePath[path]
+  let url: string = pathString
 
   // path 내의 ":param"들을 순서대로 options.params의 값으로 치환
   if (options.params && options.params.length > 0) {

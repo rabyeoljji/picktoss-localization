@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import * as R from 'remeda'
 
 import { buildUrl } from '../lib'
-import type { AllowedSearch, ExtendedOptions, ParamOptions, Pathname, SearchOf } from '../model'
+import type { AllowedSearch, ExtendedOptions, ParamOptions, Pathname, SearchOf } from '../model/type'
 
 export const useRouter = () => {
   const navigate = useNavigate()
