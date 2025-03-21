@@ -2,6 +2,7 @@ import { Link as RouterLink, type LinkProps as RouterLinkProps } from 'react-rou
 
 import { buildUrl } from '../lib'
 import type { AllowedSearch, ExtendedOptions, ExtractRouteParamsTuple, Pathname, SearchOf } from '../model/type'
+import { type RouteConfig } from '../config'
 
 /**
  * - 파라미터가 없는 경로: params는 선택적(optional)
@@ -9,13 +10,13 @@ import type { AllowedSearch, ExtendedOptions, ExtractRouteParamsTuple, Pathname,
  * 그리고 search, hash 옵션도 함께 사용할 수 있음.
  */
 type CustomLinkProps<T extends Pathname> = Omit<RouterLinkProps, 'to'> &
-  (ExtractRouteParamsTuple<T> extends []
+  (ExtractRouteParamsTuple<RouteConfig[T]['pathname']> extends []
     ? { to: T; search?: string | AllowedSearch<SearchOf<T>>; hash?: string; params?: [] }
     : {
         to: T
         search?: string | AllowedSearch<SearchOf<T>>
         hash?: string
-        params: ExtractRouteParamsTuple<T>
+        params: ExtractRouteParamsTuple<RouteConfig[T]['pathname']>
       })
 
 export function Link<T extends Pathname>(props: CustomLinkProps<T>) {

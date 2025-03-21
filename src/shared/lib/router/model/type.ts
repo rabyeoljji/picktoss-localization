@@ -3,7 +3,8 @@ import type { NavigateOptions } from 'react-router'
 import { type RouteConfig } from '../config'
 
 /**
- * 전체 Pathname 타입 (예: '/', '/login', '/workspace/:id', 등)
+ * 전체 Pathname 타입 (예: '/', '/login', '/note/:noteId' 등)
+ * RouteConfig의 키 값인 경로 문자열
  */
 export type Pathname = keyof RouteConfig
 
@@ -36,7 +37,7 @@ export type ExtractRouteParamsTuple<T extends string> = T extends `${infer _Star
  * - search는 string 또는 AllowedSearch<SearchOf<T>>를 받을 수 있음
  */
 export type Options<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> =
-  ExtractRouteParamsTuple<T> extends infer P extends unknown[]
+  ExtractRouteParamsTuple<RouteConfig[T]['pathname']> extends infer P extends unknown[]
     ? P extends []
       ? { search?: string | S; hash?: string; params?: [] }
       : { search?: string | S; hash?: string; params: P }
@@ -54,4 +55,4 @@ export type ExtendedOptions<T extends Pathname, S extends object = AllowedSearch
  * - 파라미터 유무에 따라 options 인자의 필요 여부를 결정
  */
 export type ParamOptions<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> =
-  ExtractRouteParamsTuple<T> extends [] ? [options?: ExtendedOptions<T, S>] : [options: ExtendedOptions<T, S>]
+  ExtractRouteParamsTuple<RouteConfig[T]['pathname']> extends [] ? [options?: ExtendedOptions<T, S>] : [options: ExtendedOptions<T, S>]

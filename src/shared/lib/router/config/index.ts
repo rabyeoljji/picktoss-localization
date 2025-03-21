@@ -1,49 +1,4 @@
-/** @important
- * pathname, search, hash 등의 타입 정의
- */
-export type RouteConfig = {
-  // Root
-  root: { pathname: '/' }
-  // Auth
-  login: { pathname: '/login' }
-  installGuide: { pathname: '/install-guide' }
-  // 노트 관련
-  notes: { pathname: '/note' }
-  noteDetail: { pathname: '/note/:noteId' }
-  noteQuiz: { pathname: '/note/quiz/:noteId' }
-  noteArrange: { pathname: '/note/arrange/:directoryId' }
-  noteSearch: { pathname: '/note/search' }
-  noteEdit: { pathname: '/note/edit/:noteId' }
-  noteWrite: { pathname: '/note/write' }
-  noteUpload: { pathname: '/note/upload' }
-  // 마이 페이지 관련
-  account: { pathname: '/account' }
-  accountInfo: { pathname: '/account/info' }
-  dailyQuizAttendance: { pathname: '/account/daily-quiz-attendance' }
-  quizAnalysis: { pathname: '/account/quiz-analysis' }
-  quizRecord: { pathname: '/account/quiz-record' }
-  notificationConfig: { pathname: '/account/notification-config' }
-  paymentHistory: { pathname: '/account/payment-history' }
-  notice: { pathname: '/account/notice' }
-  contact: { pathname: '/account/contact' }
-  faq: { pathname: '/account/faq' }
-  policy: { pathname: '/account/policy' }
-  withdraw: { pathname: '/account/withdraw' }
-  // 테마 퀴즈
-  randomQuiz: { pathname: '/random-quiz' }
-  bombQuiz: { pathname: '/bomb-quiz' }
-  // 컬렉션 관련
-  collections: { pathname: '/collection' }
-  collectionDetail: { pathname: '/collection/:collectionId' }
-  collectionQuiz: { pathname: '/collection/quiz/:collectionId' }
-  collectionComplain: { pathname: '/collection/complain/:collectionId' }
-  collectionCreate: { pathname: '/collection/create' }
-  collectionEditInfo: { pathname: '/collection/edit/info/:collectionId' }
-  collectionEditQuiz: { pathname: '/collection/edit/quiz/:collectionId' }
-  collectionSearch: { pathname: '/collection/search' }
-}
-
-export const RoutePath: Record<keyof RouteConfig, RouteConfig[keyof RouteConfig]['pathname']> = {
+export const RoutePath = {
   // Root
   root: '/',
   // Auth
@@ -83,4 +38,57 @@ export const RoutePath: Record<keyof RouteConfig, RouteConfig[keyof RouteConfig]
   collectionEditInfo: '/collection/edit/info/:collectionId',
   collectionEditQuiz: '/collection/edit/quiz/:collectionId',
   collectionSearch: '/collection/search',
+} as const
+
+/** @important
+ * pathname, search, hash 등의 타입 정의
+ */
+export type RouteConfig = {
+  // Root
+  [RoutePath.root]: { pathname: typeof RoutePath.root }
+  // Auth
+  [RoutePath.login]: { pathname: typeof RoutePath.login }
+  [RoutePath.installGuide]: { pathname: typeof RoutePath.installGuide }
+  // 노트 관련
+  [RoutePath.notes]: { pathname: typeof RoutePath.notes }
+  [RoutePath.noteDetail]: { pathname: typeof RoutePath.noteDetail }
+  [RoutePath.noteQuiz]: { pathname: typeof RoutePath.noteQuiz }
+  [RoutePath.noteArrange]: { pathname: typeof RoutePath.noteArrange }
+  [RoutePath.noteSearch]: { pathname: typeof RoutePath.noteSearch }
+  [RoutePath.noteEdit]: { pathname: typeof RoutePath.noteEdit }
+  [RoutePath.noteWrite]: { pathname: typeof RoutePath.noteWrite }
+  [RoutePath.noteUpload]: { pathname: typeof RoutePath.noteUpload }
+  // 마이 페이지 관련
+  [RoutePath.account]: { pathname: typeof RoutePath.account }
+  [RoutePath.accountInfo]: { pathname: typeof RoutePath.accountInfo }
+  [RoutePath.dailyQuizAttendance]: { pathname: typeof RoutePath.dailyQuizAttendance }
+  [RoutePath.quizAnalysis]: { pathname: typeof RoutePath.quizAnalysis }
+  [RoutePath.quizRecord]: { pathname: typeof RoutePath.quizRecord }
+  [RoutePath.notificationConfig]: { pathname: typeof RoutePath.notificationConfig }
+  [RoutePath.paymentHistory]: { pathname: typeof RoutePath.paymentHistory }
+  [RoutePath.notice]: { pathname: typeof RoutePath.notice }
+  [RoutePath.contact]: { pathname: typeof RoutePath.contact }
+  [RoutePath.faq]: { pathname: typeof RoutePath.faq }
+  [RoutePath.policy]: { pathname: typeof RoutePath.policy }
+  [RoutePath.withdraw]: { pathname: typeof RoutePath.withdraw }
+  // 테마 퀴즈
+  [RoutePath.randomQuiz]: {
+    pathname: typeof RoutePath.randomQuiz
+    search: {
+      date: string
+    }
+  }
+  [RoutePath.bombQuiz]: {
+    pathname: typeof RoutePath.bombQuiz
+    search: { date: string }
+  }
+  // 컬렉션 관련
+  [RoutePath.collections]: { pathname: typeof RoutePath.collections }
+  [RoutePath.collectionDetail]: { pathname: typeof RoutePath.collectionDetail }
+  [RoutePath.collectionQuiz]: { pathname: typeof RoutePath.collectionQuiz }
+  [RoutePath.collectionComplain]: { pathname: typeof RoutePath.collectionComplain }
+  [RoutePath.collectionCreate]: { pathname: typeof RoutePath.collectionCreate }
+  [RoutePath.collectionEditInfo]: { pathname: typeof RoutePath.collectionEditInfo }
+  [RoutePath.collectionEditQuiz]: { pathname: typeof RoutePath.collectionEditQuiz }
+  [RoutePath.collectionSearch]: { pathname: typeof RoutePath.collectionSearch }
 }
