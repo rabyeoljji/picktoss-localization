@@ -169,7 +169,7 @@ const RecentKeywords = () => {
         </TextButton>
       </div>
       <div className="mt-3">
-        {recentKeywords.map((keyword, index) => (
+        {recentKeywords.slice(10).map((keyword, index) => (
           <div key={index} className="py-[9.5px] flex items-center justify-between">
             <Text typo="body-1-medium">{keyword}</Text>
             <button onClick={() => setRecentKeywords(recentKeywords.filter((_, i) => i !== index))}>
