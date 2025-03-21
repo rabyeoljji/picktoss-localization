@@ -20,10 +20,17 @@ export const useCreateDocument = () => {
   })
 }
 
+// export const useSearchDocument = (params: { keyword: string }) => {
+//   return useMutation({
+//     mutationKey: [DOCUMENT_KEYS.searchDocument, params],
+//     mutationFn: () => searchDocument(params),
+//   })
+// }
+
 export const useSearchDocument = (params: { keyword: string }) => {
-  return useMutation({
-    mutationKey: [DOCUMENT_KEYS.searchDocument, params],
-    mutationFn: () => searchDocument(params),
+  return useQuery({
+    queryKey: [DOCUMENT_KEYS.searchDocument, params],
+    queryFn: () => searchDocument(params),
   })
 }
 

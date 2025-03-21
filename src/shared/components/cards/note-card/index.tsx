@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion'
 
 import { IcFolder } from '@/shared/assets/icon'
-import { NoteIcon } from '@/shared/components/bg-icons/note-icon'
+import { NoteIcon, NoteType } from '@/shared/components/bg-icons/note-icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
@@ -135,7 +135,7 @@ const NoteCardLeft = ({
   selectMode,
 }: {
   // type: 'FILE' | 'TEXT' | 'NOTION'
-  type: 'FILE' | 'TEXT'
+  type: NoteType
   checkBox: React.ReactNode
   selectMode: boolean
 }) => {

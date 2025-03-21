@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router'
+import { useNavigate, useSearchParams } from 'react-router'
 
 import { LOCAL_KEY } from '@/shared/config'
-import { Pathname, SearchOf, useRouter } from '@/shared/lib/router'
-import { getLocalStorage, setLocalStorage } from '@/shared/lib/utils/storage'
+import { getLocalStorage, removeLocalStorage, setLocalStorage } from '@/shared/lib/utils/storage'
 
 export const useSearch = () => {
-  const router = useRouter()
+  const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const initialKeyword = searchParams.get('keyword') || ''
 
@@ -42,30 +41,27 @@ export const useSearch = () => {
   }, [initialKeyword])
 
   /** 최근 검색어 리스트에서 특정 검색어 클릭 시 검색창에 키워드가 반영되도록하는 함수 */
-  // todo: /home-search 추가
-  const handleUpdateKeyword = (
-    selectedKeyword: string,
-    callbackUrlPath: '/note/search',
-    callbackUrlOptions: SearchOf<Pathname>,
-  ) => {
+  const handleUpdateKeyword = (selectedKeyword: string) => {
     setKeyword(selectedKeyword)
 
-    router.replace(callbackUrlPath, callbackUrlOptions)
+    const newSearchParams = new URLSearchParams(location.search)
+    newSearchParams.set('keyword', selectedKeyword)
+    navigate(`${location.pathname}?${newSearchParams.toString()}`, { replace: true })
+
     setIsSearchFocused(false)
   }
 
   /** 검색창에 입력되어있는 키워드를 삭제하는 함수 */
-  const handleDeleteKeyword = (callbackUrlPath: '/note/search', callbackUrlOptions: SearchOf<Pathname>) => {
+  const handleDeleteKeyword = () => {
     setKeyword('')
-    router.replace(callbackUrlPath, callbackUrlOptions)
+
+    const newSearchParams = new URLSearchParams(location.search)
+    newSearchParams.delete('keyword')
+    navigate(`${location.pathname}?${newSearchParams.toString()}`, { replace: true })
   }
 
   // 검색
-  const handleSubmit = (
-    e: React.FormEvent<HTMLFormElement>,
-    callbackUrlPath: '/note/search',
-    callbackUrlOptions: SearchOf<Pathname>,
-  ) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (!keyword.trim()) {
@@ -73,7 +69,10 @@ export const useSearch = () => {
       return
     }
 
-    router.replace(callbackUrlPath, callbackUrlOptions)
+    const newSearchParams = new URLSearchParams(location.search)
+    newSearchParams.set('keyword', keyword)
+    navigate(`${location.pathname}?${newSearchParams.toString()}`, { replace: true })
+
     searchInputRef.current?.blur()
     setIsSearchFocused(false)
   }
@@ -89,5 +88,34 @@ export const useSearch = () => {
     handleUpdateKeyword,
     handleDeleteKeyword,
     handleSubmit,
+  }
+}
+
+export const useRecentSearches = () => {
+  const [recentSearches, setRecentSearches] = useState<string[]>([])
+
+  useEffect(() => {
+    const storageSearches = getLocalStorage<string[]>(LOCAL_KEY.RECENT_SEARCHES) ?? []
+    setRecentSearches(storageSearches)
+  }, [])
+
+  /** 로컬스토리지에서 특정 검색어 삭제 */
+  const deleteRecentSearch = (keyword: string) => {
+    const newRecentSearches = recentSearches.filter((search) => search !== keyword)
+    setLocalStorage(LOCAL_KEY.RECENT_SEARCHES, newRecentSearches)
+    setRecentSearches(newRecentSearches)
+  }
+
+  /** 전체 검색어 삭제 */
+  const deleteAllRecentSearches = () => {
+    removeLocalStorage(LOCAL_KEY.RECENT_SEARCHES)
+    setRecentSearches([])
+  }
+
+  return {
+    recentSearches,
+    setRecentSearches,
+    deleteRecentSearch,
+    deleteAllRecentSearches,
   }
 }
