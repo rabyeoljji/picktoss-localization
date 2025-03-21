@@ -37,6 +37,7 @@ import {
   NoteWritePage,
   NotesPage,
 } from '@/pages/note'
+import { SearchPage } from '@/pages/search-page'
 import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
 
 import { AuthLayout } from '@/app/layout/auth-layout'
@@ -54,59 +55,60 @@ export const AppRouter = () => {
             {/* PC에서는 항상 접근 가능하지만 모바일에서는 PWA로만 접근 가능하게 하는 Layout */}
             <Route element={<PWAOnlyMobileLayout />}>
               {/* Home */}
-              <Route path={RoutePath.root.pathname} element={<HomePage />} />
+              <Route path={RoutePath.root} element={<HomePage />} />
+              <Route path={RoutePath.search} element={<SearchPage />} />
 
               {/* Note */}
-              <Route path={RoutePath.notes.pathname}>
+              <Route path={RoutePath.notes}>
                 <Route index element={<NotesPage />} />
-                <Route path={RoutePath.noteDetail.pathname} element={<NoteDetailPage />} />
-                <Route path={RoutePath.noteQuiz.pathname} element={<NoteQuizPage />} />
-                <Route path={RoutePath.noteArrange.pathname} element={<NoteArrangePage />} />
-                <Route path={RoutePath.noteSearch.pathname} element={<NoteSearchPage />} />
-                <Route path={RoutePath.noteEdit.pathname} element={<NoteEditPage />} />
-                <Route path={RoutePath.noteWrite.pathname} element={<NoteWritePage />} />
-                <Route path={RoutePath.noteUpload.pathname} element={<NoteUploadPage />} />
+                <Route path={RoutePath.noteDetail} element={<NoteDetailPage />} />
+                <Route path={RoutePath.noteQuiz} element={<NoteQuizPage />} />
+                <Route path={RoutePath.noteArrange} element={<NoteArrangePage />} />
+                <Route path={RoutePath.noteSearch} element={<NoteSearchPage />} />
+                <Route path={RoutePath.noteEdit} element={<NoteEditPage />} />
+                <Route path={RoutePath.noteWrite} element={<NoteWritePage />} />
+                <Route path={RoutePath.noteUpload} element={<NoteUploadPage />} />
               </Route>
 
               {/* Account */}
-              <Route path={RoutePath.account.pathname}>
+              <Route path={RoutePath.account}>
                 <Route index element={<AccountPage />} />
-                <Route path={RoutePath.accountInfo.pathname} element={<AccountInfoPage />} />
-                <Route path={RoutePath.dailyQuizAttendance.pathname} element={<DailyQuizAttendancePage />} />
-                <Route path={RoutePath.quizAnalysis.pathname} element={<QuizAnalysisPage />} />
-                <Route path={RoutePath.quizRecord.pathname} element={<QuizRecordPage />} />
-                <Route path={RoutePath.notificationConfig.pathname} element={<NotificationConfigPage />} />
-                <Route path={RoutePath.paymentHistory.pathname} element={<PaymentHistoryPage />} />
-                <Route path={RoutePath.notice.pathname} element={<NoticePage />} />
-                <Route path={RoutePath.contact.pathname} element={<ContactPage />} />
-                <Route path={RoutePath.faq.pathname} element={<FaQPage />} />
-                <Route path={RoutePath.policy.pathname} element={<PolicyPage />} />
-                <Route path={RoutePath.withdraw.pathname} element={<WithdrawPage />} />
+                <Route path={RoutePath.accountInfo} element={<AccountInfoPage />} />
+                <Route path={RoutePath.dailyQuizAttendance} element={<DailyQuizAttendancePage />} />
+                <Route path={RoutePath.quizAnalysis} element={<QuizAnalysisPage />} />
+                <Route path={RoutePath.quizRecord} element={<QuizRecordPage />} />
+                <Route path={RoutePath.notificationConfig} element={<NotificationConfigPage />} />
+                <Route path={RoutePath.paymentHistory} element={<PaymentHistoryPage />} />
+                <Route path={RoutePath.notice} element={<NoticePage />} />
+                <Route path={RoutePath.contact} element={<ContactPage />} />
+                <Route path={RoutePath.faq} element={<FaQPage />} />
+                <Route path={RoutePath.policy} element={<PolicyPage />} />
+                <Route path={RoutePath.withdraw} element={<WithdrawPage />} />
               </Route>
 
               {/* Theme Quiz */}
               <Route>
-                <Route path={RoutePath.randomQuiz.pathname} element={<RandomQuizPage />} />
-                <Route path={RoutePath.bombQuiz.pathname} element={<BombQuizPage />} />
+                <Route path={RoutePath.randomQuiz} element={<RandomQuizPage />} />
+                <Route path={RoutePath.bombQuiz} element={<BombQuizPage />} />
               </Route>
             </Route>
 
             {/* 컬렉션 */}
-            <Route path={RoutePath.collections.pathname}>
+            <Route path={RoutePath.collections}>
               <Route index element={<CollectionsPage />} />
-              <Route path={RoutePath.collectionDetail.pathname} element={<CollectionDetailPage />} />
-              <Route path={RoutePath.collectionQuiz.pathname} element={<CollectionQuizPage />} />
-              <Route path={RoutePath.collectionComplain.pathname} element={<CollectionComplainPage />} />
-              <Route path={RoutePath.collectionCreate.pathname} element={<CollectionCreatePage />} />
-              <Route path={RoutePath.collectionEditInfo.pathname} element={<CollectionEditInfoPage />} />
-              <Route path={RoutePath.collectionEditQuiz.pathname} element={<CollectionEditQuizPage />} />
-              <Route path={RoutePath.collectionSearch.pathname} element={<CollectionSearchPage />} />
+              <Route path={RoutePath.collectionDetail} element={<CollectionDetailPage />} />
+              <Route path={RoutePath.collectionQuiz} element={<CollectionQuizPage />} />
+              <Route path={RoutePath.collectionComplain} element={<CollectionComplainPage />} />
+              <Route path={RoutePath.collectionCreate} element={<CollectionCreatePage />} />
+              <Route path={RoutePath.collectionEditInfo} element={<CollectionEditInfoPage />} />
+              <Route path={RoutePath.collectionEditQuiz} element={<CollectionEditQuizPage />} />
+              <Route path={RoutePath.collectionSearch} element={<CollectionSearchPage />} />
             </Route>
           </Route>
           {/* Auth */}
-          <Route path={RoutePath.login.pathname} element={<LoginPage />} />
+          <Route path={RoutePath.login} element={<LoginPage />} />
           {/* Install Induce */}
-          <Route path={RoutePath.installGuide.pathname} element={<InstallGuidePage />} />
+          <Route path={RoutePath.installGuide} element={<InstallGuidePage />} />
         </Route>
       </Routes>
     </BrowserRouter>

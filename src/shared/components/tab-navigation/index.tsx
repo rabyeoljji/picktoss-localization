@@ -8,22 +8,22 @@ import { cn } from '@/shared/lib/utils'
 const navItems = [
   {
     label: '홈',
-    to: RoutePath.root.pathname,
+    to: RoutePath.root,
     icon: <IcHome />,
   },
   {
     label: '퀴즈노트',
-    to: RoutePath.notes.pathname,
+    to: RoutePath.notes,
     icon: <IcQuiznote />,
   },
   {
     label: '컬렉션',
-    to: RoutePath.collections.pathname,
+    to: RoutePath.collections,
     icon: <IcCollection />,
   },
   {
     label: '마이',
-    to: RoutePath.account.pathname,
+    to: RoutePath.account,
     icon: <IcMy />,
   },
 ] as const
