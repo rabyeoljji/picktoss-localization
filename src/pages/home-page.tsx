@@ -14,6 +14,7 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import { SearchInput } from '@/shared/components/ui/search-input'
+import { Link } from '@/shared/lib/router'
 
 const HomePage = () => {
   const clearToken = useAuthStore((state) => state.clearToken)
@@ -25,6 +26,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col gap-6 px-10">
       <Button onClick={handleLogout}>로그아웃</Button>
+      <Link to="/account">asd</Link>
       <SearchInput />
       <Drawer dismissible>
         <DrawerTrigger asChild>
