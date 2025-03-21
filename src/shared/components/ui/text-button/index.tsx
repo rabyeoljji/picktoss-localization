@@ -10,10 +10,10 @@ const textButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'text-gray-700',
+        secondary: 'text-gray-700',
         primary: 'text-orange-500',
         critical: 'text-red-500',
-        secondary: 'text-gray-500',
+        sub: 'text-gray-500',
       },
       size: {
         lg: 'typo-button-1 gap-2 [&_svg]:size-5',
@@ -22,7 +22,7 @@ const textButtonVariants = cva(
       },
     },
     defaultVariants: {
-      variant: 'default',
+      variant: 'secondary',
       size: 'md',
     },
   },
