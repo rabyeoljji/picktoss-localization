@@ -78,16 +78,16 @@ const InputWithCancelButton = ({
   const placeholder =
     pathname === '/home-search'
       ? '노트, 퀴즈, 컬렉션 검색'
-      : pathname === RoutePath.noteSearch.pathname
+      : pathname === RoutePath.noteSearch
         ? '노트명, 노트, 퀴즈 검색'
-        : pathname === RoutePath.collectionSearch.pathname
+        : pathname === RoutePath.collectionSearch
           ? '컬렉션 검색'
           : '검색어를 입력해주세요'
 
   const handleCancel = () => {
     if (prev) {
       if (prev === 'home') {
-        router.replace(RoutePath.root.pathname)
+        router.replace(RoutePath.root)
       }
     } else {
       router.back()

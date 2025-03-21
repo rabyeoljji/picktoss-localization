@@ -6,6 +6,7 @@ import { Input } from '../input'
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   deleteKeyword?: () => void
+  // onValueChange?: (value: string) => void
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(

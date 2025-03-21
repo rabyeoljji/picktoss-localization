@@ -46,7 +46,7 @@ export const SearchPage = () => {
         left="back"
         content={
           <form onSubmit={handleSubmit}>
-            <SearchInput onValueChange={(value: string) => setKeyword(value)} />
+            <SearchInput onChange={(e) => setKeyword(e.target.value)} />
           </form>
         }
       />
@@ -85,9 +85,9 @@ const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) 
           문서 ({documents.length})
         </Text>
         {documents.map((document: DocumentSearchResult) => (
-          <div key={document.id} className="p-3 rounded-lg bg-base-2 mb-2">
+          <div key={document.documentId} className="p-3 rounded-lg bg-base-2 mb-2">
             <Text typo="subtitle-2-medium" className="line-clamp-1">
-              {document.title}
+              {document.documentName}
             </Text>
             <Text typo="body-1-regular" color="sub" className="line-clamp-2 mt-1">
               {document.content}
@@ -103,10 +103,10 @@ const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) 
         {collections.map((collection: CollectionSearchResult) => (
           <div key={collection.id} className="p-3 rounded-lg bg-base-2 mb-2">
             <Text typo="subtitle-2-medium" className="line-clamp-1">
-              {collection.title}
+              {collection.name}
             </Text>
             <Text typo="body-1-regular" color="sub" className="line-clamp-2 mt-1">
-              {collection.description}
+              {collection.memberName}
             </Text>
           </div>
         ))}
