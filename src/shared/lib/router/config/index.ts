@@ -71,6 +71,7 @@ export const RoutePath = {
 export type RouteConfig = {
   /** 메인 홈 화면 */
   [RoutePath.root]: { pathname: typeof RoutePath.root }
+  [RoutePath.search]: { pathname: typeof RoutePath.search }
 
   /** 로그인 페이지 */
   [RoutePath.login]: { pathname: typeof RoutePath.login }
