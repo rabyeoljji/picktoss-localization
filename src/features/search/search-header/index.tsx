@@ -76,7 +76,7 @@ const InputWithCancelButton = ({
   const pathname = useLocation().pathname
 
   const placeholder =
-    pathname === '/home-search'
+    pathname === RoutePath.search
       ? '노트, 퀴즈, 컬렉션 검색'
       : pathname === RoutePath.noteSearch
         ? '노트명, 노트, 퀴즈 검색'
