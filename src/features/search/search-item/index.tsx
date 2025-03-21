@@ -25,9 +25,9 @@ const SearchItem = ({
 }: Props) => {
   return (
     <Link
-      to={RoutePath.noteDetail.pathname}
-      params={[documentId ?? 0]}
-      search={resultType === 'quiz' ? { tab: 'QUIZ' } : {}}
+      to={RoutePath.noteDetail}
+      params={[String(documentId)]}
+      search={resultType === 'quiz' ? { tab: ['QUIZ'] } : {}}
       className={cn('border-b border-divider py-[24px] flex flex-col', lastItem && 'border-none')}
     >
       <div className="mb-[8px] flex items-center">

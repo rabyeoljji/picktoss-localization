@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChangeEvent } from 'react'
 
 import SearchHeader from '@/features/search/search-header'
 import SearchItem from '@/features/search/search-item'
 import { highlightAndTrimText } from '@/features/search/utils'
 
-import { useSearchDocument } from '@/entities/document/api/hooks'
+import { DocumentSearchResult, QuizSearchResult } from '@/entities/search/api'
+import { useSearchDocuments, useSearchDocumentsQuery } from '@/entities/search/api/hooks'
 
 import { Text } from '@/shared/components/ui/text'
 import { useSearch } from '@/shared/hooks/use-search'
@@ -24,7 +26,7 @@ const NoteSearchPage = () => {
     handleSubmit,
   } = useSearch()
 
-  const { data, isPending } = useSearchDocument({ keyword: initialKeyword })
+  const { data, isPending } = useSearchDocumentsQuery(initialKeyword)
   const searchResults = [...(data?.documents ?? []), ...(data?.quizzes ?? [])]
   const onChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
@@ -83,7 +85,7 @@ const NoResults = ({ className }: { className?: HTMLElement['className'] }) => {
 
 interface Props {
   length: number
-  searchResults: {}[]
+  searchResults: (DocumentSearchResult | QuizSearchResult)[]
   keyword: string
 }
 

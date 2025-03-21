@@ -41,7 +41,7 @@ interface SearchDocumentResponse {
     documentId: number
     documentName: string
     content: string
-    documentType: 'FILE' | 'TEXT' | 'NOTION'
+    documentType: 'FILE' | 'TEXT'
     directory: {
       id: number
       name: 'string'
@@ -54,7 +54,7 @@ interface SearchDocumentResponse {
     answer: string
     documentId: number
     documentName: string
-    documentType: 'FILE' | 'TEXT' | 'NOTION'
+    documentType: 'FILE' | 'TEXT'
     directoryName: string
   }[]
 }
