@@ -20,12 +20,7 @@ export default meta
 export const AllCases: StoryObj<typeof TextButton> = {
   render: () => {
     // TextButton의 variant 종류
-    const variants: Array<'default' | 'primary' | 'critical' | 'secondary'> = [
-      'default',
-      'primary',
-      'critical',
-      'secondary',
-    ]
+    const variants: Array<'sub' | 'primary' | 'critical' | 'secondary'> = ['sub', 'primary', 'critical', 'secondary']
 
     return (
       <div style={{ display: 'grid', gap: '40px' }}>

@@ -12,13 +12,14 @@
 export const RoutePath = {
   /** 메인 홈 화면 */
   root: '/',
+  search: '/search',
 
   /** 로그인 페이지 */
   login: '/login',
-  
+
   /** 설치 가이드 페이지 */
   installGuide: '/install-guide',
-  
+
   /** 노트 관련 */
   notes: '/note',
   noteDetail: '/note/:noteId',
@@ -28,7 +29,7 @@ export const RoutePath = {
   noteEdit: '/note/edit/:noteId',
   noteWrite: '/note/write',
   noteUpload: '/note/upload',
-  
+
   /** 계정 관련 */
   account: '/account',
   accountInfo: '/account/info',
@@ -42,11 +43,11 @@ export const RoutePath = {
   faq: '/account/faq',
   policy: '/account/policy',
   withdraw: '/account/withdraw',
-  
+
   /** 테마 퀴즈 */
   randomQuiz: '/random-quiz',
   bombQuiz: '/bomb-quiz',
-  
+
   /** 컬렉션 관련 */
   collections: '/collection',
   collectionDetail: '/collection/:collectionId',
@@ -75,10 +76,10 @@ export type RouteConfig = {
 
   /** 로그인 페이지 */
   [RoutePath.login]: { pathname: typeof RoutePath.login }
-  
+
   /** 설치 가이드 페이지 */
   [RoutePath.installGuide]: { pathname: typeof RoutePath.installGuide }
-  
+
   /** 노트 관련 */
   [RoutePath.notes]: { pathname: typeof RoutePath.notes }
   [RoutePath.noteDetail]: { pathname: typeof RoutePath.noteDetail }
@@ -88,7 +89,7 @@ export type RouteConfig = {
   [RoutePath.noteEdit]: { pathname: typeof RoutePath.noteEdit }
   [RoutePath.noteWrite]: { pathname: typeof RoutePath.noteWrite }
   [RoutePath.noteUpload]: { pathname: typeof RoutePath.noteUpload }
-  
+
   /** 계정 관련 */
   [RoutePath.account]: { pathname: typeof RoutePath.account }
   [RoutePath.accountInfo]: { pathname: typeof RoutePath.accountInfo }
@@ -102,7 +103,7 @@ export type RouteConfig = {
   [RoutePath.faq]: { pathname: typeof RoutePath.faq }
   [RoutePath.policy]: { pathname: typeof RoutePath.policy }
   [RoutePath.withdraw]: { pathname: typeof RoutePath.withdraw }
-  
+
   /** 테마 퀴즈 */
   [RoutePath.randomQuiz]: {
     pathname: typeof RoutePath.randomQuiz
@@ -118,7 +119,7 @@ export type RouteConfig = {
       date: string
     }
   }
-  
+
   /** 컬렉션 관련 */
   [RoutePath.collections]: { pathname: typeof RoutePath.collections }
   [RoutePath.collectionDetail]: { pathname: typeof RoutePath.collectionDetail }
