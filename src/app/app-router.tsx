@@ -37,6 +37,7 @@ import {
   NoteWritePage,
   NotesPage,
 } from '@/pages/note'
+import { SearchPage } from '@/pages/search-page'
 import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
 
 import { AuthLayout } from '@/app/layout/auth-layout'
@@ -55,6 +56,7 @@ export const AppRouter = () => {
             <Route element={<PWAOnlyMobileLayout />}>
               {/* Home */}
               <Route path={RoutePath.root} element={<HomePage />} />
+              <Route path={RoutePath.search} element={<SearchPage />} />
 
               {/* Note */}
               <Route path={RoutePath.notes}>

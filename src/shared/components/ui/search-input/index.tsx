@@ -5,11 +5,12 @@ import { IcClear, IcSearch } from '@/shared/assets/icon'
 import { Input } from '../input'
 
 interface SearchInputProps {
+  value?: string
   onValueChange?: (value: string) => void
 }
 
-export const SearchInput = ({ onValueChange }: SearchInputProps) => {
-  const [internalValue, setValue] = useState('')
+export const SearchInput = ({ value, onValueChange }: SearchInputProps) => {
+  const [internalValue, setValue] = useState(value)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,7 +21,7 @@ export const SearchInput = ({ onValueChange }: SearchInputProps) => {
   const handleClear = () => {
     setValue('')
     onValueChange?.('')
-    
+
     // clear 후 input에 focus 설정
     setTimeout(() => {
       inputRef.current?.focus()
