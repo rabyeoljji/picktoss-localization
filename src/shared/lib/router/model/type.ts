@@ -1,63 +1,73 @@
-import type { NavigateOptions } from 'react-router'
-
-import { RoutePath } from '../config'
+import { type RouteConfig } from '../config'
 
 /**
- * RoutePath의 구성 객체 타입
+ * RouteConfig 키에서 추출한 경로 문자열 리터럴 타입
+ * 예: '/', '/login', '/account' 등
  */
-export type RouteConfig = (typeof RoutePath)[keyof typeof RoutePath]
+export type Pathname = keyof RouteConfig
 
 /**
- * 전체 Pathname 타입 (예: '/', '/login', '/workspace/:id', 등)
+ * 주어진 경로에 대한 검색 파라미터 타입을 추출
+ * @template T 경로 문자열 리터럴 타입
  */
-export type Pathname = RouteConfig['pathname']
+export type SearchOf<T extends Pathname> = RouteConfig[T] extends { search: infer S extends object }
+  ? S
+  : Record<string, never>
 
 /**
- * 주어진 Pathname에 해당하는 search 객체 타입을 추출
+ * 검색 파라미터에서 허용되는 값 타입들
+ * @template T 검색 파라미터 객체 타입
  */
-export type SearchOf<T extends Pathname> =
-  Extract<RouteConfig, { pathname: T }> extends { search: infer S } ? S : Record<string, never>
-
-/**
- * config에 정의된 search 타입은 항상 배열이므로, 각 프로퍼티의 타입은 배열의 요소 타입으로 변환
- * search는 모두 선택적(optional)으로 처리
- */
-export type AllowedSearch<S> = {
-  [K in keyof S]?: S[K] extends readonly (infer U)[] ? U : never
+export type AllowedSearch<T extends object> = {
+  [K in keyof T]?: T[K] extends Array<infer _R>
+    ? Array<string | number | boolean>
+    : string | number | boolean
 }
 
 /**
- * 경로에서 파라미터를 tuple 형태로 추출하는 타입 헬퍼
- * 예: '/workspace/:id/details/:tabId' -> [string | number, string | number]
+ * 경로 문자열에서 파라미터를 추출하여 튜플 타입으로 변환
+ * 예: '/user/:id' => [string]
+ * @template T 경로 문자열 리터럴 타입
  */
-export type ExtractRouteParamsTuple<T extends string> = T extends `${infer _Start}:${infer _Param}/${infer Rest}`
-  ? [string | number, ...ExtractRouteParamsTuple<`/${Rest}`>]
-  : T extends `${infer _Start}:${infer _Param}`
-    ? [string | number]
-    : []
+export type ExtractRouteParamsTuple<T extends string> = T extends `${string}:${infer _Param}/${infer Rest}`
+  ? [string, ...ExtractRouteParamsTuple<`/${Rest}`>]
+  : T extends `${string}:${infer _Param}`
+  ? [string]
+  : []
 
 /**
- * Options:
- * - 파라미터가 있는 경우 options.params는 해당 튜플과 정확히 일치해야 함
- * - search는 string 또는 AllowedSearch<SearchOf<T>>를 받을 수 있음
+ * 경로에 따른 옵션 타입 (search, hash, params)
+ * 파라미터가 없는 경로는 params 옵션을 받지 않음
+ * @template T 경로 문자열 리터럴 타입
+ * @template S 검색 파라미터 객체 타입
  */
 export type Options<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> =
-  ExtractRouteParamsTuple<T> extends infer P extends unknown[]
+  ExtractRouteParamsTuple<RouteConfig[T]['pathname']> extends infer P extends unknown[]
     ? P extends []
-      ? { search?: string | S; hash?: string; params?: [] }
-      : { search?: string | S; hash?: string; params: P }
+      ? { search?: string | S; hash?: string } // 파라미터가 없는 경로는 params 옵션 제외
+      : { search?: string | S; hash?: string; params: P } // 파라미터가 있는 경로는 params 필수
     : never
 
 /**
- * ExtendedOptions:
- * - NavigateOptions에서 replace는 별도로 처리하므로 제외
+ * 내부 사용을 위한 확장된 옵션 타입
+ * params를 선택적으로 만들고 빈 배열 할당 가능
+ * @template T 경로 문자열 리터럴 타입
+ * @template S 검색 파라미터 객체 타입
  */
-export type ExtendedOptions<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> = Options<T, S> &
-  Omit<NavigateOptions, 'replace'>
+export type ExtendedOptions<T extends Pathname, S extends object> = {
+  search?: string | S
+  hash?: string
+  params?: ExtractRouteParamsTuple<RouteConfig[T]['pathname']>
+}
 
 /**
- * ParamOptions:
- * - 파라미터 유무에 따라 options 인자의 필요 여부를 결정
+ * 경로에 따라 파라미터 옵션의 필수 여부를 결정하는 타입
+ * 파라미터가 있는 경로는 옵션 객체가 필수, 없는 경로는 선택적
+ * @template T 경로 문자열 리터럴 타입
+ * @template S 검색 파라미터 객체 타입
  */
-export type ParamOptions<T extends Pathname, S extends object = AllowedSearch<SearchOf<T>>> =
-  ExtractRouteParamsTuple<T> extends [] ? [options?: ExtendedOptions<T, S>] : [options: ExtendedOptions<T, S>]
+export type ParamOptions<T extends Pathname, S extends object> = ExtractRouteParamsTuple<
+  RouteConfig[T]['pathname']
+> extends []
+  ? [options?: Options<T, S>]
+  : [options: Options<T, S>]

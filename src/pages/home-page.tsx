@@ -14,8 +14,10 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import { SearchInput } from '@/shared/components/ui/search-input'
+import { Link, useRouter } from '@/shared/lib/router'
 
 const HomePage = () => {
+  const router = useRouter()
   const clearToken = useAuthStore((state) => state.clearToken)
 
   const handleLogout = () => {
@@ -24,7 +26,9 @@ const HomePage = () => {
 
   return (
     <div className="flex flex-col gap-6 px-10">
+      <Button onClick={() => router.push('/search')}>검색</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
+      <Link to="/account">asd</Link>
       <SearchInput />
       <Drawer dismissible>
         <DrawerTrigger asChild>
