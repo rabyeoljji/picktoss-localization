@@ -7,20 +7,17 @@ import { getLocalStorage, removeLocalStorage, setLocalStorage } from '@/shared/l
 export const useSearch = () => {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const initialKeyword = searchParams.get('keyword') || ''
+  const searchKeyword = searchParams.get('keyword') || ''
 
-  const [keyword, setKeyword] = useState(initialKeyword)
+  const [keyword, setKeyword] = useState(searchKeyword)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
   const searchInputRef = useRef<HTMLInputElement>(null)
-  const searchContainerRef = useRef<HTMLDivElement>(null)
+  const recentSearchRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
-      if (
-        !searchInputRef.current?.contains(e.target as Node) &&
-        !searchContainerRef.current?.contains(e.target as Node)
-      ) {
+      if (!searchInputRef.current?.contains(e.target as Node) && !recentSearchRef.current?.contains(e.target as Node)) {
         setIsSearchFocused(false)
       }
     }
@@ -33,12 +30,12 @@ export const useSearch = () => {
 
   // 검색 후 로컬스토리지에 반영
   useEffect(() => {
-    if (!initialKeyword) return
+    if (!searchKeyword) return
 
     const storageSearches = getLocalStorage<string[]>(LOCAL_KEY.RECENT_SEARCHES) ?? []
-    const newSearches = [initialKeyword, ...storageSearches.filter((search) => search !== initialKeyword)].slice(0, 5)
+    const newSearches = [searchKeyword, ...storageSearches.filter((search) => search !== searchKeyword)].slice(0, 5)
     setLocalStorage(LOCAL_KEY.RECENT_SEARCHES, newSearches)
-  }, [initialKeyword])
+  }, [searchKeyword])
 
   /** 최근 검색어 리스트에서 특정 검색어 클릭 시 검색창에 키워드가 반영되도록하는 함수 */
   const handleUpdateKeyword = (selectedKeyword: string) => {
@@ -80,11 +77,11 @@ export const useSearch = () => {
   return {
     keyword,
     setKeyword,
-    initialKeyword,
+    searchKeyword,
     isSearchFocused,
     setIsSearchFocused,
     searchInputRef,
-    searchContainerRef,
+    recentSearchRef,
     handleUpdateKeyword,
     handleDeleteKeyword,
     handleSubmit,

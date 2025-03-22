@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ChangeEvent } from 'react'
 
 import SearchHeader from '@/features/search/search-header'
-import SearchItem from '@/features/search/search-item'
-import { highlightAndTrimText } from '@/features/search/utils'
+import SearchItem from '@/features/search/search-item-quiz-note'
+import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/utils'
 
 import { DocumentSearchResult, QuizSearchResult } from '@/entities/search/api'
-import { useSearchDocuments, useSearchDocumentsQuery } from '@/entities/search/api/hooks'
+import { useSearchDocumentsQuery } from '@/entities/search/api/hooks'
 
 import { Text } from '@/shared/components/ui/text'
 import { useSearch } from '@/shared/hooks/use-search'
@@ -14,63 +13,67 @@ import { cn } from '@/shared/lib/utils'
 
 const NoteSearchPage = () => {
   const {
-    initialKeyword,
+    searchKeyword,
     keyword,
     setKeyword,
     isSearchFocused,
     setIsSearchFocused,
     searchInputRef,
-    searchContainerRef,
+    recentSearchRef,
     handleDeleteKeyword,
     handleUpdateKeyword,
     handleSubmit,
   } = useSearch()
 
-  const { data, isPending } = useSearchDocumentsQuery(initialKeyword)
-  const searchResults = [...(data?.documents ?? []), ...(data?.quizzes ?? [])]
   const onChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
   }
 
   return (
-    <div>
+    <div className="size-full bg-surface-1">
       <SearchHeader
         keyword={keyword}
         onChangeKeyword={onChangeKeyword}
         handleDeleteKeyword={handleDeleteKeyword}
         handleSubmit={handleSubmit}
         handleUpdateKeyword={handleUpdateKeyword}
-        searchContainerRef={searchContainerRef}
+        recentSearchRef={recentSearchRef}
         searchInputRef={searchInputRef}
         isSearchFocused={isSearchFocused}
         setIsSearchFocused={setIsSearchFocused}
       />
-      {!isSearchFocused &&
-        (isPending ? (
-          <></>
-        ) : // todo: lading lottie
-        // <Loading center />
-        // 검색 결과 X
-        !data || searchResults.length === 0 ? (
-          <NoResults className="h-[calc(100dvh-56px)]" />
-        ) : (
-          // 검색 결과 O : 검색 결과 리스트
-          data &&
-          searchResults.length > 0 && (
-            <div className="h-[calc(100dvh-56px)] overflow-y-auto text-text1-medium">
-              <DocumentQuizSearchList
-                length={searchResults.length}
-                searchResults={searchResults}
-                keyword={initialKeyword}
-              />
-            </div>
-          )
-        ))}
+
+      <SearchContent isSearchFocused={isSearchFocused} searchKeyword={searchKeyword} />
     </div>
   )
 }
 
 export default NoteSearchPage
+
+const SearchContent = ({ isSearchFocused, searchKeyword }: { isSearchFocused: boolean; searchKeyword: string }) => {
+  const { data, isPending } = useSearchDocumentsQuery(searchKeyword)
+  const searchResults = [...(data?.documents ?? []), ...(data?.quizzes ?? [])]
+  const noResults = !data || searchResults.length === 0
+
+  if (isSearchFocused) {
+    if (isPending) {
+      // todo: lading lottie
+      return <></>
+    }
+
+    if (noResults) {
+      return <NoResults className="h-[calc(100dvh-56px)]" />
+    }
+
+    if (data) {
+      return (
+        <div className="h-[calc(100dvh-56px)] px-[16px] overflow-y-auto text-text1-medium">
+          <DocumentQuizSearchList length={searchResults.length} searchResults={searchResults} keyword={searchKeyword} />
+        </div>
+      )
+    }
+  }
+}
 
 const NoResults = ({ className }: { className?: HTMLElement['className'] }) => {
   return (
@@ -97,41 +100,49 @@ const DocumentQuizSearchList = ({ length, searchResults, keyword }: Props) => {
       </Text>
 
       <div className="flex flex-col">
-        {/* {searchResults.map((searchItem, idx) => (
-          <SearchItem
-            key={idx}
-            documentId={searchItem.documentId || null}
-            createType={searchItem.documentType as Document.Type}
-            documentTitle={highlightAndTrimText(searchItem.documentName ?? '', keyword ?? '')}
-            matchingSentence={
-              searchItem.content ? (
+        {searchResults.map((searchItem, idx) => {
+          const isQuizType = 'question' in searchItem && 'answer' in searchItem
+          const isNoteType = 'content' in searchItem
+
+          return (
+            <SearchItem
+              key={idx}
+              documentId={searchItem.documentId || null}
+              documentTitle={highlightAndTrimText(searchItem.documentName ?? '', keyword ?? '')}
+              matchingSentence={
                 // 문서 결과
-                <MarkdownProcessor markdownText={searchItem.content} keyword={keyword ?? ''} />
-              ) : (
-                // 퀴즈 결과
-                highlightAndTrimText(
-                  `Q.${searchItem.question ?? '...'} A.${
-                    (searchItem.answer === 'correct'
-                      ? 'O'
-                      : searchItem.answer === 'incorrect'
-                        ? 'X'
-                        : searchItem.answer) ?? '...'
-                  }`,
-                  keyword ?? '',
+                isNoteType ? (
+                  <MarkdownProcessor markdownText={searchItem.content} keyword={keyword ?? ''} />
+                ) : (
+                  // 퀴즈 결과
+                  isQuizType &&
+                  highlightAndTrimText(
+                    `Q.${searchItem.question ?? '...'} A.${
+                      (searchItem.answer === 'correct'
+                        ? 'O'
+                        : searchItem.answer === 'incorrect'
+                          ? 'X'
+                          : searchItem.answer) ?? '...'
+                    }`,
+                    keyword ?? '',
+                  )
                 )
-              )
-            }
-            resultType={searchItem.question ? 'quiz' : 'document'}
-            relativeDirectory={
-              searchItem.directory
-                ? searchItem.directory.name === '기본 폴더'
-                  ? '전체 노트'
-                  : searchItem.directory.name
-                : (searchItem.directoryName ?? '')
-            }
-            lastItem={idx === searchResults.length - 1}
-          />
-        ))} */}
+              }
+              resultType={isQuizType ? 'quiz' : 'document'}
+              quizCount={25} // todo: searchItem.-- 데이터 값으로 수정
+              charCount={15430} // todo: searchItem.-- 데이터 값으로 수정
+              relativeDirectory={
+                isNoteType
+                  ? searchItem.directory.name === '기본 폴더'
+                    ? '전체 노트'
+                    : searchItem.directory.name
+                  : (searchItem.directoryName ?? '')
+              }
+              directoryEmoji="🎯"
+              lastItem={idx === searchResults.length - 1}
+            />
+          )
+        })}
       </div>
     </div>
   )

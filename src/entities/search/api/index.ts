@@ -23,7 +23,7 @@ export interface DocumentSearchResult {
   documentType: NoteType
   directory: {
     id: 0
-    name: 'string'
+    name: string
   }
 }
 

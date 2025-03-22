@@ -16,7 +16,7 @@ interface Props {
   handleUpdateKeyword: (selectedKeyword: string) => void
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
   searchInputRef: React.RefObject<HTMLInputElement | null>
-  searchContainerRef: React.RefObject<HTMLDivElement | null>
+  recentSearchRef: React.RefObject<HTMLDivElement | null>
   isSearchFocused: boolean
   setIsSearchFocused: (value: boolean) => void
 }
@@ -27,7 +27,7 @@ const SearchHeader = ({
   handleUpdateKeyword,
   handleDeleteKeyword,
   handleSubmit,
-  searchContainerRef,
+  recentSearchRef,
   searchInputRef,
   isSearchFocused,
   setIsSearchFocused,
@@ -44,8 +44,8 @@ const SearchHeader = ({
         setIsSearchFocused={setIsSearchFocused}
       />
 
-      {/* input 클릭 시 나타날 최근 검색어 */}
-      {isSearchFocused && <RecentSearches containerRef={searchContainerRef} onUpdateKeyword={handleUpdateKeyword} />}
+      {/* input 클릭 시 나타날 최근 검색어 : 외부 영역 클릭 시 닫힘 */}
+      {isSearchFocused && <RecentSearches recentSearchRef={recentSearchRef} onUpdateKeyword={handleUpdateKeyword} />}
     </>
   )
 }
@@ -95,8 +95,8 @@ const InputWithCancelButton = ({
   }
 
   return (
-    <header className="flex-center relative right-1/2 z-20 h-[56px] w-full max-w-mobile grow translate-x-1/2  bg-surface-1 px-[16px] typo-subtitle-2-medium">
-      <button type="button" onClick={handleCancel} className="ml-[17px] w-fit flex-none">
+    <header className="flex-center relative right-1/2 z-20 h-[56px] w-full max-w-xl grow translate-x-1/2  bg-surface-1 px-[16px] typo-subtitle-2-medium">
+      <button type="button" onClick={handleCancel} className="ml-[8px] mr-[12px] w-fit flex-none">
         <IcBack className="size-[24px] text-primary" />
       </button>
 
@@ -109,7 +109,6 @@ const InputWithCancelButton = ({
           onChange={onChangeInputValue}
           deleteKeyword={onDeleteKeyword}
           placeholder={placeholder}
-          className="h-[40px] placeholder:text-caption"
         />
       </form>
     </header>
@@ -117,15 +116,15 @@ const InputWithCancelButton = ({
 }
 
 interface RecentSearchesProps {
-  containerRef: RefObject<HTMLDivElement | null>
+  recentSearchRef: RefObject<HTMLDivElement | null>
   onUpdateKeyword: (keyword: string) => void
 }
 
-const RecentSearches = ({ containerRef, onUpdateKeyword }: RecentSearchesProps) => {
+const RecentSearches = ({ recentSearchRef, onUpdateKeyword }: RecentSearchesProps) => {
   const { recentSearches, deleteRecentSearch, deleteAllRecentSearches } = useRecentSearches()
 
   return (
-    <div ref={containerRef} className="flex flex-col border-t border-divider px-[16px] py-[20px]">
+    <div ref={recentSearchRef} className="flex flex-col border-t border-divider bg-surface-1 px-[16px] py-[20px]">
       <div className="mb-[14px] flex items-center justify-between">
         <Text typo="body-1-bold" className="text-secondary">
           최근 검색어

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import mammoth from 'mammoth'
 import { marked } from 'marked'
 import * as pdfjs from 'pdfjs-dist'
@@ -520,6 +519,7 @@ const handleDocxFile = async (file: File): Promise<string> => {
     const result = await mammoth.extractRawText({ arrayBuffer })
     return result.value.trim()
   } catch (error) {
+    console.log(error)
     throw new Error('DOCX 파일 처리 중 오류가 발생했습니다.')
   }
 }
@@ -530,6 +530,7 @@ const handleTxtFile = async (file: File): Promise<string> => {
     const text = await file.text()
     return text.trim()
   } catch (error) {
+    console.log(error)
     throw new Error('TXT 파일 처리 중 오류가 발생했습니다.')
   }
 }
