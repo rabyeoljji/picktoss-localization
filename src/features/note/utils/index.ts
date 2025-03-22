@@ -6,9 +6,9 @@ import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api'
 import '@/shared/lib/utils/pdf'
 
 /** markdown string을 받아 markdown 문법을 제거해 텍스트만 반환하는 함수 */
-export function extractPlainText(markdownText: string): string {
+export async function extractPlainText(markdownText: string) {
   // 마크다운 -> HTML 변환
-  const html = marked(markdownText, { headerIds: false, mangle: false })
+  const html = await marked(markdownText, { gfm: true })
 
   // HTML -> 텍스트 추출
   const div = document.createElement('div')

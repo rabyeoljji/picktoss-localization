@@ -1,10 +1,23 @@
-'use client'
-
-import { JSX } from 'react'
+import { JSX, useEffect, useState } from 'react'
 
 import { extractPlainText } from '@/features/note/utils'
 
 import { Text } from '@/shared/components/ui/text'
+
+/** 마크다운 텍스트를 받아
+ * 문법을 제거하고 키워드에 강조를 해서 반환하는 컴포넌트
+ */
+export const MarkdownProcessor = ({ markdownText, keyword }: { markdownText: string; keyword: string }) => {
+  const [highlightedText, setHighlightedText] = useState<React.ReactNode>('')
+
+  useEffect(() => {
+    extractPlainText(markdownText).then((plainText) => {
+      setHighlightedText(highlightAndTrimText(plainText, keyword))
+    })
+  }, [markdownText, keyword])
+
+  return <div>{highlightedText}</div>
+}
 
 /**
  * 텍스트에서 키워드를 강조하는 함수
@@ -56,14 +69,4 @@ export function highlightAndTrimText(text: string, keyword: string): JSX.Element
       {suffix}
     </>
   )
-}
-
-/** 마크다운 텍스트를 받아
- * 문법을 제거하고 키워드에 강조를 해서 반환하는 함수
- */
-export const MarkdownProcessor = ({ markdownText, keyword }: { markdownText: string; keyword: string }) => {
-  const plainText = extractPlainText(markdownText)
-  const highlightedText = highlightAndTrimText(plainText, keyword)
-
-  return <div>{highlightedText}</div>
 }
