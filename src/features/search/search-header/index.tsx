@@ -1,5 +1,3 @@
-// import InputWithCancelButton from './input-with-cancel-button'
-// import RecentSearches from './recent-searches'
 import { ChangeEventHandler, RefObject } from 'react'
 import { useLocation, useSearchParams } from 'react-router'
 
@@ -8,16 +6,19 @@ import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
 import { useRecentSearches } from '@/shared/hooks/use-search'
 import { RoutePath, useRouter } from '@/shared/lib/router'
+import { StorageKeyType } from '@/shared/lib/storage/model/type'
 
 interface Props {
   keyword: string
+  searchInputRef: React.RefObject<HTMLInputElement | null>
+  recentSearchRef: React.RefObject<HTMLDivElement | null>
+  isSearchFocused: boolean
+  recentStorageKey: StorageKeyType
+
   onChangeKeyword: (e: React.ChangeEvent<HTMLInputElement>) => void
   handleDeleteKeyword: () => void
   handleUpdateKeyword: (selectedKeyword: string) => void
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void
-  searchInputRef: React.RefObject<HTMLInputElement | null>
-  recentSearchRef: React.RefObject<HTMLDivElement | null>
-  isSearchFocused: boolean
   setIsSearchFocused: (value: boolean) => void
 }
 
@@ -31,10 +32,11 @@ const SearchHeader = ({
   searchInputRef,
   isSearchFocused,
   setIsSearchFocused,
+  recentStorageKey,
 }: Props) => {
   return (
     <>
-      <InputWithCancelButton
+      <InputWithBackButton
         inputValue={keyword}
         onChangeInputValue={onChangeKeyword}
         onDeleteKeyword={handleDeleteKeyword}
@@ -45,7 +47,13 @@ const SearchHeader = ({
       />
 
       {/* input 클릭 시 나타날 최근 검색어 : 외부 영역 클릭 시 닫힘 */}
-      {isSearchFocused && <RecentSearches recentSearchRef={recentSearchRef} onUpdateKeyword={handleUpdateKeyword} />}
+      {isSearchFocused && (
+        <RecentSearches
+          recentStorageKey={recentStorageKey}
+          recentSearchRef={recentSearchRef}
+          onUpdateKeyword={handleUpdateKeyword}
+        />
+      )}
     </>
   )
 }
@@ -62,7 +70,8 @@ interface InputWithCancelButtonProps {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void
 }
 
-const InputWithCancelButton = ({
+/** 뒤로가기 버튼과 검색창을 결합한 컴포넌트 */
+const InputWithBackButton = ({
   inputValue,
   onChangeInputValue,
   searchInputRef,
@@ -84,7 +93,7 @@ const InputWithCancelButton = ({
           ? '컬렉션 검색'
           : '검색어를 입력해주세요'
 
-  const handleCancel = () => {
+  const handleBack = () => {
     if (prev) {
       if (prev === 'home') {
         router.replace(RoutePath.root)
@@ -96,7 +105,7 @@ const InputWithCancelButton = ({
 
   return (
     <header className="flex-center relative right-1/2 z-20 h-[56px] w-full max-w-xl grow translate-x-1/2  bg-surface-1 px-[16px] typo-subtitle-2-medium">
-      <button type="button" onClick={handleCancel} className="ml-[8px] mr-[12px] w-fit flex-none">
+      <button type="button" onClick={handleBack} className="ml-[8px] mr-[12px] w-fit flex-none">
         <IcBack className="size-[24px] text-primary" />
       </button>
 
@@ -117,11 +126,13 @@ const InputWithCancelButton = ({
 
 interface RecentSearchesProps {
   recentSearchRef: RefObject<HTMLDivElement | null>
+  recentStorageKey: StorageKeyType
   onUpdateKeyword: (keyword: string) => void
 }
 
-const RecentSearches = ({ recentSearchRef, onUpdateKeyword }: RecentSearchesProps) => {
-  const { recentSearches, deleteRecentSearch, deleteAllRecentSearches } = useRecentSearches()
+/** 최근 검색어 컴포넌트 */
+const RecentSearches = ({ recentSearchRef, recentStorageKey, onUpdateKeyword }: RecentSearchesProps) => {
+  const { recentKeywords, deleteRecentSearch, deleteAllRecentSearches } = useRecentSearches(recentStorageKey)
 
   return (
     <div ref={recentSearchRef} className="flex flex-col border-t border-divider bg-surface-1 px-[16px] py-[20px]">
@@ -135,7 +146,7 @@ const RecentSearches = ({ recentSearchRef, onUpdateKeyword }: RecentSearchesProp
       </div>
 
       <div className="flex flex-col">
-        {recentSearches.map((keyword) => (
+        {recentKeywords.map((keyword) => (
           <div
             key={keyword}
             onClick={() => onUpdateKeyword(keyword)}

@@ -9,6 +9,7 @@ import { useSearchDocumentsQuery } from '@/entities/search/api/hooks'
 
 import { Text } from '@/shared/components/ui/text'
 import { useSearch } from '@/shared/hooks/use-search'
+import { StorageKey } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
 
 const NoteSearchPage = () => {
@@ -23,7 +24,7 @@ const NoteSearchPage = () => {
     handleDeleteKeyword,
     handleUpdateKeyword,
     handleSubmit,
-  } = useSearch()
+  } = useSearch(StorageKey.quizNoteRecentSearchKeyword)
 
   const onChangeKeyword = (e: ChangeEvent<HTMLInputElement>) => {
     setKeyword(e.target.value)
@@ -41,6 +42,7 @@ const NoteSearchPage = () => {
         searchInputRef={searchInputRef}
         isSearchFocused={isSearchFocused}
         setIsSearchFocused={setIsSearchFocused}
+        recentStorageKey={StorageKey.quizNoteRecentSearchKeyword}
       />
 
       <SearchContent isSearchFocused={isSearchFocused} searchKeyword={searchKeyword} />
@@ -50,6 +52,7 @@ const NoteSearchPage = () => {
 
 export default NoteSearchPage
 
+/** 검색결과를 렌더링하는 컴포넌트 */
 const SearchContent = ({ isSearchFocused, searchKeyword }: { isSearchFocused: boolean; searchKeyword: string }) => {
   const { data, isPending } = useSearchDocumentsQuery(searchKeyword)
   const searchResults = [...(data?.documents ?? []), ...(data?.quizzes ?? [])]
@@ -75,6 +78,7 @@ const SearchContent = ({ isSearchFocused, searchKeyword }: { isSearchFocused: bo
   }
 }
 
+/** 검색 결과가 없을 때 보여주는 컴포넌트 */
 const NoResults = ({ className }: { className?: HTMLElement['className'] }) => {
   return (
     <div className={cn('flex-center flex-col gap-1', className)}>
@@ -92,6 +96,7 @@ interface Props {
   keyword: string
 }
 
+/** 검색 결과가 있을 때 퀴즈와 노트 결과들을 보여주는 컴포넌트 */
 const DocumentQuizSearchList = ({ length, searchResults, keyword }: Props) => {
   return (
     <div className="flex flex-col p-[16px]">
