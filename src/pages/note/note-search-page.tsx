@@ -146,7 +146,7 @@ const DocumentQuizSearchList = ({ length, searchResults, keyword }: Props) => {
                     : searchItem.directory.name
                   : (searchItem.directoryName ?? '')
               }
-              directoryEmoji="🎯"
+              directoryEmoji="🎯" // todo: searchItem.-- 데이터 값으로 수정
               lastItem={idx === searchResults.length - 1}
             />
           )
