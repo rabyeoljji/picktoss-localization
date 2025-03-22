@@ -4,11 +4,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import { Text } from '@/shared/components/ui/text'
 
-import SearchItem from '.'
+import SearchQuizNoteItem from '.'
 
-const meta: Meta<typeof SearchItem> = {
-  title: 'search/SearchItemQuizNote',
-  component: SearchItem,
+const meta: Meta<typeof SearchQuizNoteItem> = {
+  title: 'search/SearchQuizNoteItem',
+  component: SearchQuizNoteItem,
   parameters: {
     layout: 'centered',
   },
@@ -35,14 +35,14 @@ const meta: Meta<typeof SearchItem> = {
 }
 
 export default meta
-type Story = StoryObj<typeof SearchItem>
+type Story = StoryObj<typeof SearchQuizNoteItem>
 
 export const NoteResult: Story = {
   render: () => {
     const [{ lastItem }] = useArgs()
 
     return (
-      <SearchItem
+      <SearchQuizNoteItem
         documentId={0}
         documentTitle={'제무제표 분석하기'}
         matchingSentence={
@@ -68,7 +68,7 @@ export const NoteResult: Story = {
 export const QuizResult: Story = {
   render: () => {
     return (
-      <SearchItem
+      <SearchQuizNoteItem
         documentId={1}
         documentTitle={'최근 이슈'}
         matchingSentence={

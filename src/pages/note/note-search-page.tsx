@@ -1,12 +1,12 @@
 import { ChangeEvent } from 'react'
 
 import SearchHeader from '@/features/search/search-header'
-import SearchItem from '@/features/search/search-item-quiz-note'
 import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/utils'
 
 import { DocumentSearchResult, QuizSearchResult } from '@/entities/search/api'
 import { useSearchDocumentsQuery } from '@/entities/search/api/hooks'
 
+import SearchQuizNoteItem from '@/shared/components/items/search-quiz-note-item'
 import { Text } from '@/shared/components/ui/text'
 import { useSearch } from '@/shared/hooks/use-search'
 import { StorageKey } from '@/shared/lib/storage'
@@ -113,7 +113,7 @@ const DocumentQuizSearchList = ({ length, searchResults, keyword }: Props) => {
           const isNoteType = 'content' in searchItem
 
           return (
-            <SearchItem
+            <SearchQuizNoteItem
               key={idx}
               documentId={searchItem.documentId || null}
               documentTitle={highlightAndTrimText(searchItem.documentName ?? '', keyword ?? '')}

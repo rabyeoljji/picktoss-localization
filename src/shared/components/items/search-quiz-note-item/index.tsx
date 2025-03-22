@@ -15,7 +15,7 @@ interface Props {
   lastItem?: boolean
 }
 
-const SearchItem = ({
+const SearchQuizNoteItem = ({
   documentId,
   documentTitle,
   matchingSentence,
@@ -59,4 +59,4 @@ const SearchItem = ({
   )
 }
 
-export default SearchItem
+export default SearchQuizNoteItem
