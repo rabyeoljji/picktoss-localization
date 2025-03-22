@@ -58,7 +58,7 @@ const SearchContent = ({ isSearchFocused, searchKeyword }: { isSearchFocused: bo
   const searchResults = [...(data?.documents ?? []), ...(data?.quizzes ?? [])]
   const noResults = !data || searchResults.length === 0
 
-  if (isSearchFocused) {
+  if (!isSearchFocused) {
     if (isPending) {
       // todo: lading lottie
       return <></>
@@ -76,6 +76,9 @@ const SearchContent = ({ isSearchFocused, searchKeyword }: { isSearchFocused: bo
       )
     }
   }
+
+  // 검색창에 focus되어있는 동안에는 렌더링하지 않음
+  return null
 }
 
 /** 검색 결과가 없을 때 보여주는 컴포넌트 */
