@@ -27,7 +27,7 @@ export const RoutePath = {
   noteArrange: '/note/arrange/:directoryId',
   noteSearch: '/note/search',
   noteEdit: '/note/edit/:noteId',
-  noteWrite: '/note/write',
+  noteCreate: '/note/create',
   noteUpload: '/note/upload',
 
   /** 계정 관련 */
@@ -90,7 +90,7 @@ export type RouteConfig = {
   [RoutePath.noteArrange]: { pathname: typeof RoutePath.noteArrange }
   [RoutePath.noteSearch]: { pathname: typeof RoutePath.noteSearch }
   [RoutePath.noteEdit]: { pathname: typeof RoutePath.noteEdit }
-  [RoutePath.noteWrite]: { pathname: typeof RoutePath.noteWrite }
+  [RoutePath.noteCreate]: { pathname: typeof RoutePath.noteCreate }
   [RoutePath.noteUpload]: { pathname: typeof RoutePath.noteUpload }
 
   /** 계정 관련 */

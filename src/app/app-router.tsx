@@ -31,12 +31,12 @@ import HomePage from '@/pages/home-page'
 import { InstallGuidePage } from '@/pages/install-guide-page'
 import {
   NoteArrangePage,
+  NoteCreatePage,
   NoteDetailPage,
   NoteEditPage,
   NoteQuizPage,
   NoteSearchPage,
   NoteUploadPage,
-  NoteWritePage,
   NotesPage,
 } from '@/pages/note'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
@@ -69,7 +69,7 @@ export const AppRouter = () => {
                 <Route path={RoutePath.noteArrange} element={<NoteArrangePage />} />
                 <Route path={RoutePath.noteSearch} element={<NoteSearchPage />} />
                 <Route path={RoutePath.noteEdit} element={<NoteEditPage />} />
-                <Route path={RoutePath.noteWrite} element={<NoteWritePage />} />
+                <Route path={RoutePath.noteCreate} element={<NoteCreatePage />} />
                 <Route path={RoutePath.noteUpload} element={<NoteUploadPage />} />
               </Route>
 
