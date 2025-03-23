@@ -6,6 +6,7 @@ import imgBombEmpty from "./img_bomb_empty.png"
 import imgBookmark from "./img_bookmark.png"
 import imgCalender from "./img_calender.png"
 import imgCheckbadge from "./img_checkbadge.png"
+import imgConfirm from "./img_confirm.png"
 import imgDailygraph from "./img_dailygraph.png"
 import imgExit from "./img_exit.png"
 import imgGraph from "./img_graph.png"
@@ -60,6 +61,10 @@ export const ImgCalender = ({ ...props }) => {
 
 export const ImgCheckbadge = ({ ...props }) => {
   return <img src={imgCheckbadge} alt="checkbadge" {...props} />;
+};
+
+export const ImgConfirm = ({ ...props }) => {
+  return <img src={imgConfirm} alt="confirm" {...props} />;
 };
 
 export const ImgDailygraph = ({ ...props }) => {

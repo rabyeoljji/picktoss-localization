@@ -1,5 +1,8 @@
 // This file is auto-generated. Do not edit manually
 
+import IcO from './ic_O.svg?react'
+import IcX from './ic_X.svg?react'
+import IcChange from './ic__change.svg?react'
 import IcAdd from './ic_add.svg?react'
 import IcArrange from './ic_arrange.svg?react'
 import IcBack from './ic_back.svg?react'
@@ -30,6 +33,7 @@ import IcFolder from './ic_folder.svg?react'
 import IcFolderFilled from './ic_folder_filled.svg?react'
 import IcHome from './ic_home.svg?react'
 import IcInfo from './ic_info.svg?react'
+import IcInterest from './ic_interest.svg?react'
 import IcKebab from './ic_kebab.svg?react'
 import IcList from './ic_list.svg?react'
 import IcLogo from './ic_logo.svg?react'
@@ -39,20 +43,24 @@ import IcMy from './ic_my.svg?react'
 import IcNote from './ic_note.svg?react'
 import IcNotification from './ic_notification.svg?react'
 import IcNotion from './ic_notion.svg?react'
-import IcO from './ic_O.svg?react'
 import IcQuestion from './ic_question.svg?react'
 import IcQuiznote from './ic_quiznote.svg?react'
 import IcRefresh from './ic_refresh.svg?react'
 import IcReplay from './ic_replay.svg?react'
 import IcRewrite from './ic_rewrite.svg?react'
 import IcSearch from './ic_search.svg?react'
+import IcSelect from './ic_select.svg?react'
 import IcSetting from './ic_setting.svg?react'
 import IcStopwatch from './ic_stopwatch.svg?react'
 import IcUpload from './ic_upload.svg?react'
+import IcWarning from './ic_warning.svg?react'
+import IcWarningFilled from './ic_warning_filled.svg?react'
 import IcWrite from './ic_write.svg?react'
-import IcX from './ic_X.svg?react'
 
 export {
+  IcO,
+  IcX,
+  IcChange,
   IcAdd,
   IcArrange,
   IcBack,
@@ -83,6 +91,7 @@ export {
   IcFolderFilled,
   IcHome,
   IcInfo,
+  IcInterest,
   IcKebab,
   IcList,
   IcLogo,
@@ -92,16 +101,17 @@ export {
   IcNote,
   IcNotification,
   IcNotion,
-  IcO,
   IcQuestion,
   IcQuiznote,
   IcRefresh,
   IcReplay,
   IcRewrite,
   IcSearch,
+  IcSelect,
   IcSetting,
   IcStopwatch,
   IcUpload,
+  IcWarning,
+  IcWarningFilled,
   IcWrite,
-  IcX,
 }

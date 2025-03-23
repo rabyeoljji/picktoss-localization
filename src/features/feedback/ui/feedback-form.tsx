@@ -54,7 +54,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       // 첫 번째 에러 메시지 표시
       const firstError = Object.values(formState.errors)[0]
       if (firstError && firstError.message) {
-        toast.error(firstError.message as string)
+        toast(firstError.message as string)
       }
     }
   }, [formState.submitCount, formState.errors])
@@ -65,7 +65,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       const fileArray = Array.from(e.target.files)
       if (images.length + fileArray.length > 3) {
         // 최대 3개 이미지 제한
-        toast.error('이미지는 최대 3개까지 첨부 가능합니다.')
+        toast('이미지는 최대 3개까지 첨부 가능합니다.')
         return
       }
       setImages((prev) => [...prev, ...fileArray])
@@ -97,11 +97,10 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       },
       {
         onSuccess: () => {
-          toast.success('문의가 성공적으로 접수되었습니다.')
           if (onSuccess) onSuccess()
         },
         onError: () => {
-          toast.error('문의 접수에 실패했습니다. 다시 시도해주세요.')
+          toast('잠시 후 다시 시도해주세요')
           if (onError) onError()
         },
       },
