@@ -15,6 +15,7 @@ const NoteCreatePage = () => {
     html: '',
     markdown: '',
   })
+  console.log(content)
 
   return (
     <div>
