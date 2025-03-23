@@ -1,7 +1,11 @@
+import { useState } from 'react'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 
 import { useAuthStore } from '@/features/auth'
 
+import { ImgRoundCorrect } from '@/shared/assets/images'
+import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers/peeking-drawer'
 import { Button } from '@/shared/components/ui/button'
 import {
   Drawer,
@@ -24,8 +28,28 @@ const HomePage = () => {
     clearToken()
   }
 
+  const [pickingDrawerOpen, setPickingDrawerOpen] = useState(false)
   return (
     <div className="flex flex-col gap-6 px-10">
+      <PeekingDrawer
+        open={pickingDrawerOpen}
+        onOpenChange={setPickingDrawerOpen}
+        className="bg-surface-1"
+        peekContent={<div />}
+        fixedContent={
+          <div className="h-[100px]">
+            <Button className="w-full">다음</Button>
+          </div>
+        }
+      >
+        <PeekingDrawerContent>
+          <div className="w-full px-5">
+            <ImgRoundCorrect />
+            <span>정답</span>
+          </div>
+        </PeekingDrawerContent>
+      </PeekingDrawer>
+
       <Button onClick={() => router.push('/search')}>검색</Button>
       <Button onClick={() => router.push('/note/search')}>노트 검색</Button>
       <Button onClick={() => router.push('/account/feedback')}>문의하기</Button>
