@@ -318,9 +318,11 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
           </div>
         </div>
 
-        <Button type="submit" disabled={isPending || !form.getValues().privacy}>
-          {isPending ? '제출 중...' : '문의 확인하기'}
-        </Button>
+        <div className="px-4">
+          <Button type="submit" disabled={isPending || !form.getValues().privacy}>
+            {isPending ? '제출 중...' : '문의 보내기'}
+          </Button>
+        </div>
       </form>
     </Form>
   )
