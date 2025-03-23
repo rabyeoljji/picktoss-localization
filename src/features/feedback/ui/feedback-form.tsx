@@ -6,7 +6,7 @@ import { toast } from 'sonner'
 
 import { useCreateFeedback } from '@/entities/feedback/api/hooks'
 
-import { IcCamera, IcChevronRight, IcClose } from '@/shared/assets/icon'
+import { IcCamera, IcChevronRight, IcClose, IcWarningFilled } from '@/shared/assets/icon'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Button } from '@/shared/components/ui/button'
 import { Checkbox } from '@/shared/components/ui/checkbox'
@@ -54,7 +54,9 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       // 첫 번째 에러 메시지 표시
       const firstError = Object.values(formState.errors)[0]
       if (firstError && firstError.message) {
-        toast(firstError.message as string)
+        toast(firstError.message as string, {
+          icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+        })
       }
     }
   }, [formState.submitCount, formState.errors])
@@ -109,7 +111,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col flex-1">
+      <form className="flex flex-col flex-1" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="px-4 py-5">
           <div className="grid gap-2">
             <Text typo="h4">픽토스에 전하고 싶은 말을 남겨주세요</Text>
@@ -134,7 +136,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
                         </FormControl>
                         <label
                           htmlFor={`type-${label}`}
-                          className={`rounded-full px-3 py-2 typo-button-4 ${
+                          className={`rounded-full px-3 cursor-pointer py-2 typo-button-4 ${
                             field.value === value
                               ? 'bg-inverse text-inverse'
                               : 'bg-base-1 ring ring-divider text-secondary'

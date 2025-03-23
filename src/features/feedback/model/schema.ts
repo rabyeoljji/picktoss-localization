@@ -15,8 +15,8 @@ export const feedbackTypeMap: Record<string, FeedbackType> = {
 
 // 피드백 스키마
 export const feedbackSchema = z.object({
-  type: FeedbackTypeEnum.refine((val) => val != undefined, {
-    message: '문의 유형을 선택해주세요',
+  type: z.enum(['ERROR', 'PARTNERSHIP', 'ACCOUNT_INFO', 'OTHER'], {
+    required_error: '문의 유형을 선택해주세요',
   }),
   content: z.string().min(20, '상세 문의 내용을 20자 이상 적어주세요'),
   email: z.string().email('답변 받으실 이메일을 적어주세요'),
