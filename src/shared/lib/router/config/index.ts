@@ -46,7 +46,8 @@ export const RoutePath = {
   feedback: '/account/feedback',
   feedbackComplete: '/account/feedback/complete',
 
-  /** 테마 퀴즈 */
+  /** 퀴즈 */
+  progressQuiz: '/progress-quiz/:quizId',
   randomQuiz: '/random-quiz',
   bombQuiz: '/bomb-quiz',
 
@@ -108,7 +109,15 @@ export type RouteConfig = {
   [RoutePath.feedback]: { pathname: typeof RoutePath.feedback }
   [RoutePath.feedbackComplete]: { pathname: typeof RoutePath.feedbackComplete }
 
-  /** 테마 퀴즈 */
+  /** 퀴즈 */
+  [RoutePath.progressQuiz]: {
+    pathname: typeof RoutePath.progressQuiz
+    search: {
+      name: string
+      emoji: string
+      date: string
+    }
+  }
   [RoutePath.randomQuiz]: {
     pathname: typeof RoutePath.randomQuiz
     search: {
