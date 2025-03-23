@@ -27,6 +27,7 @@ const HomePage = () => {
   return (
     <div className="flex flex-col gap-6 px-10">
       <Button onClick={() => router.push('/search')}>검색</Button>
+      <Button onClick={() => router.push('/note/search')}>노트 검색</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
       <Link to="/account">asd</Link>
       <SearchInput />
