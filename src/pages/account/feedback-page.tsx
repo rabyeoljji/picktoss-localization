@@ -69,8 +69,8 @@ export const FeedbackPage = () => {
       return
     }
 
-    if (!content.trim()) {
-      toast.error('상세 내용을 입력해주세요.')
+    if (!content.trim() || content.trim().length < 20) {
+      toast.error('상세 내용을 20자 이상 입력해주세요.')
       return
     }
 
