@@ -18,7 +18,7 @@ interface Props {
   className?: HTMLElement['className']
 }
 
-export const NoteCard = ({
+export const SlidableNoteCard = ({
   children,
   id,
   className,
@@ -129,7 +129,7 @@ export const NoteCard = ({
   )
 }
 
-const NoteCardLeft = ({
+const SlidableNoteCardLeft = ({
   type,
   checkBox,
   selectMode,
@@ -150,11 +150,11 @@ const NoteCardLeft = ({
   )
 }
 
-const NoteCardContent = ({ children }: { children: React.ReactNode }) => {
+const SlidableNoteCardContent = ({ children }: { children: React.ReactNode }) => {
   return <div className="ml-[16px] flex w-full flex-col">{children}</div>
 }
 
-const NoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
+const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
   return (
     <div className="mb-[2px] flex items-center gap-[8px]">
       <Text as="h4" typo="subtitle-2-bold" className="w-fit max-w-[calc(100%-100px)] overflow-x-hidden truncate">
@@ -166,7 +166,7 @@ const NoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }
   )
 }
 
-const NoteCardPreview = ({ content }: { content: string }) => {
+const SlidableNoteCardPreview = ({ content }: { content: string }) => {
   return (
     <Text typo="body-1-regular" color="sub" className="w-[calc(100%-55px)] truncate text-nowrap break-all">
       {content}
@@ -174,7 +174,7 @@ const NoteCardPreview = ({ content }: { content: string }) => {
   )
 }
 
-const NoteCardDetail = ({
+const SlidableNoteCardDetail = ({
   quizCount,
   charCount,
   directory,
@@ -197,8 +197,8 @@ const NoteCardDetail = ({
   )
 }
 
-NoteCard.Left = NoteCardLeft
-NoteCard.Content = NoteCardContent
-NoteCard.Header = NoteCardHeader
-NoteCard.Preview = NoteCardPreview
-NoteCard.Detail = NoteCardDetail
+SlidableNoteCard.Left = SlidableNoteCardLeft
+SlidableNoteCard.Content = SlidableNoteCardContent
+SlidableNoteCard.Header = SlidableNoteCardHeader
+SlidableNoteCard.Preview = SlidableNoteCardPreview
+SlidableNoteCard.Detail = SlidableNoteCardDetail
