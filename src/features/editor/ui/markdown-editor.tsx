@@ -123,7 +123,7 @@ export const MarkdownEditor = ({
   }
 
   return (
-    <div className={cn('relative w-full flex flex-col h-full', className)}>
+    <div className={cn('relative w-full flex flex-col h-full bg-surface-1', className)}>
       {editor.isEmpty && !isFocused && (
         <div className="absolute left-4 top-5 text-gray-400 pointer-events-none">{placeholder}</div>
       )}
@@ -134,7 +134,7 @@ export const MarkdownEditor = ({
         />
       </div>
 
-      <div className="flex justify-between items-center h-10 px-[16px] py-[10px] bg-white border-t border-gray-100">
+      <div className="flex justify-between items-center h-10 px-[16px] py-[10px]">
         <div className="flex items-center">
           <Text typo="body-2-medium">최소 {minLength}자 이상 입력해주세요</Text>
         </div>
