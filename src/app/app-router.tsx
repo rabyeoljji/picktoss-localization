@@ -14,6 +14,7 @@ import {
   QuizRecordPage,
   WithdrawPage,
 } from '@/pages/account'
+import { FeedbackPage } from '@/pages/account/feedback-page'
 import { LoginPage } from '@/pages/auth'
 import {
   CollectionComplainPage,
@@ -84,6 +85,9 @@ export const AppRouter = () => {
                 <Route path={RoutePath.faq} element={<FaQPage />} />
                 <Route path={RoutePath.policy} element={<PolicyPage />} />
                 <Route path={RoutePath.withdraw} element={<WithdrawPage />} />
+                <Route>
+                  <Route path={RoutePath.feedback} element={<FeedbackPage />} />
+                </Route>
               </Route>
 
               {/* Theme Quiz */}

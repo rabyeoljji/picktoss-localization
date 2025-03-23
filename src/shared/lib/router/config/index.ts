@@ -43,6 +43,7 @@ export const RoutePath = {
   faq: '/account/faq',
   policy: '/account/policy',
   withdraw: '/account/withdraw',
+  feedback: '/account/feedback',
 
   /** 테마 퀴즈 */
   randomQuiz: '/random-quiz',
@@ -103,6 +104,7 @@ export type RouteConfig = {
   [RoutePath.faq]: { pathname: typeof RoutePath.faq }
   [RoutePath.policy]: { pathname: typeof RoutePath.policy }
   [RoutePath.withdraw]: { pathname: typeof RoutePath.withdraw }
+  [RoutePath.feedback]: { pathname: typeof RoutePath.feedback }
 
   /** 테마 퀴즈 */
   [RoutePath.randomQuiz]: {

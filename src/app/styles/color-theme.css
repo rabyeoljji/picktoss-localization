@@ -39,6 +39,18 @@
   --border-color-incorrect: var(--color-red-500);
 }
 
+@theme ring-color {
+  --ring-color-outline: var(--color-gray-100);
+  --ring-color-divider: var(--color-gray-100);
+  --ring-color-box: var(--color-gray-200);
+  --ring-color-active: var(--color-gray-600);
+  --ring-color-accent: var(--color-orange-400);
+  --ring-color-success: var(--color-green-500);
+  --ring-color-error: var(--color-red-500);
+  --ring-color-correct: var(--color-green-500);
+  --ring-color-incorrect: var(--color-red-500);
+}
+
 @theme text-color {
   --text-color-primary: var(--color-gray-900);
   --text-color-secondary: var(--color-gray-700);
