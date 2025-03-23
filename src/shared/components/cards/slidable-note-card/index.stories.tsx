@@ -4,14 +4,14 @@ import { Meta, StoryObj } from '@storybook/react'
 
 import { IcDelete, IcMove } from '@/shared/assets/icon'
 
-import { NoteCard } from '.'
+import { SlidableNoteCard } from '.'
 import { Checkbox } from '../../ui/checkbox'
 import { Tag } from '../../ui/tag'
 import { Text } from '../../ui/text'
 
-const meta: Meta<typeof NoteCard> = {
-  title: 'Card/NoteCard',
-  component: NoteCard,
+const meta: Meta<typeof SlidableNoteCard> = {
+  title: 'Card/Slidable',
+  component: SlidableNoteCard,
   parameters: {
     docs: {
       page: null,
@@ -32,7 +32,7 @@ const meta: Meta<typeof NoteCard> = {
 }
 export default meta
 
-export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
+export const WrittenTypeNoteCard: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 0
@@ -43,7 +43,7 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
 
     return (
       <div className="p-10 flex-center">
-        <NoteCard
+        <SlidableNoteCard
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
@@ -64,24 +64,24 @@ export const WrittenTypeNoteCard: StoryObj<typeof NoteCard> = {
             </button>,
           ]}
         >
-          <NoteCard.Left
+          <SlidableNoteCard.Left
             type="TEXT"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={selectMode}
           />
 
-          <NoteCard.Content>
-            <NoteCard.Header title="금융투자분석사 노트정리" />
-            <NoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <NoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
-          </NoteCard.Content>
-        </NoteCard>
+          <SlidableNoteCard.Content>
+            <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
+            <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
+            <SlidableNoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
+          </SlidableNoteCard.Content>
+        </SlidableNoteCard>
       </div>
     )
   },
 }
 
-export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
+export const FileTypeNoteCard: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 1
@@ -92,7 +92,7 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
 
     return (
       <div className="p-10 flex-center">
-        <NoteCard
+        <SlidableNoteCard
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
@@ -113,24 +113,24 @@ export const FileTypeNoteCard: StoryObj<typeof NoteCard> = {
             </button>,
           ]}
         >
-          <NoteCard.Left
+          <SlidableNoteCard.Left
             type="FILE"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={selectMode}
           />
 
-          <NoteCard.Content>
-            <NoteCard.Header title="금융투자분석사 노트정리" />
-            <NoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <NoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
-          </NoteCard.Content>
-        </NoteCard>
+          <SlidableNoteCard.Content>
+            <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
+            <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
+            <SlidableNoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
+          </SlidableNoteCard.Content>
+        </SlidableNoteCard>
       </div>
     )
   },
 }
 
-export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
+export const SelectModeNoteCard: StoryObj<typeof SlidableNoteCard> = {
   args: {
     selectMode: true, // 기본값을 true로 설정
   },
@@ -144,7 +144,7 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
 
     return (
       <div className="p-10 flex-center">
-        <NoteCard
+        <SlidableNoteCard
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
@@ -165,24 +165,24 @@ export const SelectModeNoteCard: StoryObj<typeof NoteCard> = {
             </button>,
           ]}
         >
-          <NoteCard.Left
+          <SlidableNoteCard.Left
             type="FILE"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={selectMode}
           />
 
-          <NoteCard.Content>
-            <NoteCard.Header title="금융투자분석사 노트정리" />
-            <NoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <NoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
-          </NoteCard.Content>
-        </NoteCard>
+          <SlidableNoteCard.Content>
+            <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
+            <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
+            <SlidableNoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
+          </SlidableNoteCard.Content>
+        </SlidableNoteCard>
       </div>
     )
   },
 }
 
-export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
+export const ReviewPickNoteCard: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 3
@@ -193,7 +193,7 @@ export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
 
     return (
       <div className="p-10 flex-center">
-        <NoteCard
+        <SlidableNoteCard
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
@@ -214,18 +214,21 @@ export const ReviewPickNoteCard: StoryObj<typeof NoteCard> = {
             </button>,
           ]}
         >
-          <NoteCard.Left
+          <SlidableNoteCard.Left
             type="TEXT"
             checkBox={<Checkbox id={`note_${id}`} className="mx-[8px] size-[20px]" />}
             selectMode={selectMode}
           />
 
-          <NoteCard.Content>
-            <NoteCard.Header title="금융투자분석사 노트정리" tag={<Tag color="orange-weak">복습 필요 {5}</Tag>} />
-            <NoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <NoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
-          </NoteCard.Content>
-        </NoteCard>
+          <SlidableNoteCard.Content>
+            <SlidableNoteCard.Header
+              title="금융투자분석사 노트정리"
+              tag={<Tag color="orange-weak">복습 필요 {5}</Tag>}
+            />
+            <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
+            <SlidableNoteCard.Detail quizCount={28} charCount={10528} directory="경영경제" />
+          </SlidableNoteCard.Content>
+        </SlidableNoteCard>
       </div>
     )
   },
