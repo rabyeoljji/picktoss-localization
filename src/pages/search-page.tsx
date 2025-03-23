@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { useSearch } from '@/features/search/model/use-search'
+
 import { useSearchIntegrated } from '@/entities/search/api/hooks'
 import {
   CollectionSearchResult,
@@ -7,32 +9,43 @@ import {
   IntegratedSearchResponse,
   QuizSearchResult,
 } from '@/entities/search/api/index'
+import { NoResults } from '@/entities/search/ui/no-results'
 
-import { IcClose } from '@/shared/assets/icon'
+import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
-import { TextButton } from '@/shared/components/ui/text-button'
-import { StorageKey, useLocalStorage } from '@/shared/lib/storage'
+import { StorageKey } from '@/shared/lib/storage'
 
 export const SearchPage = () => {
   const [searchResults, setSearchResults] = useState<IntegratedSearchResponse | null>(null)
-  const [isSearched, setIsSearched] = useState(false)
-  const [keyword, setKeyword] = useState('')
 
-  const [recentKeywords, setRecentKeywords] = useLocalStorage(StorageKey.integratedRecentSearchKeyword, [])
+  const {
+    inputValue,
+    setInputValue,
+    showRecentKeywords,
+    setShowRecentKeywords,
+    searchInputRef,
+    handleClearKeyword,
+    onSearchSubmit,
+    RecentSearchKeywords,
+  } = useSearch(StorageKey.integratedRecentSearchKeyword)
 
   const { mutate: searchMutate, isPending } = useSearchIntegrated({
     onSuccess: (data: IntegratedSearchResponse) => {
       setSearchResults(data)
-      setIsSearched(true)
-      setRecentKeywords([keyword, ...recentKeywords])
     },
   })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    searchMutate(keyword)
+    if (!inputValue.trim()) return
+    searchMutate(inputValue)
+    onSearchSubmit()
+  }
+
+  const onChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value)
   }
 
   const hasSearchResults =
@@ -40,26 +53,32 @@ export const SearchPage = () => {
     (searchResults.documents?.length > 0 || searchResults.collections?.length > 0 || searchResults.quizzes?.length > 0)
 
   return (
-    // 임시 스타일
     <div className="h-screen bg-base-1 flex flex-col">
       <Header
-        left="back"
+        left={<BackButton className="mr-1" />}
         content={
-          <form onSubmit={handleSubmit}>
-            <SearchInput onChange={(e) => setKeyword(e.target.value)} />
-          </form>
+          <>
+            <form onSubmit={handleSubmit} tabIndex={-1} className="relative grow">
+              <SearchInput
+                autoFocus
+                ref={searchInputRef}
+                onFocus={() => setShowRecentKeywords(true)}
+                value={inputValue}
+                onChange={onChangeKeyword}
+                clearKeyword={handleClearKeyword}
+                placeholder="노트, 퀴즈, 컬렉션 검색"
+              />
+            </form>
+
+            {/* input 클릭 시 나타날 최근 검색어 : 외부 영역 클릭 시 닫힘 */}
+            {showRecentKeywords && <RecentSearchKeywords />}
+          </>
         }
       />
 
       <div className="flex-1 overflow-auto">
-        {/* 검색 결과가 없을 때 */}
-        {isSearched && !isPending && !hasSearchResults && <NoResults />}
-
-        {/* 최근 검색 키워드 */}
-        {!isSearched && <RecentKeywords />}
-
-        {/* 검색 결과 */}
-        {isSearched && !isPending && hasSearchResults && searchResults && (
+        {!showRecentKeywords && !isPending && !hasSearchResults && <NoResults />}
+        {!showRecentKeywords && !isPending && hasSearchResults && (
           <SearchResults
             documents={searchResults.documents}
             collections={searchResults.collections}
@@ -77,9 +96,9 @@ interface SearchResultsProps {
   quizzes: IntegratedSearchResponse['quizzes']
 }
 
-const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) => {
-  return (
-    <div className="p-4">
+const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) => (
+  <div className="p-4">
+    {documents.length > 0 && (
       <div className="mb-6">
         <Text typo="subtitle-2-medium" className="mb-2">
           문서 ({documents.length})
@@ -95,7 +114,8 @@ const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) 
           </div>
         ))}
       </div>
-
+    )}
+    {collections.length > 0 && (
       <div className="mb-6">
         <Text typo="subtitle-2-medium" className="mb-2">
           컬렉션 ({collections.length})
@@ -111,7 +131,8 @@ const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) 
           </div>
         ))}
       </div>
-
+    )}
+    {quizzes.length > 0 && (
       <div>
         <Text typo="subtitle-2-medium" className="mb-2">
           퀴즈 ({quizzes.length})
@@ -127,57 +148,6 @@ const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) 
           </div>
         ))}
       </div>
-    </div>
-  )
-}
-
-const NoResults = () => {
-  return (
-    <div className="center text-center">
-      <Text typo="subtitle-1-bold" color="primary">
-        검색 결과가 없어요
-      </Text>
-      <Text typo="body-1-medium" color="sub" className="mt-1">
-        다른 키워드를 입력해보세요
-      </Text>
-    </div>
-  )
-}
-
-const RecentKeywords = () => {
-  const [recentKeywords, setRecentKeywords, removeRecentKeywords] = useLocalStorage(
-    StorageKey.integratedRecentSearchKeyword,
-    [],
-  )
-
-  if (recentKeywords.length === 0) {
-    return (
-      <div className="mt-[37.5px] flex-center">
-        <Text as="span" typo="body-1-bold">
-          최근 검색 내역이 없어요
-        </Text>
-      </div>
-    )
-  }
-
-  return (
-    <div className="mt-4 px-4">
-      <div className="flex items-center justify-between">
-        <Text typo="body-1-bold">최근 검색어</Text>
-        <TextButton variant="sub" size="sm" onClick={() => removeRecentKeywords()}>
-          전체 삭제
-        </TextButton>
-      </div>
-      <div className="mt-3">
-        {recentKeywords.slice(10).map((keyword, index) => (
-          <div key={index} className="py-[9.5px] flex items-center justify-between">
-            <Text typo="body-1-medium">{keyword}</Text>
-            <button onClick={() => setRecentKeywords(recentKeywords.filter((_, i) => i !== index))}>
-              <IcClose className="size-5 text-icon-sub" />
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
+    )}
+  </div>
+)

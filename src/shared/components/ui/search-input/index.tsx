@@ -5,12 +5,11 @@ import { IcClear, IcSearch } from '@/shared/assets/icon'
 import { Input } from '../input'
 
 interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  deleteKeyword?: () => void
-  // onValueChange?: (value: string) => void
+  clearKeyword?: () => void
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ value, onChange, deleteKeyword, ...props }: SearchInputProps, ref) => {
+  ({ value, onChange, clearKeyword, ...props }: SearchInputProps, ref) => {
     const [internalValue, setValue] = useState(value)
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -47,7 +46,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             internalValue && (
               <IcClear
                 className="size-5 text-icon-sub cursor-pointer"
-                onClick={deleteKeyword ?? handleClear}
+                onClick={clearKeyword ?? handleClear}
                 role="button"
               />
             )
