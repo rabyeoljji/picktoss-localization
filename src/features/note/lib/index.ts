@@ -3,7 +3,7 @@ import { marked } from 'marked'
 import * as pdfjs from 'pdfjs-dist'
 import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api'
 
-import '@/shared/lib/utils/pdf'
+import '@/shared/lib/pdf'
 
 /** markdown string을 받아 markdown 문법을 제거해 텍스트만 반환하는 함수 */
 export async function extractPlainText(markdownText: string) {

@@ -1,6 +1,6 @@
 import { JSX, useEffect, useState } from 'react'
 
-import { extractPlainText } from '@/features/note/utils'
+import { extractPlainText } from '@/features/note/lib'
 
 import { Text } from '@/shared/components/ui/text'
 
