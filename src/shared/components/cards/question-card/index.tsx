@@ -6,11 +6,11 @@ import { IcChevronDown, IcChevronUp, IcO, IcX } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-export const QuizCard = ({ children }: { children: React.ReactNode }) => {
+export const QuestionCard = ({ children }: { children: React.ReactNode }) => {
   return <div className="pt-5 rounded-[12px] bg-surface-1 border border-outline">{children}</div>
 }
 
-const QuizCardHeader = ({ order, right }: { order: number; right?: React.ReactNode }) => {
+const QuestionCardHeader = ({ order, right }: { order: number; right?: React.ReactNode }) => {
   return (
     <div className="h-6 flex items-center justify-between px-4">
       <Text typo="subtitle-1-bold" color="accent">
@@ -21,7 +21,7 @@ const QuizCardHeader = ({ order, right }: { order: number; right?: React.ReactNo
   )
 }
 
-const QuizCardQuestion = ({ children }: { children: React.ReactNode }) => {
+const QuestionCardQuestion = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="mt-2 px-4">
       <Text typo="subtitle-2-bold" color="primary">
@@ -31,7 +31,7 @@ const QuizCardQuestion = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-const QuizCardMultiple = ({
+const QuestionCardMultiple = ({
   options,
   answerIndex,
   showIndexs,
@@ -72,7 +72,7 @@ const QuizCardMultiple = ({
   )
 }
 
-const QuizCardOX = ({
+const QuestionCardOX = ({
   answer,
   showIndexs,
   disabledIndexs,
@@ -107,7 +107,7 @@ const QuizCardOX = ({
   )
 }
 
-const QuizCardExplanation = ({
+const QuestionCardExplanation = ({
   children,
   open,
   onOpenChange,
@@ -164,8 +164,8 @@ const QuizCardExplanation = ({
   )
 }
 
-QuizCard.Header = QuizCardHeader
-QuizCard.Question = QuizCardQuestion
-QuizCard.Multiple = QuizCardMultiple
-QuizCard.OX = QuizCardOX
-QuizCard.Explanation = QuizCardExplanation
+QuestionCard.Header = QuestionCardHeader
+QuestionCard.Question = QuestionCardQuestion
+QuestionCard.Multiple = QuestionCardMultiple
+QuestionCard.OX = QuestionCardOX
+QuestionCard.Explanation = QuestionCardExplanation
