@@ -12,7 +12,16 @@ export const BackButton = ({ type = 'back', onClick, className }: BackButtonProp
   const router = useRouter()
 
   return (
-    <button className={cn('p-2', className)} onClick={() => onClick?.() || router.back()}>
+    <button
+      className={cn('p-2', className)}
+      onClick={() => {
+        if (onClick != null) {
+          onClick()
+        } else {
+          router.back()
+        }
+      }}
+    >
       {type === 'close' ? <IcClose /> : <IcBack />}
     </button>
   )
