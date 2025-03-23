@@ -1,8 +1,6 @@
-import { useState } from 'react'
-
 import { useSearch } from '@/features/search/model/use-search'
 
-import { useSearchIntegrated } from '@/entities/search/api/hooks'
+import { useSearchIntegratedQuery } from '@/entities/search/api/hooks'
 import {
   CollectionSearchResult,
   DocumentSearchResult,
@@ -18,11 +16,10 @@ import { Text } from '@/shared/components/ui/text'
 import { StorageKey } from '@/shared/lib/storage'
 
 export const SearchPage = () => {
-  const [searchResults, setSearchResults] = useState<IntegratedSearchResponse | null>(null)
-
   const {
     inputValue,
     setInputValue,
+    queryKeyword,
     showRecentKeywords,
     setShowRecentKeywords,
     searchInputRef,
@@ -31,16 +28,17 @@ export const SearchPage = () => {
     RecentSearchKeywords,
   } = useSearch(StorageKey.integratedRecentSearchKeyword)
 
-  const { mutate: searchMutate, isPending } = useSearchIntegrated({
-    onSuccess: (data: IntegratedSearchResponse) => {
-      setSearchResults(data)
-    },
+  // 쿼리를 사용하여 queryKeyword 변경 시 자동으로 검색 실행
+  const { data: searchResults, isFetching } = useSearchIntegratedQuery(queryKeyword, {
+    enabled: !!queryKeyword && !showRecentKeywords,
   })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!inputValue.trim()) return
-    searchMutate(inputValue)
+
+    // onSearchSubmit 호출 시 URL이 업데이트되고 queryKeyword가 변경됨
+    // 이에 따라 자동으로 useSearchIntegratedQuery가 실행됨
     onSearchSubmit()
   }
 
@@ -77,8 +75,8 @@ export const SearchPage = () => {
       />
 
       <div className="flex-1 overflow-auto">
-        {!showRecentKeywords && !isPending && !hasSearchResults && <NoResults />}
-        {!showRecentKeywords && !isPending && hasSearchResults && (
+        {!showRecentKeywords && !isFetching && !hasSearchResults && !!queryKeyword && <NoResults />}
+        {!showRecentKeywords && !isFetching && hasSearchResults && (
           <SearchResults
             documents={searchResults.documents}
             collections={searchResults.collections}

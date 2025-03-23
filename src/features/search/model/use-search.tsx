@@ -51,15 +51,17 @@ export const useSearch = (storageKey: StorageKeyType) => {
     }
   }, [])
 
-  // 검색 후 로컬스토리지에 검색어 기록 저장
-  useEffect(() => {
-    if (!queryKeyword) return
+  /**
+   * 최근 검색어 업데이트 유틸리티 함수
+   * @param keyword 추가할 키워드
+   */
+  const updateRecentKeywords = (keyword: string) => {
+    if (!keyword) return
 
     // 중복 검색어 제거 후 최대 5개만 유지
-    const updatedKeywords = [queryKeyword, ...recentKeywords.filter((keyword) => keyword !== queryKeyword)].slice(0, 5)
-
+    const updatedKeywords = [keyword, ...recentKeywords.filter((k) => k !== keyword)].slice(0, 5)
     setRecentKeywords(updatedKeywords)
-  }, [queryKeyword, recentKeywords, setRecentKeywords])
+  }
 
   /**
    * 검색어로 검색 페이지 이동 또는 갱신하는 함수
@@ -80,6 +82,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
     setInputValue(selectedKeyword)
     navigateToSearch(selectedKeyword)
     setShowRecentKeywords(false)
+    updateRecentKeywords(selectedKeyword)
   }
 
   /**
@@ -101,6 +104,11 @@ export const useSearch = (storageKey: StorageKeyType) => {
   const onSearchSubmit = () => {
     const trimmedKeyword = inputValue.trim()
 
+    // 검색어가 있는 경우에만 최근 검색어에 추가
+    if (trimmedKeyword) {
+      updateRecentKeywords(trimmedKeyword)
+    }
+
     navigateToSearch(trimmedKeyword)
     searchInputRef.current?.blur()
     setShowRecentKeywords(false)
@@ -111,7 +119,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
 
     return (
       <div ref={recentSearchListRef} className="absolute top-[54px] w-full left-0">
-        <div className="flex flex-col bg-surface-1 px-[16px] py-[20px]">
+        <div className="flex flex-col bg-surface-1 py-[20px]">
           <div className="mb-[14px] flex items-center justify-between">
             <Text typo="body-1-bold" className="text-secondary">
               최근 검색어
@@ -149,6 +157,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
   return {
     // 상태
     inputValue,
+    queryKeyword,
     showRecentKeywords,
     recentKeywords,
 

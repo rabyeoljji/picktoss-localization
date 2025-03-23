@@ -1,10 +1,8 @@
-import { useState } from 'react'
-
+import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/lib'
 import { useSearch } from '@/features/search/model/use-search'
-import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/utils'
 
 import { DocumentSearchResult, QuizSearchResult } from '@/entities/search/api'
-import { useSearchDocuments } from '@/entities/search/api/hooks'
+import { useSearchDocumentsQuery } from '@/entities/search/api/hooks'
 import { NoResults } from '@/entities/search/ui/no-results'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -15,14 +13,10 @@ import { Text } from '@/shared/components/ui/text'
 import { StorageKey } from '@/shared/lib/storage'
 
 const NoteSearchPage = () => {
-  const [searchResults, setSearchResults] = useState<{
-    documents?: DocumentSearchResult[]
-    quizzes?: QuizSearchResult[]
-  } | null>(null)
-
   const {
     inputValue,
     setInputValue,
+    queryKeyword,
     showRecentKeywords,
     setShowRecentKeywords,
     searchInputRef,
@@ -31,16 +25,17 @@ const NoteSearchPage = () => {
     RecentSearchKeywords,
   } = useSearch(StorageKey.quizNoteRecentSearchKeyword)
 
-  const { mutate: searchMutate, isPending } = useSearchDocuments({
-    onSuccess: (data) => {
-      setSearchResults(data)
-    },
+  // 쿼리를 사용하여 queryKeyword 변경 시 자동으로 검색 실행
+  const { data: searchResults, isFetching } = useSearchDocumentsQuery(queryKeyword, {
+    enabled: !!queryKeyword && !showRecentKeywords,
   })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (!inputValue.trim()) return
-    searchMutate(inputValue)
+
+    // onSearchSubmit 호출 시 URL이 업데이트되고 queryKeyword가 변경됨
+    // 이에 따라 자동으로 useSearchDocumentsQuery가 실행됨
     onSearchSubmit()
   }
 
@@ -48,13 +43,10 @@ const NoteSearchPage = () => {
     setInputValue(e.target.value)
   }
 
-  const hasSearchResults =
-    searchResults &&
-    ((searchResults.documents && searchResults.documents.length > 0) ||
-      (searchResults.quizzes && searchResults.quizzes.length > 0))
+  const hasSearchResults = searchResults && (searchResults.documents?.length > 0 || searchResults.quizzes?.length > 0)
 
   return (
-    <div className="size-full bg-surface-1">
+    <div className="h-screen bg-base-1 flex flex-col">
       <Header
         left={<BackButton className="mr-1" />}
         content={
@@ -67,7 +59,7 @@ const NoteSearchPage = () => {
                 value={inputValue}
                 onChange={onChangeKeyword}
                 clearKeyword={handleClearKeyword}
-                placeholder="노트명 노트, 퀴즈 검색"
+                placeholder="노트, 퀴즈 검색"
               />
             </form>
 
@@ -78,12 +70,12 @@ const NoteSearchPage = () => {
       />
 
       <div className="flex-1 overflow-auto">
-        {!showRecentKeywords && !isPending && !hasSearchResults && <NoResults />}
-        {!showRecentKeywords && !isPending && hasSearchResults && (
+        {!showRecentKeywords && !isFetching && !hasSearchResults && !!queryKeyword && <NoResults />}
+        {!showRecentKeywords && !isFetching && hasSearchResults && (
           <DocumentQuizSearchResults
-            documents={searchResults?.documents || []}
-            quizzes={searchResults?.quizzes || []}
-            keyword={inputValue.trim()}
+            documents={searchResults.documents}
+            quizzes={searchResults.quizzes}
+            keyword={queryKeyword}
           />
         )}
       </div>
