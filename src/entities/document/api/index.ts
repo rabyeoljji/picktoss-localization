@@ -41,8 +41,21 @@ interface SearchDocumentResponse {
     documentId: number
     documentName: string
     content: string
-    documentType: 'FILE' | 'TEXT' | 'NOTION'
-    // 추가 필드가 있을 수 있음
+    documentType: 'FILE' | 'TEXT'
+    directory: {
+      id: number
+      name: 'string'
+    }
+  }[]
+
+  quizzes: {
+    id: number
+    question: string
+    answer: string
+    documentId: number
+    documentName: string
+    documentType: 'FILE' | 'TEXT'
+    directoryName: string
   }[]
 }
 

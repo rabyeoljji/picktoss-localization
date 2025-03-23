@@ -1,0 +1,14 @@
+# editor
+**/.vscode
+
+# npm
+package-lock.json
+
+# public
+/public/*
+
+# storybook
+storybook-static
+
+# eslint
+.eslintrc.json

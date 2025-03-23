@@ -1,3 +1,4 @@
+import { NoteType } from '@/shared/components/bg-icons/note-icon'
 import { client } from '@/shared/lib/axios/client'
 
 export interface SearchRequest {
@@ -12,28 +13,28 @@ export interface IntegratedSearchResponse {
 
 export interface DocumentSearchResponse {
   documents: DocumentSearchResult[]
+  quizzes: QuizSearchResult[]
 }
 
 export interface DocumentSearchResult {
-  id: number
-  title: string
+  documentId: number
+  documentName: string
   content: string
-  createdAt: string
-  updatedAt: string
-  directoryId: number
-  directoryName: string
+  documentType: NoteType
+  directory: {
+    id: 0
+    name: string
+  }
 }
 
 export interface CollectionSearchResult {
   id: number
-  title: string
-  description: string
-  category: string
-  isBookmarked: boolean
-  quizCount: number
+  name: string
+  emoji: string
   bookmarkCount: number
-  createdAt: string
-  updatedAt: string
+  collectionCategory: string
+  memberName: string
+  quizCount: number
 }
 
 export interface QuizSearchResult {
@@ -41,8 +42,9 @@ export interface QuizSearchResult {
   question: string
   answer: string
   documentId: number
-  documentTitle: string
-  createdAt: string
+  documentName: string
+  documentType: NoteType
+  directoryName: string
 }
 
 /**
