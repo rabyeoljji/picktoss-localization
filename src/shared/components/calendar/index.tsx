@@ -23,6 +23,7 @@ interface Props {
  * 선택된 날짜는 URL 쿼리 파라미터로 관리되며, 날짜 선택 시 라우터를 통해 URL이 업데이트됩니다.
  * 연속된 날짜 기록은 범위로 시각화되며, 단일 날짜 기록은 개별적으로 표시됩니다.
  *
+ * @param path 현재 경로
  * @param selectedDate 현재 선택된 날짜
  * @param dates 날짜 객체의 배열 (날짜와 해당 날짜의 완료 상태)
  * @param isLoading 로딩 상태 표시 여부
