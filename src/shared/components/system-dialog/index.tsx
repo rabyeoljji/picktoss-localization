@@ -30,7 +30,7 @@ export const SystemDialog = ({
 }: SystemDialogProps) => {
   return (
     <Dialog>
-      <DialogTrigger>{trigger}</DialogTrigger>
+      <DialogTrigger asChild>{trigger}</DialogTrigger>
       <DialogContent className="w-[280px] rounded-[16px] p-6">
         <DialogHeader className="text-start">
           <DialogTitle className="typo-subtitle-2-bold text-text-primary">{title}</DialogTitle>
