@@ -34,7 +34,12 @@ const extractParamsFromPath = (pattern: string, path: string): string[] => {
 
 /**
  * 현재 URL의 쿼리 파라미터를 추출하고 설정하는 훅
- *
+ * 
+ * @param path 경로 문자열 (예: '/search', '/random-quiz')
+ * @param key 쿼리 파라미터 키 (예: 'q', 'page')
+ * @param initialValue 초기값 (URL에 파라미터가 없을 경우 사용)
+ * @param options 옵션 객체 (선택적)
+ * 
  * @example 기본 사용법 - 초기값의 타입에 따라 반환 타입이 결정됨
  * const [name, setName] = useQueryParam('/random-quiz', 'name', '')        // [string, (v: string) => void]
  * const [count, setCount] = useQueryParam('/random-quiz', 'count', 0)      // [number, (v: number) => void]
@@ -47,8 +52,8 @@ const extractParamsFromPath = (pattern: string, path: string): string[] => {
  *
  * @example 옵션 설정
  * const [filter, setFilter] = useQueryParam('/search', 'filter', '', {
- *   push: false, // 브라우저 히스토리에 새 항목을 추가하지 않음
- *   emptyHandling: 'preserve' // 빈 값을 URL에 유지 (예: ?filter=)
+ *   push: true, // 브라우저 히스토리에 새 항목을 추가함 (기본값: false)
+ *   emptyHandling: 'preserve' // 빈 값을 URL에 유지 (예: ?filter=) (기본값: 'remove')
  * })
  */
 

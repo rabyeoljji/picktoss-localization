@@ -60,7 +60,9 @@ type CustomLinkProps<T extends Pathname> = Omit<RouterLinkProps, 'to'> &
 /**
  * 타입 안전한 링크 컴포넌트
  *
- * 경로에 파라미터가 있는지에 따라 다른 속성을 요구
+ * 경로에 파라미터가 있는지에 따라 다른 속성을 요구합니다.
+ * 파라미터가 있는 경로는 반드시 params 속성을 제공해야 하며,
+ * 파라미터가 없는 경로는 params 속성이 선택적입니다.
  *
  * @param props 컴포넌트 속성
  * @returns 렌더링된 링크 컴포넌트
@@ -73,6 +75,14 @@ type CustomLinkProps<T extends Pathname> = Omit<RouterLinkProps, 'to'> &
  * @example
  * // 파라미터가 있는 경로 (params 필수)
  * <Link to="/note/:noteId" params={['123']}>노트 123</Link>
+ * 
+ * @example
+ * // 해시와 함께 사용
+ * <Link to="/note/:noteId" params={['123']} hash="comments">댓글로 이동</Link>
+ * 
+ * @example
+ * // 문자열 형태의 search 파라미터
+ * <Link to="/search" search="q=검색어&filter=all">검색</Link>
  */
 export const Link = <T extends Pathname>({ to, search, hash, params, ...rest }: CustomLinkProps<T>) => {
   const url = buildUrl(to, {
