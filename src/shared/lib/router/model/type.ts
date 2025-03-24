@@ -26,14 +26,15 @@ export type AllowedSearch<T extends object> = T
 
 /**
  * 경로 문자열에서 파라미터를 추출하여 튜플 타입으로 변환
- * 예: '/user/:id' => [string]
+ * 예: '/user/:id' => [string | number]
  * @template T 경로 문자열 리터럴 타입
  */
-export type ExtractRouteParamsTuple<T extends string> = T extends `${string}:${infer _Param}/${infer Rest}`
-  ? [string, ...ExtractRouteParamsTuple<`/${Rest}`>]
-  : T extends `${string}:${infer _Param}`
-  ? [string]
-  : []
+export type ExtractRouteParamsTuple<T extends string | number> =
+  T extends `${string | number}:${infer _Param}/${infer Rest}`
+    ? [string | number, ...ExtractRouteParamsTuple<`/${Rest}`>]
+    : T extends `${string | number}:${infer _Param}`
+      ? [string | number]
+      : []
 
 /**
  * 경로에 따른 옵션 타입 (search, hash, params)
@@ -44,7 +45,7 @@ export type Options<T extends Pathname> =
   ExtractRouteParamsTuple<T> extends infer P extends unknown[]
     ? P extends []
       ? { search?: SearchOf<T>; hash?: string } // 파라미터가 없는 경로는 params 옵션 제외
-      : { search?: SearchOf<T>; hash?: string; params: string[] } // 파라미터가 있는 경로는 params 필수
+      : { search?: SearchOf<T>; hash?: string; params: (string | number)[] } // 파라미터가 있는 경로는 params 필수
     : never
 
 /**
@@ -63,6 +64,5 @@ export type ExtendedOptions<T extends Pathname> = {
  * 파라미터가 있는 경로는 옵션 객체가 필수, 없는 경로는 선택적
  * @template T 경로 문자열 리터럴 타입
  */
-export type ParamOptions<T extends Pathname> = ExtractRouteParamsTuple<T> extends []
-  ? [options?: Options<T>]
-  : [options: Options<T>]
+export type ParamOptions<T extends Pathname> =
+  ExtractRouteParamsTuple<T> extends [] ? [options?: Options<T>] : [options: Options<T>]
