@@ -17,6 +17,17 @@ interface Props {
   className?: HTMLElement['className']
 }
 
+/**
+ * 날짜 선택 및 기록 표시가 가능한 캘린더 컴포넌트
+ *
+ * 선택된 날짜는 URL 쿼리 파라미터로 관리되며, 날짜 선택 시 라우터를 통해 URL이 업데이트됩니다.
+ * 연속된 날짜 기록은 범위로 시각화되며, 단일 날짜 기록은 개별적으로 표시됩니다.
+ *
+ * @param selectedDate 현재 선택된 날짜
+ * @param dates 날짜 객체의 배열 (날짜와 해당 날짜의 완료 상태)
+ * @param isLoading 로딩 상태 표시 여부
+ * @param className 추가 CSS 클래스명
+ */
 export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) => {
   const today = useMemo(() => new Date(), [])
   const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
@@ -30,6 +41,13 @@ export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) =
     setShowLoading(false)
   }, [selectedDate])
 
+  /**
+   * 날짜 선택 시 URL 쿼리 파라미터를 업데이트하는 핸들러
+   *
+   * 같은 날짜를 다시 선택하는 경우 작업을 취소하고 로딩 상태를 해제합니다.
+   *
+   * @param selected 사용자가 선택한 날짜 (undefined일 수 있음)
+   */
   const handleSelect = (selected?: Date) => {
     setShowLoading(true)
 
@@ -47,6 +65,14 @@ export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) =
     }
   }
 
+  /**
+   * 캘린더에 날짜 범위 및 단일 날짜 표시를 위한 수정자 생성
+   *
+   * 연속된 날짜는, 시작(day_range_start), 중간(day_range_middle), 끝(day_range_end) 날짜로 구분합니다.
+   * 독립된 날짜는 단일 날짜(single_solved_day)로 표시됩니다.
+   *
+   * @returns 날짜 표시를 위한 수정자 객체 또는 undefined
+   */
   const modifiers = useMemo(() => {
     const defaultDate = today
 
