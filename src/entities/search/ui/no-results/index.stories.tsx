@@ -12,6 +12,13 @@ const meta = {
     layout: 'centered',
   },
   tags: ['autodocs'],
+  decorators: [
+    (Story) => (
+      <div className="h-[100px] w-[375px]">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof NoResults>
 
 export default meta
@@ -23,7 +30,7 @@ type Story = StoryObj<typeof meta>
  */
 export const Default: Story = {
   args: {},
-  render: () => <NoResults />
+  render: () => <NoResults />,
 }
 
 /**
@@ -36,5 +43,5 @@ export const Mobile: Story = {
       defaultViewport: 'mobile1',
     },
   },
-  render: () => <NoResults />
+  render: () => <NoResults />,
 }
