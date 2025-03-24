@@ -13,12 +13,12 @@ const navItems = [
   },
   {
     label: '퀴즈노트',
-    to: RoutePath.notes,
+    to: RoutePath.note,
     icon: <IcQuiznote />,
   },
   {
     label: '컬렉션',
-    to: RoutePath.collections,
+    to: RoutePath.collection,
     icon: <IcCollection />,
   },
   {

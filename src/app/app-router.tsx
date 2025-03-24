@@ -64,7 +64,7 @@ export const AppRouter = () => {
               <Route path={RoutePath.search} element={<SearchPage />} />
 
               {/* Note */}
-              <Route path={RoutePath.notes}>
+              <Route path={RoutePath.note}>
                 <Route index element={<NotesPage />} />
                 <Route path={RoutePath.noteDetail} element={<NoteDetailPage />} />
                 <Route path={RoutePath.noteQuiz} element={<NoteQuizPage />} />
@@ -79,18 +79,18 @@ export const AppRouter = () => {
               <Route path={RoutePath.account}>
                 <Route index element={<AccountPage />} />
                 <Route path={RoutePath.accountInfo} element={<AccountInfoPage />} />
-                <Route path={RoutePath.dailyQuizAttendance} element={<DailyQuizAttendancePage />} />
-                <Route path={RoutePath.quizAnalysis} element={<QuizAnalysisPage />} />
-                <Route path={RoutePath.quizRecord} element={<QuizRecordPage />} />
-                <Route path={RoutePath.notificationConfig} element={<NotificationConfigPage />} />
-                <Route path={RoutePath.paymentHistory} element={<PaymentHistoryPage />} />
-                <Route path={RoutePath.notice} element={<NoticePage />} />
-                <Route path={RoutePath.contact} element={<ContactPage />} />
-                <Route path={RoutePath.faq} element={<FaQPage />} />
-                <Route path={RoutePath.policy} element={<PolicyPage />} />
-                <Route path={RoutePath.withdraw} element={<WithdrawPage />} />
-                <Route path={RoutePath.feedback} element={<FeedbackPage />} />
-                <Route path={RoutePath.feedbackComplete} element={<FeedbackCompletePage />} />
+                <Route path={RoutePath.accountDailyQuizAttendance} element={<DailyQuizAttendancePage />} />
+                <Route path={RoutePath.accountQuizAnalysis} element={<QuizAnalysisPage />} />
+                <Route path={RoutePath.accountQuizRecord} element={<QuizRecordPage />} />
+                <Route path={RoutePath.accountNotificationConfig} element={<NotificationConfigPage />} />
+                <Route path={RoutePath.accountPaymentHistory} element={<PaymentHistoryPage />} />
+                <Route path={RoutePath.accountNotice} element={<NoticePage />} />
+                <Route path={RoutePath.accountContact} element={<ContactPage />} />
+                <Route path={RoutePath.accountFaq} element={<FaQPage />} />
+                <Route path={RoutePath.accountPolicy} element={<PolicyPage />} />
+                <Route path={RoutePath.accountWithdraw} element={<WithdrawPage />} />
+                <Route path={RoutePath.accountFeedback} element={<FeedbackPage />} />
+                <Route path={RoutePath.accountFeedbackComplete} element={<FeedbackCompletePage />} />
               </Route>
 
               {/* Theme Quiz */}
@@ -102,7 +102,7 @@ export const AppRouter = () => {
             </Route>
 
             {/* 컬렉션 */}
-            <Route path={RoutePath.collections}>
+            <Route path={RoutePath.collection}>
               <Route index element={<CollectionsPage />} />
               <Route path={RoutePath.collectionDetail} element={<CollectionDetailPage />} />
               <Route path={RoutePath.collectionQuiz} element={<CollectionQuizPage />} />
