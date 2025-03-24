@@ -14,7 +14,7 @@ export const FeedbackPage = () => {
         left={
           <SystemDialog
             trigger={<BackButton onClick={() => {}} />}
-            title="문의를 취소할까요?"
+            title="문의에서 나가시겠어요?"
             content="지금까지 작성한 내용은 저장되지 않습니다."
             cancelLabel="취소"
             confirmLabel="확인"
