@@ -37,7 +37,7 @@ export const DefaultCalendar: StoryObj<typeof Calendar> = {
      * @param isLoading 로딩 상태 표시 여부
      * @param className 추가 CSS 클래스명
      */
-    return <Calendar selectedDate={selectedDate} isLoading={false} />
+    return <Calendar path="/" selectedDate={selectedDate} isLoading={false} />
   },
 }
 
@@ -70,6 +70,6 @@ export const RangeCalendar: StoryObj<typeof Calendar> = {
       },
     ]
 
-    return <Calendar selectedDate={selectedDate} isLoading={false} dates={dates} />
+    return <Calendar path="/" selectedDate={selectedDate} isLoading={false} dates={dates} />
   },
 }

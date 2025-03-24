@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router'
 
 import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 
 import { ShadcnCalendar } from '@/shared/components/ui/calendar'
-import { useRouter } from '@/shared/lib/router'
+import { Pathname, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
+  path: Pathname
   selectedDate: Date
   dates?: {
     date: string
@@ -28,12 +28,11 @@ interface Props {
  * @param isLoading 로딩 상태 표시 여부
  * @param className 추가 CSS 클래스명
  */
-export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) => {
+export const Calendar = ({ path, selectedDate, dates, isLoading, className }: Props) => {
   const today = useMemo(() => new Date(), [])
   const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
 
   const router = useRouter()
-  const [searchParams] = useSearchParams()
   const [showLoading, setShowLoading] = useState(false)
   const [currentMonth, setCurrentMonth] = useState(selectedDate)
 
@@ -59,9 +58,7 @@ export const Calendar = ({ selectedDate, dates, isLoading, className }: Props) =
         return
       }
 
-      const currentSearchParams = new URLSearchParams(searchParams)
-      currentSearchParams.set('selectedDate', formattedDate)
-      router.replace('/account/quiz-record', { search: `?${currentSearchParams.toString()}` })
+      router.replace(path, { search: { selectedDate: formattedDate } })
     }
   }
 
