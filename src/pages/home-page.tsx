@@ -53,7 +53,7 @@ const HomePage = () => {
       <Button
         onClick={() =>
           router.push('/progress-quiz/:quizId', {
-            params: [3],
+            params: ['3'],
           })
         }
       >
