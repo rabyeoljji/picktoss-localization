@@ -3,13 +3,11 @@
 import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { toast } from 'sonner'
 
 import { WithdrawFormValues, withdrawFormSchema, withdrawReasonMap } from '@/features/withdraw/model/schema'
 
 import { useDeleteMember } from '@/entities/member/api/hooks'
 
-import { IcWarningFilled } from '@/shared/assets/icon'
 import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Checkbox } from '@/shared/components/ui/checkbox'
@@ -17,10 +15,14 @@ import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/f
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
 import { Textarea } from '@/shared/components/ui/textarea'
+import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const WithdrawForm = () => {
+  const router = useRouter()
+
   const { mutate: deleteMemberMutate, isPending } = useDeleteMember()
+
   const form = useForm<WithdrawFormValues>({
     resolver: zodResolver(withdrawFormSchema),
     defaultValues: {
@@ -30,22 +32,9 @@ const WithdrawForm = () => {
     },
   })
 
-  const {
-    control,
-    handleSubmit,
-    watch,
-    formState: { errors },
-  } = form
+  const { control, handleSubmit, watch } = form
 
   const handleClickDeleteAccount = (data: WithdrawFormValues) => {
-    // forDev : 탈퇴 사유 api 스키마 맞춤을 위한 디버깅용 토스트입니다
-    const firstError = Object.values(errors)[0]
-    if (firstError && firstError.message) {
-      toast(firstError.message as string, {
-        icon: <IcWarningFilled className="size-4 text-icon-critical" />,
-      })
-    }
-
     const requestBody: { reason?: WithdrawFormValues['reason']; detail?: WithdrawFormValues['content'] } = {}
 
     if (data.reason) {
@@ -55,12 +44,17 @@ const WithdrawForm = () => {
       requestBody['detail'] = data.content
     }
 
-    deleteMemberMutate(requestBody)
+    deleteMemberMutate(requestBody, {
+      onSuccess: () => {
+        router.replace('/login')
+      },
+    })
   }
 
   return (
     <Form {...form}>
       <form onSubmit={handleSubmit(handleClickDeleteAccount)}>
+        {/* 탈퇴 사유 */}
         <FormField
           name="reason"
           control={control}
@@ -69,7 +63,7 @@ const WithdrawForm = () => {
               <RadioGroup
                 value={field.value}
                 onValueChange={field.onChange}
-                className="flex flex-col gap-[8px] pb-[40px] pt-[44px]"
+                className="flex flex-col gap-[8px] py-[40px]"
               >
                 {Object.entries(withdrawReasonMap).map(([label, value]) => (
                   <FormItem key={value} className="space-y-0">
@@ -128,29 +122,27 @@ const WithdrawForm = () => {
         <div className="h-2 w-full bg-base-2" />
 
         {/* 데이터 삭제 동의 */}
-        <div className="my-3">
-          <FormField
-            control={form.control}
-            name="conformNotification"
-            render={({ field }) => (
-              <FormItem className="flex items-center gap-[8px]">
-                <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} id="checkNotification" />
-                </FormControl>
-                <label htmlFor="checkNotification">
-                  <Text typo="body-2-medium" color="primary">
-                    저장한 데이터는 모두 삭제되며 복구할 수 없음을 확인했습니다
-                  </Text>
-                </label>
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="conformNotification"
+          render={({ field }) => (
+            <FormItem className="flex items-center gap-[8px] pt-[20px] pb-[24px]">
+              <FormControl>
+                <Checkbox checked={field.value} onCheckedChange={field.onChange} id="checkNotification" />
+              </FormControl>
+              <label htmlFor="checkNotification">
+                <Text typo="body-2-medium" color="primary">
+                  저장한 데이터는 모두 삭제되며 복구할 수 없음을 확인했습니다
+                </Text>
+              </label>
+            </FormItem>
+          )}
+        />
 
         {/* 계정 삭제 확인 dialog */}
         <SystemDialog
           trigger={
-            <Button disabled={isPending || !form.getValues().conformNotification}>
+            <Button disabled={isPending || !form.getValues().conformNotification} className="w-full">
               {isPending ? '제출 중...' : '탈퇴하기'}
             </Button>
           }
@@ -159,7 +151,7 @@ const WithdrawForm = () => {
             <Text typo="body-1-medium" color="sub">
               픽토스에서 만든 노트와{' '}
               <Text typo="body-1-medium" color="critical" className="inline-block size-fit">
-                314개의 문제
+                {314}개의 문제
               </Text>
               가 <br />
               모두 삭제됩니다
@@ -167,6 +159,7 @@ const WithdrawForm = () => {
           }
           confirmLabel="계정 삭제"
           onConfirm={handleSubmit(handleClickDeleteAccount)}
+          variant="critical"
         />
       </form>
     </Form>
