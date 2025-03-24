@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { MarkdownEditor } from '@/features/editor'
 
-import { IcFile, IcWrite } from '@/shared/assets/icon'
+import { IcFile, IcInfo, IcWrite } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
@@ -14,12 +14,14 @@ const NoteCreatePage = () => {
   const [content, setContent] = useState({
     html: '',
     markdown: '',
+    textLength: 0,
   })
   console.log(content)
 
   return (
-    <div>
+    <div className="min-h-screen max-w-xl mx-auto bg-surface-1 relative">
       <Header
+        className="sticky top-0 w-full z-50"
         left={<BackButton type="close" />}
         content={
           <div className="ml-auto w-fit">
@@ -32,7 +34,7 @@ const NoteCreatePage = () => {
 
       {!method && <SelectMethod setMethod={setMethod} />}
 
-      {method === 'markdown' && <NoteCreatePageMarkdown setContent={setContent} />}
+      {method === 'markdown' && <NoteCreatePageMarkdown content={content} setContent={setContent} />}
       {method === 'file' && <NoteCreatePageFile />}
     </div>
   )
@@ -41,24 +43,47 @@ const NoteCreatePage = () => {
 export default NoteCreatePage
 
 const NoteCreatePageMarkdown = ({
+  content,
   setContent,
 }: {
-  setContent: (content: { html: string; markdown: string }) => void
+  content: { html: string; markdown: string; textLength: number }
+  setContent: (content: { html: string; markdown: string; textLength: number }) => void
 }) => {
+  const MIN_LENGTH = 1000
+  const MAX_LENGTH = 50000
+
   const handleEditorChange = (html: string, markdown: string) => {
-    setContent({ html, markdown })
+    // html에서 텍스트만 추출하는 함수
+    const getTextFromHtml = (html: string) => {
+      const tempDiv = document.createElement('div')
+      tempDiv.innerHTML = html
+      return tempDiv.textContent || ''
+    }
+
+    const textContent = getTextFromHtml(html)
+    const textLength = textContent.length
+
+    setContent({ html, markdown, textLength })
   }
 
   return (
-    <div className="h-[calc(100vh-(var(--header-height)))] flex flex-col">
-      <div className="flex-1 overflow-auto">
-        <MarkdownEditor
-          onChange={handleEditorChange}
-          placeholder="여기를 탭하여 입력을 시작하세요"
-          className="h-full"
-          maxLength={50000}
-          minLength={1000}
-        />
+    <div className="h-[calc(100vh-var(--header-height)-40px)]">
+      <MarkdownEditor
+        onChange={handleEditorChange}
+        placeholder="여기를 탭하여 입력을 시작하세요"
+      />
+      <div className="fixed bottom-0 w-full max-w-xl flex justify-between items-center h-[40px] px-4 py-[10px] bg-surface-1 border-t border-surface-3 z-10">
+        <div className="flex items-center gap-1">
+          <IcInfo className="size-4 text-caption" />
+          <Text typo="body-2-medium" color="caption">
+            최소 {MIN_LENGTH}자 이상 입력해주세요
+          </Text>
+        </div>
+        <div>
+          <Text typo="body-2-medium">
+            {content.textLength} <span className="text-sub">/ {MAX_LENGTH}</span>
+          </Text>
+        </div>
       </div>
     </div>
   )
