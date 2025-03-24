@@ -61,36 +61,73 @@ export const MarkdownEditor = ({
   useEffect(() => {
     if (!containerRef.current || !editor) return
 
+    // 디바운스 처리를 위한 타이머 ID
+    let resizeTimeoutId: NodeJS.Timeout | null = null
+
     const updateHeight = () => {
       if (!containerRef.current) return
 
-      // 전체 뷰포트 높이 가져오기
-      const viewportHeight = window.innerHeight
-
-      // 컨테이너의 위치 정보 가져오기
-      const containerRect = containerRef.current.getBoundingClientRect()
-      const containerTop = containerRect.top
-
-      // 사용 가능한 높이 계산 (뷰포트 높이 - 컨테이너 상단 위치 - 하단 영역 높이 - 여유 공간)
-      const availableHeight = viewportHeight - containerTop - 하단_영역_높이 - 50
-
-      // ProseMirror 요소에 직접 높이 적용
-      const proseMirror = containerRef.current.querySelector('.ProseMirror')
-      if (proseMirror) {
-        ;(proseMirror as HTMLElement).style.height = `${availableHeight}px`
-        ;(proseMirror as HTMLElement).style.overflowY = 'auto'
+      // 이전 타이머가 있으면 취소
+      if (resizeTimeoutId) {
+        clearTimeout(resizeTimeoutId)
       }
+
+      // 키패드 애니메이션 시간을 고려하여 약간의 지연 후 높이 계산 (300ms)
+      resizeTimeoutId = setTimeout(() => {
+        if (!containerRef.current) return
+
+        // visualViewport API를 사용하여 현재 보이는 영역의 높이를 가져옴
+        const viewportHeight = window.visualViewport?.height || window.innerHeight
+        
+        // 컨테이너의 위치 정보 가져오기
+        const containerRect = containerRef.current.getBoundingClientRect()
+        const containerTop = containerRect.top
+        
+        // 사용 가능한 높이 계산 (뷰포트 높이 - 컨테이너 상단 위치 - 하단 영역 높이)
+        const availableHeight = viewportHeight - containerTop - 하단_영역_높이
+        
+        console.log('Height calculation:', {
+          viewportHeight,
+          containerTop,
+          하단_영역_높이,
+          availableHeight
+        })
+        
+        // ProseMirror 요소에 직접 높이 적용
+        const proseMirror = containerRef.current.querySelector('.ProseMirror')
+        if (proseMirror) {
+          // 부드러운 전환을 위한 트랜지션 추가
+          ;(proseMirror as HTMLElement).style.transition = 'height 0.2s ease-out'
+          ;(proseMirror as HTMLElement).style.height = `${availableHeight}px`
+          ;(proseMirror as HTMLElement).style.overflowY = 'auto'
+        }
+      }, 300)
     }
 
     // 초기 높이 계산
     updateHeight()
 
-    // 윈도우 크기 변경 시 높이 재계산
-    window.addEventListener('resize', updateHeight)
+    // visualViewport API를 사용하여 키패드 상태 변화 감지
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', updateHeight)
+      window.visualViewport.addEventListener('scroll', updateHeight)
+    } else {
+      // visualViewport API가 지원되지 않는 브라우저를 위한 대체 이벤트
+      window.addEventListener('resize', updateHeight)
+    }
 
     // 클린업 함수
     return () => {
-      window.removeEventListener('resize', updateHeight)
+      if (resizeTimeoutId) {
+        clearTimeout(resizeTimeoutId)
+      }
+      
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', updateHeight)
+        window.visualViewport.removeEventListener('scroll', updateHeight)
+      } else {
+        window.removeEventListener('resize', updateHeight)
+      }
     }
   }, [editor])
 
