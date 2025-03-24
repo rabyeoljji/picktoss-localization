@@ -20,8 +20,8 @@ export const RoutePath = {
   /** 설치 가이드 페이지 */
   installGuide: '/install-guide',
 
-  /** 노트 관련 */
-  notes: '/note',
+  /** 노트 관련 페이지 */
+  note: '/note',
   noteDetail: '/note/:noteId',
   noteQuiz: '/note/quiz/:noteId',
   noteArrange: '/note/arrange/:directoryId',
@@ -30,29 +30,29 @@ export const RoutePath = {
   noteCreate: '/note/create',
   noteUpload: '/note/upload',
 
-  /** 계정 관련 */
+  /** 계정 관련 페이지 */
   account: '/account',
   accountInfo: '/account/info',
-  dailyQuizAttendance: '/account/daily-quiz-attendance',
-  quizAnalysis: '/account/quiz-analysis',
-  quizRecord: '/account/quiz-record',
-  notificationConfig: '/account/notification-config',
-  paymentHistory: '/account/payment-history',
-  notice: '/account/notice',
-  contact: '/account/contact',
-  faq: '/account/faq',
-  policy: '/account/policy',
-  withdraw: '/account/withdraw',
-  feedback: '/account/feedback',
-  feedbackComplete: '/account/feedback/complete',
+  accountDailyQuizAttendance: '/account/daily-quiz-attendance',
+  accountQuizAnalysis: '/account/quiz-analysis',
+  accountQuizRecord: '/account/quiz-record',
+  accountNotificationConfig: '/account/notification-config',
+  accountPaymentHistory: '/account/payment-history',
+  accountNotice: '/account/notice',
+  accountContact: '/account/contact',
+  accountFaq: '/account/faq',
+  accountPolicy: '/account/policy',
+  accountWithdraw: '/account/withdraw',
+  accountFeedback: '/account/feedback',
+  accountFeedbackComplete: '/account/feedback/complete',
 
-  /** 퀴즈 */
+  /** 퀴즈 관련 페이지 */
   progressQuiz: '/progress-quiz/:quizId',
   randomQuiz: '/random-quiz',
   bombQuiz: '/bomb-quiz',
 
-  /** 컬렉션 관련 */
-  collections: '/collection',
+  /** 컬렉션 관련 페이지 */
+  collection: '/collection',
   collectionDetail: '/collection/:collectionId',
   collectionQuiz: '/collection/quiz/:collectionId',
   collectionComplain: '/collection/complain/:collectionId',
@@ -63,89 +63,55 @@ export const RoutePath = {
 } as const
 
 /**
- * 각 경로에 대한 구성 정보를 담은 타입
- *
- * 경로 문자열을 키로 사용하고, 해당 경로에 대한 세부 정보를 값으로 가짐
- * 경로가 파라미터를 포함하는 경우 pathname 속성에 그대로 반영됨
- * 검색 파라미터를 사용하는 경로는 search 속성에 해당 타입을 정의
- *
- * @example
- * type MyPathname = keyof RouteConfig // 모든 경로 문자열 타입
+ * 각 경로에 대한 검색 파라미터 타입을 정의
+ * 경로를 키로 사용하여 일관된 구조 유지
  */
-export type RouteConfig = {
-  /** 메인 홈 화면 */
-  [RoutePath.root]: { pathname: typeof RoutePath.root }
-  [RoutePath.search]: { pathname: typeof RoutePath.search }
-
-  /** 로그인 페이지 */
-  [RoutePath.login]: { pathname: typeof RoutePath.login }
-
-  /** 설치 가이드 페이지 */
-  [RoutePath.installGuide]: { pathname: typeof RoutePath.installGuide }
-
-  /** 노트 관련 */
-  [RoutePath.notes]: { pathname: typeof RoutePath.notes }
-  [RoutePath.noteDetail]: { pathname: typeof RoutePath.noteDetail }
-  [RoutePath.noteQuiz]: { pathname: typeof RoutePath.noteQuiz }
-  [RoutePath.noteArrange]: { pathname: typeof RoutePath.noteArrange }
-  [RoutePath.noteSearch]: { pathname: typeof RoutePath.noteSearch }
-  [RoutePath.noteEdit]: { pathname: typeof RoutePath.noteEdit }
-  [RoutePath.noteCreate]: { pathname: typeof RoutePath.noteCreate }
-  [RoutePath.noteUpload]: { pathname: typeof RoutePath.noteUpload }
-
-  /** 계정 관련 */
-  [RoutePath.account]: { pathname: typeof RoutePath.account }
-  [RoutePath.accountInfo]: { pathname: typeof RoutePath.accountInfo }
-  [RoutePath.dailyQuizAttendance]: { pathname: typeof RoutePath.dailyQuizAttendance }
-  [RoutePath.quizAnalysis]: { pathname: typeof RoutePath.quizAnalysis }
-  [RoutePath.quizRecord]: { pathname: typeof RoutePath.quizRecord }
-  [RoutePath.notificationConfig]: { pathname: typeof RoutePath.notificationConfig }
-  [RoutePath.paymentHistory]: { pathname: typeof RoutePath.paymentHistory }
-  [RoutePath.notice]: { pathname: typeof RoutePath.notice }
-  [RoutePath.contact]: { pathname: typeof RoutePath.contact }
-  [RoutePath.faq]: { pathname: typeof RoutePath.faq }
-  [RoutePath.policy]: { pathname: typeof RoutePath.policy }
-  [RoutePath.withdraw]: { pathname: typeof RoutePath.withdraw }
-  [RoutePath.feedback]: { pathname: typeof RoutePath.feedback }
-  [RoutePath.feedbackComplete]: { pathname: typeof RoutePath.feedbackComplete }
-
-  /** 퀴즈 */
-  [RoutePath.progressQuiz]: {
-    pathname: typeof RoutePath.progressQuiz
-    search: {
-      name: string
-      emoji: string
-      date: string
-    }
-  }
-  [RoutePath.randomQuiz]: {
-    pathname: typeof RoutePath.randomQuiz
-    search: {
-      /** 날짜 */
-      date: string
-    }
-  }
-  [RoutePath.bombQuiz]: {
-    pathname: typeof RoutePath.bombQuiz
-    search: {
-      /** 날짜 */
-      date: string
-    }
-  }
-
-  /** 컬렉션 관련 */
-  [RoutePath.collections]: { pathname: typeof RoutePath.collections }
-  [RoutePath.collectionDetail]: { pathname: typeof RoutePath.collectionDetail }
-  [RoutePath.collectionQuiz]: { pathname: typeof RoutePath.collectionQuiz }
-  [RoutePath.collectionComplain]: { pathname: typeof RoutePath.collectionComplain }
-  [RoutePath.collectionCreate]: { pathname: typeof RoutePath.collectionCreate }
-  [RoutePath.collectionEditInfo]: { pathname: typeof RoutePath.collectionEditInfo }
-  [RoutePath.collectionEditQuiz]: { pathname: typeof RoutePath.collectionEditQuiz }
-  [RoutePath.collectionSearch]: {
-    pathname: typeof RoutePath.collectionSearch
-    search: {
-      /** 검색어 */
-      query: string
-    }
-  }
+export const SearchConfig = {
+  '/': undefined,
+  '/search': undefined,
+  '/login': undefined,
+  '/install-guide': undefined,
+  '/note': undefined,
+  '/note/:noteId': undefined,
+  '/note/quiz/:noteId': undefined,
+  '/note/arrange/:directoryId': undefined,
+  '/note/search': undefined,
+  '/note/edit/:noteId': undefined,
+  '/note/create': undefined,
+  '/note/upload': undefined,
+  '/account': undefined,
+  '/account/info': undefined,
+  '/account/daily-quiz-attendance': undefined,
+  '/account/quiz-analysis': undefined,
+  '/account/quiz-record': undefined,
+  '/account/notification-config': undefined,
+  '/account/payment-history': undefined,
+  '/account/notice': undefined,
+  '/account/contact': undefined,
+  '/account/faq': undefined,
+  '/account/policy': undefined,
+  '/account/withdraw': undefined,
+  '/account/feedback': undefined,
+  '/account/feedback/complete': undefined,
+  '/progress-quiz/:quizId': {
+    name: '유민' as '유민' | '정우',
+    emoji: '',
+    date: '',
+  },
+  '/random-quiz': {
+    date: '',
+  },
+  '/bomb-quiz': {
+    date: '',
+  },
+  '/collection': undefined,
+  '/collection/:collectionId': undefined,
+  '/collection/quiz/:collectionId': undefined,
+  '/collection/complain/:collectionId': undefined,
+  '/collection/create': undefined,
+  '/collection/edit/info/:collectionId': undefined,
+  '/collection/edit/quiz/:collectionId': undefined,
+  '/collection/search': {
+    query: '',
+  },
 }

@@ -50,12 +50,22 @@ const HomePage = () => {
         </PeekingDrawerContent>
       </PeekingDrawer>
 
-      <Button onClick={() => router.push('/search')}>검색</Button>
+      <Button
+        onClick={() =>
+          router.push('/progress-quiz/:quizId', {
+            params: ['3'],
+          })
+        }
+      >
+        검색
+      </Button>
       <Button onClick={() => router.push('/note/search')}>노트 검색</Button>
       <Button onClick={() => router.push('/account/feedback')}>문의하기</Button>
       <Button onClick={() => router.push('/note/create')}>문서 만들기</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
-      <Link to="/account">asd</Link>
+      <Link to="/progress-quiz/:quizId" params={['3']} search={{ name: '정우' }}>
+        폭탄 퀴즈{' '}
+      </Link>
       <SearchInput />
       <Drawer dismissible>
         <DrawerTrigger asChild>
