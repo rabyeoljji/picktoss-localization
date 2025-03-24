@@ -13,11 +13,12 @@ import { htmlToMarkdown } from '../lib'
 const editorStyles = `
 .ProseMirror {
   outline: none !important;
-  min-height: 100% !important;
   width: 100% !important;
+  height: 100% !important;
   box-sizing: border-box !important;
   padding: 20px 16px !important;
   margin: 0 !important;
+  overflow-y: auto !important;
 }
 
 .ProseMirror p {
@@ -83,38 +84,13 @@ export const MarkdownEditor = ({
     }
   }, [])
 
-  // PWA 환경 대응을 위한 visualViewport API 활용
-  useEffect(() => {
-    const visualViewport = window.visualViewport
-    if (!visualViewport) return
-
-    const handleViewportChange = () => {
-      // 키보드가 올라왔을 때 뷰포트 높이 변화 감지
-      document.documentElement.style.setProperty(
-        '--viewport-height', 
-        `${visualViewport.height}px`
-      )
-    }
-
-    visualViewport.addEventListener('resize', handleViewportChange)
-    visualViewport.addEventListener('scroll', handleViewportChange)
-
-    // 초기 실행
-    handleViewportChange()
-
-    return () => {
-      visualViewport.removeEventListener('resize', handleViewportChange)
-      visualViewport.removeEventListener('scroll', handleViewportChange)
-    }
-  }, [])
-
   if (!editor) {
     return null
   }
 
   return (
     <div className={cn('w-full h-full', className)}>
-      <div ref={editorWrapperRef} className="relative w-full h-full overflow-auto">
+      <div ref={editorWrapperRef} className="relative w-full h-full">
         {editor.isEmpty && !isFocused && (
           <div className="absolute left-4 top-5 text-gray-400 pointer-events-none z-10">{placeholder}</div>
         )}

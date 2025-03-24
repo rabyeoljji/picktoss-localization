@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { MarkdownEditor } from '@/features/editor'
 
@@ -18,8 +18,33 @@ const NoteCreatePage = () => {
   })
   console.log(content)
 
+  // PWA 환경에 대응하기 위한 visualViewport 처리
+  useEffect(() => {
+    const visualViewport = window.visualViewport
+    if (!visualViewport) return
+
+    const handleViewportChange = () => {
+      // 키보드가 올라왔을 때 높이 변화 감지
+      document.documentElement.style.setProperty(
+        '--viewport-height',
+        `${visualViewport.height}px`
+      )
+    }
+
+    visualViewport.addEventListener('resize', handleViewportChange)
+    visualViewport.addEventListener('scroll', handleViewportChange)
+
+    // 초기 실행
+    handleViewportChange()
+
+    return () => {
+      visualViewport.removeEventListener('resize', handleViewportChange)
+      visualViewport.removeEventListener('scroll', handleViewportChange)
+    }
+  }, [])
+
   return (
-    <div className="min-h-screen max-w-xl mx-auto bg-surface-1 relative">
+    <div className="min-h-screen max-w-xl mx-auto bg-surface-1 relative" style={{ height: 'var(--viewport-height, 100vh)' }}>
       <Header
         className="sticky top-0 w-full z-50"
         left={<BackButton type="close" />}
@@ -67,12 +92,14 @@ const NoteCreatePageMarkdown = ({
   }
 
   return (
-    <div className="h-[calc(100vh-var(--header-height)-40px)]">
-      <MarkdownEditor
-        onChange={handleEditorChange}
-        placeholder="여기를 탭하여 입력을 시작하세요"
-      />
-      <div className="fixed bottom-0 w-full max-w-xl flex justify-between items-center h-[40px] px-4 py-[10px] bg-surface-1 border-t border-surface-3 z-10">
+    <div className="h-[calc(var(--viewport-height,100vh)-var(--header-height)-40px)] flex flex-col">
+      <div className="flex-1 overflow-hidden">
+        <MarkdownEditor
+          onChange={handleEditorChange}
+          placeholder="여기를 탭하여 입력을 시작하세요"
+        />
+      </div>
+      <div className="w-full flex justify-between items-center h-[40px] px-4 py-[10px] bg-surface-1 border-t border-surface-3 z-10">
         <div className="flex items-center gap-1">
           <IcInfo className="size-4 text-caption" />
           <Text typo="body-2-medium" color="caption">
@@ -95,7 +122,7 @@ const NoteCreatePageFile = () => {
 
 const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') => void }) => {
   return (
-    <div className="flex-center h-[calc(100vh-(var(--header-height)))]">
+    <div className="flex-center h-[calc(var(--viewport-height,100vh)-(var(--header-height)))]">
       <div className="grid gap-[10px] w-full">
         <SquareButton
           variant="secondary"
