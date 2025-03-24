@@ -175,8 +175,8 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
           {/* 사진 */}
           <div className="mt-10 grid gap-2">
             <FormLabel>사진</FormLabel>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center mb-2">
+            <div className="flex items-center gap-2 pb-[12px]">
+              <div className="flex items-center">
                 <button
                   type="button"
                   onClick={handleImageButtonClick}
