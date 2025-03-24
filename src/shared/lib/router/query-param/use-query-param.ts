@@ -11,12 +11,6 @@ type RouteKeys = keyof typeof SearchConfig;
 // SearchConfig에서 경로에 따른 쿼리 파라미터 키 타입
 type QueryParamKeys<R extends RouteKeys> = keyof (typeof SearchConfig)[R];
 
-// SearchConfig에서 경로와 키에 따른 값 타입
-type QueryParamValueType<
-  R extends RouteKeys, 
-  K extends QueryParamKeys<R>
-> = (typeof SearchConfig)[R][K];
-
 /**
  * 현재 URL 경로에서 pathname 추출
  */
@@ -98,9 +92,9 @@ export function useQueryParam<
   K extends QueryParamKeys<R>
 >(
   key: K & string, 
-  initialValue: QueryParamValueType<R, K> extends string ? string : never,
+  initialValue: (typeof SearchConfig)[R][K] & string,
   explicitPath: R
-): [string, (value: string) => void];
+): [(typeof SearchConfig)[R][K] & string, (value: (typeof SearchConfig)[R][K] & string) => void];
 
 // #2: 명시적 경로와 타입 검증을 위한 오버로드 (숫자 타입)
 export function useQueryParam<
@@ -108,9 +102,9 @@ export function useQueryParam<
   K extends QueryParamKeys<R>
 >(
   key: K & string,
-  initialValue: QueryParamValueType<R, K> extends number ? number : never, 
+  initialValue: (typeof SearchConfig)[R][K] & number, 
   explicitPath: R
-): [number, (value: number) => void];
+): [(typeof SearchConfig)[R][K] & number, (value: (typeof SearchConfig)[R][K] & number) => void];
 
 // #3: 명시적 경로와 타입 검증을 위한 오버로드 (불리언 타입)
 export function useQueryParam<
@@ -118,9 +112,9 @@ export function useQueryParam<
   K extends QueryParamKeys<R>
 >(
   key: K & string,
-  initialValue: QueryParamValueType<R, K> extends boolean ? boolean : never,
+  initialValue: (typeof SearchConfig)[R][K] & boolean,
   explicitPath: R
-): [boolean, (value: boolean) => void];
+): [(typeof SearchConfig)[R][K] & boolean, (value: (typeof SearchConfig)[R][K] & boolean) => void];
 
 // #4: 일반적인 문자열 타입 오버로드
 export function useQueryParam(
