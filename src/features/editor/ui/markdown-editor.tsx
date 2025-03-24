@@ -5,6 +5,7 @@ import Link from '@tiptap/extension-link'
 import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 
+import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
@@ -109,13 +110,16 @@ export const MarkdownEditor = ({
         />
       </div>
 
-      <div className="flex justify-between items-center h-10 px-[16px] py-[10px]">
-        <div className="flex items-center">
-          <Text typo="body-2-medium">최소 {minLength}자 이상 입력해주세요</Text>
+      <div className="flex justify-between items-center sticky bottom-0 h-10 px-[16px] py-[10px]">
+        <div className="flex items-center gap-1">
+          <IcInfo className="size-4 text-caption" />
+          <Text typo="body-2-medium" color="caption">
+            최소 {minLength}자 이상 입력해주세요
+          </Text>
         </div>
         <div>
           <Text typo="body-2-medium">
-            {charCount} / {maxLength}
+            {charCount} <span className="text-sub">/ {maxLength}</span>
           </Text>
         </div>
       </div>
