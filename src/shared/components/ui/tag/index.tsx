@@ -17,7 +17,7 @@ const tagVariants = cva('inline-flex py-[2px]', {
       red: 'bg-incorrect text-incorrect',
     },
     size: {
-      md: 'px-[8px] rounded-[8px] typo-body-2-bold',
+      md: 'px-[8px] rounded-[6px] typo-body-2-bold',
       sm: 'px-[6px] rounded-[4px] typo-caption-medium',
     },
   },
