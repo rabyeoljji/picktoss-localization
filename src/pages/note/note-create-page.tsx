@@ -1,4 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react'
 
 import { MarkdownEditor } from '@/features/editor'
 
@@ -6,6 +8,7 @@ import { IcFile, IcInfo, IcWrite } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
@@ -78,6 +81,11 @@ const NoteCreatePageMarkdown = ({
   const MIN_LENGTH = 1000
   const MAX_LENGTH = 50000
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const [selectedEmoji, setSelectedEmoji] = useState('📝')
+  const [title, setTitle] = useState('')
+  const emojiPickerRef = useRef<HTMLDivElement>(null)
+  const titleInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const visualViewport = window.visualViewport
@@ -101,8 +109,21 @@ const NoteCreatePageMarkdown = ({
     }
   }, [])
 
+  useEffect(() => {
+    // 이모지 피커 외부 클릭 시 닫기
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   const handleEditorChange = (html: string, markdown: string) => {
-    // html에서 텍스트만 추출하는 함수
     const getTextFromHtml = (html: string) => {
       const tempDiv = document.createElement('div')
       tempDiv.innerHTML = html
@@ -115,13 +136,40 @@ const NoteCreatePageMarkdown = ({
     setContent({ html, markdown, textLength })
   }
 
+  const handleEmojiClick = (emojiData: EmojiClickData) => {
+    setSelectedEmoji(emojiData.emoji)
+    setShowEmojiPicker(false)
+  }
+
   return (
-    // 100vh - header height
     <div className="h-[calc(var(--viewport-height,100vh)-var(--header-height))] flex flex-col">
-      <div className="h-[60px]">대충 제목 적는 곳</div>
+      <div className="p-4 pt-6 flex items-center gap-3 border-b border-divider">
+        <div className="relative" ref={emojiPickerRef}>
+          <button
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="typo-h4 flex-center size-[40px] px-[10px] py-2 rounded-[6px] border border-outline bg-base-2"
+          >
+            {selectedEmoji}
+          </button>
+          {showEmojiPicker && (
+            <div className="absolute top-12 left-0 z-50">
+              <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.LIGHT} width={300} height={400} />
+            </div>
+          )}
+        </div>
+        <Input
+          ref={titleInputRef}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="새로운 퀴즈"
+          className="typo-h3 p-0 border-none"
+        />
+      </div>
+
       <div className="flex-1 overflow-hidden">
         <MarkdownEditor onChange={handleEditorChange} placeholder="여기를 탭하여 입력을 시작하세요" />
       </div>
+
       <div
         className={cn(
           'w-full flex justify-between items-center h-[40px] px-4 py-[10px] bg-surface-1 z-10',
