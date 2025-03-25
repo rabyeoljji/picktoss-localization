@@ -102,7 +102,8 @@ export function useQueryParam<R extends RouteNames>(
   options?: QueryParamOptions,
 ): [
   QueryParamObject<R>, 
-  (value: QueryParamObject<R> | ((prev: QueryParamObject<R>) => QueryParamObject<R>)) => void
+  (value: QueryParamObject<R> | ((prev: QueryParamObject<R>) => QueryParamObject<R>)) => void,
+  () => void
 ]
 
 // 특정 경로와 키에 대한 정확한 타입 추론 (타입 검증이 강화됨)
@@ -113,14 +114,14 @@ export function useQueryParam<
   path: R,
   key: K,
   options?: QueryParamOptions,
-): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>) => void]
+): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>) => void, () => void]
 
 // 일반적인 string 경로와 키에 대한 오버로드
 export function useQueryParam(
   path: string,
   key: string,
   options?: QueryParamOptions,
-): [string, (value: string) => void]
+): [string, (value: string) => void, () => void]
 
 // 실제 구현
 export function useQueryParam<
@@ -139,7 +140,8 @@ export function useQueryParam<
   optionsArg?: QueryParamOptions,
 ): [
   T, 
-  (value: T | ((prev: T) => T)) => void
+  (value: T | ((prev: T) => T)) => void,
+  () => void
 ] {
   const location = useLocation()
   const navigate = useNavigate()
@@ -308,5 +310,56 @@ export function useQueryParam<
     [isObjectMode, key, location, navigate, path, options, value],
   )
 
-  return [value, setValue]
+  // 현재 경로에서 모든 쿼리 파라미터 삭제 함수
+  const removeParam = useCallback(() => {
+    const newSearchParams = new URLSearchParams(location.search)
+
+    if (isObjectMode && path in SearchConfig) {
+      // 객체 모드: SearchConfig에 정의된 모든 파라미터 삭제
+      const configParams = SearchConfig[path as RouteNames] as Record<string, unknown>
+      Object.keys(configParams).forEach(paramKey => {
+        newSearchParams.delete(paramKey)
+      })
+    } else if (!isObjectMode && key) {
+      // 단일 키 모드: 해당 키만 삭제
+      newSearchParams.delete(key)
+    }
+
+    // 현재 모든 쿼리 파라미터를 객체로 변환
+    const searchEntries: [string, string][] = []
+    newSearchParams.forEach((value, key) => {
+      searchEntries.push([key, value])
+    })
+    const searchObj = Object.fromEntries(searchEntries)
+
+    // URL 생성
+    let url: string
+
+    if (path && path in SearchConfig) {
+      // 경로 패턴에서 params 추출
+      const paramsFromPath = extractParamsFromPath(path, location.pathname)
+
+      // URL 업데이트
+      url = buildUrl(path as Pathname, {
+        search: searchObj,
+        hash: location.hash ? location.hash.substring(1) : undefined,
+        params: paramsFromPath,
+      })
+    } else {
+      // 매치되는 pathname이 없으면 현재 URL에 쿼리 스트링만 변경
+      const search = newSearchParams.toString()
+      const newSearch = search ? `?${search}` : ''
+      const hash = location.hash || ''
+      url = `${location.pathname}${newSearch}${hash}`
+    }
+
+    // 탐색 방식 결정 (push 또는 replace)
+    if (options.push) {
+      navigate(url)
+    } else {
+      navigate(url, { replace: true })
+    }
+  }, [key, isObjectMode, navigate, location, options, path])
+
+  return [value, setValue, removeParam]
 }
