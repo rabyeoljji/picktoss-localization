@@ -102,8 +102,8 @@ export function useQueryParam<R extends RouteNames>(
   options?: QueryParamOptions,
 ): [
   QueryParamObject<R>, 
-  (value: QueryParamObject<R> | ((prev: QueryParamObject<R>) => QueryParamObject<R>)) => void,
-  () => void
+  (value: QueryParamObject<R> | ((prev: QueryParamObject<R>) => QueryParamObject<R>), overrideOptions?: QueryParamOptions) => void,
+  (overrideOptions?: QueryParamOptions) => void
 ]
 
 // 특정 경로와 키에 대한 정확한 타입 추론 (타입 검증이 강화됨)
@@ -114,14 +114,14 @@ export function useQueryParam<
   path: R,
   key: K,
   options?: QueryParamOptions,
-): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>) => void, () => void]
+): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>, overrideOptions?: QueryParamOptions) => void, (overrideOptions?: QueryParamOptions) => void]
 
 // 일반적인 string 경로와 키에 대한 오버로드
 export function useQueryParam(
   path: string,
   key: string,
   options?: QueryParamOptions,
-): [string, (value: string) => void, () => void]
+): [string, (value: string, overrideOptions?: QueryParamOptions) => void, (overrideOptions?: QueryParamOptions) => void]
 
 // 실제 구현
 export function useQueryParam<
@@ -140,8 +140,8 @@ export function useQueryParam<
   optionsArg?: QueryParamOptions,
 ): [
   T, 
-  (value: T | ((prev: T) => T)) => void,
-  () => void
+  (value: T | ((prev: T) => T), overrideOptions?: QueryParamOptions) => void,
+  (overrideOptions?: QueryParamOptions) => void
 ] {
   const location = useLocation()
   const navigate = useNavigate()
@@ -240,11 +240,14 @@ export function useQueryParam<
 
   // 값 설정 함수 - 객체 모드와 단일 키 모드 모두 지원
   const setValue = useCallback(
-    (newValueOrUpdater: T | ((prev: T) => T)) => {
+    (newValueOrUpdater: T | ((prev: T) => T), overrideOptions?: QueryParamOptions) => {
       // 함수형 업데이트 처리
       const newValue = typeof newValueOrUpdater === 'function' 
         ? (newValueOrUpdater as ((prev: T) => T))(value)
         : newValueOrUpdater
+
+      // 현재 옵션과 오버라이드 옵션 병합
+      const mergedOptions = { ...options, ...(overrideOptions || {}) }
 
       const newSearchParams = new URLSearchParams(location.search)
 
@@ -256,7 +259,7 @@ export function useQueryParam<
           if (
             paramValue === undefined ||
             paramValue === null ||
-            (typeof paramValue === 'string' && paramValue === '' && options.emptyHandling === 'remove')
+            (typeof paramValue === 'string' && paramValue === '' && mergedOptions.emptyHandling === 'remove')
           ) {
             newSearchParams.delete(paramKey)
           } else {
@@ -268,7 +271,7 @@ export function useQueryParam<
         if (
           newValue === undefined ||
           newValue === null ||
-          (typeof newValue === 'string' && newValue === '' && options.emptyHandling === 'remove')
+          (typeof newValue === 'string' && newValue === '' && mergedOptions.emptyHandling === 'remove')
         ) {
           newSearchParams.delete(key)
         } else {
@@ -304,14 +307,21 @@ export function useQueryParam<
         url = `${location.pathname}${newSearch}${hash}`
       }
 
-      // 히스토리 옵션에 따라 navigate 호출
-      navigate(url, { replace: !options.push })
+      // 탐색 방식 결정 (push 또는 replace)
+      if (mergedOptions.push) {
+        navigate(url)
+      } else {
+        navigate(url, { replace: true })
+      }
     },
     [isObjectMode, key, location, navigate, path, options, value],
   )
 
   // 현재 경로에서 모든 쿼리 파라미터 삭제 함수
-  const removeParam = useCallback(() => {
+  const removeParam = useCallback((overrideOptions?: QueryParamOptions) => {
+    // 현재 옵션과 오버라이드 옵션 병합
+    const mergedOptions = { ...options, ...(overrideOptions || {}) }
+    
     const newSearchParams = new URLSearchParams(location.search)
 
     if (isObjectMode && path in SearchConfig) {
@@ -354,7 +364,7 @@ export function useQueryParam<
     }
 
     // 탐색 방식 결정 (push 또는 replace)
-    if (options.push) {
+    if (mergedOptions.push) {
       navigate(url)
     } else {
       navigate(url, { replace: true })

@@ -7,7 +7,6 @@ export const ProgressQuizPage = () => {
   const [name, setName, removeName] = useQueryParam('/progress-quiz/:quizId', 'name')
   const [emoji, setEmoji, removeEmoji] = useQueryParam('/progress-quiz/:quizId', 'emoji')
   const [date, setDate, removeDate] = useQueryParam('/progress-quiz/:quizId', 'date')
-  console.log(name)
 
   // 방법 2: 객체 형태로 모든 파라미터 관리
   // 모든 쿼리 파라미터를 하나의 객체로 관리
@@ -21,14 +20,19 @@ export const ProgressQuizPage = () => {
       <p>현재 선택된 이름: {name}</p>
       <button onClick={() => setName(name === '유민' ? '정우' : '유민')}>이름 변경</button>
       <button onClick={() => removeName()}>이름 삭제</button>
+      <button onClick={() => setName(name === '유민' ? '정우' : '유민', { push: false })}>
+        이름 변경 (히스토리 대체)
+      </button>
 
       <p>이모지: {emoji || '없음'}</p>
       <button onClick={() => setEmoji(emoji ? '' : '🎉')}>이모지 토글</button>
       <button onClick={() => removeEmoji()}>이모지 삭제</button>
+      <button onClick={() => removeEmoji({ push: true })}>이모지 삭제 (히스토리 추가)</button>
 
       <p>날짜: {date || '없음'}</p>
       <button onClick={() => setDate(date ? '' : new Date().toISOString().split('T')[0])}>오늘 날짜로 설정</button>
       <button onClick={() => removeDate()}>날짜 삭제</button>
+      <button onClick={() => setDate('', { emptyHandling: 'preserve' })}>날짜 빈 값으로 설정</button>
 
       <h2>방법 2: 객체 형태로 모든 파라미터 관리</h2>
       <pre>{JSON.stringify(params, null, 2)}</pre>
@@ -58,6 +62,11 @@ export const ProgressQuizPage = () => {
 
       {/* 모든 쿼리 파라미터 삭제 */}
       <button onClick={() => removeAllParams()}>모든 쿼리 파라미터 삭제</button>
+
+      {/* 옵션 오버라이드 예시 */}
+      <button onClick={() => setParams({ ...params, name: '유민', emoji: '🚀' }, { push: false })}>
+        모든 값 설정 (히스토리 대체)
+      </button>
     </div>
   )
 }
