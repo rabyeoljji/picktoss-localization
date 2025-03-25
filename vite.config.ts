@@ -24,6 +24,9 @@ export default defineConfig({
         background_color: '#ffffff',
         theme_color: '#000000',
       },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit instead of default 2MB
+      },
     }),
     svgr(),
   ],
