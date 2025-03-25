@@ -20,7 +20,7 @@
   --background-color-blue-strong: var(--color-blue-500);
   --background-color-blue: var(--color-blue-400);
   --background-color-blue-weak: var(--color-blue-200);
-  --background-color-accent: var(--color-orange-50);
+  --background-color-accent: var(--color-orange-100);
   --background-color-info: var(--color-blue-50);
   --background-color-correct: var(--color-green-200);
   --background-color-incorrect: var(--color-red-200);
@@ -32,7 +32,7 @@
   --border-color-divider: var(--color-gray-100);
   --border-color-box: var(--color-gray-200);
   --border-color-active: var(--color-gray-600);
-  --border-color-accent: var(--color-orange-400);
+  --border-color-accent: var(--color-orange-500);
   --border-color-success: var(--color-green-500);
   --border-color-error: var(--color-red-500);
   --border-color-correct: var(--color-green-500);
