@@ -1,4 +1,4 @@
-import { useQueryParam } from '@/shared/lib/router/query-param'
+import { useQueryParam } from '@/shared/lib/router'
 
 export const ProgressQuizPage = () => {
   // 방법 1: 개별 파라미터 접근 방식
