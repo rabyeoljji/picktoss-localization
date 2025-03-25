@@ -8,43 +8,30 @@ import { extractParamsFromPath } from '../lib'
 import { DEFAULT_QUERY_OPTIONS } from '../config'
 import { QueryParamOptions } from './type'
 
-// 문자열 리터럴 타입 추론을 위한 타입 정의
+// 더 명확한 리터럴 타입 추론을 위한 타입 정의
 type RouteNames = keyof typeof SearchConfig
 
 /**
- * ✅ QueryParamKeys
- * SearchConfig에서 경로별 가능한 쿼리 파라미터 키 타입을 추출
- * 예: QueryParamKeys<'/progress-quiz/:quizId'> => 'name' | 'emoji' | 'date'
+ * ✅ StrictQueryParamKeys
+ * 특정 경로에 대한 쿼리 파라미터 키 타입을 엄격하게 추출
+ * 단순히 keyof보다 더 정확한 타입 추론을 제공
  */
-type QueryParamKeys<R extends string> = 
-  R extends RouteNames 
-    ? typeof SearchConfig[R] extends Record<string, unknown> 
-      ? keyof typeof SearchConfig[R] 
-      : never
-    : string
+type StrictQueryParamKeys<R extends RouteNames> = keyof typeof SearchConfig[R]
 
 /**
- * ✅ QueryParamValue
- * SearchConfig에서 경로와 키에 따른 값 타입을 추출
- * 예: QueryParamValue<'/progress-quiz/:quizId', 'name'> => '유민' | '정우'
+ * ✅ StrictQueryParamValue
+ * 특정 경로와 키에 대한 값 타입을 엄격하게 추출
  */
-type QueryParamValue<R extends string, K extends string> = 
-  R extends RouteNames 
-    ? K extends keyof typeof SearchConfig[R] 
-      ? typeof SearchConfig[R][K]
-      : string
-    : string
+type StrictQueryParamValue<R extends RouteNames, K extends StrictQueryParamKeys<R>> = 
+  typeof SearchConfig[R][K]
 
 /**
  * ✅ QueryParamObject
- * SearchConfig에서 특정 경로에 대한 전체 쿼리 파라미터 타입을 추출
- * 예: QueryParamObject<'/progress-quiz/:quizId'> => { name: '유민' | '정우', emoji: string, date: string }
+ * 특정 경로에 대한 전체 쿼리 파라미터 객체 타입 추출
  */
 type QueryParamObject<R extends string> = 
   R extends RouteNames
-    ? typeof SearchConfig[R] extends Record<string, unknown>
-      ? typeof SearchConfig[R]
-      : Record<string, unknown>
+    ? typeof SearchConfig[R]
     : Record<string, unknown>
 
 /**
@@ -78,6 +65,17 @@ type QueryParamObject<R extends string> =
  * })
  */
 
+// 특정 경로와 키에 대한 정확한 타입 추론 (타입 검증이 강화됨)
+// 가장 구체적인 오버로드를 첫 번째로 배치
+export function useQueryParam<
+  R extends RouteNames, 
+  K extends StrictQueryParamKeys<R>
+>(
+  path: R,
+  key: K,
+  options?: QueryParamOptions,
+): [StrictQueryParamValue<R, K>, (value: StrictQueryParamValue<R, K>, overrideOptions?: QueryParamOptions) => void, (overrideOptions?: QueryParamOptions) => void]
+
 // 경로만 제공될 경우, 해당 경로의 모든 쿼리 파라미터 반환 (객체 형태)
 export function useQueryParam<R extends RouteNames>(
   path: R,
@@ -88,17 +86,7 @@ export function useQueryParam<R extends RouteNames>(
   (overrideOptions?: QueryParamOptions) => void
 ]
 
-// 특정 경로와 키에 대한 정확한 타입 추론 (타입 검증이 강화됨)
-export function useQueryParam<
-  R extends RouteNames, 
-  K extends QueryParamKeys<R>
->(
-  path: R,
-  key: K,
-  options?: QueryParamOptions,
-): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>, overrideOptions?: QueryParamOptions) => void, (overrideOptions?: QueryParamOptions) => void]
-
-// 일반적인 string 경로와 키에 대한 오버로드
+// 일반적인 string 경로와 키에 대한 오버로드 (가장 일반적인 오버로드이므로 마지막에 배치)
 export function useQueryParam(
   path: string,
   key: string,
@@ -112,8 +100,8 @@ export function useQueryParam<
   T = K extends undefined 
       ? (R extends RouteNames ? QueryParamObject<R> : Record<string, unknown>)
       : (R extends RouteNames 
-          ? (K extends QueryParamKeys<R> 
-              ? QueryParamValue<R, K> 
+          ? (K extends StrictQueryParamKeys<R> 
+              ? StrictQueryParamValue<R, K> 
               : string)
           : string)
 >(
@@ -308,9 +296,11 @@ export function useQueryParam<
     
     if (isObjectMode) {
       // 객체 모드: 모든 쿼리 파라미터 삭제
-      Object.keys(SearchConfig[path as RouteNames] || {}).forEach(paramKey => {
-        newSearchParams.delete(paramKey)
-      })
+      if (path in SearchConfig) {
+        Object.keys(SearchConfig[path as RouteNames] || {}).forEach(paramKey => {
+          newSearchParams.delete(paramKey)
+        })
+      }
     } else if (key) {
       // 단일 키 모드: 특정 키만 삭제
       newSearchParams.delete(key)
