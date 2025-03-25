@@ -66,7 +66,7 @@ function generateImageComponents() {
     content += `import ${camelName} from "./${file}"\n`
   })
 
-  // content += '\n'
+  // props 타입 지정
   content += '\n// Type definition for image component props\n'
   content += 'type ImageComponentProps = React.ImgHTMLAttributes<HTMLImageElement>;\n\n'
 
