@@ -20,7 +20,7 @@ function Orderbox({ className, order = 1, ...props }: Props) {
       {...props}
     >
       <CheckboxPrimitive.Indicator data-slot="checkbox-indicator" className="flex-center transition-none p-[1px]">
-        {order != null && order > 0 && (
+        {order > 0 && (
           <Text typo="body-2-bold" color="inverse">
             {order}
           </Text>
