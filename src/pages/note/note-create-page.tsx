@@ -103,7 +103,7 @@ const NoteCreatePage = () => {
       {
         file: contentBlob,
         documentName: data.title,
-        star: data.emoji,
+        star: '3', // 별점을 하드코딩으로 3으로 설정 (문자열로 변환)
         quizType: data.quizType,
         documentType: 'TEXT',
         directoryId: '1', // 기본 디렉토리 ID 또는 state에서 받아오기
@@ -228,7 +228,7 @@ const NoteCreatePageMarkdown = ({
   }
 
   return (
-    <div className="h-[calc(var(--viewport-height,100vh)-var(--header-height))] flex flex-col">
+    <div className="h-[calc(var(--viewport-height,100vh)-(var(--header-height)))] flex flex-col">
       <div className="p-4 pt-6 flex items-center gap-3 border-b border-divider">
         <div className="relative" ref={emojiPickerRef}>
           <FormField
