@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
-import { SearchConfig } from '../../config'
+import { SearchConfig } from '../../config/search-config'
 import { buildUrl } from '../../lib'
 import { Pathname } from '../../model/type'
 import { DEFAULT_QUERY_OPTIONS } from '../config'

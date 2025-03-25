@@ -1,4 +1,5 @@
-import { RoutePath, SearchConfig } from '../config'
+import { RoutePath } from '../config/route-path'
+import { SearchConfig } from '../config/search-config'
 
 /**
  * 경로 문자열 리터럴 타입

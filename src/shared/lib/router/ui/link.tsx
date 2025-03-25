@@ -1,6 +1,7 @@
 import { Link as RouterLink, type LinkProps as RouterLinkProps } from 'react-router'
 
-import { RoutePath, SearchConfig } from '../config'
+import { RoutePath } from '../config/route-path'
+import { SearchConfig } from '../config/search-config'
 import { buildUrl } from '../lib'
 
 /**
@@ -75,11 +76,11 @@ type CustomLinkProps<T extends Pathname> = Omit<RouterLinkProps, 'to'> &
  * @example
  * // 파라미터가 있는 경로 (params 필수)
  * <Link to="/note/:noteId" params={['123']}>노트 123</Link>
- * 
+ *
  * @example
  * // 해시와 함께 사용
  * <Link to="/note/:noteId" params={['123']} hash="comments">댓글로 이동</Link>
- * 
+ *
  * @example
  * // 문자열 형태의 search 파라미터
  * <Link to="/search" search="q=검색어&filter=all">검색</Link>
