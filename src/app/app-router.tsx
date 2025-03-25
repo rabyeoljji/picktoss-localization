@@ -39,8 +39,6 @@ import {
   NoteUploadPage,
   NotesPage,
 } from '@/pages/note'
-import { ProductDetailPage } from '@/pages/product/detail/product-detail-page'
-import { ProductListPage } from '@/pages/product/list/product-list-page'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
 import { SearchPage } from '@/pages/search-page'
 import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
@@ -117,13 +115,6 @@ export const AppRouter = () => {
           <Route path={RoutePath.login} element={<LoginPage />} />
           {/* Install Induce */}
           <Route path={RoutePath.installGuide} element={<InstallGuidePage />} />
-
-          {/* Product - 하드코딩된 경로 */}
-          <Route path="/product">
-            <Route index element={<ProductListPage />} />
-            <Route path="list" element={<ProductListPage />} />
-            <Route path="detail/:id" element={<ProductDetailPage />} />
-          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

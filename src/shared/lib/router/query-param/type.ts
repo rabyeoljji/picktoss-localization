@@ -16,7 +16,7 @@ export interface QueryParamOptions {
    * 브라우저 히스토리에 새 항목을 추가할지 여부
    * - true: pushState 사용 (새 히스토리 항목 생성)
    * - false: replaceState 사용 (현재 히스토리 항목 대체)
-   * @default true
+   * @default false
    */
   push?: boolean
 

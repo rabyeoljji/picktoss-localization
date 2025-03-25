@@ -53,7 +53,7 @@ const HomePage = () => {
       <Button
         onClick={() =>
           router.push('/progress-quiz/:quizId', {
-            params: [3],
+            params: ['3'],
           })
         }
       >
@@ -63,7 +63,7 @@ const HomePage = () => {
       <Button onClick={() => router.push('/account/feedback')}>문의하기</Button>
       <Button onClick={() => router.push('/note/create')}>문서 만들기</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
-      <Link to="/progress-quiz/:quizId" params={['3']} search={{ name: '정우' }}>
+      <Link to="/progress-quiz/:quizId" params={['3']} search={{ name: '유민' }}>
         폭탄 퀴즈{' '}
       </Link>
       <SearchInput />
