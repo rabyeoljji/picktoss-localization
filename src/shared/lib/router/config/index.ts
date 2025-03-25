@@ -1,84 +1,185 @@
 /**
- * 애플리케이션의 모든 경로 문자열을 상수로 정의
+ * 애플리케이션의 모든 경로와 검색 파라미터를 관리하는 통합 설정
  *
  * 라우팅 시스템에서 경로 문자열을 하드코딩하는 대신 이 객체를 참조
  * 코드 전체에서 경로 일관성을 유지하고 변경 시 단일 지점에서 관리
  *
  * @example
  * // 다음과 같이 사용
- * <Link to={RoutePath.account}>계정</Link>
- * router.push(RoutePath.login)
+ * <Link to={RouteConfig.account.pathname}>계정</Link>
+ * router.push(RouteConfig.login.pathname)
  */
-export const RoutePath = {
+export const RouteConfig = {
   /** 메인 홈 화면 */
-  root: '/',
-  search: '/search',
+  root: {
+    pathname: '/',
+  },
 
   /** 로그인 페이지 */
-  login: '/login',
+  login: {
+    pathname: '/login',
+  },
 
   /** 설치 가이드 페이지 */
-  installGuide: '/install-guide',
+  installGuide: {
+    pathname: '/install-guide',
+  },
 
   /** 노트 관련 페이지 */
-  note: '/note',
-  noteDetail: '/note/:noteId',
-  noteQuiz: '/note/quiz/:noteId',
-  noteArrange: '/note/arrange/:directoryId',
-  noteSearch: '/note/search',
-  noteEdit: '/note/edit/:noteId',
-  noteCreate: '/note/create',
-  noteUpload: '/note/upload',
+  note: {
+    pathname: '/note',
+  },
+  noteDetail: {
+    pathname: '/note/:noteId',
+  },
+  noteQuiz: {
+    pathname: '/note/quiz/:noteId',
+  },
+  noteArrange: {
+    pathname: '/note/arrange/:directoryId',
+  },
+  noteSearch: {
+    pathname: '/note/search',
+  },
+  noteEdit: {
+    pathname: '/note/edit/:noteId',
+  },
+  noteCreate: {
+    pathname: '/note/create',
+  },
+  noteUpload: {
+    pathname: '/note/upload',
+  },
 
   /** 계정 관련 페이지 */
-  account: '/account',
-  accountInfo: '/account/info',
-  accountDailyQuizAttendance: '/account/daily-quiz-attendance',
-  accountQuizAnalysis: '/account/quiz-analysis',
-  accountQuizRecord: '/account/quiz-record',
-  accountNotificationConfig: '/account/notification-config',
-  accountPaymentHistory: '/account/payment-history',
-  accountNotice: '/account/notice',
-  accountContact: '/account/contact',
-  accountFaq: '/account/faq',
-  accountPolicy: '/account/policy',
-  accountWithdraw: '/account/withdraw',
-  accountFeedback: '/account/feedback',
-  accountFeedbackComplete: '/account/feedback/complete',
+  account: {
+    pathname: '/account',
+  },
+  accountInfo: {
+    pathname: '/account/info',
+  },
+  accountDailyQuizAttendance: {
+    pathname: '/account/daily-quiz-attendance',
+  },
+  accountQuizAnalysis: {
+    pathname: '/account/quiz-analysis',
+  },
+  accountQuizRecord: {
+    pathname: '/account/quiz-record',
+  },
+  accountNotificationConfig: {
+    pathname: '/account/notification-config',
+  },
+  accountPaymentHistory: {
+    pathname: '/account/payment-history',
+  },
+  accountNotice: {
+    pathname: '/account/notice',
+  },
+  accountContact: {
+    pathname: '/account/contact',
+  },
+  accountFaq: {
+    pathname: '/account/faq',
+  },
+  accountPolicy: {
+    pathname: '/account/policy',
+  },
+  accountWithdraw: {
+    pathname: '/account/withdraw',
+  },
+  accountFeedback: {
+    pathname: '/account/feedback',
+  },
+  accountFeedbackComplete: {
+    pathname: '/account/feedback/complete',
+  },
 
   /** 퀴즈 관련 페이지 */
-  progressQuiz: '/progress-quiz/:quizId',
-  randomQuiz: '/random-quiz',
-  bombQuiz: '/bomb-quiz',
+  progressQuiz: {
+    pathname: '/progress-quiz/:quizId',
+    search: {
+      name: '유민' as '유민' | '정우',
+      emoji: '' as string,
+      date: '' as string,
+    },
+  },
+  randomQuiz: {
+    pathname: '/random-quiz',
+    search: {
+      date: '' as string,
+    },
+  },
+  bombQuiz: {
+    pathname: '/bomb-quiz',
+    search: {
+      date: '' as string,
+    },
+  },
 
   /** 컬렉션 관련 페이지 */
-  collection: '/collection',
-  collectionDetail: '/collection/:collectionId',
-  collectionQuiz: '/collection/quiz/:collectionId',
-  collectionComplain: '/collection/complain/:collectionId',
-  collectionCreate: '/collection/create',
-  collectionEditInfo: '/collection/edit/info/:collectionId',
-  collectionEditQuiz: '/collection/edit/quiz/:collectionId',
-  collectionSearch: '/collection/search',
+  collection: {
+    pathname: '/collection',
+  },
+  collectionDetail: {
+    pathname: '/collection/:collectionId',
+  },
+  collectionQuiz: {
+    pathname: '/collection/quiz/:collectionId',
+  },
+  collectionComplain: {
+    pathname: '/collection/complain/:collectionId',
+  },
+  collectionCreate: {
+    pathname: '/collection/create',
+  },
+  collectionEditInfo: {
+    pathname: '/collection/edit/info/:collectionId',
+  },
+  collectionEditQuiz: {
+    pathname: '/collection/edit/quiz/:collectionId',
+  },
+  collectionSearch: {
+    pathname: '/collection/search',
+    search: {
+      query: '' as string,
+    },
+  },
 } as const
 
 /**
- * 각 경로에 대한 검색 파라미터 타입을 정의
- * 경로를 키로 사용하여 일관된 구조 유지
+ * 기존 RoutePath 호환성 유지를 위한 변환
+ *
+ * @example
+ * // 다음과 같이 기존 방식으로 사용 가능
+ * <Link to={RoutePath.account}>계정</Link>
+ * router.push(RoutePath.login)
  */
-export const SearchConfig = {
-  '/progress-quiz/:quizId': {
-    name: '유민' as '유민' | '정우',
-    emoji: '' as string,
-    date: '' as string,
-  },
-  '/random-quiz': {
-    date: '' as string,
-  },
-  '/bomb-quiz': {
-    date: '' as string,
-  },
-  '/collection/search': {
-    query: '' as string,
-  },
-} as const
+export const RoutePath = Object.fromEntries(
+  Object.entries(RouteConfig).map(([key, value]) => [key, value.pathname]),
+) as {
+  [K in keyof typeof RouteConfig]: (typeof RouteConfig)[K]['pathname']
+}
+
+/**
+ * 경로 문자열을 키로 사용하여 검색 파라미터 매핑
+ * pathname -> search 객체 매핑
+ */
+type PathWithSearch = {
+  [K in keyof typeof RouteConfig]: (typeof RouteConfig)[K] extends { pathname: infer P; search: infer S }
+    ? P extends string
+      ? { path: P; search: S }
+      : never
+    : never
+}[keyof typeof RouteConfig]
+
+export const SearchConfig = Object.fromEntries(
+  Object.entries(RouteConfig).flatMap(([_, value]) => {
+    if ('search' in value) {
+      return [[value.pathname, value.search]]
+    }
+    return []
+  }),
+) as {
+  [P in PathWithSearch['path']]: Extract<PathWithSearch, { path: P }>['search']
+}
