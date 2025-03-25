@@ -300,7 +300,7 @@ export function useQueryParam<
   )
 
   // 현재 경로에서 모든 쿼리 파라미터 삭제 함수
-  const removeParam = useCallback((overrideOptions?: QueryParamOptions) => {
+  const resetParam = useCallback((overrideOptions?: QueryParamOptions) => {
     // 현재 옵션과 오버라이드 옵션 병합
     const mergedOptions = { ...options, ...(overrideOptions || {}) }
     
@@ -352,5 +352,5 @@ export function useQueryParam<
     }
   }, [isObjectMode, key, location, navigate, options, path])
   
-  return [value, setValue, removeParam]
+  return [value, setValue, resetParam]
 }

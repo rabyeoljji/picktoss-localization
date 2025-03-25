@@ -17,16 +17,16 @@
 import { useQueryParam } from '@/shared/lib/router/query-param'
 
 const MyComponent = () => {
-  // 기본 사용법: [값, 설정 함수, 제거 함수]
-  const [search, setSearch, removeSearch] = useQueryParam('/search', 'q')
+  // 기본 사용법: [값, 설정 함수, 초기화 함수]
+  const [search, setSearch, resetSearch] = useQueryParam('/search', 'q')
   
   // 반환되는 타입은 RouteConfig에 정의된 타입에 따라 자동으로 결정됨
-  const [name, setName, removeName] = useQueryParam('/progress-quiz/:quizId', 'name')  // '유민' | '정우' 타입
-  const [page, setPage, removePage] = useQueryParam('/search', 'page')  // number 타입
-  const [showAll, setShowAll, removeShowAll] = useQueryParam('/filter', 'active')  // boolean 타입
+  const [name, setName, resetName] = useQueryParam('/progress-quiz/:quizId', 'name')  // '유민' | '정우' 타입
+  const [page, setPage, resetPage] = useQueryParam('/search', 'page')  // number 타입
+  const [showAll, setShowAll, resetShowAll] = useQueryParam('/filter', 'active')  // boolean 타입
   
   // 여러 쿼리 파라미터 관리
-  const [params, setParams, removeParams] = useQueryParams('/search')
+  const [params, setParams, resetParams] = useQueryParams('/search')
   
   return (
     <div>
@@ -35,10 +35,10 @@ const MyComponent = () => {
         onChange={(e) => setSearch(e.target.value)} 
         placeholder="검색어 입력"
       />
-      <button onClick={() => removeSearch()}>검색어 지우기</button>
+      <button onClick={() => resetSearch()}>검색어 초기화</button>
       
       <button onClick={() => setPage(page + 1)}>다음 페이지</button>
-      <button onClick={() => removePage()}>페이지 초기화</button>
+      <button onClick={() => resetPage()}>페이지 초기화</button>
       
       <label>
         <input 
@@ -48,13 +48,13 @@ const MyComponent = () => {
         />
         모두 보기
       </label>
-      <button onClick={() => removeShowAll()}>필터 초기화</button>
+      <button onClick={() => resetShowAll()}>필터 초기화</button>
       
       {/* 모든 파라미터 한번에 변경 */}
       <button onClick={() => setParams({ q: '새 검색어', page: 1, showAll: true })}>
         모두 설정
       </button>
-      <button onClick={() => removeParams()}>모두 초기화</button>
+      <button onClick={() => resetParams()}>모두 초기화</button>
     </div>
   )
 }
@@ -74,7 +74,7 @@ const MyComponent = () => {
 3. **사용 편의성**:
    - React의 `useState`와 유사한 API로 쉽게 사용할 수 있습니다.
    - `RouteConfig`에 정의된 타입에 따라 자동으로 타입 변환이 처리됩니다 (문자열 ↔ 숫자, 문자열 ↔ 불리언).
-   - 쿼리 파라미터 제거 기능이 내장되어 있어 상태 관리가 용이합니다.
+   - 쿼리 파라미터 초기화 기능이 내장되어 있어 상태 관리가 용이합니다.
 
 4. **히스토리 관리 옵션**:
    - 쿼리 파라미터 변경 시 히스토리 항목 추가 여부를 제어할 수 있습니다.
@@ -86,7 +86,7 @@ const MyComponent = () => {
 ### 기본 형태
 
 ```tsx
-const [value, setValue, removeValue] = useQueryParam(path, key, options?)
+const [value, setValue, resetValue] = useQueryParam(path, key, options?)
 ```
 
 - **path**: 경로 문자열 (예: '/search', '/progress-quiz/:quizId')
@@ -99,20 +99,20 @@ const [value, setValue, removeValue] = useQueryParam(path, key, options?)
 
 1. **문자열 파라미터**:
    ```tsx
-   const [name, setName, removeName] = useQueryParam('/progress-quiz/:quizId', 'name')
+   const [name, setName, resetName] = useQueryParam('/progress-quiz/:quizId', 'name')
    // RouteConfig에 name: '유민' as '유민' | '정우'로 정의된 경우, name은 '유민' | '정우' 타입
    ```
 
 2. **숫자 파라미터**:
    ```tsx
-   const [page, setPage, removePage] = useQueryParam('/search', 'page')
+   const [page, setPage, resetPage] = useQueryParam('/search', 'page')
    // RouteConfig에 page: 0으로 정의된 경우, page는 number 타입
    // URL에 ?page=5가 있으면 page는 숫자 5
    ```
 
 3. **불리언 파라미터**:
    ```tsx
-   const [active, setActive, removeActive] = useQueryParam('/filter', 'active')
+   const [active, setActive, resetActive] = useQueryParam('/filter', 'active')
    // RouteConfig에 active: false로 정의된 경우, active는 boolean 타입
    // URL에 ?active=true가 있으면 active는 true
    ```
@@ -120,7 +120,7 @@ const [value, setValue, removeValue] = useQueryParam(path, key, options?)
 ### 여러 쿼리 파라미터 관리
 
 ```tsx
-const [params, setParams, removeParams] = useQueryParams('/search')
+const [params, setParams, resetParams] = useQueryParams('/search')
 
 // 모든 파라미터 가져오기
 console.log(params) // { q: '검색어', page: 1, ... }
@@ -128,18 +128,18 @@ console.log(params) // { q: '검색어', page: 1, ... }
 // 여러 파라미터 설정
 setParams({ q: '새 검색어', page: 1 })
 
-// 특정 파라미터만 제거
-removeParams('q') // q 파라미터만 제거
-removeParams(['q', 'page']) // q와 page 제거
+// 특정 파라미터만 초기화
+resetParams('q') // q 파라미터만 초기화
+resetParams(['q', 'page']) // q와 page 초기화
 
-// 모든 파라미터 제거
-removeParams()
+// 모든 파라미터 초기화
+resetParams()
 ```
 
 ### 옵션 설정
 
 ```tsx
-const [filter, setFilter, removeFilter] = useQueryParam('/search', 'filter', {
+const [filter, setFilter, resetFilter] = useQueryParam('/search', 'filter', {
   // 히스토리 옵션
   push: true, // true: 히스토리에 새 항목 추가, false: 현재 항목을 대체 (기본값: true)
   
@@ -152,20 +152,20 @@ const [filter, setFilter, removeFilter] = useQueryParam('/search', 'filter', {
 
 ### 옵션 오버라이드
 
-설정 및 제거 함수를 호출할 때 옵션을 오버라이드할 수 있습니다:
+설정 및 초기화 함수를 호출할 때 옵션을 오버라이드할 수 있습니다:
 
 ```tsx
 // 값 설정 시 옵션 오버라이드
 setFilter('category', { push: false }) // 히스토리 항목을 추가하지 않고 설정
 
-// 제거 시 옵션 오버라이드
-removeFilter({ push: false }) // 히스토리 항목을 추가하지 않고 제거
+// 초기화 시 옵션 오버라이드
+resetFilter({ push: false }) // 히스토리 항목을 추가하지 않고 초기화
 
 // 여러 파라미터 설정 시 옵션 오버라이드
 setParams({ q: '검색어', page: 1 }, { push: false })
 
-// 여러 파라미터 제거 시 옵션 오버라이드
-removeParams(['q', 'page'], { push: false })
+// 여러 파라미터 초기화 시 옵션 오버라이드
+resetParams(['q', 'page'], { push: false })
 ```
 
 ### 타입 검증
@@ -194,9 +194,9 @@ const [invalid, setInvalid] = useQueryParam('/progress-quiz/:quizId', 'invalid')
    - `RouteConfig`에 정의된 타입에 따라 파라미터 값을 적절한 타입으로 변환합니다.
    - 문자열 → 숫자, 문자열 → 불리언 변환을 지원합니다.
 
-3. **값 설정 및 제거**:
+3. **값 설정 및 초기화**:
    - 새 값을 설정하면 URL의 쿼리 파라미터가 업데이트됩니다.
-   - 값을 제거하면 URL에서 해당 쿼리 파라미터가 삭제됩니다.
+   - 값을 초기화하면 URL에서 해당 쿼리 파라미터가 삭제됩니다.
    - 옵션에 따라 히스토리 항목 추가 여부와 빈 값 처리 방식이 결정됩니다.
 
 4. **타입 안전성**:
@@ -214,17 +214,19 @@ type SearchConfig = {
 }
 
 // 경로와 키에 대한 타입 검증
-export function useQueryParam<
-  R extends keyof SearchConfig,
-  K extends keyof SearchConfig[R],
->(
+export function useQueryParam<R extends keyof SearchConfig, K extends keyof SearchConfig[R]>(
   path: R,
   key: K,
   options?: QueryParamOptions,
-): [SearchConfig[R][K], (value: SearchConfig[R][K], overrideOptions?: QueryParamOptions) => void, (overrideOptions?: QueryParamOptions) => void]
+): [
+  SearchConfig[R][K],
+  (value: SearchConfig[R][K], overrideOptions?: QueryParamOptions) => void,
+  (overrideOptions?: QueryParamOptions) => void,
+]
 ```
 
 이러한 통합을 통해:
+
 - 라우터 시스템에 정의된 경로와 검색 파라미터를 재사용합니다.
 - 경로나 검색 파라미터가 변경되면 타입 시스템이 관련된 모든 사용처를 자동으로 찾아내어 오류를 방지합니다.
 - 중앙 집중식 타입 관리로 유지보수가 용이해집니다.
@@ -232,18 +234,22 @@ export function useQueryParam<
 ## 주의점
 
 1. **경로와 파라미터 순서**:
+
    - `useQueryParam` 함수의 매개변수 순서는 (경로, 파라미터 키, 옵션)입니다.
 
 2. **초기값 설정**:
+
    - 초기값은 `RouteConfig`에서 자동으로 가져오므로 별도로 제공할 필요가 없습니다.
    - 값이 없는 경우 `RouteConfig`에 정의된 값이 사용됩니다.
 
 3. **히스토리 관리**:
+
    - 기본적으로 `push` 옵션은 `true`로 설정되어 있어 히스토리 항목이 추가됩니다.
    - 필요한 경우 `{ push: false }`로 설정하여 히스토리 항목이 추가되지 않도록 할 수 있습니다.
    - 개별 작업마다 옵션을 오버라이드할 수 있어 유연하게 사용 가능합니다.
 
 4. **빈 값 처리**:
+
    - 기본적으로 빈 문자열('')은 URL에서 완전히 제거됩니다 (`emptyHandling: 'remove'`).
    - 빈 값을 URL에 유지하려면 `{ emptyHandling: 'preserve' }`로 설정해야 합니다.
 

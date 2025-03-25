@@ -44,7 +44,7 @@ export interface UseQueryParamReturn<T extends QueryParamValue = QueryParamValue
   setValue: (newValue: T, options?: QueryParamOptions) => void
 
   /**
-   * 쿼리 파라미터를 제거하는 함수
+   * 쿼리 파라미터를 초기화하는 함수
    */
-  removeParam: (options?: QueryParamOptions) => void
+  resetParam: (options?: QueryParamOptions) => void
 }
