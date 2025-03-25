@@ -14,6 +14,10 @@ type RouteKeys = keyof typeof SearchConfig
 // SearchConfig에서 경로에 따른 쿼리 파라미터 키 타입
 type QueryParamKeys<R extends RouteKeys> = keyof (typeof SearchConfig)[R]
 
+// SearchConfig에서 경로와 키에 따른 값 타입 (정확한 리터럴 타입 추론을 위해 개선)
+type QueryParamValue<R extends RouteKeys, K extends QueryParamKeys<R>> = 
+  (typeof SearchConfig)[R][K] extends infer V ? V : never
+
 /**
  * URL 경로에서 params 값 추출
  */
@@ -34,78 +38,57 @@ const extractParamsFromPath = (pattern: string, path: string): string[] => {
 
 /**
  * 현재 URL의 쿼리 파라미터를 추출하고 설정하는 훅
+ * SearchConfig에 정의된 초기값을 자동으로 사용합니다.
  * 
  * @param path 경로 문자열 (예: '/search', '/random-quiz')
  * @param key 쿼리 파라미터 키 (예: 'q', 'page')
- * @param initialValue 초기값 (URL에 파라미터가 없을 경우 사용)
  * @param options 옵션 객체 (선택적)
  * 
- * @example 기본 사용법 - 초기값의 타입에 따라 반환 타입이 결정됨
- * const [name, setName] = useQueryParam('/random-quiz', 'name', '')        // [string, (v: string) => void]
- * const [count, setCount] = useQueryParam('/random-quiz', 'count', 0)      // [number, (v: number) => void]
- * const [active, setActive] = useQueryParam('/random-quiz', 'active', false) // [boolean, (v: boolean) => void]
+ * @example 기본 사용법 - SearchConfig에 정의된 타입에 따라 반환 타입이 결정됨
+ * const [name, setName] = useQueryParam('/progress-quiz/:quizId', 'name')  // ['유민' | '정우', (v: '유민' | '정우') => void]
+ * const [date, setDate] = useQueryParam('/random-quiz', 'date')            // [string, (v: string) => void]
  *
  * @example 타입 검증
  * // '/random-quiz' 경로는 SearchConfig에 'date' 파라미터가 문자열로 정의됨
- * const [date, setDate] = useQueryParam('/random-quiz', 'date', '')  // 정상 작동
- * const [invalid, setInvalid] = useQueryParam('/random-quiz', 'invalid', '')  // 타입 오류
+ * const [date, setDate] = useQueryParam('/random-quiz', 'date')  // 정상 작동
+ * const [invalid, setInvalid] = useQueryParam('/random-quiz', 'invalid')  // 타입 오류
  *
  * @example 옵션 설정
- * const [filter, setFilter] = useQueryParam('/search', 'filter', '', {
+ * const [filter, setFilter] = useQueryParam('/search', 'filter', {
  *   push: true, // 브라우저 히스토리에 새 항목을 추가함 (기본값: false)
  *   emptyHandling: 'preserve' // 빈 값을 URL에 유지 (예: ?filter=) (기본값: 'remove')
  * })
  */
 
-// 타입 검증을 위한 오버로드
-export function useQueryParam<R extends RouteKeys, K extends QueryParamKeys<R>>(
+// 타입 검증을 위한 오버로드 - 특정 경로와 키에 대한 정확한 타입 추론
+export function useQueryParam<
+  R extends RouteKeys, 
+  K extends QueryParamKeys<R>
+>(
   path: R,
-  key: K & string,
-  initialValue: (typeof SearchConfig)[R][K] & string,
+  key: K,
   options?: QueryParamOptions,
-): [(typeof SearchConfig)[R][K] & string, (value: (typeof SearchConfig)[R][K] & string) => void]
+): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>) => void]
 
-export function useQueryParam<R extends RouteKeys, K extends QueryParamKeys<R>>(
-  path: R,
-  key: K & string,
-  initialValue: (typeof SearchConfig)[R][K] & number,
-  options?: QueryParamOptions,
-): [(typeof SearchConfig)[R][K] & number, (value: (typeof SearchConfig)[R][K] & number) => void]
-
-export function useQueryParam<R extends RouteKeys, K extends QueryParamKeys<R>>(
-  path: R,
-  key: K & string,
-  initialValue: (typeof SearchConfig)[R][K] & boolean,
-  options?: QueryParamOptions,
-): [(typeof SearchConfig)[R][K] & boolean, (value: (typeof SearchConfig)[R][K] & boolean) => void]
-
-// 일반적인 사용을 위한 오버로드
+// 일반적인 문자열 파라미터에 대한 오버로드
 export function useQueryParam(
   path: string,
   key: string,
-  initialValue: string,
   options?: QueryParamOptions,
 ): [string, (value: string) => void]
 
-export function useQueryParam(
-  path: string,
-  key: string,
-  initialValue: number,
-  options?: QueryParamOptions,
-): [number, (value: number) => void]
-
-export function useQueryParam(
-  path: string,
-  key: string,
-  initialValue: boolean,
-  options?: QueryParamOptions,
-): [boolean, (value: boolean) => void]
-
 // 실제 구현
-export function useQueryParam<T extends string | number | boolean>(
-  path: string,
-  key: string,
-  initialValue: T,
+export function useQueryParam<
+  R extends string, 
+  K extends string,
+  T = R extends RouteKeys 
+      ? K extends QueryParamKeys<R & RouteKeys> 
+        ? QueryParamValue<R & RouteKeys, K & QueryParamKeys<R & RouteKeys>> 
+        : string
+      : string
+>(
+  path: R,
+  key: K,
   options: QueryParamOptions = DEFAULT_QUERY_OPTIONS,
 ): [T, (value: T) => void] {
   const location = useLocation()
@@ -115,6 +98,22 @@ export function useQueryParam<T extends string | number | boolean>(
   const searchParams = useMemo(() => {
     return new URLSearchParams(location.search)
   }, [location.search])
+
+  // SearchConfig에서 초기값 가져오기
+  const initialValue = useMemo(() => {
+    // path가 SearchConfig에 있고, key가 해당 path의 SearchConfig에 있는 경우
+    if (
+      path in SearchConfig && 
+      SearchConfig[path as RouteKeys] && 
+      typeof SearchConfig[path as RouteKeys] === 'object' &&
+      key in (SearchConfig[path as RouteKeys] as Record<string, unknown>)
+    ) {
+      return (SearchConfig[path as RouteKeys] as Record<string, unknown>)[key] as T
+    }
+    
+    // 기본값으로 빈 문자열 반환 (경로나 키가 SearchConfig에 정의되지 않은 경우)
+    return ('' as unknown) as T
+  }, [path, key])
 
   // 값 계산
   const value = useMemo(() => {
@@ -131,11 +130,20 @@ export function useQueryParam<T extends string | number | boolean>(
     }
 
     if (typeof initialValue === 'boolean') {
-      return (paramValue === 'true') as T
+      return (paramValue === 'true') as unknown as T
     }
 
-    return paramValue as T
-  }, [key, searchParams, initialValue])
+    // 특별한 경우 리터럴 타입을 유지하기 위한 처리
+    if (
+      path === '/progress-quiz/:quizId' && 
+      key === 'name' && 
+      (paramValue === '유민' || paramValue === '정우')
+    ) {
+      return paramValue as unknown as T
+    }
+
+    return paramValue as unknown as T
+  }, [key, searchParams, initialValue, path])
 
   // 값 설정 함수
   const setValue = useCallback(

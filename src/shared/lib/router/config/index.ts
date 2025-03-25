@@ -66,7 +66,7 @@ export const RoutePath = {
  * 각 경로에 대한 검색 파라미터 타입을 정의
  * 경로를 키로 사용하여 일관된 구조 유지
  */
-export const SearchConfig: Record<(typeof RoutePath)[keyof typeof RoutePath], unknown> = {
+export const SearchConfig = {
   '/': undefined,
   '/search': undefined,
   '/login': undefined,
@@ -95,14 +95,14 @@ export const SearchConfig: Record<(typeof RoutePath)[keyof typeof RoutePath], un
   '/account/feedback/complete': undefined,
   '/progress-quiz/:quizId': {
     name: '유민' as '유민' | '정우',
-    emoji: '',
-    date: '',
+    emoji: '' as string,
+    date: '' as string,
   },
   '/random-quiz': {
-    date: '',
+    date: '' as string,
   },
   '/bomb-quiz': {
-    date: '',
+    date: '' as string,
   },
   '/collection': undefined,
   '/collection/:collectionId': undefined,
@@ -112,6 +112,6 @@ export const SearchConfig: Record<(typeof RoutePath)[keyof typeof RoutePath], un
   '/collection/edit/info/:collectionId': undefined,
   '/collection/edit/quiz/:collectionId': undefined,
   '/collection/search': {
-    query: '',
+    query: '' as string,
   },
 }

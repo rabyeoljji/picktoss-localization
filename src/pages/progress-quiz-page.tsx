@@ -3,11 +3,12 @@ import { useQueryParam } from '@/shared/lib/router/query-param'
 export const ProgressQuizPage = () => {
   // name 파라미터는 /progress-quiz/:quizId 경로에 정의되어 있으며
   // SearchConfig에는 '유민' | '정우' 리터럴 유니온 타입으로 정의됨
-  const [name, setName] = useQueryParam('/progress-quiz/:quizId', 'name', '유민')
+  const [name, setName] = useQueryParam('/progress-quiz/:quizId', 'name')
+  console.log(name)
 
   // emoji와 date 파라미터도 사용 가능
-  const [emoji, setEmoji] = useQueryParam('/progress-quiz/:quizId', 'emoji', '')
-  const [date, setDate] = useQueryParam('/progress-quiz/:quizId', 'date', '')
+  const [emoji, setEmoji] = useQueryParam('/progress-quiz/:quizId', 'emoji')
+  const [date, setDate] = useQueryParam('/progress-quiz/:quizId', 'date')
 
   return (
     <div>
