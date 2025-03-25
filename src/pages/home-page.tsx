@@ -61,6 +61,7 @@ const HomePage = () => {
       </Button>
       <Button onClick={() => router.push('/note/search')}>노트 검색</Button>
       <Button onClick={() => router.push('/account/feedback')}>문의하기</Button>
+      <Button onClick={() => router.push('/account/withdraw')}>회원탈퇴</Button>
       <Button onClick={() => router.push('/note/create')}>문서 만들기</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
       <Link to="/progress-quiz/:quizId" params={['3']} search={{ name: '유민' }}>
