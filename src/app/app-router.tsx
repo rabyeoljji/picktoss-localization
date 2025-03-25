@@ -39,7 +39,6 @@ import {
   NoteUploadPage,
   NotesPage,
 } from '@/pages/note'
-import { ProductsPage } from '@/pages/products'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
 import { SearchPage } from '@/pages/search-page'
 import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
@@ -116,9 +115,6 @@ export const AppRouter = () => {
           <Route path={RoutePath.login} element={<LoginPage />} />
           {/* Install Induce */}
           <Route path={RoutePath.installGuide} element={<InstallGuidePage />} />
-
-          {/* Example: Products */}
-          <Route path={RoutePath.products} element={<ProductsPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

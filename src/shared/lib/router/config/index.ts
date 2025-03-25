@@ -150,27 +150,6 @@ export const RouteConfig = {
       query: '' as string,
     },
   },
-
-  /** 상품 관련 페이지 */
-  products: {
-    pathname: '/products',
-    search: {
-      category: '' as '' | '전자제품' | '의류' | '식품' | '도서' | '생활용품',
-      minPrice: '' as string,
-      maxPrice: '' as string,
-      sort: 'latest' as 'latest' | 'price-asc' | 'price-desc' | 'popular',
-      page: '1' as string,
-      search: '' as string,
-      brand: '' as string,
-      isOnSale: '' as '' | 'true' | 'false',
-      inStock: '' as '' | 'true' | 'false',
-      rating: '' as '' | '1' | '2' | '3' | '4' | '5',
-      view: 'grid' as 'grid' | 'list',
-    },
-  },
-  productDetail: {
-    pathname: '/products/:productId',
-  },
 } as const
 
 /**
