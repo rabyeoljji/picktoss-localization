@@ -2,7 +2,7 @@ import { useQueryParam } from '@/shared/lib/router/query-param'
 
 const RandomQuizPage = () => {
   // date 파라미터는 /random-quiz 경로에 정의되어 있으며, 자동으로 타입 검증됨
-  const [date, setDate] = useQueryParam('/random-quiz', 'date', '')
+  const [date, setDate] = useQueryParam('/random-quiz', 'date')
 
   return (
     <div>
