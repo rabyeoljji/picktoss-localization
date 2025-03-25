@@ -21,7 +21,7 @@ function Textarea({ className, hasError = false, label, required = false, helper
         id={id}
         data-slot="textarea"
         className={cn(
-          'bg-surface-1 border-outline placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 h-[194px] w-full resize-none rounded-[8px] border p-3 outline-none disabled:border-none',
+          'bg-surface-1 border-outline placeholder:text-caption text-primary typo-body-1-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 h-[194px] w-full resize-none rounded-[8px] border p-3 outline-none disabled:border-none',
           hasError && 'border-error focus:border-error',
           className,
         )}

@@ -41,7 +41,7 @@ const QuestionCardMultiple = ({
   showIndexs?: number[]
 }) => {
   return (
-    <div className="px-4 mt-4">
+    <div className="px-4 mt-4 mb-3">
       <div className="flex flex-col gap-2">
         {options.map((option, index) => (
           <div key={index} className="flex gap-2 items-start">
@@ -82,7 +82,7 @@ const QuestionCardOX = ({
   disabledIndexs?: number[]
 }) => {
   return (
-    <div className="px-4 mt-4">
+    <div className="px-4 mt-4 mb-3">
       <div className="px-[11.5px] flex items-center gap-2 w-full">
         <div
           className={cn(
@@ -134,7 +134,7 @@ const QuestionCardExplanation = ({
       <motion.div
         initial={!contentRef.current && false}
         layout
-        className={cn('px-4 overflow-hidden', _open && 'mt-6')}
+        className={cn('px-4 overflow-hidden', _open && 'mt-6 mb-3')}
         animate={{ height: _open && contentHeight ? contentHeight : 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
@@ -145,18 +145,15 @@ const QuestionCardExplanation = ({
         </div>
       </motion.div>
 
-      <button
-        className="w-full py-3 flex justify-center items-end border-t border-divider mt-3"
-        onClick={() => _openChange(!_open)}
-      >
-        <div className="flex items-center gap-1">
-          <Text typo="body-1-medium" color="sub">
+      <button className="w-full flex-center border-t border-divider" onClick={() => _openChange(!_open)}>
+        <div className="self-stretch h-11 flex-center gap-[4px]">
+          <Text typo="body-2-medium" color="sub">
             {_open ? '닫기' : '해설 보기'}
           </Text>
           {_open ? (
-            <IcChevronUp className="size-4 text-icon-sub" />
+            <IcChevronUp className="size-[12px] text-icon-sub" />
           ) : (
-            <IcChevronDown className="size-4 text-icon-sub" />
+            <IcChevronDown className="size-[12px] text-icon-sub" />
           )}
         </div>
       </button>
