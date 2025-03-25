@@ -35,20 +35,17 @@ const WithdrawForm = () => {
   const { control, handleSubmit, watch } = form
 
   const handleClickDeleteAccount = (data: WithdrawFormValues) => {
-    const requestBody: { reason?: WithdrawFormValues['reason']; detail?: WithdrawFormValues['content'] } = {}
-
-    if (data.reason) {
-      requestBody['reason'] = data.reason
-    }
-    if (data.content) {
-      requestBody['detail'] = data.content
-    }
-
-    deleteMemberMutate(requestBody, {
-      onSuccess: () => {
-        router.replace('/login')
+    deleteMemberMutate(
+      {
+        ...(data.reason && { reason: data.reason }),
+        ...(data.content && { detail: data.content }),
       },
-    })
+      {
+        onSuccess: () => {
+          router.replace('/login')
+        },
+      },
+    )
   }
 
   return (
