@@ -51,9 +51,7 @@ function Button({
       {left && (
         <div className={cn([size === 'sm' && '[&_svg]:size-4!'], [size === 'md' && '[&_svg]:size-5!'])}>{left}</div>
       )}
-      <div className={cn('group-data-[state=loading]:hidden', [size === 'md' && 'px-2'], [size === 'sm' && 'px-1'])}>
-        {children}
-      </div>
+      <div className={cn('group-data-[state=loading]:hidden px-1')}>{children}</div>
       <div className="center hidden group-data-[state=loading]:block">
         <svg width="40" height="8" viewBox="0 0 40 8" fill="none" xmlns="http://www.w3.org/2000/svg">
           <circle cx="4" cy="4" r="4" fill="#FFF7ED" />
