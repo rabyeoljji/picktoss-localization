@@ -67,32 +67,6 @@ export const RoutePath = {
  * 경로를 키로 사용하여 일관된 구조 유지
  */
 export const SearchConfig = {
-  '/': undefined,
-  '/search': undefined,
-  '/login': undefined,
-  '/install-guide': undefined,
-  '/note': undefined,
-  '/note/:noteId': undefined,
-  '/note/quiz/:noteId': undefined,
-  '/note/arrange/:directoryId': undefined,
-  '/note/search': undefined,
-  '/note/edit/:noteId': undefined,
-  '/note/create': undefined,
-  '/note/upload': undefined,
-  '/account': undefined,
-  '/account/info': undefined,
-  '/account/daily-quiz-attendance': undefined,
-  '/account/quiz-analysis': undefined,
-  '/account/quiz-record': undefined,
-  '/account/notification-config': undefined,
-  '/account/payment-history': undefined,
-  '/account/notice': undefined,
-  '/account/contact': undefined,
-  '/account/faq': undefined,
-  '/account/policy': undefined,
-  '/account/withdraw': undefined,
-  '/account/feedback': undefined,
-  '/account/feedback/complete': undefined,
   '/progress-quiz/:quizId': {
     name: '유민' as '유민' | '정우',
     emoji: '' as string,
@@ -104,14 +78,7 @@ export const SearchConfig = {
   '/bomb-quiz': {
     date: '' as string,
   },
-  '/collection': undefined,
-  '/collection/:collectionId': undefined,
-  '/collection/quiz/:collectionId': undefined,
-  '/collection/complain/:collectionId': undefined,
-  '/collection/create': undefined,
-  '/collection/edit/info/:collectionId': undefined,
-  '/collection/edit/quiz/:collectionId': undefined,
   '/collection/search': {
     query: '' as string,
   },
-}
+} as const

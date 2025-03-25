@@ -8,15 +8,44 @@ import { buildUrl } from '../lib'
 import { Pathname } from '../model/type'
 import { DEFAULT_QUERY_OPTIONS } from './config'
 
-// SearchConfig 경로 타입
-type RouteKeys = keyof typeof SearchConfig
+// 문자열 리터럴 타입 추론을 위한 타입 정의
+type RouteNames = keyof typeof SearchConfig
 
-// SearchConfig에서 경로에 따른 쿼리 파라미터 키 타입
-type QueryParamKeys<R extends RouteKeys> = keyof (typeof SearchConfig)[R]
+/**
+ * ✅ QueryParamKeys
+ * SearchConfig에서 경로별 가능한 쿼리 파라미터 키 타입을 추출
+ * 예: QueryParamKeys<'/progress-quiz/:quizId'> => 'name' | 'emoji' | 'date'
+ */
+type QueryParamKeys<R extends string> = 
+  R extends RouteNames 
+    ? typeof SearchConfig[R] extends Record<string, unknown> 
+      ? keyof typeof SearchConfig[R] 
+      : never
+    : string
 
-// SearchConfig에서 경로와 키에 따른 값 타입 (정확한 리터럴 타입 추론을 위해 개선)
-type QueryParamValue<R extends RouteKeys, K extends QueryParamKeys<R>> = 
-  (typeof SearchConfig)[R][K] extends infer V ? V : never
+/**
+ * ✅ QueryParamValue
+ * SearchConfig에서 경로와 키에 따른 값 타입을 추출
+ * 예: QueryParamValue<'/progress-quiz/:quizId', 'name'> => '유민' | '정우'
+ */
+type QueryParamValue<R extends string, K extends string> = 
+  R extends RouteNames 
+    ? K extends keyof typeof SearchConfig[R] 
+      ? typeof SearchConfig[R][K]
+      : string
+    : string
+
+/**
+ * ✅ QueryParamObject
+ * SearchConfig에서 특정 경로에 대한 전체 쿼리 파라미터 타입을 추출
+ * 예: QueryParamObject<'/progress-quiz/:quizId'> => { name: '유민' | '정우', emoji: string, date: string }
+ */
+type QueryParamObject<R extends string> = 
+  R extends RouteNames
+    ? typeof SearchConfig[R] extends Record<string, unknown>
+      ? typeof SearchConfig[R]
+      : Record<string, unknown>
+    : Record<string, unknown>
 
 /**
  * URL 경로에서 params 값 추출
@@ -41,12 +70,19 @@ const extractParamsFromPath = (pattern: string, path: string): string[] => {
  * SearchConfig에 정의된 초기값을 자동으로 사용합니다.
  * 
  * @param path 경로 문자열 (예: '/search', '/random-quiz')
- * @param key 쿼리 파라미터 키 (예: 'q', 'page')
+ * @param key 쿼리 파라미터 키 (선택적, 키를 지정하지 않으면 모든 쿼리 파라미터를 객체로 반환)
  * @param options 옵션 객체 (선택적)
  * 
- * @example 기본 사용법 - SearchConfig에 정의된 타입에 따라 반환 타입이 결정됨
+ * @example 기본 사용법 - 단일 파라미터 관리
  * const [name, setName] = useQueryParam('/progress-quiz/:quizId', 'name')  // ['유민' | '정우', (v: '유민' | '정우') => void]
  * const [date, setDate] = useQueryParam('/random-quiz', 'date')            // [string, (v: string) => void]
+ *
+ * @example 객체 형태로 모든 파라미터 관리
+ * const [params, setParams] = useQueryParam('/progress-quiz/:quizId')  // [{ name: '유민' | '정우', emoji: string, date: string }, (updater) => void]
+ * // 개별 값 업데이트
+ * setParams({ ...params, name: '정우' })
+ * // 함수형 업데이트
+ * setParams(prev => ({ ...prev, name: '정우' }))
  *
  * @example 타입 검증
  * // '/random-quiz' 경로는 SearchConfig에 'date' 파라미터가 문자열로 정의됨
@@ -60,9 +96,18 @@ const extractParamsFromPath = (pattern: string, path: string): string[] => {
  * })
  */
 
-// 타입 검증을 위한 오버로드 - 특정 경로와 키에 대한 정확한 타입 추론
+// 경로만 제공될 경우, 해당 경로의 모든 쿼리 파라미터 반환 (객체 형태)
+export function useQueryParam<R extends RouteNames>(
+  path: R,
+  options?: QueryParamOptions,
+): [
+  QueryParamObject<R>, 
+  (value: QueryParamObject<R> | ((prev: QueryParamObject<R>) => QueryParamObject<R>)) => void
+]
+
+// 특정 경로와 키에 대한 정확한 타입 추론 (타입 검증이 강화됨)
 export function useQueryParam<
-  R extends RouteKeys, 
+  R extends RouteNames, 
   K extends QueryParamKeys<R>
 >(
   path: R,
@@ -70,7 +115,7 @@ export function useQueryParam<
   options?: QueryParamOptions,
 ): [QueryParamValue<R, K>, (value: QueryParamValue<R, K>) => void]
 
-// 일반적인 문자열 파라미터에 대한 오버로드
+// 일반적인 string 경로와 키에 대한 오버로드
 export function useQueryParam(
   path: string,
   key: string,
@@ -80,48 +125,89 @@ export function useQueryParam(
 // 실제 구현
 export function useQueryParam<
   R extends string, 
-  K extends string,
-  T = R extends RouteKeys 
-      ? K extends QueryParamKeys<R & RouteKeys> 
-        ? QueryParamValue<R & RouteKeys, K & QueryParamKeys<R & RouteKeys>> 
-        : string
-      : string
+  K extends string | undefined = undefined,
+  T = K extends undefined 
+      ? (R extends RouteNames ? QueryParamObject<R> : Record<string, unknown>)
+      : (R extends RouteNames 
+          ? (K extends QueryParamKeys<R> 
+              ? QueryParamValue<R, K> 
+              : string)
+          : string)
 >(
   path: R,
-  key: K,
-  options: QueryParamOptions = DEFAULT_QUERY_OPTIONS,
-): [T, (value: T) => void] {
+  keyOrOptions?: K | QueryParamOptions,
+  optionsArg?: QueryParamOptions,
+): [
+  T, 
+  (value: T | ((prev: T) => T)) => void
+] {
   const location = useLocation()
   const navigate = useNavigate()
+
+  // key와 options 분리
+  const key = typeof keyOrOptions === 'string' ? keyOrOptions : undefined
+  const options = ((typeof keyOrOptions === 'string' ? optionsArg : keyOrOptions) || DEFAULT_QUERY_OPTIONS) as QueryParamOptions
 
   // 쿼리 파라미터 추출
   const searchParams = useMemo(() => {
     return new URLSearchParams(location.search)
   }, [location.search])
 
-  // SearchConfig에서 초기값 가져오기
-  const initialValue = useMemo(() => {
-    // path가 SearchConfig에 있고, key가 해당 path의 SearchConfig에 있는 경우
+  // key가 제공되지 않은 경우 (객체 모드)
+  const isObjectMode = key === undefined
+
+  // 객체 모드: 모든 쿼리 파라미터 추출
+  const paramsObject = useMemo(() => {
+    if (!isObjectMode) return undefined
+
+    // SearchConfig에서 초기값 가져오기
+    const initialObject: Record<string, unknown> = {}
+    
+    if (path in SearchConfig && typeof SearchConfig[path as RouteNames] === 'object') {
+      // SearchConfig의 모든 키에 대해 초기값 설정
+      const configParams = SearchConfig[path as RouteNames] as Record<string, unknown>
+      Object.keys(configParams).forEach(paramKey => {
+        const paramValue = searchParams.get(paramKey)
+        if (paramValue !== null) {
+          // 타입에 따른 변환
+          const initialValue = configParams[paramKey]
+          if (typeof initialValue === 'number') {
+            initialObject[paramKey] = Number(paramValue)
+          } else if (typeof initialValue === 'boolean') {
+            initialObject[paramKey] = paramValue === 'true'
+          } else {
+            initialObject[paramKey] = paramValue
+          }
+        } else {
+          initialObject[paramKey] = configParams[paramKey]
+        }
+      })
+    }
+
+    return initialObject as T
+  }, [isObjectMode, path, searchParams])
+
+  // 단일 키 모드: 특정 키에 대한 값 추출
+  const singleValue = useMemo(() => {
+    if (isObjectMode || !key) return undefined
+    
+    // SearchConfig에서 초기값 가져오기
+    let initialValue: unknown = ''
+    
     if (
       path in SearchConfig && 
-      SearchConfig[path as RouteKeys] && 
-      typeof SearchConfig[path as RouteKeys] === 'object' &&
-      key in (SearchConfig[path as RouteKeys] as Record<string, unknown>)
+      SearchConfig[path as RouteNames] && 
+      typeof SearchConfig[path as RouteNames] === 'object' &&
+      key in (SearchConfig[path as RouteNames] as Record<string, unknown>)
     ) {
-      return (SearchConfig[path as RouteKeys] as Record<string, unknown>)[key] as T
+      initialValue = (SearchConfig[path as RouteNames] as Record<string, unknown>)[key]
     }
-    
-    // 기본값으로 빈 문자열 반환 (경로나 키가 SearchConfig에 정의되지 않은 경우)
-    return ('' as unknown) as T
-  }, [path, key])
 
-  // 값 계산
-  const value = useMemo(() => {
     const paramValue = searchParams.get(key)
 
     // URL에 해당 파라미터가 없으면 초기값 사용
     if (paramValue === null) {
-      return initialValue
+      return initialValue as T
     }
 
     // 초기값 타입에 따른 변환
@@ -143,21 +229,49 @@ export function useQueryParam<
     }
 
     return paramValue as unknown as T
-  }, [key, searchParams, initialValue, path])
+  }, [key, isObjectMode, searchParams, path])
 
-  // 값 설정 함수
+  // 최종 반환 값
+  const value = useMemo(() => {
+    return isObjectMode ? paramsObject : singleValue
+  }, [isObjectMode, paramsObject, singleValue]) as T
+
+  // 값 설정 함수 - 객체 모드와 단일 키 모드 모두 지원
   const setValue = useCallback(
-    (newValue: T) => {
+    (newValueOrUpdater: T | ((prev: T) => T)) => {
+      // 함수형 업데이트 처리
+      const newValue = typeof newValueOrUpdater === 'function' 
+        ? (newValueOrUpdater as ((prev: T) => T))(value)
+        : newValueOrUpdater
+
       const newSearchParams = new URLSearchParams(location.search)
 
-      if (
-        newValue === undefined ||
-        newValue === null ||
-        (typeof newValue === 'string' && newValue === '' && options.emptyHandling === 'remove')
-      ) {
-        newSearchParams.delete(key)
-      } else {
-        newSearchParams.set(key, String(newValue))
+      if (isObjectMode && typeof newValue === 'object') {
+        // 객체 모드: 모든 키에 대해 처리
+        const params = newValue as Record<string, unknown>
+        
+        Object.entries(params).forEach(([paramKey, paramValue]) => {
+          if (
+            paramValue === undefined ||
+            paramValue === null ||
+            (typeof paramValue === 'string' && paramValue === '' && options.emptyHandling === 'remove')
+          ) {
+            newSearchParams.delete(paramKey)
+          } else {
+            newSearchParams.set(paramKey, String(paramValue))
+          }
+        })
+      } else if (!isObjectMode && key) {
+        // 단일 키 모드: 특정 키에 대해서만 처리
+        if (
+          newValue === undefined ||
+          newValue === null ||
+          (typeof newValue === 'string' && newValue === '' && options.emptyHandling === 'remove')
+        ) {
+          newSearchParams.delete(key)
+        } else {
+          newSearchParams.set(key, String(newValue))
+        }
       }
 
       // 현재 모든 쿼리 파라미터를 객체로 변환
@@ -191,7 +305,7 @@ export function useQueryParam<
       // 히스토리 옵션에 따라 navigate 호출
       navigate(url, { replace: !options.push })
     },
-    [key, location, navigate, path, options],
+    [isObjectMode, key, location, navigate, path, options, value],
   )
 
   return [value, setValue]
