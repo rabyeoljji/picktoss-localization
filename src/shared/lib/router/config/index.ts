@@ -66,7 +66,7 @@ export const RoutePath = {
  * 각 경로에 대한 검색 파라미터 타입을 정의
  * 경로를 키로 사용하여 일관된 구조 유지
  */
-export const SearchConfig = {
+export const SearchConfig: Record<(typeof RoutePath)[keyof typeof RoutePath], unknown> = {
   '/': undefined,
   '/search': undefined,
   '/login': undefined,
