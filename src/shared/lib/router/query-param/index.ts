@@ -1,1 +1,1 @@
-export { useQueryParam } from './use-query-param'
+export * from './model/use-query-param'

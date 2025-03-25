@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
-import { QueryParamOptions } from '@/shared/lib/router/query-param/type'
-
-import { SearchConfig } from '../config'
-import { buildUrl } from '../lib'
-import { Pathname } from '../model/type'
-import { DEFAULT_QUERY_OPTIONS } from './config'
+import { SearchConfig } from '../../config'
+import { buildUrl } from '../../lib'
+import { Pathname } from '../../model/type'
+import { extractParamsFromPath } from '../lib'
+import { DEFAULT_QUERY_OPTIONS } from '../config'
+import { QueryParamOptions } from './type'
 
 // 문자열 리터럴 타입 추론을 위한 타입 정의
 type RouteNames = keyof typeof SearchConfig
@@ -46,24 +46,6 @@ type QueryParamObject<R extends string> =
       ? typeof SearchConfig[R]
       : Record<string, unknown>
     : Record<string, unknown>
-
-/**
- * URL 경로에서 params 값 추출
- */
-const extractParamsFromPath = (pattern: string, path: string): string[] => {
-  const patternParts = pattern.split('/')
-  const pathParts = path.split('?')[0].split('#')[0].split('/')
-
-  const params: string[] = []
-
-  for (let i = 0; i < patternParts.length; i++) {
-    if (patternParts[i].startsWith(':') && i < pathParts.length) {
-      params.push(pathParts[i])
-    }
-  }
-
-  return params
-}
 
 /**
  * 현재 URL의 쿼리 파라미터를 추출하고 설정하는 훅
@@ -323,32 +305,31 @@ export function useQueryParam<
     const mergedOptions = { ...options, ...(overrideOptions || {}) }
     
     const newSearchParams = new URLSearchParams(location.search)
-
-    if (isObjectMode && path in SearchConfig) {
-      // 객체 모드: SearchConfig에 정의된 모든 파라미터 삭제
-      const configParams = SearchConfig[path as RouteNames] as Record<string, unknown>
-      Object.keys(configParams).forEach(paramKey => {
+    
+    if (isObjectMode) {
+      // 객체 모드: 모든 쿼리 파라미터 삭제
+      Object.keys(SearchConfig[path as RouteNames] || {}).forEach(paramKey => {
         newSearchParams.delete(paramKey)
       })
-    } else if (!isObjectMode && key) {
-      // 단일 키 모드: 해당 키만 삭제
+    } else if (key) {
+      // 단일 키 모드: 특정 키만 삭제
       newSearchParams.delete(key)
     }
-
+    
     // 현재 모든 쿼리 파라미터를 객체로 변환
     const searchEntries: [string, string][] = []
     newSearchParams.forEach((value, key) => {
       searchEntries.push([key, value])
     })
     const searchObj = Object.fromEntries(searchEntries)
-
+    
     // URL 생성
     let url: string
-
+    
     if (path && path in SearchConfig) {
       // 경로 패턴에서 params 추출
       const paramsFromPath = extractParamsFromPath(path, location.pathname)
-
+      
       // URL 업데이트
       url = buildUrl(path as Pathname, {
         search: searchObj,
@@ -362,14 +343,14 @@ export function useQueryParam<
       const hash = location.hash || ''
       url = `${location.pathname}${newSearch}${hash}`
     }
-
+    
     // 탐색 방식 결정 (push 또는 replace)
     if (mergedOptions.push) {
       navigate(url)
     } else {
       navigate(url, { replace: true })
     }
-  }, [key, isObjectMode, navigate, location, options, path])
-
+  }, [isObjectMode, key, location, navigate, options, path])
+  
   return [value, setValue, removeParam]
 }

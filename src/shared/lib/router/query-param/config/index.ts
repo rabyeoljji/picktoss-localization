@@ -17,10 +17,4 @@ export const DEFAULT_QUERY_OPTIONS = {
    * @default 'remove'
    */
   emptyHandling: 'remove' as const,
-
-  /**
-   * URL 변경 시 상태를 자동으로 동기화할지 여부
-   * @default true
-   */
-  syncWithUrl: true,
-}
+} as const
