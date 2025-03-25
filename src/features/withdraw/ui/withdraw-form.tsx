@@ -147,7 +147,7 @@ const WithdrawForm = () => {
           content={
             <Text typo="body-1-medium" color="sub">
               픽토스에서 만든 노트와{' '}
-              <Text typo="body-1-medium" color="critical" className="inline-block size-fit">
+              <Text as="span" typo="body-1-medium" color="critical">
                 {314}개의 문제
               </Text>
               가 <br />
