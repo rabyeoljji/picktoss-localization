@@ -1,17 +1,45 @@
 import { useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
+import { zodResolver } from '@hookform/resolvers/zod'
 import EmojiPicker, { EmojiClickData, Theme } from 'emoji-picker-react'
+import { toast } from 'sonner'
+import { z } from 'zod'
 
 import { MarkdownEditor } from '@/features/editor'
+
+import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcFile, IcInfo, IcWrite } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form'
 import { Input } from '@/shared/components/ui/input'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
+
+// Zod schema for form validation
+const FormSchema = z.object({
+  title: z.string().min(1, {
+    message: '제목을 입력해주세요.',
+  }),
+  emoji: z.string(),
+  content: z.object({
+    html: z.string(),
+    markdown: z.string().min(10, {
+      message: '내용을 더 입력해주세요.',
+    }),
+    textLength: z.number().min(10, {
+      message: '내용을 더 입력해주세요.',
+    }),
+  }),
+  quizType: z.enum(['MIX_UP', 'MULTIPLE_CHOICE']).default('MULTIPLE_CHOICE'),
+})
+
+type FormValues = z.infer<typeof FormSchema>
 
 const NoteCreatePage = () => {
   const [method, setMethod] = useState<'markdown' | 'file' | null>(null)
@@ -20,7 +48,9 @@ const NoteCreatePage = () => {
     markdown: '',
     textLength: 0,
   })
-  console.log(content)
+
+  const { mutate: createDocumentMutate, isPending } = useCreateDocument()
+  const router = useRouter()
 
   // PWA 환경에 대응하기 위한 visualViewport 처리
   useEffect(() => {
@@ -44,27 +74,84 @@ const NoteCreatePage = () => {
     }
   }, [])
 
+  // 폼 초기화
+  const form = useForm<FormValues>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      title: '',
+      emoji: '📝',
+      content: {
+        html: '',
+        markdown: '',
+        textLength: 0,
+      },
+      quizType: 'MULTIPLE_CHOICE',
+    },
+  })
+
+  // 컨텐츠가 변경될 때마다 form에 값 업데이트
+  useEffect(() => {
+    form.setValue('content', content, { shouldValidate: true })
+  }, [content, form])
+
+  const onSubmit = (data: FormValues) => {
+    // 마크다운 컨텐츠를 Blob으로 변환
+    const contentBlob = new Blob([data.content.markdown], { type: 'text/markdown' })
+
+    // API 요청 형식에 맞게 데이터 구성
+    createDocumentMutate(
+      {
+        file: contentBlob,
+        documentName: data.title,
+        star: data.emoji,
+        quizType: data.quizType,
+        documentType: 'TEXT',
+        directoryId: '1', // 기본 디렉토리 ID 또는 state에서 받아오기
+      },
+      {
+        onSuccess: (response) => {
+          toast('문서가 생성되었습니다.')
+          // 생성 성공 시 해당 문서로 이동
+          router.replace('/note/:noteId', {
+            params: [response.id.toString()],
+          })
+        },
+        onError: (error) => {
+          toast('문서 생성 실패')
+          console.error('문서 생성 실패:', error)
+        },
+      },
+    )
+  }
+
   return (
     <div
       className="min-h-screen max-w-xl mx-auto bg-surface-1 relative"
       style={{ height: 'var(--viewport-height, 100vh)' }}
     >
-      <Header
-        className="sticky top-0 w-full z-50"
-        left={<BackButton type="close" />}
-        content={
-          <div className="ml-auto w-fit">
-            <Button variant="primary" size="sm" disabled>
-              만들기
-            </Button>
-          </div>
-        }
-      />
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <Header
+            className="sticky top-0 w-full z-50"
+            left={<BackButton type="close" />}
+            content={
+              <>
+                <div className="center">전공 공부</div>
+                <div className="ml-auto w-fit">
+                  <Button variant="primary" size="sm" type="submit" disabled={!form.formState.isValid || isPending}>
+                    {isPending ? '생성 중...' : '만들기'}
+                  </Button>
+                </div>
+              </>
+            }
+          />
 
-      {!method && <SelectMethod setMethod={setMethod} />}
+          {!method && <SelectMethod setMethod={setMethod} />}
 
-      {method === 'markdown' && <NoteCreatePageMarkdown content={content} setContent={setContent} />}
-      {method === 'file' && <NoteCreatePageFile />}
+          {method === 'markdown' && <NoteCreatePageMarkdown content={content} setContent={setContent} form={form} />}
+          {method === 'file' && <NoteCreatePageFile />}
+        </form>
+      </Form>
     </div>
   )
 }
@@ -74,18 +161,17 @@ export default NoteCreatePage
 const NoteCreatePageMarkdown = ({
   content,
   setContent,
+  form,
 }: {
   content: { html: string; markdown: string; textLength: number }
   setContent: (content: { html: string; markdown: string; textLength: number }) => void
+  form: ReturnType<typeof useForm<FormValues>>
 }) => {
   const MIN_LENGTH = 1000
   const MAX_LENGTH = 50000
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
-  const [selectedEmoji, setSelectedEmoji] = useState('📝')
-  const [title, setTitle] = useState('')
   const emojiPickerRef = useRef<HTMLDivElement>(null)
-  const titleInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const visualViewport = window.visualViewport
@@ -137,7 +223,7 @@ const NoteCreatePageMarkdown = ({
   }
 
   const handleEmojiClick = (emojiData: EmojiClickData) => {
-    setSelectedEmoji(emojiData.emoji)
+    form.setValue('emoji', emojiData.emoji, { shouldValidate: true })
     setShowEmojiPicker(false)
   }
 
@@ -145,24 +231,40 @@ const NoteCreatePageMarkdown = ({
     <div className="h-[calc(var(--viewport-height,100vh)-var(--header-height))] flex flex-col">
       <div className="p-4 pt-6 flex items-center gap-3 border-b border-divider">
         <div className="relative" ref={emojiPickerRef}>
-          <button
-            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-            className="typo-h4 flex-center size-[40px] px-[10px] py-2 rounded-[6px] border border-outline bg-base-2"
-          >
-            {selectedEmoji}
-          </button>
+          <FormField
+            control={form.control}
+            name="emoji"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <button
+                    type="button"
+                    onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                    className="typo-h4 flex-center size-[40px] px-[10px] py-2 rounded-[6px] border border-outline bg-base-2"
+                  >
+                    {field.value}
+                  </button>
+                </FormControl>
+              </FormItem>
+            )}
+          />
           {showEmojiPicker && (
             <div className="absolute top-12 left-0 z-50">
               <EmojiPicker onEmojiClick={handleEmojiClick} theme={Theme.LIGHT} width={300} height={400} />
             </div>
           )}
         </div>
-        <Input
-          ref={titleInputRef}
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          placeholder="새로운 퀴즈"
-          className="typo-h3 p-0 border-none"
+        <FormField
+          control={form.control}
+          name="title"
+          render={({ field }) => (
+            <FormItem className="flex-1">
+              <FormControl>
+                <Input {...field} placeholder="새로운 퀴즈" className="typo-h3 p-0 border-none" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
       </div>
 
