@@ -99,8 +99,6 @@ const NoteCreatePage = () => {
   )
 }
 
-export default NoteCreatePage
-
 const EmojiTitleInput = ({
   emoji,
   setEmoji,
@@ -310,6 +308,9 @@ const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') 
   )
 }
 
+// TODO: widget 으로 분리해서 구현
 const NoteCreatePageFile = () => {
   return <div></div>
 }
+
+export default NoteCreatePage
