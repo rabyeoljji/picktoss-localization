@@ -25,7 +25,9 @@ import { useRouter } from '@/shared/lib/router'
 const NoteCreatePage = () => {
   const router = useRouter()
 
+  const [createDrawerOpen, setCreateDrawerOpen] = useState(false)
   const [documentType, setDocumentType] = useState<CreateDocumentRequest['documentType'] | null>(null)
+  const [star, setStar] = useState<CreateDocumentRequest['star']>('40')
   const [formValid, setFormValid] = useState(false)
   const [formPending, setFormPending] = useState(false)
   const [emoji, setEmoji] = useState('📝')
@@ -38,6 +40,12 @@ const NoteCreatePage = () => {
   const handleFormStateChange = (isValid: boolean, isPending: boolean) => {
     setFormValid(isValid && title.trim() !== '' && emoji !== '')
     setFormPending(isPending)
+  }
+
+  const handleCreateNote = () => {
+    // form submit 트리거를 위한 클릭 이벤트 생성
+    const submitEvent = new Event('submit', { bubbles: true, cancelable: true })
+    document.querySelector('form')?.dispatchEvent(submitEvent)
   }
 
   const onSuccess = (id: number) => {
@@ -60,19 +68,19 @@ const NoteCreatePage = () => {
           <>
             <DirectorySelector selectedDirectory={selectedDirectory} setSelectedDirectory={setSelectedDirectory} />
             <div className="ml-auto w-fit">
-              <Button
-                variant="primary"
-                size="sm"
-                type="submit"
-                disabled={!formValid || formPending}
-                onClick={() => {
-                  // form submit 트리거를 위한 클릭 이벤트 생성
-                  const submitEvent = new Event('submit', { bubbles: true, cancelable: true })
-                  document.querySelector('form')?.dispatchEvent(submitEvent)
-                }}
-              >
-                {formPending ? '생성 중...' : '만들기'}
-              </Button>
+              <CreateNoteDrawer
+                trigger={
+                  <Button
+                    variant="primary"
+                    size="sm"
+                    type="submit"
+                    disabled={!formValid || formPending}
+                    onClick={() => setCreateDrawerOpen(true)}
+                  >
+                    {formPending ? '생성 중...' : '만들기'}
+                  </Button>
+                }
+              />
             </div>
           </>
         }
@@ -97,6 +105,15 @@ const NoteCreatePage = () => {
         {documentType === 'FILE' && <NoteCreatePageFile />}
       </div>
     </div>
+  )
+}
+
+const CreateNoteDrawer = ({ trigger }: { trigger: React.ReactNode }) => {
+  return (
+    <Drawer>
+      <DrawerTrigger asChild>{trigger}</DrawerTrigger>
+      <DrawerContent height="lg">d</DrawerContent>
+    </Drawer>
   )
 }
 
