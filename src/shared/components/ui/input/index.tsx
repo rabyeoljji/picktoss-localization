@@ -11,8 +11,9 @@ interface InputProps extends React.ComponentProps<'input'> {
   hasError?: boolean
   helperText?: string
   right?: React.ReactNode
-  clear?: () => void
+  hasClear?: boolean
   width?: string | number
+  onClearClick?: () => void
 }
 
 function Input({
@@ -23,11 +24,12 @@ function Input({
   right,
   required = false,
   helperText,
-  clear,
+  hasClear,
   ref,
   width,
   value,
   onChange,
+  onClearClick,
   ...props
 }: InputProps) {
   // 내부 상태로 value 관리 (비제어 컴포넌트를 위함)
@@ -77,9 +79,6 @@ function Input({
       }
     }
 
-    // 외부 clear 함수 호출
-    clear?.()
-
     // focus 다시 설정
     setTimeout(() => {
       inputRef.current?.focus()
@@ -108,11 +107,12 @@ function Input({
           {...props}
         />
         {/* clear right 둘 중 하나만 사용된다. */}
-        {clear != null && (
+        {hasClear && (
           <div
             ref={rightRef}
             role="button"
             className="text-icon-inverse-dim size-5 cursor-pointer absolute right-3 bottom-1/2 translate-y-1/2"
+            onClick={() => onClearClick?.()}
           >
             <IcClear className="size-full" onClick={handleClear} />
           </div>
