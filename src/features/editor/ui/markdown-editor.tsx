@@ -7,8 +7,6 @@ import StarterKit from '@tiptap/starter-kit'
 
 import { cn } from '@/shared/lib/utils'
 
-import { htmlToMarkdown } from '../lib'
-
 // 에디터 기본 스타일 정의
 const editorStyles = `
 .ProseMirror {
@@ -31,14 +29,14 @@ const editorStyles = `
 `
 
 interface MarkdownEditorProps {
-  initialContent?: string
-  onChange?: (html: string, markdown: string) => void
+  initialMarkdown?: string
+  onChange?: (markdown: string) => void
   placeholder?: string
   className?: string
 }
 
 export const MarkdownEditor = ({
-  initialContent = '',
+  initialMarkdown = '',
   onChange,
   placeholder = '여기를 탭하여 입력을 시작하세요',
   className,
@@ -55,12 +53,12 @@ export const MarkdownEditor = ({
         openOnClick: false,
       }),
     ],
-    content: initialContent,
+    content: initialMarkdown,
     onUpdate: ({ editor }) => {
       if (onChange) {
-        const html = editor.getHTML()
-        const markdown = htmlToMarkdown(html)
-        onChange(html, markdown)
+        // For markdown, we'll just use the text content directly
+        const markdown = editor.getText()
+        onChange(markdown)
       }
     },
     onFocus: () => setIsFocused(true),

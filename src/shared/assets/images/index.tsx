@@ -22,8 +22,8 @@ import imgNoteEmpty from "./img_note_empty.png"
 import imgOx from "./img_ox.png"
 import imgPageerror from "./img_pageerror.png"
 import imgPush from "./img_push.png"
-import imgQuizEmpty from "./img_quiz_empty.png"
 import imgQuizerror from "./img_quizerror.png"
+import imgQuizEmpty from "./img_quiz_empty.png"
 import imgRandom from "./img_random.png"
 import imgRoundBook from "./img_round_book.png"
 import imgRoundCorrect from "./img_round_correct.png"
@@ -43,167 +43,170 @@ import imgTodayquiz from "./img_todayquiz.png"
 import imgTreasure from "./img_treasure.png"
 import imgTreasurebox from "./img_treasurebox.png"
 
-export const ImgBomb = ({ ...props }) => {
+// Type definition for image component props
+type ImageComponentProps = React.ImgHTMLAttributes<HTMLImageElement>;
+
+export const ImgBomb: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgBomb} alt="bomb" {...props} />;
 };
 
-export const ImgBombEmpty = ({ ...props }) => {
+export const ImgBombEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgBombEmpty} alt="bomb_empty" {...props} />;
 };
 
-export const ImgBookmark = ({ ...props }) => {
+export const ImgBookmark: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgBookmark} alt="bookmark" {...props} />;
 };
 
-export const ImgCalender = ({ ...props }) => {
+export const ImgCalender: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgCalender} alt="calender" {...props} />;
 };
 
-export const ImgCheckbadge = ({ ...props }) => {
+export const ImgCheckbadge: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgCheckbadge} alt="checkbadge" {...props} />;
 };
 
-export const ImgConfirm = ({ ...props }) => {
+export const ImgConfirm: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgConfirm} alt="confirm" {...props} />;
 };
 
-export const ImgDailygraph = ({ ...props }) => {
+export const ImgDailygraph: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgDailygraph} alt="dailygraph" {...props} />;
 };
 
-export const ImgExit = ({ ...props }) => {
+export const ImgExit: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgExit} alt="exit" {...props} />;
 };
 
-export const ImgGraph = ({ ...props }) => {
+export const ImgGraph: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgGraph} alt="graph" {...props} />;
 };
 
-export const ImgInfinite = ({ ...props }) => {
+export const ImgInfinite: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgInfinite} alt="infinite" {...props} />;
 };
 
-export const ImgInvite = ({ ...props }) => {
+export const ImgInvite: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgInvite} alt="invite" {...props} />;
 };
 
-export const ImgInviteEmpty = ({ ...props }) => {
+export const ImgInviteEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgInviteEmpty} alt="invite_empty" {...props} />;
 };
 
-export const ImgMedal = ({ ...props }) => {
+export const ImgMedal: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgMedal} alt="medal" {...props} />;
 };
 
-export const ImgMegaphoneEmpty = ({ ...props }) => {
+export const ImgMegaphoneEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgMegaphoneEmpty} alt="megaphone_empty" {...props} />;
 };
 
-export const ImgMeteor = ({ ...props }) => {
+export const ImgMeteor: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgMeteor} alt="meteor" {...props} />;
 };
 
-export const ImgMultiple = ({ ...props }) => {
+export const ImgMultiple: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgMultiple} alt="multiple" {...props} />;
 };
 
-export const ImgNetworkerror = ({ ...props }) => {
+export const ImgNetworkerror: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgNetworkerror} alt="networkerror" {...props} />;
 };
 
-export const ImgNoteEmpty = ({ ...props }) => {
+export const ImgNoteEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgNoteEmpty} alt="note_empty" {...props} />;
 };
 
-export const ImgOx = ({ ...props }) => {
+export const ImgOx: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgOx} alt="ox" {...props} />;
 };
 
-export const ImgPageerror = ({ ...props }) => {
+export const ImgPageerror: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgPageerror} alt="pageerror" {...props} />;
 };
 
-export const ImgPush = ({ ...props }) => {
+export const ImgPush: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgPush} alt="push" {...props} />;
 };
 
-export const ImgQuizEmpty = ({ ...props }) => {
-  return <img src={imgQuizEmpty} alt="quiz_empty" {...props} />;
-};
-
-export const ImgQuizerror = ({ ...props }) => {
+export const ImgQuizerror: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgQuizerror} alt="quizerror" {...props} />;
 };
 
-export const ImgRandom = ({ ...props }) => {
+export const ImgQuizEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgQuizEmpty} alt="quiz_empty" {...props} />;
+};
+
+export const ImgRandom: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRandom} alt="random" {...props} />;
 };
 
-export const ImgRoundBook = ({ ...props }) => {
+export const ImgRoundBook: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundBook} alt="round_book" {...props} />;
 };
 
-export const ImgRoundCorrect = ({ ...props }) => {
+export const ImgRoundCorrect: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundCorrect} alt="round_correct" {...props} />;
 };
 
-export const ImgRoundGoogle = ({ ...props }) => {
+export const ImgRoundGoogle: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundGoogle} alt="round_google" {...props} />;
 };
 
-export const ImgRoundIncorrect = ({ ...props }) => {
+export const ImgRoundIncorrect: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundIncorrect} alt="round_incorrect" {...props} />;
 };
 
-export const ImgRoundKakao = ({ ...props }) => {
+export const ImgRoundKakao: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundKakao} alt="round_kakao" {...props} />;
 };
 
-export const ImgRoundMegaphone = ({ ...props }) => {
+export const ImgRoundMegaphone: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundMegaphone} alt="round_megaphone" {...props} />;
 };
 
-export const ImgRoundMeteor = ({ ...props }) => {
+export const ImgRoundMeteor: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundMeteor} alt="round_meteor" {...props} />;
 };
 
-export const ImgRoundPicktoss = ({ ...props }) => {
+export const ImgRoundPicktoss: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundPicktoss} alt="round_picktoss" {...props} />;
 };
 
-export const ImgRoundStar = ({ ...props }) => {
+export const ImgRoundStar: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundStar} alt="round_star" {...props} />;
 };
 
-export const ImgSpeechbubble = ({ ...props }) => {
+export const ImgSpeechbubble: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgSpeechbubble} alt="speechbubble" {...props} />;
 };
 
-export const ImgStar = ({ ...props }) => {
+export const ImgStar: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgStar} alt="star" {...props} />;
 };
 
-export const ImgStarEmpty = ({ ...props }) => {
+export const ImgStarEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgStarEmpty} alt="star_empty" {...props} />;
 };
 
-export const ImgStopwatch = ({ ...props }) => {
+export const ImgStopwatch: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgStopwatch} alt="stopwatch" {...props} />;
 };
 
-export const ImgSymbol = ({ ...props }) => {
+export const ImgSymbol: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgSymbol} alt="symbol" {...props} />;
 };
 
-export const ImgTodayquiz = ({ ...props }) => {
+export const ImgTodayquiz: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgTodayquiz} alt="todayquiz" {...props} />;
 };
 
-export const ImgTreasure = ({ ...props }) => {
+export const ImgTreasure: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgTreasure} alt="treasure" {...props} />;
 };
 
-export const ImgTreasurebox = ({ ...props }) => {
+export const ImgTreasurebox: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgTreasurebox} alt="treasurebox" {...props} />;
 };
 
