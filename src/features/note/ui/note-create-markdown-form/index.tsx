@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-import { MarkdownEditor } from '@/features/editor'
+import { MarkdownEditor } from '@/features/editor/ui/markdown-editor'
 import { MAX_LENGTH, MIN_LENGTH, useCreateNoteContext } from '@/features/note/model/create-note-context'
 
 import { IcInfo } from '@/shared/assets/icon'
@@ -8,7 +8,21 @@ import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
 export const NoteCreateMarkdownForm = () => {
-  const { content, setContent, isKeyboardVisible, setIsKeyboardVisible } = useCreateNoteContext()
+  const { 
+    content, 
+    setContent, 
+    isKeyboardVisible, 
+    setIsKeyboardVisible,
+    documentName,
+    setIsValid
+  } = useCreateNoteContext()
+
+  // 유효성 검사 효과
+  useEffect(() => {
+    const isContentValid = content.textLength >= MIN_LENGTH && content.textLength <= MAX_LENGTH;
+    const isNameValid = documentName.trim().length > 0;
+    setIsValid(isContentValid && isNameValid);
+  }, [content.textLength, documentName, setIsValid]);
 
   // 키보드 감지 로직
   useEffect(() => {

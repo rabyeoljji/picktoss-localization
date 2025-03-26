@@ -1,60 +1,43 @@
 import { createContext, useContext, useState } from 'react'
-import { useForm } from 'react-hook-form'
-
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
 
 import { GetAllDirectoriesResponse } from '@/entities/directory/api'
-import { CreateDocumentRequest } from '@/entities/document/api'
 
 export const MIN_LENGTH = 3000
 export const MAX_LENGTH = 50000
 
 export const MAXIMUM_QUIZ_COUNT = 40
 
-const formSchema = z.object({
-  directoryId: z.number(),
-  documentType: z.enum(['TEXT', 'FILE', 'NOTION']).nullable(),
-  documentName: z.string().nonempty({ message: '이름을 입력하세요.' }),
-  quizType: z.enum(['MIX_UP', 'MULTIPLE_CHOICE']).default('MULTIPLE_CHOICE'),
-  star: z.string().default('5'),
-  content: z.object({
-    markdown: z.string(),
-    textLength: z
-      .number()
-      .min(MIN_LENGTH, {
-        message: `최소 ${MIN_LENGTH}자 이상 입력해주세요.`,
-      })
-      .max(MAX_LENGTH, {
-        message: `최대 ${MAX_LENGTH}자 이하 입력해주세요.`,
-      }),
-  }),
-  emoji: z.string().default('📝'),
-})
+export type DocumentType = 'TEXT' | 'FILE' | 'NOTION' | null
+export type QuizType = 'MIX_UP' | 'MULTIPLE_CHOICE'
 
-export type CreateNoteFormValues = z.infer<typeof formSchema>
+export interface CreateNoteState {
+  directoryId: number
+  documentType: DocumentType
+  documentName: string
+  quizType: QuizType
+  star: string
+  content: {
+    markdown: string
+    textLength: number
+  }
+  emoji: string
+  isValid: boolean
+  isLoading: boolean
+}
 
-export interface CreateNoteContextValues {
+export interface CreateNoteContextValues extends CreateNoteState {
   directories: GetAllDirectoriesResponse['directories']
-  form: ReturnType<typeof useForm<CreateNoteFormValues>>
-
-  // Watched values
-  directoryId: CreateNoteFormValues['directoryId']
-  documentType: CreateNoteFormValues['documentType']
-  documentName: CreateNoteFormValues['documentName']
-  quizType: CreateNoteFormValues['quizType']
-  star: CreateNoteFormValues['star']
-  content: CreateNoteFormValues['content']
-  emoji: CreateNoteFormValues['emoji']
 
   // Setter functions
   setDirectoryId: (directoryId: number) => void
-  setDocumentType: (documentType: CreateDocumentRequest['documentType']) => void
-  setDocumentName: (documentName: CreateDocumentRequest['documentName']) => void
-  setQuizType: (quizType: CreateDocumentRequest['quizType']) => void
-  setStar: (star: CreateDocumentRequest['star']) => void
+  setDocumentType: (documentType: DocumentType) => void
+  setDocumentName: (documentName: string) => void
+  setQuizType: (quizType: QuizType) => void
+  setStar: (star: string) => void
   setContent: (content: { markdown: string; textLength: number }) => void
   setEmoji: (emoji: string) => void
+  setIsValid: (isValid: boolean) => void
+  setIsLoading: (isLoading: boolean) => void
 
   // Keyboard visibility state
   isKeyboardVisible: boolean
@@ -70,68 +53,27 @@ export const CreateNoteProvider = ({
   directories: GetAllDirectoriesResponse['directories']
   children: React.ReactNode
 }) => {
-  const form = useForm<CreateNoteFormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      directoryId: directories[0].id,
-      documentType: null,
-      documentName: '',
-      quizType: 'MULTIPLE_CHOICE',
-      star: '5',
-      content: {
-        markdown: '',
-        textLength: 0,
-      },
-      emoji: '📝',
-    },
+  // 기본 상태 정의
+  const [directoryId, setDirectoryId] = useState<number>(directories[0].id)
+  const [documentType, setDocumentType] = useState<DocumentType>(null)
+  const [documentName, setDocumentName] = useState<string>('')
+  const [quizType, setQuizType] = useState<QuizType>('MULTIPLE_CHOICE')
+  const [star, setStar] = useState<string>('5')
+  const [content, setContent] = useState<{ markdown: string; textLength: number }>({
+    markdown: '',
+    textLength: 0,
   })
+  const [emoji, setEmoji] = useState<string>('📝')
+  const [isValid, setIsValid] = useState<boolean>(false)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
-  // Watch form values
-  const directoryId = form.watch('directoryId')
-  const documentType = form.watch('documentType')
-  const documentName = form.watch('documentName')
-  const quizType = form.watch('quizType')
-  const star = form.watch('star')
-  const content = form.watch('content')
-  const emoji = form.watch('emoji')
-
-  // Manage keyboard visibility with useState
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-
-  // Create setter functions
-  const setDirectoryId = (value: number) => {
-    form.setValue('directoryId', value, { shouldValidate: true })
-  }
-
-  const setDocumentType = (value: CreateDocumentRequest['documentType']) => {
-    form.setValue('documentType', value, { shouldValidate: true })
-  }
-
-  const setDocumentName = (value: CreateDocumentRequest['documentName']) => {
-    form.setValue('documentName', value, { shouldValidate: true })
-  }
-
-  const setQuizType = (value: CreateDocumentRequest['quizType']) => {
-    form.setValue('quizType', value, { shouldValidate: true })
-  }
-
-  const setStar = (value: CreateDocumentRequest['star']) => {
-    form.setValue('star', value, { shouldValidate: true })
-  }
-
-  const setContent = (value: { markdown: string; textLength: number }) => {
-    form.setValue('content', value, { shouldValidate: true })
-  }
-
-  const setEmoji = (value: string) => {
-    form.setValue('emoji', value, { shouldValidate: true })
-  }
+  // 키보드 가시성 상태
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean>(false)
 
   return (
     <CreateNoteContext.Provider
       value={{
         directories,
-        form,
         directoryId,
         documentType,
         documentName,
@@ -139,6 +81,8 @@ export const CreateNoteProvider = ({
         star,
         content,
         emoji,
+        isValid,
+        isLoading,
         isKeyboardVisible,
         setDirectoryId,
         setDocumentType,
@@ -147,6 +91,8 @@ export const CreateNoteProvider = ({
         setStar,
         setContent,
         setEmoji,
+        setIsValid,
+        setIsLoading,
         setIsKeyboardVisible,
       }}
     >

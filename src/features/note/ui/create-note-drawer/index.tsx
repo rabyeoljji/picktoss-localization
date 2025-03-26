@@ -15,7 +15,19 @@ import { calculateAvailableQuizCount } from '../../lib'
 import { MAXIMUM_QUIZ_COUNT, MIN_LENGTH, useCreateNoteContext } from '../../model/create-note-context'
 
 export const CreateNoteDrawer = () => {
-  const { quizType, setQuizType, documentName, star, setStar, content, form } = useCreateNoteContext()
+  const { 
+    quizType, 
+    setQuizType, 
+    documentName, 
+    directoryId,
+    star, 
+    setStar, 
+    content, 
+    isValid,
+    isLoading,
+    setIsLoading
+  } = useCreateNoteContext()
+  
   const [open, setOpen] = useState(false)
 
   const maxQuizCount = calculateAvailableQuizCount(content.textLength)
@@ -35,23 +47,35 @@ export const CreateNoteDrawer = () => {
       return
     }
 
-    const contentBlob = new Blob([form.getValues('content.markdown')], { type: 'text/markdown' })
+    setIsLoading(true)
+    
+    try {
+      const contentBlob = new Blob([content.markdown], { type: 'text/markdown' })
 
-    const { id } = await createDocument({
-      file: contentBlob,
-      documentName: form.getValues('documentName'),
-      directoryId: String(form.getValues('directoryId')),
-      star: form.getValues('star'),
-      quizType: form.getValues('quizType'),
-      documentType: form.getValues('documentType') || 'TEXT',
-    })
+      const { id } = await createDocument({
+        file: contentBlob,
+        documentName,
+        directoryId: String(directoryId),
+        star,
+        quizType,
+        documentType: 'TEXT',
+      })
+      
+      toast.success('문서가 생성되었습니다.')
+      // 성공 후 처리 로직 (예: 라우팅)
+    } catch (error) {
+      console.error(error)
+      toast.error('문서 생성에 실패했습니다.')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="primary" size="sm" type="submit" disabled={!form.formState.isValid}>
-          {form.formState.isLoading ? '생성 중...' : '만들기'}
+        <Button variant="primary" size="sm" type="submit" disabled={!isValid || isLoading}>
+          {isLoading ? '생성 중...' : '만들기'}
         </Button>
       </DrawerTrigger>
       <DrawerContent height="lg">
