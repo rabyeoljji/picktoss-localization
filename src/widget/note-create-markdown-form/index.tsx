@@ -21,9 +21,14 @@ const MarkdownFormSchema = z.object({
   content: z.object({
     html: z.string(),
     markdown: z.string(),
-    textLength: z.number().min(1000, {
-      message: '최소 1000자 이상 입력해주세요.',
-    }),
+    textLength: z
+      .number()
+      .min(MIN_LENGTH, {
+        message: '최소 1000자 이상 입력해주세요.',
+      })
+      .max(MAX_LENGTH, {
+        message: '5000자 이하 입력해주세요.',
+      }),
   }),
   quizType: z.enum(['MIX_UP', 'MULTIPLE_CHOICE']).default('MULTIPLE_CHOICE'),
 })
@@ -166,17 +171,15 @@ export const NoteCreateMarkdownForm = ({
               isKeyboardVisible && 'pb-2',
             )}
           >
-            <div className="flex items-center gap-[2px]">
-              <IcInfo className="size-4 text-base-6" />
+            <div className="flex items-center gap-1">
+              <IcInfo className="size-4 text-icon-sub" />
               <Text typo="body-1-regular" color="caption">
-                {content.textLength} / {MAX_LENGTH}자
+                최소 1000자 이상 입력해주세요
               </Text>
             </div>
             <div className={content.textLength < MIN_LENGTH ? 'text-danger' : 'text-success'}>
-              <Text typo="body-1-medium">
-                {content.textLength < MIN_LENGTH
-                  ? `최소 ${MIN_LENGTH}자 이상 (${MIN_LENGTH - content.textLength}자 남음)`
-                  : '작성 완료'}
+              <Text typo="body-1-medium" color="secondary">
+                {content.textLength} / {MAX_LENGTH}
               </Text>
             </div>
           </div>

@@ -25,7 +25,7 @@ const NoteCreatePage = () => {
 
   // 폼 상태 관리 핸들러
   const handleFormStateChange = (isValid: boolean, isPending: boolean) => {
-    setFormValid(isValid)
+    setFormValid(isValid && title.trim() !== '' && emoji !== '')
     setFormPending(isPending)
   }
 
@@ -132,8 +132,16 @@ const EmojiTitleInput = ({
           {emoji}
         </button>
         {showEmojiPicker && (
-          <div className="absolute z-10 top-full left-0 mt-1">
-            <EmojiPicker onEmojiClick={(data) => setEmoji(data.emoji)} theme={Theme.LIGHT} width={300} height={400} />
+          <div className="absolute top-full bg-base-1 z-40 left-0 mt-1">
+            <EmojiPicker
+              onEmojiClick={(data) => {
+                setEmoji(data.emoji)
+                setShowEmojiPicker(false)
+              }}
+              theme={Theme.LIGHT}
+              width={300}
+              height={400}
+            />
           </div>
         )}
       </div>
