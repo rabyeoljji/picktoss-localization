@@ -6,10 +6,10 @@ import { DOCUMENT_ENDPOINTS } from './config'
 export interface CreateDocumentRequest {
   file: File | Blob
   directoryId: string
-  documentName: string
-  star: string
-  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
   documentType: 'FILE' | 'TEXT' | 'NOTION'
+  documentName: string
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  star: string
 }
 
 interface CreateDocumentResponse {
