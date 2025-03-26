@@ -10,6 +10,7 @@ import { useCreateDirectory, useGetAllDirectories } from '@/entities/directory/a
 import { CreateDocumentRequest } from '@/entities/document/api'
 
 import { IcAdd, IcCheck, IcChevronDown, IcFile, IcWrite } from '@/shared/assets/icon'
+import { ImgMultiple } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { SystemDialog } from '@/shared/components/system-dialog'
@@ -21,12 +22,14 @@ import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useRouter } from '@/shared/lib/router'
+import { cn } from '@/shared/lib/utils'
 
 const NoteCreatePage = () => {
   const router = useRouter()
 
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false)
   const [documentType, setDocumentType] = useState<CreateDocumentRequest['documentType'] | null>(null)
+  const [quizType, setQuizType] = useState<CreateDocumentRequest['quizType']>('MULTIPLE_CHOICE')
   const [star, setStar] = useState<CreateDocumentRequest['star']>('40')
   const [formValid, setFormValid] = useState(false)
   const [formPending, setFormPending] = useState(false)
@@ -80,6 +83,10 @@ const NoteCreatePage = () => {
                     {formPending ? '생성 중...' : '만들기'}
                   </Button>
                 }
+                quizType={quizType}
+                setQuizType={setQuizType}
+                star={star}
+                setStar={setStar}
               />
             </div>
           </>
@@ -108,7 +115,19 @@ const NoteCreatePage = () => {
   )
 }
 
-const CreateNoteDrawer = ({ trigger }: { trigger: React.ReactNode }) => {
+const CreateNoteDrawer = ({
+  trigger,
+  quizType,
+  setQuizType,
+  star,
+  setStar,
+}: {
+  trigger: React.ReactNode
+  quizType: CreateDocumentRequest['quizType']
+  setQuizType: (quizType: CreateDocumentRequest['quizType']) => void
+  star: CreateDocumentRequest['star']
+  setStar: (star: CreateDocumentRequest['star']) => void
+}) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
@@ -116,6 +135,47 @@ const CreateNoteDrawer = ({ trigger }: { trigger: React.ReactNode }) => {
         <DrawerHeader>
           <DrawerTitle>만들 유형과 문제 수를 선택해주세요</DrawerTitle>
         </DrawerHeader>
+
+        <div className="py-10 flex gap-3">
+          <button
+            className={cn(
+              'flex-1 p-4 aspect-[16/12] rounded-[16px] border border-outline flex-center flex-col  gap-1',
+              'hover:bg-info hover:border-blue-300',
+              quizType === 'MULTIPLE_CHOICE' && 'bg-info border-blue-300',
+            )}
+            onClick={() => setQuizType('MULTIPLE_CHOICE')}
+          >
+            <ImgMultiple className="size-[64px]" />
+            <Text typo="subtitle-1-bold" color="primary">
+              객관식
+            </Text>
+          </button>
+          <button
+            className={cn(
+              'flex-1 p-4 aspect-[16/12] rounded-[16px] border border-outline flex-center flex-col gap-1',
+              'hover:bg-info hover:border-blue-300',
+              quizType === 'MIX_UP' && 'bg-info border-blue-300',
+            )}
+            onClick={() => setQuizType('MIX_UP')}
+          >
+            <ImgMultiple className="size-[64px]" />
+            <Text typo="subtitle-1-bold" color="primary">
+              O/X
+            </Text>
+          </button>
+        </div>
+
+        <div className="py-5 grid gap-[32px]">
+          <div className="grid gap-1 text-center">
+            <Text typo="body-2-medium" color="sub">
+              만들 문제 수
+            </Text>
+            <Text typo="h2" color="accent">
+              {star} 문제
+            </Text>
+          </div>
+          <div></div>
+        </div>
       </DrawerContent>
       <div></div>
     </Drawer>
