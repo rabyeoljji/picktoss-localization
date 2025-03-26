@@ -1,9 +1,5 @@
 import { useState } from 'react'
 
-import { toast } from 'sonner'
-
-import { useCreateDocument } from '@/entities/document/api/hooks'
-
 import { ImgMultiple, ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
@@ -12,70 +8,23 @@ import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
 import { calculateAvailableQuizCount } from '../../lib'
-import { MAXIMUM_QUIZ_COUNT, MIN_LENGTH, useCreateNoteContext } from '../../model/create-note-context'
+import { MAXIMUM_QUIZ_COUNT, useCreateNoteContext } from '../../model/create-note-context'
 
 export const CreateNoteDrawer = () => {
-  const { 
-    quizType, 
-    setQuizType, 
-    documentName, 
-    directoryId,
-    star, 
-    setStar, 
-    content, 
-    isValid,
-    isLoading,
-    setIsLoading
-  } = useCreateNoteContext()
-  
+  const { handleCreateDocument, quizType, setQuizType, star, setStar, content, isValid, isPending } =
+    useCreateNoteContext()
+
   const [open, setOpen] = useState(false)
 
   const maxQuizCount = calculateAvailableQuizCount(content.textLength)
   const DOCUMENT_MIN_QUIZ_COUNT = maxQuizCount < 5 ? maxQuizCount : 5
   const DOCUMENT_MAX_QUIZ_COUNT = Math.min(maxQuizCount, MAXIMUM_QUIZ_COUNT)
 
-  const { mutateAsync: createDocument, isPending } = useCreateDocument()
-
-  const handleCreateDocument = async () => {
-    if (!documentName.trim()) {
-      toast.error('문서 이름을 입력해주세요.')
-      return
-    }
-
-    if (content.textLength < MIN_LENGTH) {
-      toast.error(`최소 ${MIN_LENGTH}자 이상 입력해주세요.`)
-      return
-    }
-
-    setIsLoading(true)
-    
-    try {
-      const contentBlob = new Blob([content.markdown], { type: 'text/markdown' })
-
-      const { id } = await createDocument({
-        file: contentBlob,
-        documentName,
-        directoryId: String(directoryId),
-        star,
-        quizType,
-        documentType: 'TEXT',
-      })
-      
-      toast.success('문서가 생성되었습니다.')
-      // 성공 후 처리 로직 (예: 라우팅)
-    } catch (error) {
-      console.error(error)
-      toast.error('문서 생성에 실패했습니다.')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="primary" size="sm" type="submit" disabled={!isValid || isLoading}>
-          {isLoading ? '생성 중...' : '만들기'}
+        <Button variant="primary" size="sm" type="submit" disabled={!isValid || isPending}>
+          {isPending ? '생성 중...' : '만들기'}
         </Button>
       </DrawerTrigger>
       <DrawerContent height="lg">

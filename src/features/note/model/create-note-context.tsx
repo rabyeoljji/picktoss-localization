@@ -1,14 +1,18 @@
 import { createContext, useContext, useState } from 'react'
 
+import { toast } from 'sonner'
+
 import { GetAllDirectoriesResponse } from '@/entities/directory/api'
+import { CreateDocumentRequest } from '@/entities/document/api'
+import { useCreateDocument } from '@/entities/document/api/hooks'
 
 export const MIN_LENGTH = 3000
 export const MAX_LENGTH = 50000
 
 export const MAXIMUM_QUIZ_COUNT = 40
 
-export type DocumentType = 'TEXT' | 'FILE' | 'NOTION' | null
-export type QuizType = 'MIX_UP' | 'MULTIPLE_CHOICE'
+export type DocumentType = CreateDocumentRequest['documentType'] | null
+export type QuizType = CreateDocumentRequest['quizType']
 
 export interface CreateNoteState {
   directoryId: number
@@ -22,7 +26,6 @@ export interface CreateNoteState {
   }
   emoji: string
   isValid: boolean
-  isLoading: boolean
 }
 
 export interface CreateNoteContextValues extends CreateNoteState {
@@ -37,11 +40,13 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setContent: (content: { markdown: string; textLength: number }) => void
   setEmoji: (emoji: string) => void
   setIsValid: (isValid: boolean) => void
-  setIsLoading: (isLoading: boolean) => void
 
   // Keyboard visibility state
   isKeyboardVisible: boolean
   setIsKeyboardVisible: (isKeyboardVisible: boolean) => void
+
+  handleCreateDocument: () => Promise<void>
+  isPending: boolean
 }
 
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
@@ -65,10 +70,46 @@ export const CreateNoteProvider = ({
   })
   const [emoji, setEmoji] = useState<string>('📝')
   const [isValid, setIsValid] = useState<boolean>(false)
-  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   // 키보드 가시성 상태
   const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean>(false)
+
+  const { mutateAsync: createDocument, isPending } = useCreateDocument()
+
+  const handleCreateDocument = async () => {
+    if (!documentName.trim()) {
+      toast.error('문서 이름을 입력해주세요.')
+      return
+    }
+
+    if (content.textLength < MIN_LENGTH) {
+      toast.error(`최소 ${MIN_LENGTH}자 이상 입력해주세요.`)
+      return
+    }
+
+    if (!documentType) {
+      toast.error('문서 타입을 선택해주세요.')
+      return
+    }
+
+    try {
+      const contentBlob = new Blob([content.markdown], { type: 'text/markdown' })
+
+      await createDocument({
+        file: contentBlob,
+        documentName,
+        directoryId: String(directoryId),
+        star,
+        quizType,
+        documentType,
+      })
+
+      toast.success('문서가 생성되었습니다.')
+    } catch (error) {
+      console.error(error)
+      toast.error('문서 생성에 실패했습니다.')
+    }
+  }
 
   return (
     <CreateNoteContext.Provider
@@ -82,8 +123,8 @@ export const CreateNoteProvider = ({
         content,
         emoji,
         isValid,
-        isLoading,
         isKeyboardVisible,
+
         setDirectoryId,
         setDocumentType,
         setDocumentName,
@@ -92,8 +133,10 @@ export const CreateNoteProvider = ({
         setContent,
         setEmoji,
         setIsValid,
-        setIsLoading,
         setIsKeyboardVisible,
+
+        handleCreateDocument,
+        isPending,
       }}
     >
       {children}
