@@ -5,6 +5,8 @@ import { toast } from 'sonner'
 
 import { NoteCreateMarkdownForm } from '@/widget/note-create-markdown-form'
 
+import { calculateAvailableQuizCount } from '@/features/quiz/lib/calculateAvailableQuizCount'
+
 import { GetAllDirectoriesResponse } from '@/entities/directory/api'
 import { useCreateDirectory, useGetAllDirectories } from '@/entities/directory/api/hooks'
 import { CreateDocumentRequest } from '@/entities/document/api'
@@ -25,13 +27,14 @@ import { TextButton } from '@/shared/components/ui/text-button'
 import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
+const MAXIMUM_QUIZ_COUNT = 40
+
 const NoteCreatePage = () => {
   const router = useRouter()
 
   const [createDrawerOpen, setCreateDrawerOpen] = useState(false)
   const [documentType, setDocumentType] = useState<CreateDocumentRequest['documentType'] | null>(null)
   const [quizType, setQuizType] = useState<CreateDocumentRequest['quizType']>('MULTIPLE_CHOICE')
-  const [star, setStar] = useState<CreateDocumentRequest['star']>('40')
   const [formValid, setFormValid] = useState(false)
   const [formPending, setFormPending] = useState(false)
   const [emoji, setEmoji] = useState('📝')
@@ -39,6 +42,17 @@ const NoteCreatePage = () => {
   const [selectedDirectory, setSelectedDirectory] = useState<GetAllDirectoriesResponse['directories'][number] | null>(
     null,
   )
+  const [content, setContent] = useState({
+    markdown: '',
+    textLength: 0,
+  })
+
+  const maxQuizCount = calculateAvailableQuizCount(content.textLength)
+
+  const DOCUMENT_MIN_QUIZ_COUNT = maxQuizCount < 5 ? maxQuizCount : 5
+  const DOCUMENT_MAX_QUIZ_COUNT = Math.min(maxQuizCount, MAXIMUM_QUIZ_COUNT)
+
+  const [star, setStar] = useState<CreateDocumentRequest['star']>(String(DOCUMENT_MAX_QUIZ_COUNT))
 
   // 폼 상태 관리 핸들러
   const handleFormStateChange = (isValid: boolean, isPending: boolean) => {
@@ -73,6 +87,16 @@ const NoteCreatePage = () => {
             <DirectorySelector selectedDirectory={selectedDirectory} setSelectedDirectory={setSelectedDirectory} />
             <div className="ml-auto w-fit">
               <CreateNoteDrawer
+                DOCUMENT_MIN_QUIZ_COUNT={DOCUMENT_MIN_QUIZ_COUNT}
+                DOCUMENT_MAX_QUIZ_COUNT={DOCUMENT_MAX_QUIZ_COUNT}
+                open={createDrawerOpen}
+                onOpenChange={(open) => {
+                  if (open) {
+                    setStar(String(DOCUMENT_MAX_QUIZ_COUNT))
+                  }
+                  setCreateDrawerOpen(open)
+                }}
+                handleCreateNote={handleCreateNote}
                 trigger={
                   <Button
                     variant="primary"
@@ -102,6 +126,8 @@ const NoteCreatePage = () => {
         {documentType === 'TEXT' && (
           <>
             <NoteCreateMarkdownForm
+              content={content}
+              setContent={setContent}
               directoryId={String(selectedDirectory?.id)}
               onFormStateChange={handleFormStateChange}
               title={title}
@@ -117,20 +143,31 @@ const NoteCreatePage = () => {
 }
 
 const CreateNoteDrawer = ({
+  open,
+  onOpenChange,
   trigger,
   quizType,
   setQuizType,
   star,
   setStar,
+  handleCreateNote,
+  DOCUMENT_MIN_QUIZ_COUNT,
+  DOCUMENT_MAX_QUIZ_COUNT,
 }: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
   trigger: React.ReactNode
   quizType: CreateDocumentRequest['quizType']
   setQuizType: (quizType: CreateDocumentRequest['quizType']) => void
   star: CreateDocumentRequest['star']
   setStar: (star: CreateDocumentRequest['star']) => void
+  handleCreateNote: () => void
+  DOCUMENT_MIN_QUIZ_COUNT: number
+  DOCUMENT_MAX_QUIZ_COUNT: number
 }) => {
+  console.log(DOCUMENT_MAX_QUIZ_COUNT)
   return (
-    <Drawer>
+    <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
       <DrawerContent height="lg">
         <DrawerHeader>
@@ -180,14 +217,14 @@ const CreateNoteDrawer = ({
               value={[Number(star)]}
               step={1}
               onValueChange={(value) => setStar(String(value[0]))}
-              min={5}
-              max={40}
+              min={DOCUMENT_MIN_QUIZ_COUNT}
+              max={DOCUMENT_MAX_QUIZ_COUNT}
             />
             <Text typo="body-2-medium" color="sub" className="absolute top-5 left-0">
-              5 문제
+              {DOCUMENT_MIN_QUIZ_COUNT} 문제
             </Text>
             <Text typo="body-2-medium" color="sub" className="absolute top-5 right-0">
-              40 문제
+              {DOCUMENT_MAX_QUIZ_COUNT} 문제
             </Text>
           </div>
 
@@ -195,7 +232,7 @@ const CreateNoteDrawer = ({
             <Text typo="body-1-medium" color="sub" className="pt-[14px] pb-3 text-center">
               현재 가진 별: {10}개
             </Text>
-            <Button variant="special">
+            <Button variant="special" onClick={() => handleCreateNote()}>
               <div className="flex-center gap-1">
                 <span>만들기</span>
 

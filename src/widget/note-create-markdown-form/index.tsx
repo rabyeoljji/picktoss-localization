@@ -40,6 +40,8 @@ interface NoteCreateMarkdownFormProps {
   title: string
   onSuccess: (id: number) => void
   onError: () => void
+  content: { markdown: string; textLength: number }
+  setContent: ({ markdown, textLength }: { markdown: string; textLength: number }) => void
 }
 
 export const NoteCreateMarkdownForm = ({
@@ -48,14 +50,10 @@ export const NoteCreateMarkdownForm = ({
   title,
   onSuccess,
   onError,
+  content,
+  setContent,
 }: NoteCreateMarkdownFormProps) => {
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
-
-  // 상태 초기화
-  const [content, setContent] = useState({
-    markdown: '',
-    textLength: 0,
-  })
 
   // API 훅 호출
   const { mutate: createDocumentMutate, isPending } = useCreateDocument()
