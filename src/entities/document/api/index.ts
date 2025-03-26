@@ -3,7 +3,7 @@ import { client } from '@/shared/lib/axios/client'
 import { DOCUMENT_ENDPOINTS } from './config'
 
 // 문서 생성
-interface CreateDocumentRequest {
+export interface CreateDocumentRequest {
   file: File | Blob
   directoryId: string
   documentName: string

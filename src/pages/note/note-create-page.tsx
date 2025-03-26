@@ -7,6 +7,7 @@ import { NoteCreateMarkdownForm } from '@/widget/note-create-markdown-form'
 
 import { GetAllDirectoriesResponse } from '@/entities/directory/api'
 import { useCreateDirectory, useGetAllDirectories } from '@/entities/directory/api/hooks'
+import { CreateDocumentRequest } from '@/entities/document/api'
 
 import { IcAdd, IcCheck, IcChevronDown, IcFile, IcWrite } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -24,7 +25,7 @@ import { useRouter } from '@/shared/lib/router'
 const NoteCreatePage = () => {
   const router = useRouter()
 
-  const [method, setMethod] = useState<'markdown' | 'file' | null>(null)
+  const [documentType, setDocumentType] = useState<CreateDocumentRequest['documentType'] | null>(null)
   const [formValid, setFormValid] = useState(false)
   const [formPending, setFormPending] = useState(false)
   const [emoji, setEmoji] = useState('📝')
@@ -77,12 +78,12 @@ const NoteCreatePage = () => {
         }
       />
 
-      {!method && <SelectMethod setMethod={setMethod} />}
+      {!documentType && <SelectDocumentType setDocumentType={setDocumentType} />}
 
       <div className="pt-[var(--header-height)]">
         <EmojiTitleInput title={title} setTitle={setTitle} emoji={emoji} setEmoji={setEmoji} />
 
-        {method === 'markdown' && (
+        {documentType === 'TEXT' && (
           <>
             <NoteCreateMarkdownForm
               directoryId={String(selectedDirectory?.id)}
@@ -93,7 +94,7 @@ const NoteCreatePage = () => {
             />
           </>
         )}
-        {method === 'file' && <NoteCreatePageFile />}
+        {documentType === 'FILE' && <NoteCreatePageFile />}
       </div>
     </div>
   )
@@ -276,7 +277,7 @@ const DirectorySelector = ({
   )
 }
 
-const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') => void }) => {
+const SelectDocumentType = ({ setDocumentType }: { setDocumentType: (documentType: 'TEXT' | 'FILE') => void }) => {
   return (
     <div className="flex-center h-[calc(var(--viewport-height,100vh)-(var(--header-height)))]">
       <div className="grid gap-[10px] w-full">
@@ -285,7 +286,7 @@ const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') 
           size="lg"
           left={<IcWrite />}
           className="w-[180px] mx-auto"
-          onClick={() => setMethod('markdown')}
+          onClick={() => setDocumentType('TEXT')}
         >
           직접 작성하기
         </SquareButton>
@@ -294,7 +295,7 @@ const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') 
             variant="secondary"
             size="lg"
             left={<IcFile />}
-            onClick={() => setMethod('file')}
+            onClick={() => setDocumentType('FILE')}
             className="w-[180px]"
           >
             파일 올리기
