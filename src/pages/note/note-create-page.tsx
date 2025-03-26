@@ -28,57 +28,40 @@ const NoteCreatePage = () => {
       className="min-h-screen max-w-xl mx-auto bg-surface-1 relative"
       style={{ height: 'var(--viewport-height, 100vh)' }}
     >
-      {!method && (
-        <>
-          <Header
-            className="sticky top-0 w-full z-50"
-            left={<BackButton type="close" />}
-            content={<div className="center">전공 공부</div>}
-          />
-          <SelectMethod setMethod={setMethod} />
-        </>
-      )}
+      <Header
+        className="fixed max-w-xl top-0 w-full z-50"
+        left={<BackButton type="close" />}
+        content={
+          <>
+            <div className="center">전공 공부</div>
+            <div className="ml-auto w-fit">
+              <Button
+                variant="primary"
+                size="sm"
+                type="submit"
+                disabled={!formValid || formPending}
+                onClick={() => {
+                  // form submit 트리거를 위한 클릭 이벤트 생성
+                  const submitEvent = new Event('submit', { bubbles: true, cancelable: true })
+                  document.querySelector('form')?.dispatchEvent(submitEvent)
+                }}
+              >
+                {formPending ? '생성 중...' : '만들기'}
+              </Button>
+            </div>
+          </>
+        }
+      />
 
-      {method === 'markdown' && (
-        <>
-          <Header
-            className="sticky top-0 w-full z-50"
-            left={<BackButton type="close" />}
-            content={
-              <>
-                <div className="center">전공 공부</div>
-                <div className="ml-auto w-fit">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    type="submit"
-                    disabled={!formValid || formPending}
-                    onClick={() => {
-                      // form submit 트리거를 위한 클릭 이벤트 생성
-                      const submitEvent = new Event('submit', { bubbles: true, cancelable: true })
-                      document.querySelector('form')?.dispatchEvent(submitEvent)
-                    }}
-                  >
-                    {formPending ? '생성 중...' : '만들기'}
-                  </Button>
-                </div>
-              </>
-            }
-          />
+      {!method && <SelectMethod setMethod={setMethod} />}
+
+      <div className="pt-[var(--header-height)]">
+        {method === 'markdown' && (
           <NoteCreateMarkdownForm directoryId={directoryId} onFormStateChange={handleFormStateChange} />
-        </>
-      )}
+        )}
 
-      {method === 'file' && (
-        <>
-          <Header
-            className="sticky top-0 w-full z-50"
-            left={<BackButton type="close" />}
-            content={<div className="center">전공 공부</div>}
-          />
-          <NoteCreatePageFile />
-        </>
-      )}
+        {method === 'file' && <NoteCreatePageFile />}
+      </div>
     </div>
   )
 }
