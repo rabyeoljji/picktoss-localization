@@ -3,7 +3,7 @@ import { Fragment, useEffect, useRef, useState } from 'react'
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { toast } from 'sonner'
 
-import { NoteCreateMarkdownForm } from '@/widget/note-create-markdown-form'
+import { NoteCreateMarkdownForm } from '@/widget/ui/note-create-markdown-form'
 
 import { calculateAvailableQuizCount } from '@/features/quiz/lib/calculateAvailableQuizCount'
 
@@ -165,7 +165,6 @@ const CreateNoteDrawer = ({
   DOCUMENT_MIN_QUIZ_COUNT: number
   DOCUMENT_MAX_QUIZ_COUNT: number
 }) => {
-  console.log(DOCUMENT_MAX_QUIZ_COUNT)
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
