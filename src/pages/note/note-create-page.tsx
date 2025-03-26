@@ -112,7 +112,12 @@ const CreateNoteDrawer = ({ trigger }: { trigger: React.ReactNode }) => {
   return (
     <Drawer>
       <DrawerTrigger asChild>{trigger}</DrawerTrigger>
-      <DrawerContent height="lg">d</DrawerContent>
+      <DrawerContent height="lg">
+        <DrawerHeader>
+          <DrawerTitle>만들 유형과 문제 수를 선택해주세요</DrawerTitle>
+        </DrawerHeader>
+      </DrawerContent>
+      <div></div>
     </Drawer>
   )
 }
