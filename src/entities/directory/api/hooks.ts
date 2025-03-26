@@ -8,6 +8,7 @@ export const useGetAllDirectories = () => {
   return useQuery({
     queryKey: [DIRECTORY_KEYS.getAllDirectories],
     queryFn: () => getAllDirectories(),
+    select: (data) => data.directories,
   })
 }
 
