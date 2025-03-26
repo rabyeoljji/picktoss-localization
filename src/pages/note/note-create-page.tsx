@@ -209,7 +209,7 @@ const DirectorySelector = ({
                 <RadioGroupItem value={String(directory.id)} id={`radio-${directory.id}`} className="sr-only" />
                 <label
                   htmlFor={`radio-${directory.id}`}
-                  className="py-4 flex items-center justify-between cursor-pointer"
+                  className="py-4 flex items-center justify-between cursor-pointer border-b border-divider"
                 >
                   <Text typo="subtitle-2-medium" color={directory.id === selectedDirectory.id ? 'accent' : 'primary'}>
                     {directory.name} <span className="text-caption">{directory.documentCount}</span>
