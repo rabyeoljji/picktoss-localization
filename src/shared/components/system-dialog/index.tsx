@@ -2,6 +2,7 @@ import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -10,30 +11,46 @@ import {
 import { cn } from '@/shared/lib/utils'
 
 interface SystemDialogProps {
-  trigger: React.ReactNode
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+  trigger?: React.ReactNode
   title: string
+  description?: string
   content: React.ReactNode
   variant?: 'default' | 'critical'
   cancelLabel?: string
   confirmLabel?: string
   onConfirm: () => void
+  preventClose?: boolean
 }
 
 export const SystemDialog = ({
+  open,
+  onOpenChange,
   trigger,
   title,
+  description,
   content,
   variant = 'default',
   cancelLabel = '취소',
-  confirmLabel = '버튼명',
+  confirmLabel = '확인',
   onConfirm,
+  preventClose = false,
 }: SystemDialogProps) => {
+  const handleOpenChange = (newOpen: boolean) => {
+    if (preventClose && !newOpen) {
+      return
+    }
+    onOpenChange?.(newOpen)
+  }
+
   return (
-    <Dialog>
-      <DialogTrigger asChild>{trigger}</DialogTrigger>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
       <DialogContent className="max-w-[280px] w-fit rounded-[16px] px-[24px] pt-[24px] pb-[8px]">
         <DialogHeader className="text-center">
           <DialogTitle className="typo-subtitle-2-bold text-text-primary">{title}</DialogTitle>
+          {description && <DialogDescription className="typo-body-1-medium text-sub">{description}</DialogDescription>}
         </DialogHeader>
         <div className="mt-4 text-center text-sub typo-body-1-medium">{content}</div>
         <DialogFooter className="mt-[20px] self-stretch inline-flex justify-between items-center">

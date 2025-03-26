@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { DIRECTORY_KEYS } from './config'
 import { createDirectory, deleteDirectory, getAllDirectories, getSingleDirectory, updateDirectoryInfo } from './index'
@@ -8,14 +8,20 @@ export const useGetAllDirectories = () => {
   return useQuery({
     queryKey: [DIRECTORY_KEYS.getAllDirectories],
     queryFn: () => getAllDirectories(),
+    select: (data) => data.directories,
   })
 }
 
 // POST: 디렉토리 생성
 export const useCreateDirectory = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DIRECTORY_KEYS.createDirectory,
     mutationFn: (data: Parameters<typeof createDirectory>[0]) => createDirectory(data),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: [DIRECTORY_KEYS.getAllDirectories] })
+    },
   })
 }
 

@@ -46,6 +46,7 @@ import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
 import { AuthLayout } from '@/app/layout/auth-layout'
 import { PWAOnlyMobileLayout } from '@/app/layout/pwa-only-mobile-layout'
 import { RootLayout } from '@/app/layout/root-layout'
+import NotFound from '@/app/not-found'
 
 import { RoutePath } from '@/shared/lib/router'
 
@@ -55,6 +56,9 @@ export const AppRouter = () => {
       <Routes>
         <Route element={<RootLayout />}>
           <Route element={<AuthLayout />}>
+            {/* 404 */}
+            <Route path="*" element={<NotFound />} />
+
             {/* PC에서는 항상 접근 가능하지만 모바일에서는 PWA로만 접근 가능하게 하는 Layout */}
             <Route element={<PWAOnlyMobileLayout />}>
               {/* Home */}

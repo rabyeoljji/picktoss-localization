@@ -1,17 +1,24 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { toast } from 'sonner'
 
 import { NoteCreateMarkdownForm } from '@/widget/note-create-markdown-form'
 
-import { IcFile, IcWrite } from '@/shared/assets/icon'
+import { GetAllDirectoriesResponse } from '@/entities/directory/api'
+import { useCreateDirectory, useGetAllDirectories } from '@/entities/directory/api/hooks'
+
+import { IcAdd, IcCheck, IcChevronDown, IcFile, IcWrite } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
+import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
 import { Input } from '@/shared/components/ui/input'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
+import { TextButton } from '@/shared/components/ui/text-button'
 import { useRouter } from '@/shared/lib/router'
 
 const NoteCreatePage = () => {
@@ -22,6 +29,9 @@ const NoteCreatePage = () => {
   const [formPending, setFormPending] = useState(false)
   const [emoji, setEmoji] = useState('📝')
   const [title, setTitle] = useState('')
+  const [selectedDirectory, setSelectedDirectory] = useState<GetAllDirectoriesResponse['directories'][number] | null>(
+    null,
+  )
 
   // 폼 상태 관리 핸들러
   const handleFormStateChange = (isValid: boolean, isPending: boolean) => {
@@ -37,9 +47,6 @@ const NoteCreatePage = () => {
   }
   const onError = () => {}
 
-  // 디렉토리 ID는 실제로는 선택된 값을 사용해야 하지만, 현재는 하드코딩
-  const directoryId = '10'
-
   return (
     <div
       className="min-h-screen max-w-xl mx-auto bg-surface-1 relative"
@@ -50,7 +57,7 @@ const NoteCreatePage = () => {
         left={<BackButton type="close" />}
         content={
           <>
-            <div className="center">전공 공부</div>
+            <DirectorySelector selectedDirectory={selectedDirectory} setSelectedDirectory={setSelectedDirectory} />
             <div className="ml-auto w-fit">
               <Button
                 variant="primary"
@@ -78,7 +85,7 @@ const NoteCreatePage = () => {
         {method === 'markdown' && (
           <>
             <NoteCreateMarkdownForm
-              directoryId={directoryId}
+              directoryId={String(selectedDirectory?.id)}
               onFormStateChange={handleFormStateChange}
               title={title}
               onSuccess={onSuccess}
@@ -91,8 +98,6 @@ const NoteCreatePage = () => {
     </div>
   )
 }
-
-export default NoteCreatePage
 
 const EmojiTitleInput = ({
   emoji,
@@ -158,6 +163,119 @@ const EmojiTitleInput = ({
   )
 }
 
+const DirectorySelector = ({
+  selectedDirectory,
+  setSelectedDirectory,
+}: {
+  selectedDirectory: GetAllDirectoriesResponse['directories'][number] | null
+  setSelectedDirectory: (directory: GetAllDirectoriesResponse['directories'][number]) => void
+}) => {
+  const { data: directories } = useGetAllDirectories()
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [newDirectoryName, setNewDirectoryName] = useState('')
+
+  const { mutateAsync: createDirectory, isPending } = useCreateDirectory()
+  const DEFAULT_EMOJI = '📝'
+
+  useEffect(() => {
+    if (directories && !selectedDirectory) {
+      setSelectedDirectory(directories[0])
+    }
+  }, [directories, selectedDirectory, setSelectedDirectory])
+
+  const handleCreateDirectory = async () => {
+    const { id } = await createDirectory({ name: newDirectoryName, emoji: DEFAULT_EMOJI })
+    setSelectedDirectory({ id, name: newDirectoryName, emoji: DEFAULT_EMOJI, tag: 'DEFAULT', documentCount: 0 })
+    setDialogOpen(false)
+    setNewDirectoryName('')
+  }
+
+  const handleDirectorySelect = (id: string) => {
+    const found = directories?.find((d) => String(d.id) === id)
+    if (found) {
+      setSelectedDirectory(found)
+      setDrawerOpen(false)
+    }
+  }
+
+  if (!directories || !selectedDirectory) return null
+
+  return (
+    <>
+      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
+        <DrawerTrigger asChild>
+          <button className="center py-[5px] px-[12px] line-clamp-1 flex items-center gap-1">
+            <Text typo="subtitle-2-medium" color="secondary" className="max-w-[220px]">
+              {selectedDirectory.name}
+            </Text>
+            <IcChevronDown className="size-4 text-icon-sub" />
+          </button>
+        </DrawerTrigger>
+        <DrawerContent height="lg">
+          <DrawerHeader>
+            <DrawerTitle>저장할 폴더</DrawerTitle>
+          </DrawerHeader>
+          <div className="mt-4 flex-1 pb-10 overflow-auto">
+            <RadioGroup value={String(selectedDirectory.id)} onValueChange={handleDirectorySelect}>
+              {directories.map((directory) => (
+                <Fragment key={directory.id}>
+                  <RadioGroupItem value={String(directory.id)} id={`radio-${directory.id}`} className="sr-only" />
+                  <label
+                    htmlFor={`radio-${directory.id}`}
+                    className="py-4 flex items-center justify-between cursor-pointer border-b border-divider"
+                  >
+                    <Text typo="subtitle-2-medium" color={directory.id === selectedDirectory.id ? 'accent' : 'primary'}>
+                      {directory.name} <span className="text-caption">{directory.documentCount}</span>
+                    </Text>
+                    {directory.id === selectedDirectory.id && <IcCheck className="size-6 text-accent" />}
+                  </label>
+                </Fragment>
+              ))}
+            </RadioGroup>
+            <TextButton
+              variant="sub"
+              size="lg"
+              left={<IcAdd />}
+              onClick={() => {
+                setDrawerOpen(false)
+                setDialogOpen(true)
+              }}
+              className="w-full justify-start pt-4"
+            >
+              새 폴더 추가
+            </TextButton>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      <SystemDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        title="새 폴더 만들기"
+        description="추가할 폴더 이름을 입력해주세요"
+        preventClose={isPending}
+        content={
+          <>
+            {isPending ? (
+              <div className="animate-pulse text-center">Loading...</div>
+            ) : (
+              <Input
+                value={newDirectoryName}
+                onChange={(e) => setNewDirectoryName(e.target.value)}
+                placeholder="새로운 폴더"
+                hasClear
+                onClearClick={() => setNewDirectoryName('')}
+              />
+            )}
+          </>
+        }
+        onConfirm={handleCreateDirectory}
+      />
+    </>
+  )
+}
+
 const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') => void }) => {
   return (
     <div className="flex-center h-[calc(var(--viewport-height,100vh)-(var(--header-height)))]">
@@ -190,6 +308,9 @@ const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') 
   )
 }
 
+// TODO: widget 으로 분리해서 구현
 const NoteCreatePageFile = () => {
   return <div></div>
 }
+
+export default NoteCreatePage

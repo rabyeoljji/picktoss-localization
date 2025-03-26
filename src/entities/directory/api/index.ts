@@ -3,7 +3,7 @@ import { client } from '@/shared/lib/axios/client'
 import { DIRECTORY_ENDPOINTS } from './config'
 
 // GET: 모든 디렉토리 조회
-interface GetAllDirectoriesResponse {
+export interface GetAllDirectoriesResponse {
   directories: { id: number; name: string; emoji: string; tag: 'DEFAULT' | 'NORMAL'; documentCount: number }[]
 }
 
