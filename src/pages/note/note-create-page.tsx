@@ -10,7 +10,7 @@ import { useCreateDirectory, useGetAllDirectories } from '@/entities/directory/a
 import { CreateDocumentRequest } from '@/entities/document/api'
 
 import { IcAdd, IcCheck, IcChevronDown, IcFile, IcWrite } from '@/shared/assets/icon'
-import { ImgMultiple } from '@/shared/assets/images'
+import { ImgMultiple, ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { SystemDialog } from '@/shared/components/system-dialog'
@@ -18,6 +18,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
 import { Input } from '@/shared/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
+import { Slider } from '@/shared/components/ui/slider'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
@@ -174,7 +175,39 @@ const CreateNoteDrawer = ({
               {star} 문제
             </Text>
           </div>
-          <div></div>
+          <div className="relative">
+            <Slider
+              value={[Number(star)]}
+              step={1}
+              onValueChange={(value) => setStar(String(value[0]))}
+              min={5}
+              max={40}
+            />
+            <Text typo="body-2-medium" color="sub" className="absolute top-5 left-0">
+              5 문제
+            </Text>
+            <Text typo="body-2-medium" color="sub" className="absolute top-5 right-0">
+              40 문제
+            </Text>
+          </div>
+
+          <div className="absolute bottom-0 w-[calc(100%-32px)] pb-12">
+            <Text typo="body-1-medium" color="sub" className="pt-[14px] pb-3 text-center">
+              현재 가진 별: {10}개
+            </Text>
+            <Button variant="special">
+              <div className="flex-center gap-1">
+                <span>만들기</span>
+
+                <div className="py-px px-2 flex items-center gap-[4.3px] rounded-full bg-[#D3DCE433]/80">
+                  <ImgStar className="size-[16px]" />
+                  <Text typo="body-1-medium" color="white">
+                    {10}
+                  </Text>
+                </div>
+              </div>
+            </Button>
+          </div>
         </div>
       </DrawerContent>
       <div></div>
