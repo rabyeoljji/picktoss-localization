@@ -11,7 +11,7 @@ import { calculateAvailableQuizCount } from '../../lib'
 import { MAXIMUM_QUIZ_COUNT, useCreateNoteContext } from '../../model/create-note-context'
 
 export const CreateNoteDrawer = () => {
-  const { handleCreateDocument, quizType, setQuizType, star, setStar, content, isValid, isPending } =
+  const { handleCreateDocument, quizType, setQuizType, star, setStar, content, isPending, checkIsValid } =
     useCreateNoteContext()
 
   const [open, setOpen] = useState(false)
@@ -23,7 +23,7 @@ export const CreateNoteDrawer = () => {
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="primary" size="sm" type="submit" disabled={!isValid || isPending}>
+        <Button variant="primary" size="sm" type="submit" disabled={!checkIsValid() || isPending}>
           {isPending ? '생성 중...' : '만들기'}
         </Button>
       </DrawerTrigger>

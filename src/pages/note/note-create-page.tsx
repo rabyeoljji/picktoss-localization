@@ -2,7 +2,7 @@ import { CreateNoteProvider, useCreateNoteContext } from '@/features/note/model/
 import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
 import { DirectorySelector } from '@/features/note/ui/directory-selector'
 import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
-import { NoteCreateMarkdownForm } from '@/features/note/ui/note-create-markdown-form'
+import { NoteCreateMarkdown } from '@/features/note/ui/note-create-markdown'
 import { SelectDocumentType } from '@/features/note/ui/select-document-type'
 
 import { useGetAllDirectories } from '@/entities/directory/api/hooks'
@@ -50,7 +50,7 @@ export const NoteCreateContent = () => {
       <div className="pt-[var(--header-height)]">
         <EmojiTitleInput />
 
-        {documentType === 'TEXT' && <NoteCreateMarkdownForm />}
+        {documentType === 'TEXT' && <NoteCreateMarkdown />}
         {documentType === 'FILE' && <NoteCreatePageFile />}
       </div>
     </div>

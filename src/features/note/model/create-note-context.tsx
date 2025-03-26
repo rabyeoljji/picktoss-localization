@@ -25,7 +25,6 @@ export interface CreateNoteState {
     textLength: number
   }
   emoji: string
-  isValid: boolean
 }
 
 export interface CreateNoteContextValues extends CreateNoteState {
@@ -39,7 +38,6 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setStar: (star: string) => void
   setContent: (content: { markdown: string; textLength: number }) => void
   setEmoji: (emoji: string) => void
-  setIsValid: (isValid: boolean) => void
 
   // Keyboard visibility state
   isKeyboardVisible: boolean
@@ -47,6 +45,9 @@ export interface CreateNoteContextValues extends CreateNoteState {
 
   handleCreateDocument: () => Promise<void>
   isPending: boolean
+
+  // 유효성 검사 함수
+  checkIsValid: () => boolean
 }
 
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
@@ -69,25 +70,28 @@ export const CreateNoteProvider = ({
     textLength: 0,
   })
   const [emoji, setEmoji] = useState<string>('📝')
-  const [isValid, setIsValid] = useState<boolean>(false)
 
   // 키보드 가시성 상태
   const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean>(false)
 
   const { mutateAsync: createDocument, isPending } = useCreateDocument()
 
+  // 유효성 검사 함수
+  const checkIsValid = () => {
+    const isContentValid = content.textLength >= MIN_LENGTH && content.textLength <= MAX_LENGTH
+    const isNameValid = documentName.trim().length > 0
+    const isTypeValid = documentType !== null
+    return isContentValid && isNameValid && isTypeValid
+  }
+
   const handleCreateDocument = async () => {
     if (!documentName.trim()) {
       toast.error('문서 이름을 입력해주세요.')
       return
-    }
-
-    if (content.textLength < MIN_LENGTH) {
+    } else if (content.textLength < MIN_LENGTH) {
       toast.error(`최소 ${MIN_LENGTH}자 이상 입력해주세요.`)
       return
-    }
-
-    if (!documentType) {
+    } else if (!documentType) {
       toast.error('문서 타입을 선택해주세요.')
       return
     }
@@ -122,7 +126,6 @@ export const CreateNoteProvider = ({
         star,
         content,
         emoji,
-        isValid,
         isKeyboardVisible,
 
         setDirectoryId,
@@ -132,11 +135,11 @@ export const CreateNoteProvider = ({
         setStar,
         setContent,
         setEmoji,
-        setIsValid,
         setIsKeyboardVisible,
 
         handleCreateDocument,
         isPending,
+        checkIsValid,
       }}
     >
       {children}

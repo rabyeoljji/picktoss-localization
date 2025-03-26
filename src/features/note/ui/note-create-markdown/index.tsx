@@ -7,22 +7,8 @@ import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-export const NoteCreateMarkdownForm = () => {
-  const { 
-    content, 
-    setContent, 
-    isKeyboardVisible, 
-    setIsKeyboardVisible,
-    documentName,
-    setIsValid
-  } = useCreateNoteContext()
-
-  // 유효성 검사 효과
-  useEffect(() => {
-    const isContentValid = content.textLength >= MIN_LENGTH && content.textLength <= MAX_LENGTH;
-    const isNameValid = documentName.trim().length > 0;
-    setIsValid(isContentValid && isNameValid);
-  }, [content.textLength, documentName, setIsValid]);
+export const NoteCreateMarkdown = () => {
+  const { content, setContent, isKeyboardVisible, setIsKeyboardVisible } = useCreateNoteContext()
 
   // 키보드 감지 로직
   useEffect(() => {
@@ -83,11 +69,12 @@ export const NoteCreateMarkdownForm = () => {
               최소 {MIN_LENGTH}자 이상 입력해주세요
             </Text>
           </div>
-          <div className={content.textLength < MIN_LENGTH ? 'text-danger' : 'text-success'}>
-            <Text typo="body-1-medium" color="secondary">
-              {content.textLength} / {MAX_LENGTH}
-            </Text>
-          </div>
+          <Text typo="body-1-medium" color="secondary">
+            <span className={cn(content.textLength < MIN_LENGTH ? 'text-critical' : 'text-success')}>
+              {content.textLength}
+            </span>{' '}
+            / {MAX_LENGTH}
+          </Text>
         </div>
       </div>
     </>
