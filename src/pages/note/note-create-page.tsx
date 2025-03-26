@@ -1,4 +1,7 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+
+import EmojiPicker, { Theme } from 'emoji-picker-react'
+import { toast } from 'sonner'
 
 import { NoteCreateMarkdownForm } from '@/widget/note-create-markdown-form'
 
@@ -6,19 +9,33 @@ import { IcFile, IcWrite } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
+import { Input } from '@/shared/components/ui/input'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
 
 const NoteCreatePage = () => {
+  const router = useRouter()
+
   const [method, setMethod] = useState<'markdown' | 'file' | null>(null)
   const [formValid, setFormValid] = useState(false)
   const [formPending, setFormPending] = useState(false)
+  const [emoji, setEmoji] = useState('📝')
+  const [title, setTitle] = useState('')
 
   // 폼 상태 관리 핸들러
   const handleFormStateChange = (isValid: boolean, isPending: boolean) => {
     setFormValid(isValid)
     setFormPending(isPending)
   }
+
+  const onSuccess = (id: number) => {
+    toast('문서가 생성되었습니다.')
+    router.replace('/note/:noteId', {
+      params: [id.toString()],
+    })
+  }
+  const onError = () => {}
 
   // 디렉토리 ID는 실제로는 선택된 값을 사용해야 하지만, 현재는 하드코딩
   const directoryId = '10'
@@ -56,10 +73,19 @@ const NoteCreatePage = () => {
       {!method && <SelectMethod setMethod={setMethod} />}
 
       <div className="pt-[var(--header-height)]">
-        {method === 'markdown' && (
-          <NoteCreateMarkdownForm directoryId={directoryId} onFormStateChange={handleFormStateChange} />
-        )}
+        <EmojiTitleInput title={title} setTitle={setTitle} emoji={emoji} setEmoji={setEmoji} />
 
+        {method === 'markdown' && (
+          <>
+            <NoteCreateMarkdownForm
+              directoryId={directoryId}
+              onFormStateChange={handleFormStateChange}
+              title={title}
+              onSuccess={onSuccess}
+              onError={onError}
+            />
+          </>
+        )}
         {method === 'file' && <NoteCreatePageFile />}
       </div>
     </div>
@@ -68,8 +94,60 @@ const NoteCreatePage = () => {
 
 export default NoteCreatePage
 
-const NoteCreatePageFile = () => {
-  return <div></div>
+const EmojiTitleInput = ({
+  emoji,
+  setEmoji,
+  title,
+  setTitle,
+}: {
+  emoji: string
+  setEmoji: (emoji: string) => void
+  title: string
+  setTitle: (title: string) => void
+}) => {
+  const emojiPickerRef = useRef<HTMLDivElement>(null)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (emojiPickerRef.current && !emojiPickerRef.current.contains(event.target as Node)) {
+        setShowEmojiPicker(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
+  return (
+    <div className="p-4 pt-6 flex items-center gap-3 border-b border-divider">
+      <div className="relative" ref={emojiPickerRef}>
+        <button
+          type="button"
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+          className="typo-h4 flex-center size-[40px] px-[10px] py-2 rounded-[6px] border border-outline bg-base-2"
+        >
+          {emoji}
+        </button>
+        {showEmojiPicker && (
+          <div className="absolute z-10 top-full left-0 mt-1">
+            <EmojiPicker onEmojiClick={(data) => setEmoji(data.emoji)} theme={Theme.LIGHT} width={300} height={400} />
+          </div>
+        )}
+      </div>
+
+      <div className="flex-1">
+        <Input
+          className="typo-body-1-medium border-none text-base-9 placeholder:text-base-9/60 h-auto px-0 py-1 focus-visible:ring-0"
+          placeholder="제목 입력"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
+    </div>
+  )
 }
 
 const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') => void }) => {
@@ -102,4 +180,8 @@ const SelectMethod = ({ setMethod }: { setMethod: (method: 'markdown' | 'file') 
       </div>
     </div>
   )
+}
+
+const NoteCreatePageFile = () => {
+  return <div></div>
 }
