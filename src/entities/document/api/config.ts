@@ -13,6 +13,8 @@ export const DOCUMENT_ENDPOINTS = {
   searchDocument: () => '/documents/search',
   // POST (문서에서 추가 퀴즈 생성)
   addQuizzes: (documentId: number) => `/documents/${documentId}/add-quizzes`,
+  // GET (문서에 해당하는 모든 퀴즈 가져오기)
+  getDocumentQuizzes: (documentId: number) => `/documents/${documentId}/quizzes`,
   // PATCH: 문서 이름 변경
   updateDocumentName: (documentId: number) => `/documents/${documentId}/update-name`,
   // PATCH: 문서 내용 업데이트
@@ -21,6 +23,8 @@ export const DOCUMENT_ENDPOINTS = {
   moveDocument: () => '/documents/move',
   // GET: 복습 필수 문서 조회
   getDocumentsNeedingReview: () => '/documents/review-need-documents',
+  // GET: 모든 문서 가져오기
+  getAllDocuments: () => '/directories/documents',
 }
 
 export const DOCUMENT_KEYS = {
@@ -29,6 +33,8 @@ export const DOCUMENT_KEYS = {
     originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.getSingleDocument(documentId)),
   searchDocument: originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.searchDocument()),
   addQuizzes: (documentId: number) => originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.addQuizzes(documentId)),
+  getDocumentQuizzes: (documentId: number) => 
+    originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.getDocumentQuizzes(documentId)),
   downloadQuiz: (documentId: number) => originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.downloadQuiz(documentId)),
   updateDocumentName: (documentId: number) =>
     originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.updateDocumentName(documentId)),
@@ -36,4 +42,5 @@ export const DOCUMENT_KEYS = {
     originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.updateDocumentContent(documentId)),
   moveDocument: originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.moveDocument()),
   getDocumentsNeedingReview: originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.getDocumentsNeedingReview()),
+  getAllDocuments: originalCreateKey(DOCUMENT, DOCUMENT_ENDPOINTS.getAllDocuments()),
 }
