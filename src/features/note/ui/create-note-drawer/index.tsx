@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { MAXIMUM_QUIZ_COUNT } from '@/features/note/config'
+import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 
 import { ImgMultiple, ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
@@ -9,18 +9,20 @@ import { Slider } from '@/shared/components/ui/slider'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-import { calculateAvailableQuizCount } from '../../lib'
-import { useCreateNoteContext } from '../../model/create-note-context'
-
 export const CreateNoteDrawer = () => {
-  const { handleCreateDocument, quizType, setQuizType, star, setStar, content, isPending, checkButtonActivate } =
-    useCreateNoteContext()
+  const {
+    handleCreateDocument,
+    quizType,
+    setQuizType,
+    star,
+    setStar,
+    isPending,
+    checkButtonActivate,
+    DOCUMENT_MIN_QUIZ_COUNT,
+    DOCUMENT_MAX_QUIZ_COUNT,
+  } = useCreateNoteContext()
 
   const [open, setOpen] = useState(false)
-
-  const maxQuizCount = calculateAvailableQuizCount(content.textLength)
-  const DOCUMENT_MIN_QUIZ_COUNT = maxQuizCount < 5 ? maxQuizCount : 5
-  const DOCUMENT_MAX_QUIZ_COUNT = Math.min(maxQuizCount, MAXIMUM_QUIZ_COUNT)
 
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>

@@ -2,8 +2,8 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 import { toast } from 'sonner'
 
-import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
-import { extractPlainText, generateMarkdownFromFile } from '@/features/note/lib'
+import { DOCUMENT_CONSTRAINTS, MAXIMUM_QUIZ_COUNT } from '@/features/note/config'
+import { calculateAvailableQuizCount, extractPlainText, generateMarkdownFromFile } from '@/features/note/lib'
 import { CreateDocumentSchema, FileInfo, FileInfoSchema, isValidFileType } from '@/features/note/model/schema'
 
 import { GetAllDirectoriesResponse } from '@/entities/directory/api'
@@ -54,6 +54,9 @@ export interface CreateNoteContextValues extends CreateNoteState {
 
   // 유효성 에러 메세지 설정 함수
   setValidationError: (errorMessage: string | null) => void
+
+  DOCUMENT_MIN_QUIZ_COUNT: number
+  DOCUMENT_MAX_QUIZ_COUNT: number
 }
 
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
@@ -86,6 +89,16 @@ export const CreateNoteProvider = ({
   const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean>(false)
 
   const { mutateAsync: createDocument, isPending } = useCreateDocument()
+
+  // 문서 길이에 따라 생성 가능한 문제 수
+  const maxQuizCount = calculateAvailableQuizCount(content.textLength)
+  const DOCUMENT_MIN_QUIZ_COUNT = maxQuizCount < 5 ? maxQuizCount : 5
+  const DOCUMENT_MAX_QUIZ_COUNT = Math.min(maxQuizCount, MAXIMUM_QUIZ_COUNT)
+
+  // 기본 문제 수 : 최댓값
+  useEffect(() => {
+    setStar(String(DOCUMENT_MAX_QUIZ_COUNT))
+  }, [DOCUMENT_MAX_QUIZ_COUNT])
 
   // validation error가 설정될 때마다 토스트 생성
   useEffect(() => {
@@ -252,6 +265,9 @@ export const CreateNoteProvider = ({
         handleCreateDocument,
         isPending,
         setValidationError,
+
+        DOCUMENT_MIN_QUIZ_COUNT,
+        DOCUMENT_MAX_QUIZ_COUNT,
       }}
     >
       {children}
