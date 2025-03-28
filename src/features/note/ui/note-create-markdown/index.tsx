@@ -1,7 +1,8 @@
 import { KeyboardDetector } from '@/app/keyboard-detector'
 
 import { MarkdownEditor } from '@/features/editor/ui/markdown-editor'
-import { MAX_LENGTH, MIN_LENGTH, useCreateNoteContext } from '@/features/note/model/create-note-context'
+import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
+import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
@@ -39,14 +40,21 @@ export const NoteCreateMarkdown = () => {
         <div className="flex items-center gap-1">
           <IcInfo className="size-4 text-icon-sub" />
           <Text typo="body-1-regular" color="caption">
-            최소 {MIN_LENGTH}자 이상 입력해주세요
+            최소 {DOCUMENT_CONSTRAINTS.CONTENT.MIN}자 이상 입력해주세요
           </Text>
         </div>
         <Text typo="body-1-medium" color="secondary">
-          <span className={cn(content.textLength < MIN_LENGTH ? 'text-critical' : 'text-success')}>
+          <span
+            className={cn(
+              content.textLength < DOCUMENT_CONSTRAINTS.CONTENT.MIN ||
+                content.textLength > DOCUMENT_CONSTRAINTS.CONTENT.MAX
+                ? 'text-critical'
+                : 'text-success',
+            )}
+          >
             {content.textLength}
           </span>{' '}
-          / {MAX_LENGTH}
+          / {DOCUMENT_CONSTRAINTS.CONTENT.MAX}
         </Text>
       </div>
     </>

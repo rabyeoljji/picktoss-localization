@@ -3,6 +3,9 @@ import { marked } from 'marked'
 import * as pdfjs from 'pdfjs-dist'
 import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api'
 
+import { FILE_CONSTRAINTS } from '@/features/note/config'
+import { isValidFileType } from '@/features/note/model/schema'
+
 import '@/shared/lib/pdf'
 
 /** markdown string을 받아 markdown 문법을 제거해 텍스트만 반환하는 함수 */
@@ -31,32 +34,6 @@ export const formatFileSize = (size: number) => {
   return `${(size / (1024 * 1024)).toFixed(1)} MB`
 }
 
-export const SUPPORTED_FILE_TYPES = {
-  PDF: {
-    mime: 'application/pdf',
-    extension: '.pdf',
-  },
-  DOCX: {
-    mime: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    extension: '.docx',
-  },
-  TXT: {
-    mime: 'text/plain',
-    extension: '.txt',
-  },
-} as const
-
-// 파일 타입 체크 함수
-export const isValidFileType = (file: File): boolean => {
-  if (!file) return false
-
-  const fileName = file.name.toLowerCase()
-  const fileExtension = `.${fileName.split('.').pop()}`
-
-  // MIME 타입 또는 확장자가 허용된 것인지 확인
-  return Object.values(SUPPORTED_FILE_TYPES).some((type) => type.mime === file.type || type.extension === fileExtension)
-}
-
 /** 입력받은 file(pdf, docx, txt)을 markdown으로 변환해 반환하는 함수 */
 export const generateMarkdownFromFile = async (file: File): Promise<string> => {
   if (!file) {
@@ -71,15 +48,24 @@ export const generateMarkdownFromFile = async (file: File): Promise<string> => {
     const fileExtension = `.${file.name.toLowerCase().split('.').pop()}`
 
     // MIME 타입이나 확장자를 기준으로 적절한 핸들러 선택
-    if (file.type === SUPPORTED_FILE_TYPES.PDF.mime || fileExtension === SUPPORTED_FILE_TYPES.PDF.extension) {
+    if (
+      file.type === FILE_CONSTRAINTS.SUPPORTED_TYPES.PDF.mime ||
+      fileExtension === FILE_CONSTRAINTS.SUPPORTED_TYPES.PDF.extension
+    ) {
       return await handlePdfFile(file)
     }
 
-    if (file.type === SUPPORTED_FILE_TYPES.DOCX.mime || fileExtension === SUPPORTED_FILE_TYPES.DOCX.extension) {
+    if (
+      file.type === FILE_CONSTRAINTS.SUPPORTED_TYPES.DOCX.mime ||
+      fileExtension === FILE_CONSTRAINTS.SUPPORTED_TYPES.DOCX.extension
+    ) {
       return await handleDocxFile(file)
     }
 
-    if (file.type === SUPPORTED_FILE_TYPES.TXT.mime || fileExtension === SUPPORTED_FILE_TYPES.TXT.extension) {
+    if (
+      file.type === FILE_CONSTRAINTS.SUPPORTED_TYPES.TXT.mime ||
+      fileExtension === FILE_CONSTRAINTS.SUPPORTED_TYPES.TXT.extension
+    ) {
       return await handleTxtFile(file)
     }
 
@@ -309,9 +295,9 @@ const handlePdfFile = async (file: File): Promise<string> => {
             })
             currentLine = ''
           }
-          currentLine = text + ' '
+          currentLine = ' \n\n ' + text + ' '
         } else {
-          currentLine += ' ' + text
+          currentLine += ' \n\n ' + text + ' '
         }
       }
 
