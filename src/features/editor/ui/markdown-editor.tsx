@@ -110,7 +110,13 @@ export const MarkdownEditor = ({
             <div className="absolute left-4 top-5 text-gray-400 pointer-events-none z-10">{placeholder}</div>
           )}
 
-          <EditorContent editor={editor} className="w-full h-full pb-[60px]" />
+          <EditorContent
+            editor={editor}
+            className="w-full pb-[60px]"
+            style={{
+              height: 'calc(100% + 1px)',
+            }}
+          />
         </div>
       </ProseMirrorWrapper>
     </div>

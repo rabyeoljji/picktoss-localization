@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 
+import { KeyboardDetector } from '@/app/keyboard-detector'
+
 import { MarkdownEditor } from '@/features/editor'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 import { DOCUMENT_CONSTRAINTS } from '@/features/note/model/schema'
@@ -23,32 +25,6 @@ const NoteCreatePageFile = () => {
     }
   }, [fileInfo])
 
-  // 키보드 감지 로직
-  useEffect(() => {
-    const visualViewport = window.visualViewport
-    if (!visualViewport) return
-
-    const handleViewportChange = () => {
-      // 키보드가 올라왔는지 감지 및 CSS 변수 설정
-      const isKeyboard = visualViewport.height < window.innerHeight * 0.8
-      setIsKeyboardVisible(isKeyboard)
-
-      // 높이 변수 설정 (필요한 경우)
-      document.documentElement.style.setProperty('--viewport-height', `${visualViewport.height}px`)
-    }
-
-    visualViewport.addEventListener('resize', handleViewportChange)
-    visualViewport.addEventListener('scroll', handleViewportChange)
-
-    // 초기 실행
-    handleViewportChange()
-
-    return () => {
-      visualViewport.removeEventListener('resize', handleViewportChange)
-      visualViewport.removeEventListener('scroll', handleViewportChange)
-    }
-  }, [setIsKeyboardVisible])
-
   // 에디터 내용 변경 핸들러
   const handleEditorChange = (markdown: string) => {
     setContent({
@@ -67,6 +43,7 @@ const NoteCreatePageFile = () => {
 
   return (
     <>
+      <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
       {content.markdown && (
         <div className="h-[calc(var(--viewport-height,100vh)-(var(--header-height))-81px)] flex flex-col">
           {/* h-screen - header-height - emoji-title-input-height */}

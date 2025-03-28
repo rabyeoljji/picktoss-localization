@@ -51,12 +51,16 @@ export const NoteCreateContent = () => {
       <div>
         {!documentType && <SelectDocumentType />}
 
-        <div className="pt-[var(--header-height)]">
-          <EmojiTitleInput />
+        {documentType && (
+          <div className="pt-[var(--header-height)]">
+            <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height)))] flex flex-col">
+              <EmojiTitleInput />
 
-          {documentType === 'TEXT' && <NoteCreateMarkdown />}
-          {documentType === 'FILE' && <NoteCreatePageFile />}
-        </div>
+              {documentType === 'TEXT' && <NoteCreateMarkdown />}
+              {documentType === 'FILE' && <NoteCreatePageFile />}
+            </div>
+          </div>
+        )}
       </div>
     </UploadFileProvider>
   )

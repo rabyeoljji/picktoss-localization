@@ -5,6 +5,8 @@ import {
   addQuizzes,
   createDocument,
   downloadQuiz,
+  getAllDocuments,
+  getDocumentQuizzes,
   getDocumentsNeedingReview,
   getSingleDocument,
   moveDocument,
@@ -38,6 +40,26 @@ export const useAddQuizzes = (documentId: number) => {
   return useMutation({
     mutationKey: DOCUMENT_KEYS.addQuizzes(documentId),
     mutationFn: (data: Parameters<typeof addQuizzes>[1]) => addQuizzes(documentId, data),
+  })
+}
+
+export const useGetDocumentQuizzes = ({
+  documentId,
+  quizType,
+}: {
+  documentId: number
+  quizType?: 'MIX_UP' | 'MULTIPLE_CHOICE'
+}) => {
+  return useQuery({
+    queryKey: [...DOCUMENT_KEYS.getDocumentQuizzes(documentId), quizType],
+    queryFn: () => getDocumentQuizzes(documentId, quizType),
+  })
+}
+
+export const useGetAllDocuments = (options?: { directoryId?: number; sortOption?: 'CREATED_AT' | 'UPDATED_AT' }) => {
+  return useQuery({
+    queryKey: [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
+    queryFn: () => getAllDocuments(options),
   })
 }
 
