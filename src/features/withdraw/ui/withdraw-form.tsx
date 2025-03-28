@@ -13,10 +13,10 @@ import { Button } from '@/shared/components/ui/button'
 import { Checkbox } from '@/shared/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
+import { Selectbox } from '@/shared/components/ui/selectbox'
 import { Text } from '@/shared/components/ui/text'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { useRouter } from '@/shared/lib/router'
-import { cn } from '@/shared/lib/utils'
 
 const WithdrawForm = () => {
   const router = useRouter()
@@ -65,24 +65,14 @@ const WithdrawForm = () => {
                 {Object.entries(withdrawReasonMap).map(([label, value]) => (
                   <FormItem key={value} className="space-y-0">
                     <FormControl>
-                      <RadioGroupItem value={value} id={`type-${label}`} className="peer sr-only" />
-                    </FormControl>
-                    <label
-                      htmlFor={`type-${label}`}
-                      key={value}
-                      className={cn(
-                        'w-full flex-center rounded-[10px] border border-outline py-[13.5px] px-[16px] transition-colors cursor-pointer',
-                        field.value === value && 'bg-accent border-accent',
-                      )}
-                    >
-                      <Text
-                        as="span"
-                        typo={field.value === value ? 'body-1-bold' : 'body-1-medium'}
-                        color={field.value === value ? 'accent' : 'secondary'}
+                      <Selectbox
+                        relativeItem={<RadioGroupItem value={value} id={`type-${label}`} className="peer sr-only" />}
+                        htmlFor={`type-${label}`}
+                        selected={field.value === value}
                       >
                         {label}
-                      </Text>
-                    </label>
+                      </Selectbox>
+                    </FormControl>
                   </FormItem>
                 ))}
               </RadioGroup>
