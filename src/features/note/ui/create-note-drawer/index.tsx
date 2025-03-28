@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { MAXIMUM_QUIZ_COUNT } from '@/features/note/model/schema'
+
 import { ImgMultiple, ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
@@ -8,10 +10,10 @@ import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
 import { calculateAvailableQuizCount } from '../../lib'
-import { MAXIMUM_QUIZ_COUNT, useCreateNoteContext } from '../../model/create-note-context'
+import { useCreateNoteContext } from '../../model/create-note-context'
 
 export const CreateNoteDrawer = () => {
-  const { handleCreateDocument, quizType, setQuizType, star, setStar, content, isPending, checkIsValid } =
+  const { handleCreateDocument, quizType, setQuizType, star, setStar, content, isPending, checkButtonActivate } =
     useCreateNoteContext()
 
   const [open, setOpen] = useState(false)
@@ -23,7 +25,7 @@ export const CreateNoteDrawer = () => {
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="primary" size="sm" type="submit" disabled={!checkIsValid() || isPending}>
+        <Button variant="primary" size="sm" type="submit" disabled={!checkButtonActivate() || isPending}>
           {isPending ? '생성 중...' : '만들기'}
         </Button>
       </DrawerTrigger>

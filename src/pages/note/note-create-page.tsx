@@ -1,8 +1,10 @@
 import { CreateNoteProvider, useCreateNoteContext } from '@/features/note/model/create-note-context'
+import { UploadFileProvider } from '@/features/note/model/upload-file-context'
 import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
 import { DirectorySelector } from '@/features/note/ui/directory-selector'
 import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
 import { NoteCreateMarkdown } from '@/features/note/ui/note-create-markdown'
+import NoteCreatePageFile from '@/features/note/ui/note-create-page-file'
 import { SelectDocumentType } from '@/features/note/ui/select-document-type'
 
 import { useGetAllDirectories } from '@/entities/directory/api/hooks'
@@ -43,23 +45,21 @@ const NoteCreatePage = () => {
 
 export const NoteCreateContent = () => {
   const { documentType } = useCreateNoteContext()
+
   return (
-    <div>
-      {!documentType && <SelectDocumentType />}
+    <UploadFileProvider>
+      <div>
+        {!documentType && <SelectDocumentType />}
 
-      <div className="pt-[var(--header-height)]">
-        <EmojiTitleInput />
+        <div className="pt-[var(--header-height)]">
+          <EmojiTitleInput />
 
-        {documentType === 'TEXT' && <NoteCreateMarkdown />}
-        {documentType === 'FILE' && <NoteCreatePageFile />}
+          {documentType === 'TEXT' && <NoteCreateMarkdown />}
+          {documentType === 'FILE' && <NoteCreatePageFile />}
+        </div>
       </div>
-    </div>
+    </UploadFileProvider>
   )
-}
-
-// TODO: widget 으로 분리해서 구현
-const NoteCreatePageFile = () => {
-  return <div></div>
 }
 
 export default NoteCreatePage
