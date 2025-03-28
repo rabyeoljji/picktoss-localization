@@ -2,7 +2,7 @@ import { useState } from 'react'
 
 import { MAXIMUM_QUIZ_COUNT } from '@/features/note/config'
 
-import { ImgMultiple, ImgStar } from '@/shared/assets/images'
+import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
 import { Slider } from '@/shared/components/ui/slider'
@@ -44,7 +44,7 @@ export const CreateNoteDrawer = () => {
             onClick={() => setQuizType('MULTIPLE_CHOICE')}
           >
             <ImgMultiple className="size-[64px]" />
-            <Text typo="subtitle-1-bold" color="primary">
+            <Text typo="subtitle-1-bold" color={quizType === 'MULTIPLE_CHOICE' ? 'info' : 'primary'}>
               객관식
             </Text>
           </button>
@@ -56,8 +56,8 @@ export const CreateNoteDrawer = () => {
             )}
             onClick={() => setQuizType('MIX_UP')}
           >
-            <ImgMultiple className="size-[64px]" />
-            <Text typo="subtitle-1-bold" color="primary">
+            <ImgOx className="size-[64px]" />
+            <Text typo="subtitle-1-bold" color={quizType === 'MIX_UP' ? 'info' : 'primary'}>
               O/X
             </Text>
           </button>
@@ -99,7 +99,7 @@ export const CreateNoteDrawer = () => {
                 <div className="py-px px-2 flex items-center gap-[4.3px] rounded-full bg-[#D3DCE433]/80">
                   <ImgStar className="size-[16px]" />
                   <Text typo="body-1-medium" color="white">
-                    {10}
+                    {star}
                   </Text>
                 </div>
               </div>
