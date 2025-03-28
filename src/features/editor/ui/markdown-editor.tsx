@@ -93,7 +93,13 @@ export const MarkdownEditor = ({
           <div className="absolute left-4 top-5 text-gray-400 pointer-events-none z-10">{placeholder}</div>
         )}
 
-        <EditorContent editor={editor} className="w-full h-full" />
+        <EditorContent
+          editor={editor}
+          className="w-full"
+          style={{
+            height: 'calc(100% + 1px)',
+          }}
+        />
       </div>
     </div>
   )

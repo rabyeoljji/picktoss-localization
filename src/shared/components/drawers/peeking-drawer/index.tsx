@@ -224,14 +224,13 @@ export const PeekingDrawer = ({
             </PeekingDrawerContent>
           </motion.div>
         </div>
+        {/* Fixed Content - 항상 드로어 하단에 고정 */}
+        {fixedContent && (
+          <div className="absolute left-0 right-0 bottom-0 px-5 w-full" ref={fixedContentRef} style={{ zIndex: 10 }}>
+            {fixedContent}
+          </div>
+        )}
       </motion.div>
-
-      {/* Fixed Content - 항상 드로어 하단에 고정 */}
-      {fixedContent && (
-        <div className="absolute left-0 right-0 bottom-0 px-5 w-full" ref={fixedContentRef} style={{ zIndex: 10 }}>
-          {fixedContent}
-        </div>
-      )}
     </div>
   )
 }

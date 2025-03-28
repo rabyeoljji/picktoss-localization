@@ -3,13 +3,13 @@ import { client } from '@/shared/lib/axios/client'
 import { DOCUMENT_ENDPOINTS } from './config'
 
 // 문서 생성
-interface CreateDocumentRequest {
+export interface CreateDocumentRequest {
   file: File | Blob
   directoryId: string
-  documentName: string
-  star: string
-  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
   documentType: 'FILE' | 'TEXT' | 'NOTION'
+  documentName: string
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  star: string
 }
 
 interface CreateDocumentResponse {
@@ -104,6 +104,33 @@ export const addQuizzes = async (documentId: number, data: CreateQuizzesRequest)
   return response.data
 }
 
+// 문서에 해당하는 모든 퀴즈 가져오기
+export interface GetDocumentQuizzesResponse {
+  quizzes: {
+    id: number
+    question: string
+    answer: string
+    explanation: string
+    options: string[]
+    quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+    document: {
+      id: number
+      name: string
+    }
+    directory: {
+      id: number
+      name: string
+    }
+  }[]
+}
+
+export const getDocumentQuizzes = async (documentId: number, quizType?: 'MIX_UP' | 'MULTIPLE_CHOICE') => {
+  const url = DOCUMENT_ENDPOINTS.getDocumentQuizzes(documentId)
+  const params = quizType ? { 'quiz-type': quizType } : undefined
+  const response = await client.get<GetDocumentQuizzesResponse>(url, { params })
+  return response.data
+}
+
 // 문서 퀴즈 다운로드
 export const downloadQuiz = async (documentId: number): Promise<string> => {
   const response = await client.get<string>(DOCUMENT_ENDPOINTS.downloadQuiz(documentId))
@@ -158,5 +185,41 @@ interface GetDocumentsNeedingReviewResponse {
 
 export const getDocumentsNeedingReview = async (): Promise<GetDocumentsNeedingReviewResponse> => {
   const response = await client.get<GetDocumentsNeedingReviewResponse>(DOCUMENT_ENDPOINTS.getDocumentsNeedingReview())
+  return response.data
+}
+
+export interface GetAllDocumentsResponse {
+  documents: {
+    id: number
+    name: string
+    previewContent: string
+    characterCount: number
+    quizGenerationStatus:
+      | 'UNPROCESSED'
+      | 'PROCESSED'
+      | 'PROCESSING'
+      | 'COMPLETELY_FAILED'
+      | 'PARTIAL_SUCCESS'
+      | 'QUIZ_GENERATION_ERROR'
+    totalQuizCount: number
+    documentType: 'FILE' | 'TEXT' | 'NOTION'
+    createdAt: string
+    updatedAt: string
+    reviewNeededQuizCount: number
+    directory: {
+      name: string
+      tag: 'DEFAULT' | 'NORMAL'
+    }
+  }[]
+}
+
+export const getAllDocuments = async (
+  options: { directoryId?: number; sortOption?: 'CREATED_AT' | 'UPDATED_AT' } = {},
+) => {
+  const params: Record<string, string | number> = {}
+  if (options.directoryId) params['directory-id'] = options.directoryId
+  if (options.sortOption) params['sort-option'] = options.sortOption
+
+  const response = await client.get<GetAllDocumentsResponse>(DOCUMENT_ENDPOINTS.getAllDocuments(), { params })
   return response.data
 }
