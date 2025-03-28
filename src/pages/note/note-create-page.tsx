@@ -1,5 +1,4 @@
 import { CreateNoteProvider, useCreateNoteContext } from '@/features/note/model/create-note-context'
-import { UploadFileProvider } from '@/features/note/model/upload-file-context'
 import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
 import { DirectorySelector } from '@/features/note/ui/directory-selector'
 import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
@@ -47,22 +46,20 @@ export const NoteCreateContent = () => {
   const { documentType } = useCreateNoteContext()
 
   return (
-    <UploadFileProvider>
-      <div>
-        {!documentType && <SelectDocumentType />}
+    <div>
+      {!documentType && <SelectDocumentType />}
 
-        {documentType && (
-          <div className="pt-[var(--header-height)]">
-            <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height)))] flex flex-col">
-              <EmojiTitleInput />
+      {documentType && (
+        <div className="pt-[var(--header-height)]">
+          <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height)))] flex flex-col">
+            <EmojiTitleInput />
 
-              {documentType === 'TEXT' && <NoteCreateMarkdown />}
-              {documentType === 'FILE' && <NoteCreatePageFile />}
-            </div>
+            {documentType === 'TEXT' && <NoteCreateMarkdown />}
+            {documentType === 'FILE' && <NoteCreatePageFile />}
           </div>
-        )}
-      </div>
-    </UploadFileProvider>
+        </div>
+      )}
+    </div>
   )
 }
 

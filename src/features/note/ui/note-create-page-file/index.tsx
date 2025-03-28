@@ -3,17 +3,24 @@ import { useEffect } from 'react'
 import { KeyboardDetector } from '@/app/keyboard-detector'
 
 import { MarkdownEditor } from '@/features/editor'
+import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
-import { DOCUMENT_CONSTRAINTS } from '@/features/note/model/schema'
-import { useUploadFileContext } from '@/features/note/model/upload-file-context'
 
 import { IcChange, IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
 const NoteCreatePageFile = () => {
-  const { setDocumentName, content, setContent, isKeyboardVisible, setIsKeyboardVisible } = useCreateNoteContext()
-  const { fileInfo, changeFileInfo, isProcessing } = useUploadFileContext()
+  const {
+    setDocumentName,
+    content,
+    setContent,
+    isKeyboardVisible,
+    setIsKeyboardVisible,
+    fileInfo,
+    changeFileInfo,
+    isProcessing,
+  } = useCreateNoteContext()
 
   useEffect(() => {
     if (fileInfo) {

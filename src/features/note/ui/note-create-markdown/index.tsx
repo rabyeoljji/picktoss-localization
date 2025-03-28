@@ -1,8 +1,8 @@
 import { KeyboardDetector } from '@/app/keyboard-detector'
 
 import { MarkdownEditor } from '@/features/editor/ui/markdown-editor'
+import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
-import { DOCUMENT_CONSTRAINTS } from '@/features/note/model/schema'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'

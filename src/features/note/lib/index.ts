@@ -3,7 +3,8 @@ import { marked } from 'marked'
 import * as pdfjs from 'pdfjs-dist'
 import { TextItem, TextMarkedContent } from 'pdfjs-dist/types/src/display/api'
 
-import { FILE_CONSTRAINTS, isValidFileType } from '@/features/note/model/schema'
+import { FILE_CONSTRAINTS } from '@/features/note/config'
+import { isValidFileType } from '@/features/note/model/schema'
 
 import '@/shared/lib/pdf'
 

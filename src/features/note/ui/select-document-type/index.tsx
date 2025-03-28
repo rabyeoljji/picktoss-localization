@@ -1,5 +1,3 @@
-import { useUploadFileContext } from '@/features/note/model/upload-file-context'
-
 import { IcFile, IcWrite } from '@/shared/assets/icon'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
@@ -7,8 +5,7 @@ import { Text } from '@/shared/components/ui/text'
 import { useCreateNoteContext } from '../../model/create-note-context'
 
 export const SelectDocumentType = () => {
-  const { setDocumentType } = useCreateNoteContext()
-  const { changeFileInfo } = useUploadFileContext()
+  const { setDocumentType, changeFileInfo } = useCreateNoteContext()
 
   return (
     <div className="flex-center h-[calc(var(--viewport-height,100vh)-(var(--header-height)))]">

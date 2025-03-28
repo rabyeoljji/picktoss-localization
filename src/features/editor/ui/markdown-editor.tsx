@@ -8,7 +8,7 @@ import { marked } from 'marked'
 import { toast } from 'sonner'
 import styled from 'styled-components'
 
-import { DOCUMENT_CONSTRAINTS } from '@/features/note/model/schema'
+import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 
 import { cn } from '@/shared/lib/utils'
 
@@ -48,25 +48,21 @@ export const MarkdownEditor = ({
       }),
     ],
     content: marked(initialMarkdown, { gfm: true, breaks: true }),
-    onUpdate: ({ editor }) => {
+    onUpdate: async ({ editor }) => {
       if (onChange) {
-        const markdown = editor.getText()
+        const html = editor.getHTML()
+        const markdown = await marked.parse(html)
 
         if (markdown.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX) {
           onChange(markdown)
         } else {
-          const truncatedContent = markdown.slice(0, DOCUMENT_CONSTRAINTS.CONTENT.MAX)
-          const currentSelection = editor.state.selection
-
-          editor.view.updateState(
-            editor.state.apply(
-              editor.state.tr
-                .setSelection(currentSelection)
-                .replaceWith(0, editor.state.doc.content.size, editor.state.schema.text(truncatedContent)),
-            ),
-          )
-          onChange(truncatedContent)
           toast('내용은 50,000자까지 작성 가능합니다')
+
+          const truncatedMarkdown = markdown.slice(0, DOCUMENT_CONSTRAINTS.CONTENT.MAX)
+          const truncatedHTML = marked(truncatedMarkdown, { gfm: true, breaks: true })
+
+          editor.commands.setContent(truncatedHTML, false)
+          onChange(truncatedMarkdown)
         }
       }
     },

@@ -2,7 +2,9 @@ import { createContext, useCallback, useContext, useEffect, useState } from 'rea
 
 import { toast } from 'sonner'
 
-import { CreateDocumentSchema, DOCUMENT_CONSTRAINTS } from '@/features/note/model/schema'
+import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
+import { extractPlainText, generateMarkdownFromFile } from '@/features/note/lib'
+import { CreateDocumentSchema, FileInfo, FileInfoSchema, isValidFileType } from '@/features/note/model/schema'
 
 import { GetAllDirectoriesResponse } from '@/entities/directory/api'
 import { CreateDocumentRequest } from '@/entities/document/api'
@@ -44,6 +46,12 @@ export interface CreateNoteContextValues extends CreateNoteState {
   handleCreateDocument: () => Promise<void>
   checkButtonActivate: () => boolean
 
+  // upload file
+  fileInfo: FileInfo | null
+  isProcessing: boolean
+  setIsProcessing: (value: boolean) => void
+  changeFileInfo: (e: React.ChangeEvent<HTMLInputElement>) => void
+
   // 유효성 에러 메세지 설정 함수
   setValidationError: (errorMessage: string | null) => void
 }
@@ -68,6 +76,8 @@ export const CreateNoteProvider = ({
     textLength: 0,
   })
   const [emoji, setEmoji] = useState<string>('📝')
+  const [fileInfo, setFileInfo] = useState<FileInfo | null>(null)
+  const [isProcessing, setIsProcessing] = useState(false)
 
   // 유효성 검사 에러 상태
   const [validationError, setValidationError] = useState<string | null>(null)
@@ -85,7 +95,7 @@ export const CreateNoteProvider = ({
     }
   }, [validationError])
 
-  // 만들기 버튼 활성화 조건에 따른 함수
+  /** 만들기 버튼 활성화 조건 체크 함수 */
   const checkButtonActivate = () => {
     const isContentValid =
       content.textLength >= DOCUMENT_CONSTRAINTS.CONTENT.MIN && content.textLength <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
@@ -94,7 +104,66 @@ export const CreateNoteProvider = ({
     return isContentValid && isNameValid && isTypeValid
   }
 
-  // 유효성 검사 함수
+  /** fileInfo 유효성 검사 함수 */
+  const validateFileInfo = (info: unknown) => {
+    const result = FileInfoSchema.safeParse(info)
+    if (!result.success) {
+      setValidationError(result.error.errors[0]?.message ?? 'file validation error')
+      return false
+    }
+    setValidationError(null)
+    return true
+  }
+
+  /** file이 변경되면 fileInfo상태를 설정하는 함수 */
+  const changeFileInfo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    setIsProcessing(true)
+
+    if (fileInfo) {
+      setFileInfo(null)
+      setValidationError(null)
+    }
+
+    const file = e.target.files?.[0] ?? null
+
+    if (!file) {
+      setIsProcessing(false)
+      setValidationError('파일이 존재하지 않습니다.')
+      return
+    }
+    if (!isValidFileType(file)) {
+      setValidationError('PDF, DOCX, TXT 파일만 업로드할 수 있습니다.')
+    }
+
+    try {
+      const markdownString = await generateMarkdownFromFile(file)
+      const markdownText = await extractPlainText(markdownString)
+
+      const removeFileExtension = (filename: string) => {
+        const lastDotIndex = filename.lastIndexOf('.')
+        return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
+      }
+
+      const newFileInfo = {
+        name: removeFileExtension(file.name),
+        size: file.size,
+        content: markdownString,
+        charCount: markdownText.length,
+      }
+      if (!validateFileInfo(newFileInfo)) {
+        return
+      }
+
+      setFileInfo(newFileInfo)
+    } catch (err) {
+      console.error('파일 처리 중 오류 발생:', err)
+      setValidationError('파일 처리 중 문제가 발생했습니다.')
+    } finally {
+      setIsProcessing(false)
+    }
+  }
+
+  /** 노트 생성 유효성 검사 함수 */
   const checkIsValid = useCallback(() => {
     const blob = new Blob([content.markdown], { type: 'text/markdown' })
     const file = new File([blob], `${documentName}.md`, { type: 'text/markdown' })
@@ -173,6 +242,11 @@ export const CreateNoteProvider = ({
         setContent,
         setEmoji,
         setIsKeyboardVisible,
+
+        fileInfo,
+        changeFileInfo,
+        isProcessing,
+        setIsProcessing,
 
         checkButtonActivate,
         handleCreateDocument,

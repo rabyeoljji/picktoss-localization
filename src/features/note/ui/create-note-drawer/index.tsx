@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { MAXIMUM_QUIZ_COUNT } from '@/features/note/model/schema'
+import { MAXIMUM_QUIZ_COUNT } from '@/features/note/config'
 
 import { ImgMultiple, ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
