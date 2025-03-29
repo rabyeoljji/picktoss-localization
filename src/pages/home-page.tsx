@@ -23,6 +23,7 @@ import { Link, useRouter } from '@/shared/lib/router'
 const HomePage = () => {
   const router = useRouter()
   const clearToken = useAuthStore((state) => state.clearToken)
+  router.push('/note')
 
   const handleLogout = () => {
     clearToken()

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import * as R from 'remeda'
 
 import { buildUrl } from '../lib'
-import { Options, Pathname } from './type'
+import { ParamOptions, Pathname } from './type'
 
 /**
  * 라우터 내부용 buildUrl 옵션 타입
@@ -45,9 +45,10 @@ export const useRouter = () => {
    * // 파라미터가 있는 경로로 이동 (params는 필수)
    * router.push('/note/:noteId', { params: ['123'] })
    */
-  function push<T extends Pathname>(path: T, options?: Options<T>) {
+  function push<T extends Pathname>(path: T, ...args: ParamOptions<T>) {
     // buildUrl에 전달할 옵션 객체를 생성
     const urlOptions: BuildUrlOptions = {}
+    const options = args[0]
 
     if (options?.search) {
       urlOptions.search = options.search as Record<string, unknown>
@@ -74,9 +75,10 @@ export const useRouter = () => {
    * @param path 이동할 경로 (예: '/account', '/note/:noteId')
    * @param options 이동 옵션 (파라미터가 있는 경로는 필수, 없는 경로는 선택적)
    */
-  function replace<T extends Pathname>(path: T, options?: Options<T>) {
+  function replace<T extends Pathname>(path: T, ...args: ParamOptions<T>) {
     // buildUrl에 전달할 옵션 객체를 생성
     const urlOptions: BuildUrlOptions = {}
+    const options = args[0]
 
     if (options?.search) {
       urlOptions.search = options.search as Record<string, unknown>
