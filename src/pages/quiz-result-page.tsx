@@ -16,8 +16,7 @@ interface QuizItem {
 
 const QuizResultPage = () => {
   const [params] = useQueryParam('/quiz-result')
-  const { quizSetId, quizSetType, reward, quizDataEncoded } = params
-  const quizDataDecoded = atob(quizDataEncoded)
+  const quizDataDecoded = atob(params.quizDataEncoded)
   const quizData = JSON.parse(quizDataDecoded) as QuizItem[]
 
   // 전체 통계 계산

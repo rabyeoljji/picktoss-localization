@@ -112,6 +112,14 @@ export const RouteConfig = {
       autoNext: true as boolean,
     },
   },
+  quizLoading: {
+    pathname: '/quiz-loading',
+    search: {
+      documentId: 0 as number,
+      documentName: '' as string,
+      star: 0 as number,
+    },
+  },
   quizResult: {
     pathname: '/quiz-result',
     search: {
