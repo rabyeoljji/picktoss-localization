@@ -1,60 +1,59 @@
 import * as React from 'react'
 
-import { type VariantProps, cva } from 'class-variance-authority'
 import { CheckIcon, XIcon } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
 
-const multipleChoiceOptionVariants = cva(
-  'relative flex items-center cursor-pointer gap-3 typo-subtitle-2-medium text-secondary bg-base-1 border-outline rounded-[16px] border py-3 px-[10px] transition-all disabled:text-disabled disabled:bg-disabled',
-  {
-    variants: {
-      state: {
-        default: 'hover:bg-active',
-        correct: 'bg-correct border-correct text-correct',
-        incorrect: 'bg-disabled text-disabled',
-      },
-    },
-    defaultVariants: {
-      state: 'default',
-    },
-  },
-)
-
-export interface MultipleChoiceOptionProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof multipleChoiceOptionVariants> {
+export interface MultipleChoiceOptionProps extends React.HTMLAttributes<HTMLButtonElement> {
   label?: string
-  content: string
-  showIcon?: boolean
+  option: string
+  selectedOption: string | null
+  isCorrect: boolean
 }
 
 export const MultipleChoiceOption = ({
-  className,
-  state,
   label,
-  content,
-  showIcon = true,
+  option,
+  selectedOption,
+  isCorrect,
   ...props
 }: MultipleChoiceOptionProps) => {
+  const isSelected = selectedOption === option
+
   return (
-    <div className={cn(multipleChoiceOptionVariants({ state, className }))} {...props}>
-      {label && (
+    <button
+      className={cn(
+        'transition-all flex items-center gap-3 py-3 px-2.5 rounded-[16px] ring-1',
+        isCorrect ? 'bg-correct ring-success text-correct' : 'bg-disabled ring-outline text-disabled',
+        selectedOption === null && 'bg-base-1 ring-outline text-secondary',
+      )}
+      {...props}
+    >
+      {selectedOption ? (
+        <>
+          {isCorrect && (
+            <div className="flex items-center justify-center rounded-full bg-green-500 text-white size-[32px]">
+              <CheckIcon className="size-5" />
+            </div>
+          )}
+          {isSelected && !isCorrect && (
+            <div className="flex items-center justify-center rounded-full bg-red-500 text-white size-[32px]">
+              <XIcon className="size-5" />
+            </div>
+          )}
+          {!isCorrect && !isSelected && (
+            <div className="flex items-center justify-center rounded-full bg-gray-100 text-gray-900 size-[32px]">
+              <span className="typo-button-3">{label}</span>
+            </div>
+          )}
+        </>
+      ) : (
         <div className="flex items-center justify-center rounded-full bg-gray-100 text-gray-900 size-[32px]">
           <span className="typo-button-3">{label}</span>
         </div>
       )}
-      <span className="typo-body-2 flex-1">{content}</span>
-      {showIcon && state === 'correct' && (
-        <div className="flex items-center justify-center rounded-full bg-green-500 text-white size-[32px]">
-          <CheckIcon className="size-5" />
-        </div>
-      )}
-      {showIcon && state === 'incorrect' && (
-        <div className="flex items-center justify-center rounded-full bg-red-500 text-white size-[32px]">
-          <XIcon className="size-5" />
-        </div>
-      )}
-    </div>
+
+      <span className="typo-body-2 text-start flex-1">{option}</span>
+    </button>
   )
 }

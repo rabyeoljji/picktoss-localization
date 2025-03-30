@@ -36,15 +36,19 @@ const ANIMATION_CONFIG = {
 // 핸들바 높이 (픽셀)
 const HANDLE_HEIGHT = 26
 
+// 드로어 콘텐츠 높이 (뷰포트 대비 %)
+const DRAWER_HEIGHT_PERCENTAGE = 55
+
 export const PeekingDrawer = ({
   children,
-  open = false,
+  open,
   onOpenChange,
   peekContent,
   fixedContent,
   className = 'bg-surface-1',
 }: PeekingDrawerProps) => {
-  const [isOpen, setIsOpen] = useState(open)
+  // 외부에서 open prop이 전달되지 않으면 내부 상태로 기본값 true 사용
+  const [isOpen, setIsOpen] = useState(open !== undefined ? open : false)
   const controls = useAnimation()
 
   // 레퍼런스
@@ -54,13 +58,16 @@ export const PeekingDrawer = ({
 
   // 높이 상태
   const [actualPeekHeight, setActualPeekHeight] = useState(0)
-  const [actualContentHeight, setActualContentHeight] = useState(0)
   const [fixedContentHeight, setFixedContentHeight] = useState(0)
+  const [viewportHeight, setViewportHeight] = useState(0)
 
   /**
    * 모든 콘텐츠 요소의 높이를 측정하는 함수
    */
   const measureHeights = () => {
+    // 뷰포트 높이 측정
+    setViewportHeight(window.innerHeight)
+
     // 고정 콘텐츠 높이 측정
     if (fixedContentRef.current) {
       const fixedHeight = fixedContentRef.current.getBoundingClientRect().height
@@ -71,12 +78,6 @@ export const PeekingDrawer = ({
     if (peekContentRef.current) {
       const peekHeight = peekContentRef.current.scrollHeight + HANDLE_HEIGHT
       setActualPeekHeight(peekHeight)
-    }
-
-    // drawer 콘텐츠 높이 측정
-    if (drawerContentRef.current) {
-      const contentHeight = drawerContentRef.current.scrollHeight
-      setActualContentHeight(contentHeight)
     }
   }
 
@@ -121,8 +122,8 @@ export const PeekingDrawer = ({
       // 최소 peek 높이 (핸들바 + peek 콘텐츠)
       const minimumPeekHeight = actualPeekHeight
 
-      // 드로어 모드 높이 (drawer 콘텐츠 + fixed 콘텐츠)
-      const drawerModeHeight = actualContentHeight + fixedContentHeight
+      // 드로어 모드 높이 (뷰포트의 55%)
+      const drawerModeHeight = Math.round(viewportHeight * (DRAWER_HEIGHT_PERCENTAGE / 100))
 
       // peek 모드일 때는 peek 높이와 fixed 높이 중 더 큰 값 사용
       const peekModeHeight = Math.max(minimumPeekHeight, fixedContentHeight + HANDLE_HEIGHT)
@@ -138,11 +139,11 @@ export const PeekingDrawer = ({
     } else {
       controls.start({ height: peekModeHeight })
     }
-  }, [actualPeekHeight, actualContentHeight, fixedContentHeight, controls, isOpen])
+  }, [actualPeekHeight, fixedContentHeight, controls, isOpen, viewportHeight])
 
   // 외부 open 상태가 변경되면 내부 상태 업데이트
   useEffect(() => {
-    if (isOpen !== open) {
+    if (open !== undefined && isOpen !== open) {
       setIsOpen(open)
     }
   }, [open, isOpen])

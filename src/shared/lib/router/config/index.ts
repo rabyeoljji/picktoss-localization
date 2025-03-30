@@ -104,7 +104,8 @@ export const RouteConfig = {
   progressQuiz: {
     pathname: '/progress-quiz/:quizId',
     search: {
-      index: 0 as number,
+      quizIndex: 0 as number,
+      selectedOption: null as string | null,
     },
   },
   randomQuiz: {
