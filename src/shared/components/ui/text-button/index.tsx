@@ -16,8 +16,8 @@ const textButtonVariants = cva(
         sub: 'text-gray-500',
       },
       size: {
-        lg: 'typo-button-1 gap-2 [&_svg]:size-5',
-        md: 'typo-button-2 gap-1 [&_svg]:size-4',
+        lg: 'typo-button-2 gap-2 [&_svg]:size-5',
+        md: 'typo-button-3 gap-1 [&_svg]:size-4',
         sm: 'typo-button-4 gap-1 [&_svg]:size-4',
       },
     },
