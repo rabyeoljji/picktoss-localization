@@ -17,6 +17,7 @@ interface MarkdownEditorProps {
   onChange?: (markdown: string) => void
   placeholder?: string
   className?: string
+  editable?: boolean
 }
 
 export const MarkdownEditor = ({
@@ -24,6 +25,7 @@ export const MarkdownEditor = ({
   onChange,
   placeholder = '여기를 탭하여 입력을 시작하세요',
   className,
+  editable,
 }: MarkdownEditorProps) => {
   const [isFocused, setIsFocused] = useState(false)
   const editorWrapperRef = useRef<HTMLDivElement>(null)
@@ -48,6 +50,7 @@ export const MarkdownEditor = ({
       }),
     ],
     content: marked(initialMarkdown, { gfm: true, breaks: true }),
+    editable: editable,
     onUpdate: async ({ editor }) => {
       if (onChange) {
         const html = editor.getHTML()

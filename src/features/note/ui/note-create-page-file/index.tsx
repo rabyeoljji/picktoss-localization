@@ -3,24 +3,14 @@ import { useEffect } from 'react'
 import { KeyboardDetector } from '@/app/keyboard-detector'
 
 import { MarkdownEditor } from '@/features/editor'
-import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 
-import { IcChange, IcInfo } from '@/shared/assets/icon'
+import { IcChange } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { cn } from '@/shared/lib/utils'
 
 const NoteCreatePageFile = () => {
-  const {
-    setDocumentName,
-    content,
-    setContent,
-    isKeyboardVisible,
-    setIsKeyboardVisible,
-    fileInfo,
-    changeFileInfo,
-    isProcessing,
-  } = useCreateNoteContext()
+  const { setDocumentName, content, setContent, setIsKeyboardVisible, fileInfo, changeFileInfo, isProcessing } =
+    useCreateNoteContext()
 
   useEffect(() => {
     if (fileInfo) {
@@ -54,40 +44,14 @@ const NoteCreatePageFile = () => {
       {content.markdown && (
         <div className="h-[calc(var(--viewport-height,100vh)-(var(--header-height))-81px)] flex flex-col">
           {/* h-screen - header-height - emoji-title-input-height */}
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-auto scrollbar-hide text-disabled">
             <MarkdownEditor
               className="flex-1"
               onChange={handleEditorChange}
               placeholder="여기를 탭하여 입력을 시작하세요"
               initialMarkdown={fileInfo?.content}
+              editable={false}
             />
-          </div>
-
-          <div
-            className={cn(
-              'flex justify-between items-center pt-2 pb-8 px-4 border-t border-divider',
-              isKeyboardVisible && 'pb-2',
-            )}
-          >
-            <div className="flex items-center gap-1">
-              <IcInfo className="size-4 text-icon-sub" />
-              <Text typo="body-1-regular" color="caption">
-                최소 {DOCUMENT_CONSTRAINTS.CONTENT.MIN}자 이상 입력해주세요
-              </Text>
-            </div>
-            <Text typo="body-1-medium" color="secondary">
-              <span
-                className={cn(
-                  content.textLength < DOCUMENT_CONSTRAINTS.CONTENT.MIN ||
-                    content.textLength > DOCUMENT_CONSTRAINTS.CONTENT.MAX
-                    ? 'text-critical'
-                    : 'text-success',
-                )}
-              >
-                {content.textLength}
-              </span>{' '}
-              / {DOCUMENT_CONSTRAINTS.CONTENT.MAX}
-            </Text>
           </div>
         </div>
       )}
@@ -107,7 +71,7 @@ const NoteCreatePageFile = () => {
         >
           <IcChange className="size-[20px]" />
           <Text typo="button-3" className="px-1">
-            파일 올리기
+            파일 변경
           </Text>
         </label>
       </div>
