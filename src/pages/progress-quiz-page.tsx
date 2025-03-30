@@ -62,7 +62,6 @@ export const ProgressQuizPage = () => {
 
   const currentQuiz = quizzes[params.quizIndex]
   console.log(currentQuiz)
-
   return (
     <div className="min-h-screen bg-surface-1">
       <Header
@@ -105,8 +104,9 @@ export const ProgressQuizPage = () => {
                   key={index}
                   O={index === 0}
                   X={index === 1}
+                  isCorrect={currentQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
                   selectedOption={params.selectedOption}
-                  onClick={() => handleOptionSelect(currentQuiz.answer)}
+                  onClick={() => handleOptionSelect(index === 0 ? 'correct' : 'incorrect')}
                   className="flex-1"
                 />
               ))}

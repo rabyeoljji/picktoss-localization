@@ -30,6 +30,7 @@ export const OOption: Story = {
   args: {
     O: true,
     X: false,
+    isCorrect: true,
     selectedOption: null,
   },
   parameters: {
@@ -45,6 +46,7 @@ export const XOption: Story = {
   args: {
     O: false,
     X: true,
+    isCorrect: false,
     selectedOption: null,
   },
   parameters: {
@@ -56,31 +58,49 @@ export const XOption: Story = {
   },
 }
 
-export const OSelected: Story = {
+export const CorrectSelected: Story = {
   args: {
     O: true,
     X: false,
-    selectedOption: 'O',
+    isCorrect: true,
+    selectedOption: 'correct',
   },
   parameters: {
     docs: {
       description: {
-        story: '선택된 O 타입 선택지입니다. 파란색 배경과 함께 선택 상태를 나타냅니다.',
+        story: '정답인 선택지를 선택한 상태입니다. 녹색 배경과 체크 스타일을 표시합니다.',
       },
     },
   },
 }
 
-export const XSelected: Story = {
+export const IncorrectSelected: Story = {
   args: {
     O: false,
     X: true,
-    selectedOption: 'X',
+    isCorrect: false,
+    selectedOption: 'incorrect',
   },
   parameters: {
     docs: {
       description: {
-        story: '선택된 X 타입 선택지입니다. 주황색 배경과 함께 선택 상태를 나타냅니다.',
+        story: '오답인 선택지를 선택한 상태입니다. 빨간색 배경과 X 스타일을 표시합니다.',
+      },
+    },
+  },
+}
+
+export const CorrectButNotSelected: Story = {
+  args: {
+    O: true,
+    X: false,
+    isCorrect: true,
+    selectedOption: 'incorrect',
+  },
+  parameters: {
+    docs: {
+      description: {
+        story: '정답이지만 사용자가 다른 선택지를 선택한 경우입니다. 정답임을 나타내는 스타일로 표시됩니다.',
       },
     },
   },
@@ -90,6 +110,7 @@ export const WithCustomClassName: Story = {
   args: {
     O: true,
     X: false,
+    isCorrect: true,
     selectedOption: null,
     className: 'shadow-lg border-2 border-gray-200',
   },
@@ -108,12 +129,14 @@ export const OXOptions: Story = {
       <OXChoiceOption 
         O={true} 
         X={false} 
+        isCorrect={true}
         selectedOption={null} 
         className="w-[165px]"
       />
       <OXChoiceOption 
         O={false} 
         X={true} 
+        isCorrect={false}
         selectedOption={null}
         className="w-[165px]"
       />
@@ -128,31 +151,49 @@ export const OXOptions: Story = {
   },
 }
 
-export const OXSelectedOptions: Story = {
+export const AllStates: Story = {
   render: () => (
     <div className="grid grid-cols-2 gap-4">
       <OXChoiceOption 
         O={true} 
         X={false} 
+        isCorrect={true}
         selectedOption={null}
         className="w-[165px]"
       />
       <OXChoiceOption 
         O={false} 
         X={true} 
+        isCorrect={false}
         selectedOption={null}
         className="w-[165px]"
       />
       <OXChoiceOption 
         O={true} 
         X={false} 
-        selectedOption="O"
+        isCorrect={true}
+        selectedOption="correct"
         className="w-[165px]"
       />
       <OXChoiceOption 
         O={false} 
         X={true} 
-        selectedOption="X" 
+        isCorrect={false}
+        selectedOption="incorrect" 
+        className="w-[165px]"
+      />
+      <OXChoiceOption 
+        O={true} 
+        X={false} 
+        isCorrect={true}
+        selectedOption="incorrect"
+        className="w-[165px]"
+      />
+      <OXChoiceOption 
+        O={false} 
+        X={true} 
+        isCorrect={false}
+        selectedOption="correct" 
         className="w-[165px]"
       />
     </div>
@@ -160,7 +201,7 @@ export const OXSelectedOptions: Story = {
   parameters: {
     docs: {
       description: {
-        story: '선택되지 않은 상태와 선택된 상태의 O/X 선택지를 모두 표시합니다.',
+        story: '모든 가능한 상태의 O/X 선택지를 표시합니다.',
       },
     },
   },
