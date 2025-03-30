@@ -104,9 +104,7 @@ export const RouteConfig = {
   progressQuiz: {
     pathname: '/progress-quiz/:quizId',
     search: {
-      name: '유민' as '유민' | '정우',
-      emoji: '' as string,
-      date: '' as string,
+      index: 0 as number,
     },
   },
   randomQuiz: {
