@@ -152,13 +152,8 @@ export const CreateNoteProvider = ({
       const markdownString = await generateMarkdownFromFile(file)
       const markdownText = await extractPlainText(markdownString)
 
-      const removeFileExtension = (filename: string) => {
-        const lastDotIndex = filename.lastIndexOf('.')
-        return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
-      }
-
       const newFileInfo = {
-        name: removeFileExtension(file.name),
+        name: file.name,
         size: file.size,
         content: markdownString,
         charCount: markdownText.length,
