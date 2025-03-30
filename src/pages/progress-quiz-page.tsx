@@ -9,13 +9,14 @@ import { useGetDocumentQuizzes } from '@/entities/document/api/hooks'
 import { Question } from '@/entities/quiz/ui/question'
 
 import { IcControl } from '@/shared/assets/icon'
-import { ImgRoundCorrect, ImgRoundIncorrect } from '@/shared/assets/images'
+import { ImgExit, ImgRoundCorrect, ImgRoundIncorrect } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers/peeking-drawer'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
+import { Dialog, DialogCTA, DialogContent } from '@/shared/components/ui/dialog'
 import { Text } from '@/shared/components/ui/text'
-import { useQueryParam } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 type Quiz = {
@@ -39,7 +40,7 @@ export const ProgressQuizPage = () => {
   const { quizId } = useParams()
 
   const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
-  const { quizIndex, selectedOption } = params
+  const [exitDialogOpen, setExitDialogOpen] = useState(false)
 
   const { data: quizzes } = useGetDocumentQuizzes({
     documentId: Number(quizId),
@@ -51,33 +52,33 @@ export const ProgressQuizPage = () => {
   }
 
   const handleNextQuestion = () => {
-    setParams({ ...params, quizIndex: quizIndex + 1, selectedOption: null })
+    setParams({ ...params, quizIndex: params.quizIndex + 1, selectedOption: null })
   }
 
   if (!quizzes) {
     return <div className="center">Loading...</div>
   }
 
-  const currentQuiz = quizzes[quizIndex]
+  const currentQuiz = quizzes[params.quizIndex]
 
   return (
     <div className="min-h-screen bg-surface-1">
       <Header
-        left={<BackButton type="close" />}
+        left={<BackButton type="close" onClick={() => setExitDialogOpen(true)} />}
         content={
           <div>
             <div className="center">
-              <StopWatch isRunning={selectedOption === null} />
+              <StopWatch isRunning={params.selectedOption === null} />
             </div>
             <IcControl className="size-6 ml-auto" />
           </div>
         }
       />
-      <ProgressBar current={quizIndex + 1} totalQuizCount={quizzes.length} />
+      <ProgressBar current={params.quizIndex + 1} totalQuizCount={quizzes.length} />
 
       {/* 퀴즈 콘텐츠 영역 */}
       <div className="pt-10">
-        <Question order={quizIndex + 1} question={currentQuiz.question} />
+        <Question order={params.quizIndex + 1} question={currentQuiz.question} />
         <>
           {currentQuiz.quizType === 'MULTIPLE_CHOICE' && (
             <div className="pt-10 grid gap-2.5">
@@ -87,7 +88,7 @@ export const ProgressQuizPage = () => {
                   label={String.fromCharCode(65 + index)}
                   option={option}
                   isCorrect={option === currentQuiz.answer}
-                  selectedOption={selectedOption}
+                  selectedOption={params.selectedOption}
                   onClick={() => handleOptionSelect(option)}
                 />
               ))}
@@ -97,13 +98,15 @@ export const ProgressQuizPage = () => {
         </>
       </div>
 
-      {selectedOption && (
+      {params.selectedOption && (
         <ResultPeekingDrawer
           currentQuiz={currentQuiz}
           handleNextQuestion={handleNextQuestion}
-          selectedOption={selectedOption}
+          selectedOption={params.selectedOption}
         />
       )}
+
+      <ExitDialog exitDialogOpen={exitDialogOpen} setExitDialogOpen={setExitDialogOpen} />
     </div>
   )
 }
@@ -168,5 +171,41 @@ const ResultPeekingDrawer = ({
         )}
       </PeekingDrawerContent>
     </PeekingDrawer>
+  )
+}
+
+const ExitDialog = ({
+  exitDialogOpen,
+  setExitDialogOpen,
+}: {
+  exitDialogOpen: boolean
+  setExitDialogOpen: (open: boolean) => void
+}) => {
+  const router = useRouter()
+
+  return (
+    <Dialog open={exitDialogOpen} onOpenChange={setExitDialogOpen}>
+      <DialogContent>
+        <div className="flex-center flex-col text-center gap-4">
+          <ImgExit className="size-[120px]" />
+          <div className="grid gap-2">
+            <Text typo="h4" color="primary">
+              퀴즈에서 나가시겠어요?
+            </Text>
+            <Text typo="subtitle-2-medium" color="sub">
+              현재까지 푼 퀴즈는 기록되지 않아요
+            </Text>
+          </div>
+        </div>
+
+        <DialogCTA.B
+          className="pt-10"
+          onPrimaryButtonClick={() => router.back()}
+          onSecondaryButtonClick={() => setExitDialogOpen(false)}
+          primaryButtonLabel="나가기"
+          secondaryButtonLabel="계속하기"
+        />
+      </DialogContent>
+    </Dialog>
   )
 }

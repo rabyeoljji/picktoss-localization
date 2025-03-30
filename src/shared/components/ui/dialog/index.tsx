@@ -101,14 +101,16 @@ function DialogCTA_B({
   secondaryButtonLabel,
   onPrimaryButtonClick,
   onSecondaryButtonClick,
+  className,
 }: {
   primaryButtonLabel: string
   secondaryButtonLabel: string
   onPrimaryButtonClick: () => void
   onSecondaryButtonClick: () => void
+  className?: HTMLElement['className']
 }) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className={cn('flex w-full flex-col gap-2', className)}>
       <Button onClick={onPrimaryButtonClick} size="md">
         {primaryButtonLabel}
       </Button>

@@ -18,7 +18,7 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import { SearchInput } from '@/shared/components/ui/search-input'
-import { Link, useRouter } from '@/shared/lib/router'
+import { useRouter } from '@/shared/lib/router'
 
 const HomePage = () => {
   const router = useRouter()
@@ -65,9 +65,6 @@ const HomePage = () => {
       <Button onClick={() => router.push('/account/withdraw')}>회원탈퇴</Button>
       <Button onClick={() => router.push('/note/create')}>문서 만들기</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
-      <Link to="/progress-quiz/:quizId" params={['3']} search={{ name: '유민' }}>
-        폭탄 퀴즈{' '}
-      </Link>
       <SearchInput />
       <Drawer dismissible>
         <DrawerTrigger asChild>
