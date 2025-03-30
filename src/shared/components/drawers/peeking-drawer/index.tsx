@@ -198,7 +198,7 @@ export const PeekingDrawer = ({
               paddingBottom: fixedContentHeight ? `${fixedContentHeight}px` : '0',
             }}
             ref={peekContentRef}
-            className="w-full"
+            className="w-full bg-base-1"
           >
             {peekContent}
           </motion.div>

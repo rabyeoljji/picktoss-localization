@@ -38,7 +38,7 @@ type Quiz = {
 export const ProgressQuizPage = () => {
   const { quizId } = useParams()
 
-  const [params, setParams, resetParams] = useQueryParam('/progress-quiz/:quizId')
+  const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
   const { quizIndex, selectedOption } = params
 
   const { data: quizzes } = useGetDocumentQuizzes({
@@ -67,7 +67,7 @@ export const ProgressQuizPage = () => {
         content={
           <div>
             <div className="center">
-              <StopWatch isRunning={true} />
+              <StopWatch isRunning={selectedOption === null} />
             </div>
             <IcControl className="size-6 ml-auto" />
           </div>
@@ -117,7 +117,7 @@ const ResultPeekingDrawer = ({
   handleNextQuestion: () => void
   selectedOption: string | null
 }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   return (
     <PeekingDrawer
@@ -128,7 +128,7 @@ const ResultPeekingDrawer = ({
           <Button onClick={handleNextQuestion}>다음</Button>
         </div>
       }
-      className={cn(open ? (selectedOption === currentQuiz.answer ? 'bg-success' : 'bg-incorrect') : 'bg-base-1')}
+      className={cn(open ? (selectedOption === currentQuiz.answer ? 'bg-correct' : 'bg-incorrect') : 'bg-base-1')}
     >
       <PeekingDrawerContent>
         {selectedOption === currentQuiz.answer ? (
