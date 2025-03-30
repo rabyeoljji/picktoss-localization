@@ -28,8 +28,7 @@ export const QUIZ_KEYS = {
   postTestCreateTodayQuiz: originalCreateKey(QUIZ, QUIZ_ENDPOINTS.postTestCreateTodayQuiz()),
   postMemberGeneratedQuizSet: (documentId: number) =>
     originalCreateKey(QUIZ, QUIZ_ENDPOINTS.postMemberGeneratedQuizSet(documentId)),
-  postErrorCheckQuizSet: (documentId: number) =>
-    originalCreateKey(QUIZ, QUIZ_ENDPOINTS.postErrorCheckQuizSet(documentId)),
+  postErrorCheckQuizSet: () => originalCreateKey(QUIZ, 'postErrorCheckQuizSet'),
 
   // PATCH
   patchRandomQuizResult: originalCreateKey(QUIZ, QUIZ_ENDPOINTS.patchRandomQuizResult()),
