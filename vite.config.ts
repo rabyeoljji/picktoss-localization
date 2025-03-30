@@ -30,6 +30,9 @@ export default defineConfig({
     }),
     svgr(),
   ],
+  server: {
+    allowedHosts: ['d7ac-220-85-58-253.ngrok-free.app'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

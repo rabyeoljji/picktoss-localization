@@ -53,6 +53,7 @@ export const useGetDocumentQuizzes = ({
   return useQuery({
     queryKey: [...DOCUMENT_KEYS.getDocumentQuizzes(documentId), quizType],
     queryFn: () => getDocumentQuizzes(documentId, quizType),
+    select: (data) => data.quizzes,
   })
 }
 

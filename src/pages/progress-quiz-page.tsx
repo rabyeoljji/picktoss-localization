@@ -1,6 +1,6 @@
 import { useParams } from 'react-router'
 
-import { useGetAllDocuments, useGetDocumentQuizzes } from '@/entities/document/api/hooks'
+import { useGetDocumentQuizzes } from '@/entities/document/api/hooks'
 
 import { useQueryParam } from '@/shared/lib/router'
 
@@ -9,14 +9,11 @@ export const ProgressQuizPage = () => {
 
   const [name, setName, resetName] = useQueryParam('/progress-quiz/:quizId', 'name')
   const [params, setParams, resetParams] = useQueryParam('/progress-quiz/:quizId')
-
-  const { data: allDocuments } = useGetAllDocuments()
-  console.log(allDocuments)
-  const { data } = useGetDocumentQuizzes({
+  const { data: quizzes } = useGetDocumentQuizzes({
     documentId: Number(quizId),
-    quizType: 'MIX_UP',
   })
-  console.log(data)
+
+  console.log(quizzes)
 
   return (
     <div className="grid gap-2">
