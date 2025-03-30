@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
 import { MultipleChoiceOption } from '@/features/quiz/multiple-choice-option'
@@ -7,6 +7,7 @@ import { ProgressBar } from '@/features/quiz/progress-bar'
 import { StopWatch } from '@/features/quiz/stop-watch'
 
 import { useGetDocumentQuizzes } from '@/entities/document/api/hooks'
+import { updateQuizResult } from '@/entities/quiz/api'
 import { Question } from '@/entities/quiz/ui/question'
 
 import { IcControl } from '@/shared/assets/icon'
@@ -45,29 +46,134 @@ type Quiz = {
   }
 }
 
+export type QuizSetType = 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
+
+// 각 퀴즈 결과 저장을 위한 타입
+type QuizResult = {
+  id: number
+  answer: boolean
+  choseAnswer: string
+  elapsedTime: number
+}
+
 export const ProgressQuizPage = () => {
   const { quizId } = useParams()
+  const router = useRouter()
 
   const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
   const [exitDialogOpen, setExitDialogOpen] = useState(false)
+
+  // 퀴즈 결과 저장
+  const [quizResults, setQuizResults] = useState<QuizResult[]>([])
+
+  // 현재 퀴즈 시작 시간
+  const startTimeRef = useRef<number>(Date.now())
+
+  // 결과 제출 중 상태
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { data: quizzes } = useGetDocumentQuizzes({
     documentId: Number(quizId),
   })
 
+  // 퀴즈 시작 시 시간 초기화
+  useEffect(() => {
+    if (params.selectedOption === null) {
+      startTimeRef.current = Date.now()
+    }
+  }, [params.quizIndex, params.selectedOption])
+
   const handleOptionSelect = (option: string) => {
+    if (params.selectedOption !== null || !quizzes) return
+
+    // 현재 퀴즈
+    const currentQuiz = quizzes[params.quizIndex]
+
+    // 소요 시간 계산 (밀리초)
+    const elapsedTime = Date.now() - startTimeRef.current
+
+    // 정답 여부 확인
+    const isCorrect =
+      currentQuiz.quizType === 'MULTIPLE_CHOICE' ? option === currentQuiz.answer : option === currentQuiz.answer
+
+    // 퀴즈 결과 저장
+    const quizResult: QuizResult = {
+      id: currentQuiz.id,
+      answer: isCorrect,
+      choseAnswer: option,
+      elapsedTime,
+    }
+
+    setQuizResults((prev) => [...prev, quizResult])
+
     // 옵션을 선택하면 즉시 결과 보여주기
     setParams({ ...params, selectedOption: option })
 
     if (params.autoNext) {
       setTimeout(() => {
         handleNextQuestion()
-      }, 300)
+      }, 400)
     }
   }
 
   const handleNextQuestion = () => {
+    if (!quizzes) return
+
+    // 마지막 문제인 경우
+    if (params.quizIndex === quizzes.length - 1) {
+      submitQuizResults()
+      return
+    }
+
     setParams({ ...params, quizIndex: params.quizIndex + 1, selectedOption: null })
+  }
+
+  // 퀴즈 결과 제출
+  const submitQuizResults = async () => {
+    if (isSubmitting || !quizzes || quizResults.length === 0) return
+
+    try {
+      setIsSubmitting(true)
+
+      // API 요청 데이터 구성
+      const requestData = {
+        quizSetId: quizId || '',
+        quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType, // 문서 기반 퀴즈
+        quizzes: quizResults,
+      }
+
+      // 결과 제출 API 호출
+      const result = await updateQuizResult({ data: requestData })
+
+      // 퀴즈 데이터와 사용자 응답을 함께 전달
+      const quizWithResults = quizzes.map((quiz) => {
+        const userResult = quizResults.find((qr) => qr.id === quiz.id)
+        return {
+          ...quiz,
+          userAnswer: userResult?.choseAnswer || null,
+          elapsedTime: userResult?.elapsedTime || 0,
+          isCorrect: userResult?.answer || false,
+        }
+      })
+
+      // 퀴즈 데이터를 Base64로 인코딩
+      const quizDataEncoded = btoa(JSON.stringify(quizWithResults))
+
+      // 결과 페이지로 이동
+      router.push('/quiz-result', {
+        search: {
+          quizSetId: quizId,
+          quizSetType: 'DOCUMENT_QUIZ_SET',
+          reward: result.reward,
+          quizDataEncoded: quizDataEncoded,
+        },
+      })
+    } catch (error) {
+      console.error('퀴즈 결과 제출 실패:', error)
+      alert('퀴즈 결과 제출에 실패했습니다.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (!quizzes) {

@@ -1,3 +1,5 @@
+import { QuizSetType } from '@/pages/progress-quiz-page'
+
 /**
  * 애플리케이션의 모든 경로와 검색 파라미터를 관리하는 통합 설정
  *
@@ -108,6 +110,18 @@ export const RouteConfig = {
       selectedOption: null as string | null,
       hideTimeSpent: true as boolean,
       autoNext: true as boolean,
+    },
+  },
+  quizResult: {
+    pathname: '/quiz-result',
+    search: {
+      quizSetId: '' as string,
+      quizSetType: '' as QuizSetType,
+      correctAnswerRate: 0 as number,
+      totalElapsedTime: 0 as number,
+      totalQuizCount: 0 as number,
+      reward: 0 as number,
+      quizDataEncoded: '' as string,
     },
   },
   randomQuiz: {
