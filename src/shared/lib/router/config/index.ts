@@ -106,6 +106,8 @@ export const RouteConfig = {
     search: {
       quizIndex: 0 as number,
       selectedOption: null as string | null,
+      hideTimeSpent: true as boolean,
+      autoNext: true as boolean,
     },
   },
   randomQuiz: {

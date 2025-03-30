@@ -15,7 +15,15 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers/peeking-drawer'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
-import { Dialog, DialogCTA, DialogContent } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogCTA,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
+import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -50,6 +58,12 @@ export const ProgressQuizPage = () => {
   const handleOptionSelect = (option: string) => {
     // 옵션을 선택하면 즉시 결과 보여주기
     setParams({ ...params, selectedOption: option })
+
+    if (params.autoNext) {
+      setTimeout(() => {
+        handleNextQuestion()
+      }, 300)
+    }
   }
 
   const handleNextQuestion = () => {
@@ -61,17 +75,19 @@ export const ProgressQuizPage = () => {
   }
 
   const currentQuiz = quizzes[params.quizIndex]
-  console.log(currentQuiz)
+
   return (
     <div className="min-h-screen bg-surface-1">
       <Header
         left={<BackButton type="close" onClick={() => setExitDialogOpen(true)} />}
         content={
           <div>
-            <div className="center">
-              <StopWatch isRunning={params.selectedOption === null} />
-            </div>
-            <IcControl className="size-6 ml-auto" />
+            {!params.hideTimeSpent && (
+              <div className="center">
+                <StopWatch isRunning={params.selectedOption === null} />
+              </div>
+            )}
+            <QuizSettingDialog />
           </div>
         }
       />
@@ -115,7 +131,7 @@ export const ProgressQuizPage = () => {
         </>
       </div>
 
-      {params.selectedOption && (
+      {params.selectedOption && !params.autoNext && (
         <ResultPeekingDrawer
           currentQuiz={currentQuiz}
           handleNextQuestion={handleNextQuestion}
@@ -125,6 +141,70 @@ export const ProgressQuizPage = () => {
 
       <ExitDialog exitDialogOpen={exitDialogOpen} setExitDialogOpen={setExitDialogOpen} />
     </div>
+  )
+}
+
+const QuizSettingDialog = () => {
+  const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
+  const [isOpen, setIsOpen] = useState(false)
+
+  const [tempSettings, setTempSettings] = useState({
+    autoNext: params.autoNext,
+    hideTimeSpent: params.hideTimeSpent,
+  })
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open)
+    if (open) {
+      setTempSettings({
+        autoNext: params.autoNext,
+        hideTimeSpent: params.hideTimeSpent,
+      })
+    }
+  }
+
+  const applySettings = () => {
+    setParams({
+      ...params,
+      autoNext: tempSettings.autoNext,
+      hideTimeSpent: tempSettings.hideTimeSpent,
+    })
+    setIsOpen(false)
+  }
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <IcControl role="button" className="size-6 ml-auto cursor-pointer" />
+      </DialogTrigger>
+      <DialogContent className="text-center w-[308px]">
+        <DialogTitle>퀴즈 설정</DialogTitle>
+        <DialogDescription>설정은 이번 문제부터 적용돼요</DialogDescription>
+
+        <div className="mt-4 py-5 px-10 grid gap-4">
+          <div className="flex items-center justify-between">
+            <Text typo="subtitle-2-medium" color="primary">
+              문제 바로 넘기기
+            </Text>
+            <Switch
+              checked={tempSettings.autoNext}
+              onCheckedChange={(checked) => setTempSettings({ ...tempSettings, autoNext: checked })}
+            />
+          </div>
+          <div className="flex items-center justify-between">
+            <Text typo="subtitle-2-medium" color="primary">
+              소요시간 숨기기
+            </Text>
+            <Switch
+              checked={tempSettings.hideTimeSpent}
+              onCheckedChange={(checked) => setTempSettings({ ...tempSettings, hideTimeSpent: checked })}
+            />
+          </div>
+        </div>
+
+        <DialogCTA label="적용하기" onClick={applySettings} className="mt-[60px]" />
+      </DialogContent>
+    </Dialog>
   )
 }
 

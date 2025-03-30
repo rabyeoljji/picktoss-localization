@@ -25,9 +25,9 @@ function Switch({
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"
         className={cn(
-          'bg-gray-white pointer-events-none block rounded-full transition-transform',
-          [size === 'md' && 'size-4 data-[state=checked]:translate-x-[2px] data-[state=unchecked]:translate-x-[18px]'],
-          [size === 'sm' && 'size-3 data-[state=checked]:translate-x-[2px] data-[state=unchecked]:translate-x-[16px]'],
+          'bg-white pointer-events-none block rounded-full transition-transform',
+          [size === 'md' && 'size-4 data-[state=checked]:translate-x-[18px] data-[state=unchecked]:translate-x-[2px]'],
+          [size === 'sm' && 'size-3 data-[state=checked]:translate-x-[16px] data-[state=unchecked]:translate-x-[2px]'],
         )}
       />
     </SwitchPrimitive.Root>
