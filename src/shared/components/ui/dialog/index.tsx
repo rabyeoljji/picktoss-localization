@@ -88,7 +88,7 @@ function DialogCTA({
   onClick: () => void
   hasClose?: boolean
   closeLabel?: string
-  className: HTMLElement['className']
+  className?: HTMLElement['className']
 }) {
   return (
     <div className="w-full">
