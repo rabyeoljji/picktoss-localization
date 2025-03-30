@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from 'react'
 
 import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion'
 
-import { IcFolder } from '@/shared/assets/icon'
-import { NoteIcon, NoteType } from '@/shared/components/bg-icons/note-icon'
+import { IcQuestion } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
+import { getRelativeTime } from '@/shared/lib/date'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
@@ -40,7 +40,7 @@ export const SlidableNoteCard = ({
 
   const [isLongPress, setIsLongPress] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
-  const longPressDuration = 800 // 0.8초 이상 누르면 selectMode로 전환
+  const longPressDuration = 500 // 0.5초 이상 누르면 selectMode로 전환
 
   useEffect(() => {
     if (selectMode !== undefined) {
@@ -104,7 +104,7 @@ export const SlidableNoteCard = ({
     >
       {/* Swipe 영역 */}
       <motion.div
-        className="flex h-[104px] max-w-full items-center rounded-[16px] px-[16px] py-[17px]"
+        className="relative flex h-[104px] max-w-full items-center rounded-[16px]"
         drag={_selectMode ? false : 'x'}
         dragConstraints={{ left: -(swipeOptions.length * 65), right: 0 }}
         onDrag={() => !_selectMode && setIsDragging(true)}
@@ -130,12 +130,11 @@ export const SlidableNoteCard = ({
 }
 
 const SlidableNoteCardLeft = ({
-  type,
+  content,
   checkBox,
   selectMode,
 }: {
-  // type: 'FILE' | 'TEXT' | 'NOTION'
-  type: NoteType
+  content: string
   checkBox: React.ReactNode
   selectMode: boolean
 }) => {
@@ -144,14 +143,16 @@ const SlidableNoteCardLeft = ({
       {selectMode ? (
         <>{checkBox}</>
       ) : (
-        <NoteIcon type={type} containerClassName="size-[36px]" iconClassName="size-[16px]" />
+        <div className={cn('flex-center size-10 shrink-0 text-inverse')}>
+          <Text typo="h3">{content}</Text>
+        </div>
       )}
     </>
   )
 }
 
 const SlidableNoteCardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="ml-[16px] flex w-full flex-col">{children}</div>
+  return <div className="ml-[16px] flex w-[calc(100%-55px)] flex-col">{children}</div>
 }
 
 const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
@@ -168,7 +169,7 @@ const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.Rea
 
 const SlidableNoteCardPreview = ({ content }: { content: string }) => {
   return (
-    <Text typo="body-1-regular" color="sub" className="w-[calc(100%-55px)] truncate text-nowrap break-all">
+    <Text typo="body-1-regular" color="sub" className="w-[calc(100%-40px)] truncate text-nowrap break-all">
       {content}
     </Text>
   )
@@ -176,23 +177,23 @@ const SlidableNoteCardPreview = ({ content }: { content: string }) => {
 
 const SlidableNoteCardDetail = ({
   quizCount,
-  charCount,
   directory,
+  lastUpdated, // todo: api response필드 수정 확인 필요
 }: {
   quizCount: number
-  charCount: number
   directory: string
+  lastUpdated: string
 }) => {
   return (
-    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center">
-      <span>{quizCount}문제</span>
-      <div className="inline-block size-fit mx-[8px] text-icon-sub">•</div>
-      <span>{charCount}자</span>
-      <div className="inline-block size-fit mx-[8px] text-icon-sub">•</div>
-      <span className="flex items-center">
-        <IcFolder className="size-[12px] mr-[2px] text-icon-tertiary" />
-        {directory}
-      </span>
+    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[8px]">
+      <div className="inline-flex justify-start items-center gap-1">
+        <IcQuestion className="size-[12px] text-icon-sub" />
+        <span>{quizCount}</span>
+      </div>
+      <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+      <span>{directory}</span>
+      <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+      <span className="flex items-center">{getRelativeTime(lastUpdated)}</span>
     </Text>
   )
 }
