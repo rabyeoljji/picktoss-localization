@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useParams } from 'react-router'
 
 import { MultipleChoiceOption } from '@/features/quiz/multiple-choice-option'
+import { OXChoiceOption } from '@/features/quiz/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/progress-bar'
 import { StopWatch } from '@/features/quiz/stop-watch'
 
@@ -60,6 +61,7 @@ export const ProgressQuizPage = () => {
   }
 
   const currentQuiz = quizzes[params.quizIndex]
+  console.log(currentQuiz)
 
   return (
     <div className="min-h-screen bg-surface-1">
@@ -74,10 +76,12 @@ export const ProgressQuizPage = () => {
           </div>
         }
       />
-      <ProgressBar current={params.quizIndex + 1} totalQuizCount={quizzes.length} />
+      <div className="px-4">
+        <ProgressBar current={params.quizIndex + 1} totalQuizCount={quizzes.length} />
+      </div>
 
       {/* 퀴즈 콘텐츠 영역 */}
-      <div className="pt-10">
+      <div className="pt-10 px-4">
         <Question order={params.quizIndex + 1} question={currentQuiz.question} />
         <>
           {currentQuiz.quizType === 'MULTIPLE_CHOICE' && (
@@ -94,7 +98,20 @@ export const ProgressQuizPage = () => {
               ))}
             </div>
           )}
-          {currentQuiz.quizType === 'MIX_UP' && <div></div>}
+          {currentQuiz.quizType === 'MIX_UP' && (
+            <div className="flex items-center gap-3 pt-10">
+              {Array.from({ length: 2 }).map((_, index) => (
+                <OXChoiceOption
+                  key={index}
+                  O={index === 0}
+                  X={index === 1}
+                  selectedOption={params.selectedOption}
+                  onClick={() => handleOptionSelect(currentQuiz.answer)}
+                  className="flex-1"
+                />
+              ))}
+            </div>
+          )}
         </>
       </div>
 
