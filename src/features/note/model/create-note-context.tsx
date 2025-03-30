@@ -10,6 +10,8 @@ import { GetAllDirectoriesResponse } from '@/entities/directory/api'
 import { CreateDocumentRequest } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
+import { IcWarningFilled } from '@/shared/assets/icon'
+
 export type DocumentType = CreateDocumentRequest['documentType'] | null
 export type QuizType = CreateDocumentRequest['quizType']
 
@@ -103,7 +105,9 @@ export const CreateNoteProvider = ({
   // validation error가 설정될 때마다 토스트 생성
   useEffect(() => {
     if (validationError) {
-      toast.error(validationError)
+      toast.error(validationError, {
+        icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+      })
       setValidationError(null)
     }
   }, [validationError])
@@ -224,7 +228,9 @@ export const CreateNoteProvider = ({
         toast.success(`문서가 생성되었습니다. / id: ${id}`)
       },
       onError: (error) => {
-        toast.error('문서 생성에 실패했습니다. / errorMessage: ' + error.message)
+        toast.error('문서 생성에 실패했습니다. / errorMessage: ' + error.message, {
+          icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+        })
       },
     })
   }
