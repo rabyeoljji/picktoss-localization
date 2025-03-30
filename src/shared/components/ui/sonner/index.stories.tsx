@@ -1,6 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react'
 import { toast } from 'sonner'
 
+import { IcWarningFilled } from '@/shared/assets/icon'
+
 import { Toaster } from '.'
 import { Button } from '../button'
 
@@ -66,9 +68,24 @@ export const AllCases: StoryObj<typeof Toaster> = {
       </div>
       <hr />
 
-      {/* Case 4: Toast with Long Title */}
+      {/* Case 4: Toast with Icon */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-        <p style={{ margin: 0 }}>Case 4: Toast with Long Title</p>
+        <p style={{ margin: 0 }}>Case 4: Toast with Icon</p>
+        <Button
+          onClick={() =>
+            toast('This toast has a Icon', {
+              icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+            })
+          }
+        >
+          Open Toast with Icon
+        </Button>
+      </div>
+      <hr />
+
+      {/* Case 5: Toast with Long Title */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        <p style={{ margin: 0 }}>Case 5: Toast with Long Title</p>
         <Button
           onClick={() =>
             toast(

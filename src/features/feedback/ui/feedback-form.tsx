@@ -67,7 +67,9 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       const fileArray = Array.from(e.target.files)
       if (images.length + fileArray.length > 3) {
         // 최대 3개 이미지 제한
-        toast('이미지는 최대 3개까지 첨부 가능합니다.')
+        toast('이미지는 최대 3개까지 첨부 가능합니다.', {
+          icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+        })
         return
       }
       setImages((prev) => [...prev, ...fileArray])
@@ -102,7 +104,9 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
           if (onSuccess) onSuccess()
         },
         onError: () => {
-          toast('잠시 후 다시 시도해주세요')
+          toast('잠시 후 다시 시도해주세요', {
+            icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+          })
           if (onError) onError()
         },
       },

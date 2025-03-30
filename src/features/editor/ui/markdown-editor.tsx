@@ -10,6 +10,7 @@ import styled from 'styled-components'
 
 import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 
+import { IcWarningFilled } from '@/shared/assets/icon'
 import { cn } from '@/shared/lib/utils'
 
 interface MarkdownEditorProps {
@@ -59,7 +60,9 @@ export const MarkdownEditor = ({
         if (markdown.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX) {
           onChange(markdown)
         } else {
-          toast('내용은 50,000자까지 작성 가능합니다')
+          toast('내용은 50,000자까지 작성 가능합니다', {
+            icon: <IcWarningFilled className="size-4 text-icon-critical" />,
+          })
 
           const truncatedMarkdown = markdown.slice(0, DOCUMENT_CONSTRAINTS.CONTENT.MAX)
           const truncatedHTML = marked(truncatedMarkdown, { gfm: true, breaks: true })
