@@ -10,6 +10,7 @@ export interface CreateDocumentRequest {
   documentName: string
   quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
   star: string
+  emoji: string
 }
 
 interface CreateDocumentResponse {
@@ -24,6 +25,7 @@ export const createDocument = async (data: CreateDocumentRequest): Promise<Creat
   formData.append('star', data.star)
   formData.append('quizType', data.quizType)
   formData.append('documentType', data.documentType)
+  formData.append('emoji', data.emoji)
   const response = await client.post<CreateDocumentResponse>(DOCUMENT_ENDPOINTS.createDocument(), formData, {
     headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' },
   })

@@ -31,7 +31,7 @@ export default defineConfig({
     svgr(),
   ],
   server: {
-    allowedHosts: ['c0e5-79-127-129-18.ngrok-free.app', '1bbc-222-238-36-157.ngrok-free.app'],
+    allowedHosts: ['a0d0-222-238-36-157.ngrok-free.app'],
   },
   resolve: {
     alias: {

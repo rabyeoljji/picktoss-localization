@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 import { toast } from 'sonner'
 
@@ -179,7 +179,7 @@ export const CreateNoteProvider = ({
   }
 
   /** 노트 생성 유효성 검사 함수 */
-  const checkIsValid = useCallback(() => {
+  const checkIsValid = () => {
     const blob = new Blob([content.markdown], { type: 'text/markdown' })
     const file = new File([blob], `${documentName}.md`, { type: 'text/markdown' })
 
@@ -189,6 +189,7 @@ export const CreateNoteProvider = ({
       file,
       quizType,
       star,
+      emoji,
       documentType: documentType ?? 'TEXT',
     }
 
@@ -200,7 +201,7 @@ export const CreateNoteProvider = ({
 
     setValidationError(null)
     return true
-  }, [directoryId, documentName, content.markdown, quizType, star, documentType])
+  }
 
   const handleCreateDocument = async () => {
     if (directoryId == null) {
@@ -221,6 +222,7 @@ export const CreateNoteProvider = ({
       file,
       quizType,
       star,
+      emoji,
       documentType: documentType ?? 'TEXT',
     }
 
