@@ -75,6 +75,8 @@ body::-webkit-scrollbar {
   --spacing-tab-navigation: 84px;
 
   --header-height: 54px;
+
+  --header-height-safe: calc(54px + env(safe-area-inset-top));
 }
 
 @layer base {

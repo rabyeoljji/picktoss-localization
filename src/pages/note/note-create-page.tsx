@@ -22,7 +22,7 @@ const NoteCreatePage = () => {
 
   return (
     <CreateNoteProvider directories={directories}>
-      <div className="min-h-screen max-w-xl mx-auto relative" style={{ height: 'var(--viewport-height, 100vh)' }}>
+      <div className="h-full max-w-xl mx-auto relative">
         <Header
           className="z-50"
           left={<BackButton type="close" />}
@@ -50,7 +50,7 @@ const NoteCreateContent = () => {
 
       {documentType && (
         <div className="pt-[var(--header-height)]">
-          <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height)))] flex flex-col">
+          <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))] flex flex-col">
             <EmojiTitleInput />
 
             {documentType === 'TEXT' && <NoteCreateMarkdown />}

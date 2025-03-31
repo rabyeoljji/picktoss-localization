@@ -9,7 +9,7 @@ interface Props {
 export function withHOC<P extends object>(Component: React.ComponentType<P>, config: Props) {
   return (props: P) => (
     <div className={cn('size-full safe-area-space', config.backgroundColor ?? 'bg-surface-1')}>
-      <div className="pb-tab-navigation">
+      <div className={cn(config.activeTab && 'pb-tab-navigation')}>
         <Component {...props} />
       </div>
       {config.activeTab && <TabNavigation activeTab={config.activeTab} />}
