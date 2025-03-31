@@ -45,7 +45,7 @@ const NoteCreateContent = () => {
   const { documentType } = useCreateNoteContext()
 
   return (
-    <div>
+    <>
       {!documentType && <SelectDocumentType />}
 
       {documentType && (
@@ -58,7 +58,7 @@ const NoteCreateContent = () => {
           </div>
         </div>
       )}
-    </div>
+    </>
   )
 }
 

@@ -9,7 +9,7 @@ export const SelectDocumentType = () => {
 
   return (
     <div className="pt-[var(--header-height)] h-full">
-      <div className="flex-center h-[calc(var(--viewport-height,100vh)_-_(var(--header-height)))]">
+      <div className="flex-center h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))]">
         <div className="grid gap-[10px] w-full">
           <SquareButton
             variant="secondary"
