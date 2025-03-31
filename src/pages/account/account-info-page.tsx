@@ -130,7 +130,6 @@ const AccountInfoPage = () => {
                 id="userImage"
                 className="hidden"
                 accept="image/*"
-                capture="environment"
                 onChange={handleChangeImage}
               />
               <label
