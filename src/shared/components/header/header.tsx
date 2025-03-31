@@ -11,8 +11,8 @@ interface HeaderProps {
 
 export const Header = ({ left, title, content, className }: HeaderProps) => {
   return (
-    <div className="header-h-safe flex flex-col justify-end">
-      <div className={cn('h-[54px] flex items-center sticky top-0 bg-base-1', left ? 'pl-2 pr-4' : 'px-4', className)}>
+    <div className="header-h-safe flex flex-col justify-end sticky top-0 bg-base-1">
+      <div className={cn('h-[54px] flex items-center', left ? 'pl-2 pr-4' : 'px-4', className)}>
         {left && left}
         {title && (
           <div className="center">
