@@ -4,8 +4,8 @@ import { useProgressAnimation } from '@/features/quiz/model/use-progress-animati
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress-bar'
 
-import { useGetSingleDocument } from '@/entities/document/api/hooks'
-
+import { ImgQuizEmpty } from '@/shared/assets/images'
+import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
@@ -43,16 +43,13 @@ const QuizLoadingPage = () => {
 
   // 폴링 훅 사용
   const {
-    pollingResult: { quizId, isComplete },
+    pollingResult: { quizId, isComplete, error },
     generateQuiz,
   } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
   })
-
-  // 문서 조회 훅 - 필요시 documentData 사용 가능
-  const { refetch: refetchDocument } = useGetSingleDocument(documentId)
 
   // 퀴즈 생성 완료 후 퀴즈 페이지로 이동
   const handleQuizGenerationComplete = useCallback(() => {
@@ -64,6 +61,7 @@ const QuizLoadingPage = () => {
           quizIndex: 0,
           selectedOption: null,
           autoNext: true,
+          quizSetType: 'FIRST_QUIZ_SET',
         },
       })
     }
@@ -74,19 +72,53 @@ const QuizLoadingPage = () => {
     (_id: string) => {
       // 진행률 100%로 설정
       completeAnimation()
-      // 문서 정보 리프레시
-      refetchDocument()
     },
-    [completeAnimation, refetchDocument],
+    [completeAnimation],
   )
 
   // 컴포넌트 마운트 시 퀴즈 생성 및 애니메이션 시작
   useEffect(() => {
     // 애니메이션 시작
     startAnimation()
-    // 퀴즈 생성 시작
-    generateQuiz(handleQuizGenerationSuccess)
-  }, [startAnimation, generateQuiz, handleQuizGenerationSuccess])
+    // 퀴즈 생성 시작 - 한 번만 실행되도록 함
+    if (!isComplete && !quizId) {
+      generateQuiz(handleQuizGenerationSuccess)
+    }
+  }, [])
+
+  if (error != null) {
+    return (
+      <div className="relative h-svh bg-surface-1">
+        <div className="center flex-center flex-col w-full px-[43px]">
+          <div className="flex-center flex-col">
+            <ImgQuizEmpty className="w-[120px]" />
+            <Text typo="subtitle-1-bold" color="primary" className="mt-4">
+              퀴즈를 만드는 중 문제가 생겼어요
+            </Text>
+            <Text typo="body-1-medium" color="sub" className="mt-1">
+              아래 내용을 확인하신 후 다시 시도해보세요
+            </Text>
+          </div>
+
+          <div className="my-8 py-6 px-5 bg-surface-2 rounded-[12px]">
+            <Text typo="body-1-bold" color="secondary">
+              좋은 퀴즈를 위한 노트 Tip
+            </Text>
+            <ul className="mt-2.5 list-disc pl-5">
+              <Text as="li" typo="body-1-medium" color="sub">
+                충분한 정보가 있는지 확인해주세요
+              </Text>
+              <Text as="li" typo="body-1-medium" color="sub">
+                같은 내용이 반복되지 않도록 해주세요
+              </Text>
+            </ul>
+          </div>
+
+          <Button>노트 수정하러 가기</Button>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div>

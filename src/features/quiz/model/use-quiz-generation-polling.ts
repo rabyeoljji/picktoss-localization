@@ -48,7 +48,7 @@ interface PollingResult {
  * @param options 폴링 옵션
  * @returns 폴링 관련 상태 및 메서드
  */
-export const useQuizGenerationPolling = (documentId: number | string, options?: PollingOptions) => {
+export const useQuizGenerationPolling = (documentId: number, options?: PollingOptions) => {
   const { pollingInterval = 2000, maxPollingCount = 60, autoCompleteTime = 70000 } = options || {}
 
   // 퀴즈 생성 완료 상태
@@ -101,16 +101,25 @@ export const useQuizGenerationPolling = (documentId: number | string, options?: 
 
   // 폴링 시작 함수
   const startPolling = (onSuccess?: (id: string) => void) => {
-    // 이미 폴링 중이면 중단
-    if (pollingTimerRef.current) {
-      clearInterval(pollingTimerRef.current)
+    // 이미 퀴즈 생성이 완료되었거나 폴링이 진행 중이면 중단
+    if (isComplete || quizId || pollingTimerRef.current) {
+      if (pollingTimerRef.current) {
+        clearInterval(pollingTimerRef.current)
+      }
+
+      // 이미 ID가 있으면 완료 처리만 하고 종료
+      if (quizId && !isComplete) {
+        setIsComplete(true)
+      }
+
+      return
     }
 
     // 폴링 타이머 설정
     pollingTimerRef.current = setInterval(async () => {
       try {
         // 오류 체크 퀴즈 세트 생성 시도
-        const response = await createErrorCheckQuizSet(Number(documentId))
+        const response = await createErrorCheckQuizSet(documentId)
 
         console.log('퀴즈 생성 상태 확인 성공:', response)
 
@@ -169,9 +178,12 @@ export const useQuizGenerationPolling = (documentId: number | string, options?: 
         if (onSuccess) {
           onSuccess(response.quizSetId)
         }
+
+        // 이미 완료되었으므로 폴링 시작하지 않음
+        return response
       }
 
-      // 폴링 시작 - 백엔드 상태 확인을 위해
+      // 퀴즈 ID가 없는 경우에만 폴링 시작
       startPolling(onSuccess)
 
       return response

@@ -110,6 +110,7 @@ export const RouteConfig = {
       selectedOption: null as string | null,
       hideTimeSpent: true as boolean,
       autoNext: true as boolean,
+      quizSetType: 'TODAY_QUIZ_SET' as QuizSetType,
     },
   },
   quizLoading: {

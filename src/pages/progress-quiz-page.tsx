@@ -6,8 +6,8 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/ui/progress-bar'
 import { StopWatch } from '@/features/quiz/ui/stop-watch'
 
-import { useGetDocumentQuizzes } from '@/entities/document/api/hooks'
 import { updateQuizResult } from '@/entities/quiz/api'
+import { useGetQuizSet } from '@/entities/quiz/api/hooks'
 import { Question } from '@/entities/quiz/ui/question'
 
 import { IcControl } from '@/shared/assets/icon'
@@ -72,8 +72,9 @@ export const ProgressQuizPage = () => {
   // 결과 제출 중 상태
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { data: quizzes } = useGetDocumentQuizzes({
-    documentId: Number(quizId),
+  const { data: quizzes } = useGetQuizSet({
+    quizSetId: quizId || '',
+    quizSetType: params.quizSetType,
   })
 
   // 퀴즈 시작 시 시간 초기화
