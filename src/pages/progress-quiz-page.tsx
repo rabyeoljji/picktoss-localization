@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
-import { MultipleChoiceOption } from '@/features/quiz/multiple-choice-option'
-import { OXChoiceOption } from '@/features/quiz/ox-choice-option'
-import { ProgressBar } from '@/features/quiz/progress-bar'
-import { StopWatch } from '@/features/quiz/stop-watch'
+import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
+import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
+import { ProgressBar } from '@/features/quiz/ui/progress-bar'
+import { StopWatch } from '@/features/quiz/ui/stop-watch'
 
 import { useGetDocumentQuizzes } from '@/entities/document/api/hooks'
 import { updateQuizResult } from '@/entities/quiz/api'
