@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 
+import { useUserStore } from '@/features/user/model/user-store'
+
 import { MEMBER_KEYS } from './config'
 import {
   deleteMember,
@@ -11,17 +13,22 @@ import {
   updateTodayQuizCount,
 } from './index'
 
-export const useGetMemberInfo = () => {
-  return useQuery({
-    queryKey: MEMBER_KEYS.getMemberInfo,
-    queryFn: () => getMemberInfo(),
-  })
-}
-
 export const useGetInviteLinkMember = () => {
   return useQuery({
     queryKey: MEMBER_KEYS.getInviteLinkMember,
     queryFn: () => getInviteLinkMember(),
+  })
+}
+
+export const useGetMemberInfo = () => {
+  const { setUser } = useUserStore()
+
+  return useMutation({
+    mutationKey: MEMBER_KEYS.getMemberInfo,
+    mutationFn: () => getMemberInfo(),
+    onSuccess: (data) => {
+      setUser(data)
+    },
   })
 }
 
@@ -40,17 +47,27 @@ export const useUpdateQuizNotification = () => {
 }
 
 export const useUpdateMemberName = () => {
+  const { mutate: refetchMemberInfo } = useGetMemberInfo()
+
   return useMutation({
     mutationKey: MEMBER_KEYS.updateMemberName,
     mutationFn: (data: Parameters<typeof updateMemberName>[0]) => updateMemberName(data),
+    onSettled: () => {
+      refetchMemberInfo()
+    },
   })
 }
 
 export const useUpdateInterestCollectionCategories = () => {
+  const { mutate: refetchMemberInfo } = useGetMemberInfo()
+
   return useMutation({
     mutationKey: MEMBER_KEYS.updateInterestCollectionCategories,
     mutationFn: (data: Parameters<typeof updateInterestCollectionCategories>[0]) =>
       updateInterestCollectionCategories(data),
+    onSettled: () => {
+      refetchMemberInfo()
+    },
   })
 }
 
