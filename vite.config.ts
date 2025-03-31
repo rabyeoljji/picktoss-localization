@@ -57,9 +57,15 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit instead of default 2MB
+      },
     }),
     svgr(),
   ],
+  server: {
+    allowedHosts: ['a0d0-222-238-36-157.ngrok-free.app'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

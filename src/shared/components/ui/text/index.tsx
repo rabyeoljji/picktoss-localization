@@ -77,6 +77,8 @@ const textColorStyles = {
   right: 'text-right',
   wrong: 'text-wrong',
   error: 'text-error',
+  correct: 'text-correct',
+  incorrect: 'text-incorrect',
 }
 
 type Typo = keyof typeof typographyStyles

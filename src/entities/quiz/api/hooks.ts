@@ -29,10 +29,10 @@ export const useCreateMemberGeneratedQuizSet = (documentId: number) => {
   })
 }
 
-export const useCreateErrorCheckQuizSet = (documentId: number) => {
+export const useCreateErrorCheckQuizSet = () => {
   return useMutation({
-    mutationKey: QUIZ_KEYS.postErrorCheckQuizSet(documentId),
-    mutationFn: () => createErrorCheckQuizSet(documentId),
+    mutationKey: QUIZ_KEYS.postErrorCheckQuizSet(),
+    mutationFn: (documentId: number) => createErrorCheckQuizSet(documentId),
   })
 }
 

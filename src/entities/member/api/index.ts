@@ -73,8 +73,8 @@ export const updateInterestCollectionCategories = async (
 
 // DELETE: 회원 탈퇴
 interface DeleteMemberRequest {
-  reason: 'UNSATISFACTORY_RESULT' | 'INCONVENIENT_SERVICE' | 'SYSTEM_ISSUE' | 'SECURITY_CONCERNS'
-  detail: string
+  reason?: 'UNSATISFACTORY_RESULT' | 'INCONVENIENT_SERVICE' | 'SYSTEM_ISSUE' | 'SECURITY_CONCERNS'
+  detail?: string
 }
 
 export const deleteMember = async (data: DeleteMemberRequest): Promise<void> => {

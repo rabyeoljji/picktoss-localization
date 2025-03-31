@@ -1,13 +1,14 @@
 @import 'tailwindcss';
 
 @plugin "tailwindcss-animate";
+@plugin "tailwind-scrollbar-hide";
 
 :root {
   --color-white: #ffffff;
   --color-black: #000000;
 
-  --color-gray-50: #f2f4f6;
-  --color-gray-100: #e3e9ee;
+  --color-gray-50: #f3f6fa;
+  --color-gray-100: #e3e9ef;
   --color-gray-200: #d3dce4;
   --color-gray-300: #b6c1c9;
   --color-gray-400: #99a3aa;
@@ -20,7 +21,7 @@
   --color-blue-50: #edf4ff;
   --color-blue-100: #deecff;
   --color-blue-200: #c4dbff;
-  --color-blue-300: #AOC2FF;
+  --color-blue-300: #a0c2ff;
   --color-blue-400: #7a9eff;
   --color-blue-500: #4d7bf9;
   --color-blue-600: #3d60ee;
@@ -46,6 +47,19 @@
   --color-red-500: #f4502c;
 }
 
+html {
+  overscroll-behavior: none;
+}
+
+body {
+  overscroll-behavior-x: none;
+  overflow-y: auto;
+  -ms-overflow-style: none; /* IE, Edge */
+}
+body::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+
 @font-face {
   font-family: 'SUIT-Regular';
   src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_suit@1.0/SUIT-Regular.woff2') format('woff2');
@@ -59,6 +73,8 @@
   --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 
   --spacing-tab-navigation: 84px;
+
+  --header-height: 54px;
 }
 
 @layer base {
@@ -82,5 +98,11 @@
   }
   .safe-area-space {
     @apply pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)];
+  }
+  .safe-dvh {
+    @apply h-[calc(100dvh-env(safe-area-inset-top))];
+  }
+  .header-h-safe {
+    height: calc(54px + env(safe-area-inset-top));
   }
 }

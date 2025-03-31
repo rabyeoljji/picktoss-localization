@@ -1,11 +1,14 @@
+import { useState } from 'react'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 
 import { useAuthStore } from '@/features/auth'
 
+import { ImgRoundCorrect } from '@/shared/assets/images'
+import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers/peeking-drawer'
 import { Button } from '@/shared/components/ui/button'
 import {
   Drawer,
-  DrawerBody,
   DrawerClose,
   DrawerContent,
   DrawerDescription,
@@ -15,19 +18,55 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import { SearchInput } from '@/shared/components/ui/search-input'
+import { useRouter } from '@/shared/lib/router'
 
 const HomePage = () => {
+  const router = useRouter()
   const clearToken = useAuthStore((state) => state.clearToken)
+  router.push('/note')
 
   const handleLogout = () => {
     clearToken()
   }
 
+  const [pickingDrawerOpen, setPickingDrawerOpen] = useState(false)
   return (
-    <div className="flex flex-col gap-6 px-10 bg-blue-200">
+    <div className="flex flex-col gap-6 px-10">
+      <PeekingDrawer
+        open={pickingDrawerOpen}
+        onOpenChange={setPickingDrawerOpen}
+        className="bg-surface-1"
+        peekContent={<div />}
+        fixedContent={
+          <div className="h-[100px]">
+            <Button className="w-full">다음</Button>
+          </div>
+        }
+      >
+        <PeekingDrawerContent>
+          <div className="w-full px-5">
+            <ImgRoundCorrect />
+            <span>정답</span>
+          </div>
+        </PeekingDrawerContent>
+      </PeekingDrawer>
+
+      <Button
+        onClick={() =>
+          router.push('/progress-quiz/:quizId', {
+            params: ['3'],
+          })
+        }
+      >
+        검색
+      </Button>
+      <Button onClick={() => router.push('/note/search')}>노트 검색</Button>
+      <Button onClick={() => router.push('/account/feedback')}>문의하기</Button>
+      <Button onClick={() => router.push('/account/withdraw')}>회원탈퇴</Button>
+      <Button onClick={() => router.push('/note/create')}>문서 만들기</Button>
       <Button onClick={handleLogout}>로그아웃</Button>
       <SearchInput />
-      <Drawer>
+      <Drawer dismissible>
         <DrawerTrigger asChild>
           <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
         </DrawerTrigger>
@@ -38,12 +77,10 @@ const HomePage = () => {
             <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
           </DrawerHeader>
 
-          <DrawerBody>
-            <div>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            </div>
-          </DrawerBody>
+          <div>
+            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+          </div>
 
           <DrawerFooter>
             <DrawerClose asChild>
@@ -53,7 +90,7 @@ const HomePage = () => {
         </DrawerContent>
       </Drawer>
 
-      <Drawer>
+      <Drawer modal={false} dismissible={false}>
         <DrawerTrigger asChild>
           <button className="rounded-md bg-blue-600 px-4 py-2 text-white">Open Drawer</button>
         </DrawerTrigger>
@@ -64,12 +101,10 @@ const HomePage = () => {
             <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
           </DrawerHeader>
 
-          <DrawerBody>
-            <div>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            </div>
-          </DrawerBody>
+          <div>
+            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+          </div>
 
           <DrawerFooter>
             <DrawerClose asChild>
@@ -90,12 +125,10 @@ const HomePage = () => {
             <DrawerDescription>노트를 이동시킬 폴더를 선택해주세요.</DrawerDescription>
           </DrawerHeader>
 
-          <DrawerBody>
-            <div>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-              <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
-            </div>
-          </DrawerBody>
+          <div>
+            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+            <p>Here is some content inside the drawer. You can place forms, lists, or any other UI elements here.</p>
+          </div>
 
           <DrawerFooter>
             <DrawerClose asChild>

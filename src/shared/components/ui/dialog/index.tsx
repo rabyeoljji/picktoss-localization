@@ -41,9 +41,10 @@ function DialogContent({ className, children, ...props }: React.ComponentProps<t
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
       <DialogPrimitive.Content
+        onOpenAutoFocus={(e) => e.preventDefault()}
         data-slot="dialog-content"
         className={cn(
-          'bg-background-base-01 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[343px] translate-x-[-50%] translate-y-[-50%] rounded-[20px] px-6 pt-8 pb-5 shadow-md duration-200',
+          'bg-surface-1 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[343px] translate-x-[-50%] translate-y-[-50%] rounded-[20px] px-6 pt-8 pb-5 shadow-md duration-200',
           className,
         )}
         {...props}
@@ -81,15 +82,19 @@ function DialogCTA({
   onClick,
   hasClose = false,
   closeLabel = '닫기',
+  className,
 }: React.ComponentProps<'button'> & {
   label: string
   onClick: () => void
   hasClose?: boolean
   closeLabel?: string
+  className?: HTMLElement['className']
 }) {
   return (
     <div className="w-full">
-      <Button onClick={onClick}>{label}</Button>
+      <Button onClick={onClick} className={className}>
+        {label}
+      </Button>
       {hasClose && <DialogCloseTextButton label={closeLabel} />}
     </div>
   )
@@ -100,14 +105,16 @@ function DialogCTA_B({
   secondaryButtonLabel,
   onPrimaryButtonClick,
   onSecondaryButtonClick,
+  className,
 }: {
   primaryButtonLabel: string
   secondaryButtonLabel: string
   onPrimaryButtonClick: () => void
   onSecondaryButtonClick: () => void
+  className?: HTMLElement['className']
 }) {
   return (
-    <div className="flex w-full flex-col gap-2">
+    <div className={cn('flex w-full flex-col gap-2', className)}>
       <Button onClick={onPrimaryButtonClick} size="md">
         {primaryButtonLabel}
       </Button>

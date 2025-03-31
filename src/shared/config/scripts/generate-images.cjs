@@ -66,7 +66,9 @@ function generateImageComponents() {
     content += `import ${camelName} from "./${file}"\n`
   })
 
-  content += '\n'
+  // props 타입 지정
+  content += '\n// Type definition for image component props\n'
+  content += 'type ImageComponentProps = React.ImgHTMLAttributes<HTMLImageElement>;\n\n'
 
   // (6) 각 PNG 파일에 대한 React 컴포넌트 export 구문 생성
   pngFiles.forEach((file) => {
@@ -75,7 +77,7 @@ function generateImageComponents() {
     const camelName = toCamelCase(baseName)
     // alt 텍스트는 "img_" 접두어 제거 (필요에 따라 가공)
     const altText = baseName.replace(/^img_/, '')
-    content += `export const ${pascalName} = ({ ...props }) => {\n  return <img src={${camelName}} alt="${altText}" {...props} />;\n};\n\n`
+    content += `export const ${pascalName}: React.FC<ImageComponentProps> = ({ ...props }) => {\n  return <img src={${camelName}} alt="${altText}" {...props} />;\n};\n\n`
   })
 
   // (7) 최종적으로 생성된 content를 index.tsx 파일로 저장

@@ -1,10 +1,12 @@
 import { IcFile, IcNote, IcNotion } from '@/shared/assets/icon'
 import { cn } from '@/shared/lib/utils'
 
+export type NoteType = 'TEXT' | 'FILE'
+
 interface Props {
   // type: Document.ItemInList['documentType']
   // type: 'FILE' | 'TEXT' | 'NOTION'
-  type: 'TEXT' | 'FILE'
+  type: NoteType
   containerClassName?: HTMLElement['className']
   iconClassName?: HTMLElement['className']
 }
