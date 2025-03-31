@@ -23,39 +23,7 @@ export default defineConfig({
         display: 'fullscreen',
         background_color: '#ffffff',
         theme_color: '#00000000',
-        icons: [
-          {
-            src: '/favicons/favicon.ico',
-            sizes: '32x32',
-            type: 'image/ico',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/favicons/favicon-96x96.png',
-            sizes: '96x96',
-            type: 'image/png',
-            purpose: 'maskable any',
-          },
-          {
-            src: '/favicons/apple-touch-icon.png',
-            sizes: '180x180',
-            type: 'image/png',
-          },
-          {
-            src: '/favicons/web-app-manifest-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: '/favicons/web-app-manifest-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-          {
-            src: '/favicons/favicon.svg',
-            type: 'image/svg+xml',
-          },
-        ],
+        icons: [],
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit instead of default 2MB
