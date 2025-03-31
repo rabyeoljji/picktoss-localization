@@ -74,7 +74,7 @@ export const ProgressQuizPage = () => {
 
   const { data: quizzes } = useGetQuizSet({
     quizSetId: quizId || '',
-    quizSetType: 'FIRST_QUIZ_SET',
+    quizSetType: params.quizSetType,
   })
 
   // 퀴즈 시작 시 시간 초기화

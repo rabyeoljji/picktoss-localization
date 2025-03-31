@@ -61,6 +61,7 @@ const QuizLoadingPage = () => {
           quizIndex: 0,
           selectedOption: null,
           autoNext: true,
+          quizSetType: 'FIRST_QUIZ_SET',
         },
       })
     }
