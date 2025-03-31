@@ -11,6 +11,7 @@ import { CreateDocumentRequest } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
+import { useRouter } from '@/shared/lib/router'
 
 export type DocumentType = CreateDocumentRequest['documentType'] | null
 export type QuizType = CreateDocumentRequest['quizType']
@@ -70,6 +71,8 @@ export const CreateNoteProvider = ({
   directories: GetAllDirectoriesResponse['directories']
   children: React.ReactNode
 }) => {
+  const router = useRouter()
+
   // 기본 상태 정의
   const [directoryId, setDirectoryId] = useState<number>(directories[0].id)
   const [documentType, setDocumentType] = useState<DocumentType>(null)
@@ -189,8 +192,6 @@ export const CreateNoteProvider = ({
       documentType: documentType ?? 'TEXT',
     }
 
-    console.log(createDocumentData)
-
     const result = CreateDocumentSchema.safeParse(createDocumentData)
     if (!result.success) {
       setValidationError(result.error.errors[0]?.message ?? 'create validation error')
@@ -225,7 +226,14 @@ export const CreateNoteProvider = ({
 
     createDocument(createDocumentData, {
       onSuccess: ({ id }) => {
-        toast.success(`문서가 생성되었습니다. / id: ${id}`)
+        toast.success('문서가 생성되었습니다.')
+        router.push('/quiz-loading', {
+          search: {
+            documentId: id,
+            documentName,
+            star: Number(star),
+          },
+        })
       },
       onError: (error) => {
         toast.error('문서 생성에 실패했습니다. / errorMessage: ' + error.message, {
