@@ -157,3 +157,40 @@ export const getQuizSetToday = async (): Promise<GetQuizSetTodayResponse> => {
   const response = await client.get<GetQuizSetTodayResponse>(QUIZ_ENDPOINTS.getQuizSetToday())
   return response.data
 }
+
+interface GetQuizSetResponse {
+  quizzes: {
+    id: number
+    question: string
+    answer: string
+    explanation: string
+    options: string[]
+    quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+    document: {
+      id: number
+      name: string
+    }
+    directory: {
+      id: number
+      name: string
+    }
+  }[]
+}
+
+export const getQuizSet = async ({
+  quizSetId,
+  quizSetType,
+}: {
+  quizSetId: string
+  quizSetType:
+    | 'TODAY_QUIZ_SET'
+    | 'DOCUMENT_QUIZ_SET'
+    | 'COLLECTION_QUIZ_SET'
+    | 'FIRST_QUIZ_SET'
+    | 'PUBLIC_QUIZ_COLLECTION'
+}) => {
+  const response = await client.get<GetQuizSetResponse>(QUIZ_ENDPOINTS.getQuizSet(quizSetId), {
+    params: { 'quiz-set-type': quizSetType },
+  })
+  return response.data
+}

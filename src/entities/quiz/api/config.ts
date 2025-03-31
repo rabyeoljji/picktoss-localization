@@ -21,6 +21,7 @@ export const QUIZ_ENDPOINTS = {
     quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
   ) => `/quizzes/${quizSetId}/${quizSetType}/quiz-record`,
   getQuizSetToday: () => '/quiz-sets/today',
+  getQuizSet: (quizSetId: string) => `/quiz-sets/${quizSetId}`,
 }
 
 export const QUIZ_KEYS = {
@@ -44,4 +45,5 @@ export const QUIZ_KEYS = {
     quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
   ) => originalCreateKey(QUIZ, QUIZ_ENDPOINTS.getSingleQuizSetRecord(quizSetId, quizSetType)),
   getQuizSetToday: originalCreateKey(QUIZ, QUIZ_ENDPOINTS.getQuizSetToday()),
+  getQuizSet: (quizSetId: string) => originalCreateKey(QUIZ, QUIZ_ENDPOINTS.getQuizSet(quizSetId)),
 }
