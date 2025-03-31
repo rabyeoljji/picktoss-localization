@@ -8,7 +8,7 @@ import { Text } from '@/shared/components/ui/text'
 
 const WithdrawPage = () => {
   return (
-    <div className="min-h-screen bg-base-1 flex flex-col pb-[40px]">
+    <div className="min-h-screen bg-base-1 flex flex-col pt-[var(--header-height)] pb-[40px]">
       <Header left={<BackButton />} title="회원탈퇴" />
 
       <div className="w-full flex flex-col overflow-x-hidden px-[16px]">

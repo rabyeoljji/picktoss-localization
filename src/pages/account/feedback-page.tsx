@@ -11,7 +11,7 @@ const FeedbackPage = () => {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-base-1 flex flex-col pb-[40px]">
+    <div className="min-h-screen bg-base-1 flex flex-col pt-[var(--header-height)] pb-[40px]">
       <Header
         left={
           <SystemDialog

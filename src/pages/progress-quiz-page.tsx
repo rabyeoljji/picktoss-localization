@@ -183,7 +183,7 @@ export const ProgressQuizPage = () => {
   const currentQuiz = quizzes[params.quizIndex]
 
   return (
-    <div className="min-h-screen bg-surface-1">
+    <div className="min-h-screen bg-surface-1 pt-[var(--header-height)]">
       <Header
         left={<BackButton type="close" onClick={() => setExitDialogOpen(true)} />}
         content={

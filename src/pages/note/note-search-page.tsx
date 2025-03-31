@@ -48,7 +48,7 @@ const NoteSearchPage = () => {
   const hasSearchResults = searchResults && (searchResults.documents?.length > 0 || searchResults.quizzes?.length > 0)
 
   return (
-    <div className="h-screen bg-base-1 flex flex-col">
+    <div className="h-screen bg-base-1 flex flex-col pt-[var(--header-height)]">
       <Header
         left={<BackButton className="mr-1" />}
         content={
