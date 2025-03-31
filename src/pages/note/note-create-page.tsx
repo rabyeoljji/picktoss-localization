@@ -22,12 +22,9 @@ const NoteCreatePage = () => {
 
   return (
     <CreateNoteProvider directories={directories}>
-      <div
-        className="min-h-screen max-w-xl mx-auto bg-surface-1 relative"
-        style={{ height: 'var(--viewport-height, 100vh)' }}
-      >
+      <div className="min-h-screen max-w-xl mx-auto relative" style={{ height: 'var(--viewport-height, 100vh)' }}>
         <Header
-          className="fixed max-w-xl top-0 w-full z-50"
+          className="z-50"
           left={<BackButton type="close" />}
           content={
             <>
@@ -65,4 +62,6 @@ const NoteCreateContent = () => {
   )
 }
 
-export default withHOC(NoteCreatePage, {})
+export default withHOC(NoteCreatePage, {
+  backgroundColor: 'bg-surface-1',
+})
