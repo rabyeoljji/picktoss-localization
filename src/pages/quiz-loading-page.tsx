@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 
 import { useProgressAnimation } from '@/features/quiz/model/use-progress-animation'
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
-import { QuizLoadingProgressBar } from '@/features/quiz/quiz-loading-progress-bar'
+import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress-bar'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 
