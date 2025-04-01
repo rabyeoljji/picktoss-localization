@@ -33,6 +33,7 @@ export const useGetSingleDocument = (documentId: number) => {
   return useQuery({
     queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
     queryFn: () => getSingleDocument(documentId),
+    enabled: !!documentId,
   })
 }
 

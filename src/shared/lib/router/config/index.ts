@@ -104,7 +104,7 @@ export const RouteConfig = {
 
   /** 퀴즈 관련 페이지 */
   progressQuiz: {
-    pathname: '/progress-quiz/:quizId',
+    pathname: '/progress-quiz/:quizSetId',
     search: {
       quizIndex: 0 as number,
       selectedOption: null as string | null,
