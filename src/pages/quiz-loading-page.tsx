@@ -43,7 +43,7 @@ const QuizLoadingPage = () => {
     onSuccess: ({ quizSetId, quizSetType }) => {
       completeAnimation()
       setTimeout(() => {
-        router.push('/progress-quiz/:quizSetId', {
+        router.replace('/progress-quiz/:quizSetId', {
           params: [quizSetId],
           search: {
             quizSetType,

@@ -79,6 +79,8 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
   const startTimeRef = useRef<number>(Date.now())
   // 마지막 점프 시간과 값 저장
   const lastJumpRef = useRef({ time: 0, value: 0 })
+  // 현재까지의 최대 진행률 저장 (뒤로 가는 현상 방지)
+  const maxReachedProgressRef = useRef(0)
 
   /**
    * 애니메이션 중지 함수
@@ -95,7 +97,9 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
    * @param value 설정할 진행률 값 (0-100)
    */
   const setProgressValue = (value: number) => {
-    setProgress(Math.min(100, Math.max(0, value)))
+    const newValue = Math.min(100, Math.max(0, value))
+    setProgress(newValue)
+    maxReachedProgressRef.current = Math.max(maxReachedProgressRef.current, newValue)
   }
 
   /**
@@ -110,6 +114,7 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
     // 시작 시간 기록
     startTimeRef.current = Date.now()
     lastJumpRef.current = { time: 0, value: 0 }
+    maxReachedProgressRef.current = 0
 
     // 애니메이션 타이머 설정
     animationTimerRef.current = setInterval(() => {
@@ -158,11 +163,14 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
           const jumpSize = Math.random() * randomJumpMaxSize // 랜덤 점프 크기
           targetProgress += jumpSize
           lastJumpRef.current = { time: elapsedTime, value: targetProgress }
+          // 랜덤 점프 후 최대 진행률 업데이트
+          maxReachedProgressRef.current = Math.max(maxReachedProgressRef.current, targetProgress)
         }
       }
 
       // 최종 진행률 설정 (설정된 최대값이 상한)
-      const finalProgress = Math.min(maxProgress, targetProgress)
+      // 현재까지 도달한 최대 진행률보다 작지 않도록 보장
+      const finalProgress = Math.min(maxProgress, Math.max(targetProgress, maxReachedProgressRef.current))
       setProgress(finalProgress)
     }, updateInterval)
   }
@@ -172,6 +180,7 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
    */
   const complete = () => {
     setProgress(100)
+    maxReachedProgressRef.current = 100
     stopAnimation()
   }
 
@@ -180,6 +189,7 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
    */
   const reset = () => {
     setProgress(0)
+    maxReachedProgressRef.current = 0
     stopAnimation()
   }
 
