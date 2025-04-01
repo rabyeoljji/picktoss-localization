@@ -3,10 +3,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { toast } from 'sonner'
 
 import { useAuthStore } from '@/features/auth'
-import { useUserStore } from '@/features/user/model/user-store'
 import InterestedCategoryDrawer from '@/features/user/ui/interested-category-drawer'
 
-import { useGetMemberInfo, useUpdateMemberName } from '@/entities/member/api/hooks'
+import { useUpdateMemberName, useUser } from '@/entities/member/api/hooks'
 
 import { IcCamera, IcChevronRight, IcMy } from '@/shared/assets/icon'
 import { ImgRoundGoogle, ImgRoundKakao } from '@/shared/assets/images'
@@ -23,30 +22,24 @@ const AccountInfoPage = () => {
   const router = useRouter()
 
   const { clearToken } = useAuthStore()
-  const { user } = useUserStore()
+  const { data: user } = useUser()
 
   const [nameDialogOpen, setNameDialogOpen] = useState<boolean>(false)
   const [logoutDialogOpen, setLogoutDialogOpen] = useState<boolean>(false)
-  const [newName, setNewName] = useState<string>(user?.name ?? '')
+  const [newName, setNewName] = useState<string>(user.name)
   const [imageUrl, setImageUrl] = useState<string | null>(null)
 
-  const { mutate: getMemberInfo } = useGetMemberInfo()
   const { mutate: updateMemberName, isPending } = useUpdateMemberName()
 
   const interestCategories = useMemo(
-    () => (user?.interestCategories?.length ? user.interestCategories : ['관심 분야 없음']),
-    [user?.interestCategories],
+    () => (user.interestCategories?.length ? user.interestCategories : ['관심 분야 없음']),
+    [user.interestCategories],
   )
-
-  // user상태값이 없을 경우
-  useEffect(() => {
-    if (!user) getMemberInfo()
-  }, [user])
 
   // user name이 변경될 경우 dialog input 기본 값도 변경
   useEffect(() => {
-    setNewName(user?.name ?? '')
-  }, [user?.name])
+    setNewName(user.name)
+  }, [user.name])
 
   // 로그아웃
   const handleLogout = () => {
@@ -56,7 +49,7 @@ const AccountInfoPage = () => {
   // 이름 변경 dialog open 핸들러
   const handleSetNameDialogOpen = (open: boolean) => {
     if (!open) {
-      setNewName(user?.name ?? '')
+      setNewName(user.name ?? '')
     }
 
     setNameDialogOpen(open)
@@ -70,7 +63,7 @@ const AccountInfoPage = () => {
         onSuccess: () => {
           toast('닉네임이 변경되었어요')
           setNameDialogOpen(false)
-          setNewName(user?.name ?? '')
+          setNewName(user.name ?? '')
         },
       },
     )
@@ -152,7 +145,7 @@ const AccountInfoPage = () => {
                   닉네임
                 </Text>
 
-                <Text typo="subtitle-2-medium">{user?.name}</Text>
+                <Text typo="subtitle-2-medium">{user.name}</Text>
               </div>
               <IcChevronRight className="size-[16px] text-icon-sub" />
             </button>
@@ -170,7 +163,7 @@ const AccountInfoPage = () => {
                     <Input
                       value={newName}
                       onChange={(e) => setNewName(e.target.value)}
-                      placeholder={user?.name}
+                      placeholder={user.name}
                       max={10}
                       hasClear
                       onClearClick={() => setNewName('')}
@@ -194,7 +187,7 @@ const AccountInfoPage = () => {
                 </Text>
 
                 <Text typo="subtitle-2-medium" color="primary">
-                  {user?.email ? user.email : '이메일 주소를 등록해주세요'}
+                  {user.email ? user.email : '이메일 주소를 등록해주세요'}
                 </Text>
               </div>
             </div>
@@ -205,7 +198,7 @@ const AccountInfoPage = () => {
                   로그인 정보
                 </Text>
                 <div className="flex items-center gap-[8px]">
-                  {user?.socialPlatform === 'KAKAO' ? (
+                  {user.socialPlatform === 'KAKAO' ? (
                     <>
                       <ImgRoundKakao className="size-[20px]" />
                       <Text typo="subtitle-2-medium">카카오 로그인</Text>

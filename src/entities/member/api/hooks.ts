@@ -1,6 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
-
-import { useUserStore } from '@/features/user/model/user-store'
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 
 import { MEMBER_KEYS } from './config'
 import {
@@ -13,22 +11,20 @@ import {
   updateTodayQuizCount,
 } from './index'
 
+export const useUser = () => {
+  return useSuspenseQuery({
+    queryKey: MEMBER_KEYS.getMemberInfo,
+    queryFn: () => getMemberInfo(),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+  })
+}
+
 export const useGetInviteLinkMember = () => {
   return useQuery({
     queryKey: MEMBER_KEYS.getInviteLinkMember,
     queryFn: () => getInviteLinkMember(),
-  })
-}
-
-export const useGetMemberInfo = () => {
-  const { setUser } = useUserStore()
-
-  return useMutation({
-    mutationKey: MEMBER_KEYS.getMemberInfo,
-    mutationFn: () => getMemberInfo(),
-    onSuccess: (data) => {
-      setUser(data)
-    },
   })
 }
 
@@ -47,26 +43,26 @@ export const useUpdateQuizNotification = () => {
 }
 
 export const useUpdateMemberName = () => {
-  const { mutate: refetchMemberInfo } = useGetMemberInfo()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationKey: MEMBER_KEYS.updateMemberName,
     mutationFn: (data: Parameters<typeof updateMemberName>[0]) => updateMemberName(data),
     onSettled: () => {
-      refetchMemberInfo()
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
     },
   })
 }
 
 export const useUpdateInterestCollectionCategories = () => {
-  const { mutate: refetchMemberInfo } = useGetMemberInfo()
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationKey: MEMBER_KEYS.updateInterestCollectionCategories,
     mutationFn: (data: Parameters<typeof updateInterestCollectionCategories>[0]) =>
       updateInterestCollectionCategories(data),
     onSettled: () => {
-      refetchMemberInfo()
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
     },
   })
 }

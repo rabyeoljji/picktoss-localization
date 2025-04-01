@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google'
 
 import { useLogin } from '@/entities/auth/api/hooks'
-import { useGetMemberInfo } from '@/entities/member/api/hooks'
 
 import { useRouter } from '@/shared/lib/router'
 
@@ -15,7 +14,6 @@ export const useGLogin = () => {
   const setToken = useAuthStore((state) => state.setToken)
 
   const { mutateAsync: loginMutation } = useLogin()
-  const { mutate: getMemberInfo } = useGetMemberInfo()
 
   const login = useGoogleLogin({
     onSuccess: async (tokenResponse: TokenResponse) => {
@@ -28,7 +26,6 @@ export const useGLogin = () => {
           },
         })
         setToken(result.accessToken)
-        getMemberInfo()
 
         router.replace('/')
       } catch (error) {
