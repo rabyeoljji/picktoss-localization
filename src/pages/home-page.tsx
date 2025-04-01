@@ -51,7 +51,7 @@ const HomePage = () => {
         </PeekingDrawerContent>
       </PeekingDrawer>
 
-      <Button
+      {/* <Button
         onClick={() =>
           router.push('/progress-quiz/:quizId', {
             params: ['3'],
@@ -59,7 +59,7 @@ const HomePage = () => {
         }
       >
         검색
-      </Button>
+      </Button> */}
       <Button onClick={() => router.push('/note/search')}>노트 검색</Button>
       <Button onClick={() => router.push('/account/feedback')}>문의하기</Button>
       <Button onClick={() => router.push('/account/withdraw')}>회원탈퇴</Button>
