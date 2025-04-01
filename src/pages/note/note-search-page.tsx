@@ -1,4 +1,5 @@
 import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/lib'
 import { useSearch } from '@/features/search/model/use-search'
@@ -48,7 +49,7 @@ const NoteSearchPage = () => {
   const hasSearchResults = searchResults && (searchResults.documents?.length > 0 || searchResults.quizzes?.length > 0)
 
   return (
-    <div className="h-screen bg-base-1 flex flex-col pt-[var(--header-height)]">
+    <div className="h-screen bg-base-1 flex flex-col">
       <Header
         left={<BackButton className="mr-1" />}
         content={
@@ -71,7 +72,7 @@ const NoteSearchPage = () => {
         }
       />
 
-      <div className="flex-1 overflow-auto">
+      <HeaderOffsetLayout className="flex-1 overflow-auto">
         {!showRecentKeywords && !isFetching && !hasSearchResults && !!queryKeyword && <NoResults />}
         {!showRecentKeywords && !isFetching && hasSearchResults && (
           <DocumentQuizSearchResults
@@ -80,7 +81,7 @@ const NoteSearchPage = () => {
             keyword={queryKeyword}
           />
         )}
-      </div>
+      </HeaderOffsetLayout>
     </div>
   )
 }

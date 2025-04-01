@@ -1,4 +1,5 @@
 import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { FeedbackForm } from '@/features/feedback/ui/feedback-form'
 
@@ -11,7 +12,7 @@ const FeedbackPage = () => {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-base-1 flex flex-col pt-[var(--header-height)] pb-[40px]">
+    <div className="min-h-screen bg-base-1 flex flex-col pb-[40px]">
       <Header
         left={
           <SystemDialog
@@ -26,7 +27,9 @@ const FeedbackPage = () => {
         title="문의하기"
       />
 
-      <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
+      <HeaderOffsetLayout>
+        <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
+      </HeaderOffsetLayout>
     </div>
   )
 }

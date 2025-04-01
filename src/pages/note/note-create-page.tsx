@@ -1,4 +1,5 @@
 import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { CreateNoteProvider, useCreateNoteContext } from '@/features/note/model/create-note-context'
 import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
@@ -35,7 +36,10 @@ const NoteCreatePage = () => {
             </>
           }
         />
-        <NoteCreateContent />
+
+        <HeaderOffsetLayout className="h-full">
+          <NoteCreateContent />
+        </HeaderOffsetLayout>
       </div>
     </CreateNoteProvider>
   )
@@ -49,13 +53,11 @@ const NoteCreateContent = () => {
       {!documentType && <SelectDocumentType />}
 
       {documentType && (
-        <div className="pt-[var(--header-height)]">
-          <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))] flex flex-col">
-            <EmojiTitleInput />
+        <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))] flex flex-col">
+          <EmojiTitleInput />
 
-            {documentType === 'TEXT' && <NoteCreateMarkdown />}
-            {documentType === 'FILE' && <NoteCreatePageFile />}
-          </div>
+          {documentType === 'TEXT' && <NoteCreateMarkdown />}
+          {documentType === 'FILE' && <NoteCreatePageFile />}
         </div>
       )}
     </>
