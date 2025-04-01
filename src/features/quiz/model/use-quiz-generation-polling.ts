@@ -130,18 +130,14 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
 
   // 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
+    startPolling()
+
     return () => {
       stopPolling()
     }
   }, [])
 
-  // 퀴즈 생성 (시작) 함수
-  const generateQuiz = () => {
-    startPolling()
-  }
-
   return {
     error,
-    generateQuiz,
   }
 }

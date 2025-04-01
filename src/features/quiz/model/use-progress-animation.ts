@@ -184,6 +184,8 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
   }
 
   useEffect(() => {
+    startAnimation()
+
     return () => {
       stopAnimation()
     }

@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { useProgressAnimation } from '@/features/quiz/model/use-progress-animation'
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress-bar'
@@ -32,17 +30,13 @@ const QuizLoadingPage = () => {
   ]
 
   // 프로그레스 애니메이션 훅 사용
-  const {
-    progress,
-    startAnimation,
-    complete: completeAnimation,
-  } = useProgressAnimation({
+  const { progress, complete: completeAnimation } = useProgressAnimation({
     timeline: progressTimeline,
     estimatedLoadingTime: ESTIMATED_LOADING_TIME,
   })
 
   // 문서 퀴즈 상태 폴링 훅 사용
-  const { error, generateQuiz } = useQuizGenerationPolling(documentId, {
+  const { error } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
@@ -58,11 +52,6 @@ const QuizLoadingPage = () => {
       }, 500)
     },
   })
-
-  useEffect(() => {
-    startAnimation()
-    generateQuiz()
-  }, [])
 
   // 에러 발생 시 에러 화면 표시
   if (error != null) {
