@@ -6,6 +6,7 @@ import {
   createMemberGeneratedQuizSet,
   createTodayQuizForTest,
   getCurrentTodayQuizInfo,
+  getQuizSet,
   getQuizSetToday,
   getSingleQuizRecordByDate,
   getSingleQuizSetRecord,
@@ -86,5 +87,19 @@ export const useGetQuizSetToday = () => {
   return useQuery({
     queryKey: QUIZ_KEYS.getQuizSetToday,
     queryFn: () => getQuizSetToday(),
+  })
+}
+
+export const useGetQuizSet = ({
+  quizSetId,
+  quizSetType,
+}: {
+  quizSetId: string
+  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
+}) => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getQuizSet(quizSetId),
+    queryFn: () => getQuizSet({ quizSetId, quizSetType }),
+    select: (data) => data.quizzes,
   })
 }

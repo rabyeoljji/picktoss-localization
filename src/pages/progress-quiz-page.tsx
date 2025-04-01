@@ -6,8 +6,8 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/ui/progress-bar'
 import { StopWatch } from '@/features/quiz/ui/stop-watch'
 
-import { useGetDocumentQuizzes } from '@/entities/document/api/hooks'
 import { updateQuizResult } from '@/entities/quiz/api'
+import { useGetQuizSet } from '@/entities/quiz/api/hooks'
 import { Question } from '@/entities/quiz/ui/question'
 
 import { IcControl } from '@/shared/assets/icon'
@@ -57,10 +57,10 @@ type QuizResult = {
 }
 
 export const ProgressQuizPage = () => {
-  const { quizId } = useParams()
+  const { quizSetId } = useParams()
   const router = useRouter()
 
-  const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
+  const [params, setParams] = useQueryParam('/progress-quiz/:quizSetId')
   const [exitDialogOpen, setExitDialogOpen] = useState(false)
 
   // 퀴즈 결과 저장
@@ -72,8 +72,9 @@ export const ProgressQuizPage = () => {
   // 결과 제출 중 상태
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  const { data: quizzes } = useGetDocumentQuizzes({
-    documentId: Number(quizId),
+  const { data: quizzes } = useGetQuizSet({
+    quizSetId: quizSetId || '',
+    quizSetType: params.quizSetType,
   })
 
   // 퀴즈 시작 시 시간 초기화
@@ -137,7 +138,7 @@ export const ProgressQuizPage = () => {
 
       // API 요청 데이터 구성
       const requestData = {
-        quizSetId: quizId || '',
+        quizSetId: quizSetId || '',
         quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType, // 문서 기반 퀴즈
         quizzes: quizResults,
       }
@@ -162,7 +163,7 @@ export const ProgressQuizPage = () => {
       // 결과 페이지로 이동
       router.push('/quiz-result', {
         search: {
-          quizSetId: quizId,
+          quizSetId,
           quizSetType: 'DOCUMENT_QUIZ_SET',
           reward: result.reward,
           quizDataEncoded: quizDataEncoded,
@@ -251,7 +252,7 @@ export const ProgressQuizPage = () => {
 }
 
 const QuizSettingDialog = () => {
-  const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
+  const [params, setParams] = useQueryParam('/progress-quiz/:quizSetId')
   const [isOpen, setIsOpen] = useState(false)
 
   const [tempSettings, setTempSettings] = useState({
