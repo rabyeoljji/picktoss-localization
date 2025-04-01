@@ -57,10 +57,10 @@ type QuizResult = {
 }
 
 export const ProgressQuizPage = () => {
-  const { quizId } = useParams()
+  const { quizSetId } = useParams()
   const router = useRouter()
 
-  const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
+  const [params, setParams] = useQueryParam('/progress-quiz/:quizSetId')
   const [exitDialogOpen, setExitDialogOpen] = useState(false)
 
   // 퀴즈 결과 저장
@@ -73,7 +73,7 @@ export const ProgressQuizPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const { data: quizzes } = useGetQuizSet({
-    quizSetId: quizId || '',
+    quizSetId: quizSetId || '',
     quizSetType: params.quizSetType,
   })
 
@@ -138,7 +138,7 @@ export const ProgressQuizPage = () => {
 
       // API 요청 데이터 구성
       const requestData = {
-        quizSetId: quizId || '',
+        quizSetId: quizSetId || '',
         quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType, // 문서 기반 퀴즈
         quizzes: quizResults,
       }
@@ -163,7 +163,7 @@ export const ProgressQuizPage = () => {
       // 결과 페이지로 이동
       router.push('/quiz-result', {
         search: {
-          quizSetId: quizId,
+          quizSetId,
           quizSetType: 'DOCUMENT_QUIZ_SET',
           reward: result.reward,
           quizDataEncoded: quizDataEncoded,
@@ -252,7 +252,7 @@ export const ProgressQuizPage = () => {
 }
 
 const QuizSettingDialog = () => {
-  const [params, setParams] = useQueryParam('/progress-quiz/:quizId')
+  const [params, setParams] = useQueryParam('/progress-quiz/:quizSetId')
   const [isOpen, setIsOpen] = useState(false)
 
   const [tempSettings, setTempSettings] = useState({

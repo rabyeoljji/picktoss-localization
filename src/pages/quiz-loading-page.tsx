@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import { useProgressAnimation } from '@/features/quiz/model/use-progress-animation'
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
@@ -41,51 +41,30 @@ const QuizLoadingPage = () => {
     estimatedLoadingTime: ESTIMATED_LOADING_TIME,
   })
 
-  // 폴링 훅 사용
-  const {
-    pollingResult: { quizId, isComplete, error },
-    generateQuiz,
-  } = useQuizGenerationPolling(documentId, {
+  // 문서 퀴즈 상태 폴링 훅 사용
+  const { error, generateQuiz } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
+    onSuccess: ({ quizSetId, quizSetType }) => {
+      completeAnimation()
+      setTimeout(() => {
+        router.push('/progress-quiz/:quizSetId', {
+          params: [quizSetId],
+          search: {
+            quizSetType,
+          },
+        })
+      }, 500)
+    },
   })
 
-  // 퀴즈 생성 완료 후 퀴즈 페이지로 이동
-  const handleQuizGenerationComplete = useCallback(() => {
-    if (quizId) {
-      // 라우터를 사용하여 퀴즈 페이지로 이동
-      router.push('/progress-quiz/:quizId', {
-        params: [quizId],
-        search: {
-          quizIndex: 0,
-          selectedOption: null,
-          autoNext: true,
-          quizSetType: 'FIRST_QUIZ_SET',
-        },
-      })
-    }
-  }, [quizId, router])
-
-  // 퀴즈 생성 성공 시 진행률 100%로 설정
-  const handleQuizGenerationSuccess = useCallback(
-    (_id: string) => {
-      // 진행률 100%로 설정
-      completeAnimation()
-    },
-    [completeAnimation],
-  )
-
-  // 컴포넌트 마운트 시 퀴즈 생성 및 애니메이션 시작
   useEffect(() => {
-    // 애니메이션 시작
     startAnimation()
-    // 퀴즈 생성 시작 - 한 번만 실행되도록 함
-    if (!isComplete && !quizId) {
-      generateQuiz(handleQuizGenerationSuccess)
-    }
+    generateQuiz()
   }, [])
 
+  // 에러 발생 시 에러 화면 표시
   if (error != null) {
     return (
       <div className="relative h-svh bg-surface-1">
@@ -132,12 +111,7 @@ const QuizLoadingPage = () => {
           </Text>
         </div>
 
-        <QuizLoadingProgressBar
-          completed={isComplete}
-          onComplete={handleQuizGenerationComplete}
-          progressOverride={progress}
-          text="내용을 읽고 있어요"
-        />
+        <QuizLoadingProgressBar progressOverride={progress} text="내용을 읽고 있어요" />
       </div>
     </div>
   )
