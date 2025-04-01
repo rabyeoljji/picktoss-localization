@@ -5,6 +5,7 @@ import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress
 import { ImgQuizEmpty } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
+import { TextButton } from '@/shared/components/ui/text-button'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
@@ -36,21 +37,10 @@ const QuizLoadingPage = () => {
   })
 
   // 문서 퀴즈 상태 폴링 훅 사용
-  const { error } = useQuizGenerationPolling(documentId, {
+  const { error, quizSetId, quizSetType } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
-    onSuccess: ({ quizSetId, quizSetType }) => {
-      completeAnimation()
-      setTimeout(() => {
-        router.replace('/progress-quiz/:quizSetId', {
-          params: [quizSetId],
-          search: {
-            quizSetType,
-          },
-        })
-      }, 500)
-    },
   })
 
   // 에러 발생 시 에러 화면 표시
@@ -83,6 +73,46 @@ const QuizLoadingPage = () => {
           </div>
 
           <Button>노트 수정하러 가기</Button>
+        </div>
+      </div>
+    )
+  }
+
+  if (quizSetId != null && quizSetType != null) {
+    return (
+      <div className="relative h-svh bg-surface-1">
+        <div className="center flex-center flex-col w-full px-[43px]">
+          <ImgQuizEmpty className="w-[120px]" />
+          <Text typo="h4" color="primary" className="mt-4">
+            퀴즈 생성 완료!
+          </Text>
+          <Text typo="subtitle-2-medium" color="sub">
+            새로 생긴 문제를 지금 확인해보세요
+          </Text>
+
+          <div className="mt-10 w-full flex flex-col items-center">
+            <Button
+              onClick={() => {
+                completeAnimation()
+                setTimeout(() => {
+                  router.replace('/progress-quiz/:quizSetId', {
+                    params: [quizSetId],
+                    search: {
+                      quizSetType: quizSetType,
+                    },
+                  })
+                }, 500)
+              }}
+            >
+              시작하기
+            </Button>
+            <TextButton
+              onClick={() => router.replace('/note/:noteId', { params: [String(documentId)] })}
+              className="mt-4"
+            >
+              다음에
+            </TextButton>
+          </div>
         </div>
       </div>
     )

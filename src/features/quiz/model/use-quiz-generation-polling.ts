@@ -30,8 +30,6 @@ interface PollingOptions {
    * 자동 완료 시간 (ms) - 이 시간이 지나면 자동으로 완료 처리
    */
   autoCompleteTime?: number
-
-  onSuccess?: (result: { quizSetId: string; quizSetType: QuizSetType }) => void
 }
 
 /**
@@ -52,6 +50,8 @@ export interface PollingResult {
  */
 export const useQuizGenerationPolling = (documentId: number, options?: PollingOptions) => {
   const { pollingInterval = 2000, maxPollingCount = 60, autoCompleteTime = 70000 } = options || {}
+  const [quizSetId, setQuizSetId] = useState<string | null>(null)
+  const [quizSetType, setQuizSetType] = useState<QuizSetType | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pollingCount, setPollingCount] = useState(0)
 
@@ -83,7 +83,8 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
       generateQuizSet(documentId, {
         onSuccess: ({ quizSetId, quizSetType }) => {
           stopPolling()
-          options?.onSuccess?.({ quizSetId, quizSetType })
+          setQuizSetId(quizSetId)
+          setQuizSetType(quizSetType)
         },
         onError: (err) => {
           const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
@@ -138,6 +139,8 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
   }, [])
 
   return {
+    quizSetId,
+    quizSetType,
     error,
   }
 }
