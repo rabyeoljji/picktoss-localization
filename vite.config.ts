@@ -20,9 +20,10 @@ export default defineConfig({
         short_name: 'Picktoss',
         description: '픽토스 앱',
         start_url: '/',
-        display: 'standalone',
+        display: 'fullscreen',
         background_color: '#ffffff',
-        theme_color: '#000000',
+        theme_color: '#00000000',
+        icons: [],
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit instead of default 2MB

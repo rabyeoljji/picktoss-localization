@@ -1,3 +1,5 @@
+import { withHOC } from '@/app/hoc/with-page-config'
+
 import { useSearch } from '@/features/search/model/use-search'
 
 import { useSearchIntegratedQuery } from '@/entities/search/api/hooks'
@@ -15,7 +17,7 @@ import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
 import { StorageKey } from '@/shared/lib/storage'
 
-export const SearchPage = () => {
+const SearchPage = () => {
   const {
     inputValue,
     setInputValue,
@@ -149,3 +151,5 @@ const SearchResults = ({ documents, collections, quizzes }: SearchResultsProps) 
     )}
   </div>
 )
+
+export default withHOC(SearchPage, {})

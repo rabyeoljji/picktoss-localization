@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/ui/progress-bar'
@@ -198,55 +200,58 @@ export const ProgressQuizPage = () => {
           </div>
         }
       />
-      <div className="px-4">
-        <ProgressBar current={params.quizIndex + 1} totalQuizCount={quizzes.length} />
-      </div>
 
-      {/* 퀴즈 콘텐츠 영역 */}
-      <div className="pt-10 px-4">
-        <Question order={params.quizIndex + 1} question={currentQuiz.question} />
-        <>
-          {currentQuiz.quizType === 'MULTIPLE_CHOICE' && (
-            <div className="pt-10 grid gap-2.5">
-              {currentQuiz.options.map((option, index) => (
-                <MultipleChoiceOption
-                  key={option}
-                  label={String.fromCharCode(65 + index)}
-                  option={option}
-                  isCorrect={option === currentQuiz.answer}
-                  selectedOption={params.selectedOption}
-                  onClick={() => handleOptionSelect(option)}
-                />
-              ))}
-            </div>
-          )}
-          {currentQuiz.quizType === 'MIX_UP' && (
-            <div className="flex items-center gap-3 pt-10">
-              {Array.from({ length: 2 }).map((_, index) => (
-                <OXChoiceOption
-                  key={index}
-                  O={index === 0}
-                  X={index === 1}
-                  isCorrect={currentQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
-                  selectedOption={params.selectedOption}
-                  onClick={() => handleOptionSelect(index === 0 ? 'correct' : 'incorrect')}
-                  className="flex-1"
-                />
-              ))}
-            </div>
-          )}
-        </>
-      </div>
+      <HeaderOffsetLayout>
+        <div className="px-4">
+          <ProgressBar current={params.quizIndex + 1} totalQuizCount={quizzes.length} />
+        </div>
 
-      {params.selectedOption && !params.autoNext && (
-        <ResultPeekingDrawer
-          currentQuiz={currentQuiz}
-          handleNextQuestion={handleNextQuestion}
-          selectedOption={params.selectedOption}
-        />
-      )}
+        {/* 퀴즈 콘텐츠 영역 */}
+        <div className="pt-10 px-4">
+          <Question order={params.quizIndex + 1} question={currentQuiz.question} />
+          <>
+            {currentQuiz.quizType === 'MULTIPLE_CHOICE' && (
+              <div className="pt-10 grid gap-2.5">
+                {currentQuiz.options.map((option, index) => (
+                  <MultipleChoiceOption
+                    key={option}
+                    label={String.fromCharCode(65 + index)}
+                    option={option}
+                    isCorrect={option === currentQuiz.answer}
+                    selectedOption={params.selectedOption}
+                    onClick={() => handleOptionSelect(option)}
+                  />
+                ))}
+              </div>
+            )}
+            {currentQuiz.quizType === 'MIX_UP' && (
+              <div className="flex items-center gap-3 pt-10">
+                {Array.from({ length: 2 }).map((_, index) => (
+                  <OXChoiceOption
+                    key={index}
+                    O={index === 0}
+                    X={index === 1}
+                    isCorrect={currentQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
+                    selectedOption={params.selectedOption}
+                    onClick={() => handleOptionSelect(index === 0 ? 'correct' : 'incorrect')}
+                    className="flex-1"
+                  />
+                ))}
+              </div>
+            )}
+          </>
+        </div>
 
-      <ExitDialog exitDialogOpen={exitDialogOpen} setExitDialogOpen={setExitDialogOpen} />
+        {params.selectedOption && !params.autoNext && (
+          <ResultPeekingDrawer
+            currentQuiz={currentQuiz}
+            handleNextQuestion={handleNextQuestion}
+            selectedOption={params.selectedOption}
+          />
+        )}
+
+        <ExitDialog exitDialogOpen={exitDialogOpen} setExitDialogOpen={setExitDialogOpen} />
+      </HeaderOffsetLayout>
     </div>
   )
 }

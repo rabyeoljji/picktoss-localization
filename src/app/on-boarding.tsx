@@ -1,5 +1,7 @@
 import { motion } from 'framer-motion'
 
+import { withHOC } from '@/app/hoc/with-page-config'
+
 import { SelectCard } from '@/shared/components/cards/select-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
 import { Button } from '@/shared/components/ui/button'
@@ -71,4 +73,6 @@ const OnBoarding = () => {
   )
 }
 
-export default OnBoarding
+export default withHOC(OnBoarding, {
+  backgroundColor: 'bg-surface-2',
+})

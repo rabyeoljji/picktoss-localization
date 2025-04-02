@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { toast } from 'sonner'
 
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import { useAuthStore } from '@/features/auth'
 import InterestedCategoryDrawer from '@/features/user/ui/interested-category-drawer'
 
@@ -105,7 +107,7 @@ const AccountInfoPage = () => {
     <div className="min-h-screen bg-base-1 flex flex-col">
       <Header left={<BackButton />} title="계정 정보" />
 
-      <div className="w-full grow flex flex-col overflow-x-hidden px-[16px] justify-between">
+      <HeaderOffsetLayout className="w-full grow flex flex-col overflow-x-hidden px-[16px] justify-between">
         <div className="w-full flex flex-col">
           <div className="flex-center w-full pb-[44px] pt-[24px]">
             <div className="relative">
@@ -242,7 +244,7 @@ const AccountInfoPage = () => {
             탈퇴하기
           </TextButton>
         </div>
-      </div>
+      </HeaderOffsetLayout>
     </div>
   )
 }

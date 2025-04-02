@@ -118,7 +118,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
     const { recentKeywords, removeKeyword, clearAllKeywords } = useRecentSearches(storageKey)
 
     return (
-      <div ref={recentSearchListRef} className="absolute top-[54px] w-full left-0">
+      <div ref={recentSearchListRef} className="absolute top-[var(--header-height)] w-full left-0">
         <div className="flex flex-col bg-surface-1 px-4 py-[20px]">
           <div className="mb-[14px] flex items-center justify-between">
             <Text typo="body-1-bold" className="text-secondary">
