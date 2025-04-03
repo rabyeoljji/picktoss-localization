@@ -29,17 +29,21 @@ const DrawerContent = React.forwardRef<
     height?: 'full' | 'lg' | 'md' | 'sm'
     hasHandle?: boolean
   }
->(({ className, children, height, hasHandle = true, ...props }, ref) => (
+>(({ className, children, height = 'lg', hasHandle = true, ...props }, ref) => (
   <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        'fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col px-4 rounded-t-[20px] bg-surface-1 max-w-xl mx-auto scrollbar-hide',
-        height === 'full' && 'h-screen',
-        height === 'lg' && 'h-[80%]',
-        height === 'md' && 'h-[55%]',
+        'fixed inset-x-0 bottom-0 z-50 mt-24 flex flex-col px-4 rounded-t-[20px] bg-surface-1 max-w-xl mx-auto scrollbar-hide pb-[env(safe-area-inset-bottom)]',
+        height === 'full' && 'safe-dvh',
+        height === 'lg' && '!h-[80dvh]',
+        height === 'md' && '!h-[55dvh]',
         height === 'sm' && 'h-[160px]',
+        // height === 'full' && 'h-screen',
+        // height === 'lg' && 'h-[80%]',
+        // height === 'md' && 'h-[55%]',
+        // height === 'sm' && 'h-[160px]',
         className,
       )}
       {...props}

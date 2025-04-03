@@ -1,3 +1,6 @@
+import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import WithdrawForm from '@/features/withdraw/ui/withdraw-form'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -9,7 +12,7 @@ const WithdrawPage = () => {
     <div className="min-h-screen bg-base-1 flex flex-col pb-[40px]">
       <Header left={<BackButton />} title="회원탈퇴" />
 
-      <div className="w-full flex flex-col overflow-x-hidden px-[16px]">
+      <HeaderOffsetLayout className="w-full flex flex-col overflow-x-hidden px-[16px]">
         <Text typo="h4" className="pb-[8px] pt-[20px]">
           픽토스님이 떠나시는 이유를 알려주세요
         </Text>
@@ -18,9 +21,9 @@ const WithdrawPage = () => {
         </Text>
 
         <WithdrawForm />
-      </div>
+      </HeaderOffsetLayout>
     </div>
   )
 }
 
-export default WithdrawPage
+export default withHOC(WithdrawPage, {})

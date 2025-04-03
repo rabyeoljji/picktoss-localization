@@ -1,3 +1,6 @@
+import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import { FeedbackForm } from '@/features/feedback/ui/feedback-form'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -5,7 +8,7 @@ import { Header } from '@/shared/components/header/header'
 import { SystemDialog } from '@/shared/components/system-dialog'
 import { useRouter } from '@/shared/lib/router'
 
-export const FeedbackPage = () => {
+const FeedbackPage = () => {
   const router = useRouter()
 
   return (
@@ -24,7 +27,11 @@ export const FeedbackPage = () => {
         title="문의하기"
       />
 
-      <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
+      <HeaderOffsetLayout>
+        <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
+      </HeaderOffsetLayout>
     </div>
   )
 }
+
+export default withHOC(FeedbackPage, {})

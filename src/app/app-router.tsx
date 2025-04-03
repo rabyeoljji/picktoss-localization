@@ -15,7 +15,7 @@ import {
   WithdrawPage,
 } from '@/pages/account'
 import { FeedbackCompletePage } from '@/pages/account/feedback-complete-page'
-import { FeedbackPage } from '@/pages/account/feedback-page'
+import FeedbackPage from '@/pages/account/feedback-page'
 import { LoginPage } from '@/pages/auth'
 import {
   CollectionComplainPage,
@@ -42,7 +42,7 @@ import {
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
 import QuizLoadingPage from '@/pages/quiz-loading-page'
 import QuizResultPage from '@/pages/quiz-result-page'
-import { SearchPage } from '@/pages/search-page'
+import SearchPage from '@/pages/search-page'
 import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
 
 import { AuthLayout } from '@/app/layout/auth-layout'

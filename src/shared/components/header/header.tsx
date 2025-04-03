@@ -11,16 +11,18 @@ interface HeaderProps {
 
 export const Header = ({ left, title, content, className }: HeaderProps) => {
   return (
-    <div className={cn('flex items-center h-[54px] sticky top-0 bg-base-1', left ? 'pl-2 pr-4' : 'px-4', className)}>
-      {left && left}
-      {title && (
-        <div className="center">
-          <Text typo="subtitle-2-medium" color="primary">
-            {title}
-          </Text>
-        </div>
-      )}
-      {content && <div className="flex-1">{content}</div>}
+    <div className={cn('w-full max-w-xl header-h-safe flex flex-col justify-end fixed top-0 bg-base-1', className)}>
+      <div className={cn('relative h-[var(--header-height)] flex items-center', left ? 'pl-2 pr-4' : 'px-4')}>
+        {left && left}
+        {title && (
+          <div className="center">
+            <Text typo="subtitle-2-medium" color="primary">
+              {title}
+            </Text>
+          </div>
+        )}
+        {content && <div className="flex-1">{content}</div>}
+      </div>
     </div>
   )
 }

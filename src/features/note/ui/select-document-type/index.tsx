@@ -8,7 +8,7 @@ export const SelectDocumentType = () => {
   const { setDocumentType, changeFileInfo } = useCreateNoteContext()
 
   return (
-    <div className="flex-center h-[calc(var(--viewport-height,100vh)-(var(--header-height)))]">
+    <div className="flex-center h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))]">
       <div className="grid gap-[10px] w-full">
         <SquareButton
           variant="secondary"

@@ -1,3 +1,6 @@
+import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import { CreateNoteProvider, useCreateNoteContext } from '@/features/note/model/create-note-context'
 import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
 import { DirectorySelector } from '@/features/note/ui/directory-selector'
@@ -20,12 +23,9 @@ const NoteCreatePage = () => {
 
   return (
     <CreateNoteProvider directories={directories}>
-      <div
-        className="min-h-screen max-w-xl mx-auto bg-surface-1 relative"
-        style={{ height: 'var(--viewport-height, 100vh)' }}
-      >
+      <div className="h-full max-w-xl mx-auto relative">
         <Header
-          className="fixed max-w-xl top-0 w-full z-50"
+          className="z-50"
           left={<BackButton type="close" />}
           content={
             <>
@@ -36,31 +36,34 @@ const NoteCreatePage = () => {
             </>
           }
         />
-        <NoteCreateContent />
+
+        <HeaderOffsetLayout className="h-full">
+          <NoteCreateContent />
+        </HeaderOffsetLayout>
       </div>
     </CreateNoteProvider>
   )
 }
 
-export const NoteCreateContent = () => {
+const NoteCreateContent = () => {
   const { documentType } = useCreateNoteContext()
 
   return (
-    <div>
+    <>
       {!documentType && <SelectDocumentType />}
 
       {documentType && (
-        <div className="pt-[var(--header-height)]">
-          <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height)))] flex flex-col">
-            <EmojiTitleInput />
+        <div className="h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))] flex flex-col">
+          <EmojiTitleInput />
 
-            {documentType === 'TEXT' && <NoteCreateMarkdown />}
-            {documentType === 'FILE' && <NoteCreatePageFile />}
-          </div>
+          {documentType === 'TEXT' && <NoteCreateMarkdown />}
+          {documentType === 'FILE' && <NoteCreatePageFile />}
         </div>
       )}
-    </div>
+    </>
   )
 }
 
-export default NoteCreatePage
+export default withHOC(NoteCreatePage, {
+  backgroundColor: 'bg-surface-1',
+})

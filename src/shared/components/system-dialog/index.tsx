@@ -16,12 +16,13 @@ interface SystemDialogProps {
   trigger?: React.ReactNode
   title: string
   description?: string
-  content: React.ReactNode
+  content?: React.ReactNode
   variant?: 'default' | 'critical'
   cancelLabel?: string
   confirmLabel?: string
   onConfirm: () => void
   preventClose?: boolean
+  disabledConfirm?: boolean
 }
 
 export const SystemDialog = ({
@@ -36,6 +37,7 @@ export const SystemDialog = ({
   confirmLabel = '확인',
   onConfirm,
   preventClose = false,
+  disabledConfirm = false,
 }: SystemDialogProps) => {
   const handleOpenChange = (newOpen: boolean) => {
     if (preventClose && !newOpen) {
@@ -52,7 +54,7 @@ export const SystemDialog = ({
           <DialogTitle className="typo-subtitle-2-bold text-text-primary">{title}</DialogTitle>
           {description && <DialogDescription className="typo-body-1-medium text-sub">{description}</DialogDescription>}
         </DialogHeader>
-        <div className="mt-4 text-center text-sub typo-body-1-medium">{content}</div>
+        {content && <div className="mt-4 text-center text-sub typo-body-1-medium">{content}</div>}
         <DialogFooter className="mt-[20px] self-stretch inline-flex justify-between items-center">
           <DialogClose asChild>
             <button className="typo-button-2 text-text-sub w-28 h-12 text-center justify-center text-base leading-none">
@@ -61,11 +63,12 @@ export const SystemDialog = ({
           </DialogClose>
           <button
             className={cn(
-              'typo-button-2 w-28 h-12 text-center justify-center text-base leading-none',
+              'typo-button-2 w-28 h-12 text-center justify-center text-base leading-none disabled:text-disabled disabled:pointer-events-none',
               variant === 'default' && 'text-accent',
               variant === 'critical' && 'text-critical',
             )}
             onClick={onConfirm}
+            disabled={disabledConfirm}
           >
             {confirmLabel}
           </button>

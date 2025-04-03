@@ -48,17 +48,14 @@ const NoteCreatePageFile = () => {
     <>
       <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
       {content.markdown && (
-        <div className="h-[calc(var(--viewport-height,100vh)-(var(--header-height))-81px)] flex flex-col">
-          {/* h-screen - header-height - emoji-title-input-height */}
-          <div className="flex-1 overflow-auto scrollbar-hide text-disabled">
-            <MarkdownEditor
-              className="flex-1"
-              onChange={handleEditorChange}
-              placeholder="여기를 탭하여 입력을 시작하세요"
-              initialMarkdown={fileInfo?.content}
-              editable={false}
-            />
-          </div>
+        <div className="flex-1 overflow-auto scrollbar-hide text-disabled">
+          <MarkdownEditor
+            className="flex-1"
+            onChange={handleEditorChange}
+            placeholder="여기를 탭하여 입력을 시작하세요"
+            initialMarkdown={fileInfo?.content}
+            editable={false}
+          />
         </div>
       )}
 

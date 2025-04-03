@@ -6,4 +6,5 @@ const CollectionsPage = () => {
 
 export default withHOC(CollectionsPage, {
   activeTab: '컬렉션',
+  backgroundColor: 'bg-blue-100',
 })

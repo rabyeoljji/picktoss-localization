@@ -1,3 +1,6 @@
+import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/lib'
 import { useSearch } from '@/features/search/model/use-search'
 
@@ -69,7 +72,7 @@ const NoteSearchPage = () => {
         }
       />
 
-      <div className="flex-1 overflow-auto">
+      <HeaderOffsetLayout className="flex-1 overflow-auto">
         {!showRecentKeywords && !isFetching && !hasSearchResults && !!queryKeyword && <NoResults />}
         {!showRecentKeywords && !isFetching && hasSearchResults && (
           <DocumentQuizSearchResults
@@ -78,12 +81,10 @@ const NoteSearchPage = () => {
             keyword={queryKeyword}
           />
         )}
-      </div>
+      </HeaderOffsetLayout>
     </div>
   )
 }
-
-export default NoteSearchPage
 
 interface DocumentQuizSearchResultsProps {
   documents: DocumentSearchResult[]
@@ -151,3 +152,5 @@ const DocumentQuizSearchResults = ({ documents, quizzes, keyword }: DocumentQuiz
     </div>
   )
 }
+
+export default withHOC(NoteSearchPage, {})

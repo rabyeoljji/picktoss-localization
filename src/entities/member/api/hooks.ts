@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from '@tanstack/react-query'
 
 import { MEMBER_KEYS } from './config'
 import {
@@ -11,10 +11,13 @@ import {
   updateTodayQuizCount,
 } from './index'
 
-export const useGetMemberInfo = () => {
-  return useQuery({
+export const useUser = () => {
+  return useSuspenseQuery({
     queryKey: MEMBER_KEYS.getMemberInfo,
     queryFn: () => getMemberInfo(),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 }
 
@@ -40,17 +43,27 @@ export const useUpdateQuizNotification = () => {
 }
 
 export const useUpdateMemberName = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: MEMBER_KEYS.updateMemberName,
     mutationFn: (data: Parameters<typeof updateMemberName>[0]) => updateMemberName(data),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
+    },
   })
 }
 
 export const useUpdateInterestCollectionCategories = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: MEMBER_KEYS.updateInterestCollectionCategories,
     mutationFn: (data: Parameters<typeof updateInterestCollectionCategories>[0]) =>
       updateInterestCollectionCategories(data),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
+    },
   })
 }
 
