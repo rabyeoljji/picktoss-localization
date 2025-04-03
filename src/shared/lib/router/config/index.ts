@@ -130,7 +130,7 @@ export const RouteConfig = {
       totalElapsedTime: 0 as number,
       totalQuizCount: 0 as number,
       reward: 0 as number,
-      quizDataEncoded: '' as string,
+      quizWithResultDataEncoded: '' as string,
     },
   },
   randomQuiz: {

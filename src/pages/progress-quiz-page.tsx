@@ -6,8 +6,7 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/ui/progress-bar'
 import { StopWatch } from '@/features/quiz/ui/stop-watch'
 
-import { updateQuizResult } from '@/entities/quiz/api'
-import { useGetQuizSet } from '@/entities/quiz/api/hooks'
+import { useGetQuizSet, useUpdateQuizResult } from '@/entities/quiz/api/hooks'
 import { Question } from '@/entities/quiz/ui/question'
 
 import { IcControl } from '@/shared/assets/icon'
@@ -66,6 +65,9 @@ export const ProgressQuizPage = () => {
   // 퀴즈 결과 저장
   const [quizResults, setQuizResults] = useState<QuizResult[]>([])
 
+  // 마지막 문제 선택 완료 여부 플래그
+  const [isQuizComplete, setIsQuizComplete] = useState(false)
+
   // 현재 퀴즈 시작 시간
   const startTimeRef = useRef<number>(Date.now())
 
@@ -77,6 +79,8 @@ export const ProgressQuizPage = () => {
     quizSetType: params.quizSetType,
   })
 
+  const { mutateAsync: updateQuizResult } = useUpdateQuizResult()
+
   // 퀴즈 시작 시 시간 초기화
   useEffect(() => {
     if (params.selectedOption === null) {
@@ -84,20 +88,20 @@ export const ProgressQuizPage = () => {
     }
   }, [params.quizIndex, params.selectedOption])
 
+  // 마지막 문제 결과가 모두 채워졌을 때 제출 처리
+  useEffect(() => {
+    if (isQuizComplete && quizzes && quizResults.length === quizzes.length && !isSubmitting) {
+      submitQuizResults()
+    }
+  }, [isQuizComplete, quizResults, quizzes, isSubmitting])
+
   const handleOptionSelect = (option: string) => {
     if (params.selectedOption !== null || !quizzes) return
 
-    // 현재 퀴즈
     const currentQuiz = quizzes[params.quizIndex]
-
-    // 소요 시간 계산 (밀리초)
     const elapsedTime = Date.now() - startTimeRef.current
+    const isCorrect = option === currentQuiz.answer
 
-    // 정답 여부 확인
-    const isCorrect =
-      currentQuiz.quizType === 'MULTIPLE_CHOICE' ? option === currentQuiz.answer : option === currentQuiz.answer
-
-    // 퀴즈 결과 저장
     const quizResult: QuizResult = {
       id: currentQuiz.id,
       answer: isCorrect,
@@ -105,12 +109,15 @@ export const ProgressQuizPage = () => {
       elapsedTime,
     }
 
+    // 결과 상태 업데이트
     setQuizResults((prev) => [...prev, quizResult])
-
-    // 옵션을 선택하면 즉시 결과 보여주기
+    // 선택 결과 반영
     setParams({ ...params, selectedOption: option })
 
-    if (params.autoNext) {
+    // 마지막 문제인 경우 완료 플래그 설정
+    if (params.quizIndex === quizzes.length - 1) {
+      setIsQuizComplete(true)
+    } else if (params.autoNext) {
       setTimeout(() => {
         handleNextQuestion()
       }, 400)
@@ -120,53 +127,51 @@ export const ProgressQuizPage = () => {
   const handleNextQuestion = () => {
     if (!quizzes) return
 
-    // 마지막 문제인 경우
+    // 마지막 문제라면 제출 플래그를 설정 (useEffect에서 제출)
     if (params.quizIndex === quizzes.length - 1) {
-      submitQuizResults()
+      setIsQuizComplete(true)
       return
     }
 
     setParams({ ...params, quizIndex: params.quizIndex + 1, selectedOption: null })
   }
 
-  // 퀴즈 결과 제출
+  // 퀴즈 결과 제출 (quizResults 상태를 그대로 사용)
   const submitQuizResults = async () => {
     if (isSubmitting || !quizzes || quizResults.length === 0) return
 
     try {
       setIsSubmitting(true)
 
-      // API 요청 데이터 구성
       const requestData = {
         quizSetId: quizSetId || '',
-        quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType, // 문서 기반 퀴즈
+        quizSetType: params.quizSetType,
         quizzes: quizResults,
       }
 
-      // 결과 제출 API 호출
       const result = await updateQuizResult({ data: requestData })
 
-      // 퀴즈 데이터와 사용자 응답을 함께 전달
       const quizWithResults = quizzes.map((quiz) => {
         const userResult = quizResults.find((qr) => qr.id === quiz.id)
+        if (!userResult) {
+          throw new Error('User result not found')
+        }
         return {
           ...quiz,
-          userAnswer: userResult?.choseAnswer || null,
-          elapsedTime: userResult?.elapsedTime || 0,
-          isCorrect: userResult?.answer || false,
+          userAnswer: userResult.choseAnswer,
+          isCorrect: userResult.answer,
         }
       })
 
-      // 퀴즈 데이터를 Base64로 인코딩
-      const quizDataEncoded = btoa(JSON.stringify(quizWithResults))
+      const quizWithResultDataEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(quizWithResults))))
 
-      // 결과 페이지로 이동
       router.push('/quiz-result', {
         search: {
           quizSetId,
-          quizSetType: 'DOCUMENT_QUIZ_SET',
+          quizSetType: params.quizSetType,
           reward: result.reward,
-          quizDataEncoded: quizDataEncoded,
+          totalElapsedTime: result.totalElapsedTime,
+          quizWithResultDataEncoded: quizWithResultDataEncoded,
         },
       })
     } catch (error) {
