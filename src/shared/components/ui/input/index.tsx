@@ -4,7 +4,7 @@ import { IcClear } from '@/shared/assets/icon'
 import { Label } from '@/shared/components/ui/label'
 import { cn } from '@/shared/lib/utils'
 
-import { Text } from '../text'
+import { Text, Typo, typographyStyles } from '../text'
 
 interface InputProps extends React.ComponentProps<'input'> {
   label?: string
@@ -13,6 +13,7 @@ interface InputProps extends React.ComponentProps<'input'> {
   right?: React.ReactNode
   hasClear?: boolean
   width?: string | number
+  typo?: Typo
   onClearClick?: () => void
 }
 
@@ -29,6 +30,7 @@ function Input({
   width,
   value,
   onChange,
+  typo = 'subtitle-2-medium',
   onClearClick,
   ...props
 }: InputProps) {
@@ -97,7 +99,8 @@ function Input({
           onChange={handleChange}
           data-slot="input"
           className={cn(
-            'bg-surface-1 border-outline placeholder:typo-subtitle-2-medium placeholder:text-caption text-primary typo-subtitle-2-medium focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none',
+            'bg-surface-1 border-outline placeholder:text-caption text-primary focus:border-active disabled:text-disabled disabled:bg-disabled disabled:placeholder:text-disabled h-12 w-full rounded-[8px] border px-3 outline-none disabled:border-none',
+            typographyStyles[typo],
             hasError && 'border-error focus:border-error',
             className,
           )}

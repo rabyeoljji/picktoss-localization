@@ -19,6 +19,7 @@ interface MarkdownEditorProps {
   placeholder?: string
   className?: string
   editable?: boolean
+  isKeyboardVisible?: boolean
 }
 
 export const MarkdownEditor = ({
@@ -27,6 +28,7 @@ export const MarkdownEditor = ({
   placeholder = '여기를 탭하여 입력을 시작하세요',
   className,
   editable,
+  isKeyboardVisible,
 }: MarkdownEditorProps) => {
   const [isFocused, setIsFocused] = useState(false)
   const editorWrapperRef = useRef<HTMLDivElement>(null)
@@ -81,20 +83,19 @@ export const MarkdownEditor = ({
   }
 
   return (
-    <div className={cn('w-full h-full', className)}>
+    <div
+      className={cn('w-full h-full', className)}
+      style={{
+        height: 'calc(100% + 1px)',
+      }}
+    >
       <ProseMirrorWrapper>
         <div ref={editorWrapperRef} className="relative w-full h-full">
           {editor.isEmpty && !isFocused && (
             <div className="absolute left-4 top-5 text-gray-400 pointer-events-none z-10">{placeholder}</div>
           )}
 
-          <EditorContent
-            editor={editor}
-            className="w-full pb-[60px]"
-            style={{
-              height: 'calc(100% + 1px)',
-            }}
-          />
+          <EditorContent editor={editor} className={cn('w-full', isKeyboardVisible ? 'pb-[40px]' : 'pb-[96px]')} />
         </div>
       </ProseMirrorWrapper>
     </div>

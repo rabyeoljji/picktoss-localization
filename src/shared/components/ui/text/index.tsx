@@ -2,7 +2,7 @@ import { ElementType, HTMLAttributes } from 'react'
 
 import { cn } from '@/shared/lib/utils'
 
-const typographyStyles = {
+export const typographyStyles = {
   h1: 'typo-h1',
   h2: 'typo-h2',
   h3: 'typo-h3',
@@ -81,7 +81,7 @@ const textColorStyles = {
   incorrect: 'text-incorrect',
 }
 
-type Typo = keyof typeof typographyStyles
+export type Typo = keyof typeof typographyStyles
 type TextColor = keyof typeof textColorStyles
 
 type TextProps<T extends ElementType> = {

@@ -17,7 +17,6 @@ export const CreateNoteDrawer = () => {
     star,
     setStar,
     isPending,
-    checkButtonActivate,
     DOCUMENT_MIN_QUIZ_COUNT,
     DOCUMENT_MAX_QUIZ_COUNT,
   } = useCreateNoteContext()
@@ -27,7 +26,7 @@ export const CreateNoteDrawer = () => {
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="primary" size="sm" type="submit" disabled={!checkButtonActivate() || isPending}>
+        <Button variant="special" disabled={isPending}>
           {isPending ? '생성 중...' : '만들기'}
         </Button>
       </DrawerTrigger>
@@ -36,7 +35,7 @@ export const CreateNoteDrawer = () => {
           <DrawerTitle>만들 유형과 문제 수를 선택해주세요</DrawerTitle>
         </DrawerHeader>
 
-        <div className="py-10 flex gap-3">
+        <div className="py-10 flex gap-3 w-full">
           <button
             className={cn(
               'flex-1 p-4 aspect-[16/12] rounded-[16px] border border-outline flex-center flex-col  gap-1',
@@ -94,18 +93,20 @@ export const CreateNoteDrawer = () => {
             <Text typo="body-1-medium" color="sub" className="pt-[14px] pb-3 text-center">
               현재 가진 별: {10}개
             </Text>
-            <Button variant="special" onClick={() => handleCreateDocument()}>
-              <div className="flex-center gap-1">
-                <span>만들기</span>
+            <div className="flex">
+              <Button variant="special" onClick={() => handleCreateDocument()}>
+                <div className="flex-center gap-1">
+                  <span>만들기</span>
 
-                <div className="py-px px-2 flex items-center gap-[4.3px] rounded-full bg-[#D3DCE433]/80">
-                  <ImgStar className="size-[16px]" />
-                  <Text typo="body-1-medium" color="white">
-                    {star}
-                  </Text>
+                  <div className="py-px px-2 flex items-center gap-[4.3px] rounded-full bg-[#D3DCE433]/80">
+                    <ImgStar className="size-[16px]" />
+                    <Text typo="body-1-medium" color="white">
+                      {star}
+                    </Text>
+                  </div>
                 </div>
-              </div>
-            </Button>
+              </Button>
+            </div>
           </div>
         </div>
       </DrawerContent>

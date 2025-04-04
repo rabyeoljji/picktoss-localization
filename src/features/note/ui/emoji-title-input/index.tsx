@@ -26,7 +26,7 @@ export const EmojiTitleInput = () => {
   }, [])
 
   return (
-    <div className="p-4 pt-6 flex items-center gap-3 border-b border-divider">
+    <div className="p-4 flex items-center gap-3 h-[56px]">
       <div className="relative" ref={emojiPickerRef}>
         <button
           type="button"
@@ -54,7 +54,8 @@ export const EmojiTitleInput = () => {
 
       <div className="flex-1">
         <Input
-          className="typo-body-1-medium border-none text-base-9 placeholder:text-base-9/60 h-auto px-0 py-1 focus-visible:ring-0"
+          className="border-none placeholder:text-caption h-auto px-0 focus-visible:ring-0"
+          typo="h3"
           placeholder="제목 입력"
           value={documentName}
           onChange={(e) => setDocumentName(e.target.value)}

@@ -13,7 +13,7 @@ import { useCreateDocument } from '@/entities/document/api/hooks'
 import { IcWarningFilled } from '@/shared/assets/icon'
 import { useRouter } from '@/shared/lib/router'
 
-export type DocumentType = CreateDocumentRequest['documentType'] | null
+export type DocumentType = CreateDocumentRequest['documentType']
 export type QuizType = CreateDocumentRequest['quizType']
 
 export interface CreateNoteState {
@@ -75,7 +75,7 @@ export const CreateNoteProvider = ({
 
   // 기본 상태 정의
   const [directoryId, setDirectoryId] = useState<number>(directories[0].id)
-  const [documentType, setDocumentType] = useState<DocumentType>(null)
+  const [documentType, setDocumentType] = useState<DocumentType>('FILE')
   const [documentName, setDocumentName] = useState<string>('')
   const [quizType, setQuizType] = useState<QuizType>('MULTIPLE_CHOICE')
   const [star, setStar] = useState<string>('5')
