@@ -171,7 +171,7 @@ export const OXCollect: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX answer="O" showIndexs={[0]} disabledIndexs={[1]} />
+          <QuestionCard.OX answer="correct" showIndexs={[0]} disabledIndexs={[1]} />
           <QuestionCard.Explanation>
             설명: 정답인 "O"만 강조되고, "X"는 비활성화 처리되었습니다.
           </QuestionCard.Explanation>
@@ -190,7 +190,7 @@ export const OXIncorrect: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX answer="O" showIndexs={[1]} disabledIndexs={[0]} />
+          <QuestionCard.OX answer="correct" showIndexs={[1]} disabledIndexs={[0]} />
           <QuestionCard.Explanation>
             설명: 오답인 "X"만 강조되고, 정답인 "O"는 비활성화 처리되었습니다.
           </QuestionCard.Explanation>
@@ -209,7 +209,7 @@ export const OXShowBoth: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX answer="O" showIndexs={[0, 1]} />
+          <QuestionCard.OX answer="correct" showIndexs={[0, 1]} />
           <QuestionCard.Explanation>설명: 두 옵션("O"와 "X") 모두 표시되며, 정답은 "O"입니다.</QuestionCard.Explanation>
         </QuestionCard>
       </div>
