@@ -15,6 +15,8 @@ import { cn } from '@/shared/lib/utils'
 const NoteDetailPage = () => {
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/note/:noteId', 'quizType')
+  const [isExplanationOpen, setExplanationOpen] = useQueryParam('/note/:noteId', 'isExplanationOpen')
+  const [showAnswer, setShowAnswer] = useQueryParam('/note/:noteId', 'showAnswer')
   const { data } = useGetSingleDocument(noteId ? Number(noteId) : -1)
 
   // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
@@ -108,8 +110,10 @@ const NoteDetailPage = () => {
                   <QuestionCard key={quiz.id}>
                     <QuestionCard.Header order={index + 1} right={<div>...</div>} />
                     <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                    <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} />
-                    <QuestionCard.Explanation>{quiz.explanation}</QuestionCard.Explanation>
+                    <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
+                    <QuestionCard.Explanation open={isExplanationOpen} onOpenChange={setExplanationOpen}>
+                      {quiz.explanation}
+                    </QuestionCard.Explanation>
                   </QuestionCard>
                 ))}
             </div>
@@ -121,8 +125,14 @@ const NoteDetailPage = () => {
                   <QuestionCard key={quiz.id}>
                     <QuestionCard.Header order={index + 1} right={<div>...</div>} />
                     <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                    <QuestionCard.Multiple options={quiz.options} answerIndex={quiz.options.indexOf(quiz.answer)} />
-                    <QuestionCard.Explanation>{quiz.explanation}</QuestionCard.Explanation>
+                    <QuestionCard.Multiple
+                      options={quiz.options}
+                      answerIndex={quiz.options.indexOf(quiz.answer)}
+                      showAnswer={showAnswer}
+                    />
+                    <QuestionCard.Explanation open={isExplanationOpen} onOpenChange={setExplanationOpen}>
+                      {quiz.explanation}
+                    </QuestionCard.Explanation>
                   </QuestionCard>
                 ))}
             </div>

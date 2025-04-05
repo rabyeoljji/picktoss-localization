@@ -28,7 +28,7 @@ export const QuestionCard = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-// 서브컴포넌트: Header, Question, 등은 그대로 둡니다.
+// 서브컴포넌트: Header, Question 등은 그대로 둡니다.
 const QuestionCardHeader = ({ order, right }: { order: number; right?: React.ReactNode }) => {
   return (
     <div className="h-6 flex items-center justify-between px-4">
@@ -50,19 +50,21 @@ const QuestionCardQuestion = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-// 3. 정답 표시를 위한 Multiple 컴포넌트 수정 (answerIndex 필수)
+// 3. 정답 표시를 위한 Multiple 컴포넌트 수정 (answerIndex 필수, showAnswer prop 추가)
 const QuestionCardMultiple = ({
   options,
   answerIndex,
   showIndexs,
+  showAnswer,
 }: {
   options: string[]
   answerIndex: number
   showIndexs?: number[]
+  showAnswer?: boolean
 }) => {
   const { isExplanationOpen } = useQuestionCardContext()
-  // 해설이 열려있다면 정답 인덱스를 자동으로 표시
-  const finalShowIndexs = isExplanationOpen ? [answerIndex] : showIndexs || []
+  // 해설이 열려있거나, showAnswer prop이 true이면 정답 인덱스를 자동으로 표시
+  const finalShowIndexs = isExplanationOpen || showAnswer ? [answerIndex] : showIndexs || []
   return (
     <div className="px-4 mt-4 mb-3">
       <div className="flex flex-col gap-2">
@@ -95,18 +97,20 @@ const QuestionCardMultiple = ({
   )
 }
 
-// 4. OX 컴포넌트 수정 (answerIndex 필수)
+// 4. OX 컴포넌트 수정 (answerIndex 필수, showAnswer prop 추가)
 const QuestionCardOX = ({
   answerIndex,
   showIndexs,
   disabledIndexs,
+  showAnswer,
 }: {
   answerIndex: number
   showIndexs?: number[]
   disabledIndexs?: number[]
+  showAnswer?: boolean
 }) => {
   const { isExplanationOpen } = useQuestionCardContext()
-  const finalShowIndexs = isExplanationOpen ? [answerIndex] : showIndexs || []
+  const finalShowIndexs = isExplanationOpen || showAnswer ? [answerIndex] : showIndexs || []
   return (
     <div className="px-4 mt-4 mb-3">
       <div className="px-[11.5px] flex items-center gap-2 w-full">
@@ -135,9 +139,37 @@ const QuestionCardOX = ({
   )
 }
 
-// 5. Explanation 컴포넌트 수정: 내부 state 대신 컨텍스트를 사용하여 open/close 상태를 공유
-const QuestionCardExplanation = ({ children }: { children: string }) => {
+// 5. Explanation 컴포넌트 수정: 외부에서 open, onOpenChange도 받을 수 있도록 하고 내부 상태와 동기화
+const QuestionCardExplanation = ({
+  children,
+  open,
+  onOpenChange,
+}: {
+  children: string
+  open?: boolean
+  onOpenChange?: (open: boolean) => void
+}) => {
   const { isExplanationOpen, setExplanationOpen } = useQuestionCardContext()
+
+  // 외부 prop open이 있다면 해당 값을 사용하고, 없으면 내부 상태를 사용
+  const effectiveOpen = open !== undefined ? open : isExplanationOpen
+
+  // 외부 open prop이 있을 경우 컨텍스트 상태와 동기화 (Multiple, OX 등에서 사용)
+  useEffect(() => {
+    if (open !== undefined) {
+      setExplanationOpen(open)
+    }
+  }, [open, setExplanationOpen])
+
+  // 토글 시 외부 onOpenChange가 있으면 호출, 아니면 내부 상태 변경
+  const handleToggle = () => {
+    if (onOpenChange) {
+      onOpenChange(!effectiveOpen)
+    } else {
+      setExplanationOpen(!effectiveOpen)
+    }
+  }
+
   const contentRef = useRef<HTMLDivElement>(null)
   const [contentHeight, setContentHeight] = useState<number | null>(null)
 
@@ -145,15 +177,15 @@ const QuestionCardExplanation = ({ children }: { children: string }) => {
     if (contentRef.current) {
       setContentHeight(contentRef.current.scrollHeight)
     }
-  }, [children, isExplanationOpen])
+  }, [children, effectiveOpen])
 
   return (
     <div>
       <motion.div
         initial={false}
         layout
-        className={cn('px-4 overflow-hidden', isExplanationOpen && 'mt-6 mb-3')}
-        animate={{ height: isExplanationOpen && contentHeight ? contentHeight : 0 }}
+        className={cn('px-4 overflow-hidden', effectiveOpen && 'mt-6 mb-3')}
+        animate={{ height: effectiveOpen && contentHeight ? contentHeight : 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <div ref={contentRef} className="pl-3 border-l-2 border-divider">
@@ -162,15 +194,12 @@ const QuestionCardExplanation = ({ children }: { children: string }) => {
           </Text>
         </div>
       </motion.div>
-      <button
-        className="w-full flex-center border-t border-divider"
-        onClick={() => setExplanationOpen(!isExplanationOpen)}
-      >
+      <button className="w-full flex-center border-t border-divider" onClick={handleToggle}>
         <div className="self-stretch h-11 flex-center gap-[4px]">
           <Text typo="body-2-medium" color="sub">
-            {isExplanationOpen ? '닫기' : '해설 보기'}
+            {effectiveOpen ? '닫기' : '해설 보기'}
           </Text>
-          {isExplanationOpen ? (
+          {effectiveOpen ? (
             <IcChevronUp className="size-[12px] text-icon-sub" />
           ) : (
             <IcChevronDown className="size-[12px] text-icon-sub" />
