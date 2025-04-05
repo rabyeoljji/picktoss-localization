@@ -33,6 +33,9 @@ export const useGetSingleDocument = (documentId: number) => {
   return useQuery({
     queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
     queryFn: () => getSingleDocument(documentId),
+    retry: false,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
     enabled: !!documentId,
   })
 }

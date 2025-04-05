@@ -99,7 +99,7 @@ const NoteDetailPage = () => {
         </div>
 
         {/* 4. 문제 리스트 */}
-        <div className="px-4 py-4">
+        <div className="px-4 pt-4 pb-[113px]">
           {quizType === 'MIX_UP' ? (
             <div className="grid gap-2">
               {data?.quizzes
@@ -108,7 +108,7 @@ const NoteDetailPage = () => {
                   <QuestionCard key={quiz.id}>
                     <QuestionCard.Header order={index + 1} right={<div>...</div>} />
                     <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                    <QuestionCard.OX />
+                    <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} />
                     <QuestionCard.Explanation>{quiz.explanation}</QuestionCard.Explanation>
                   </QuestionCard>
                 ))}
@@ -121,7 +121,7 @@ const NoteDetailPage = () => {
                   <QuestionCard key={quiz.id}>
                     <QuestionCard.Header order={index + 1} right={<div>...</div>} />
                     <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                    <QuestionCard.Multiple options={quiz.options} />
+                    <QuestionCard.Multiple options={quiz.options} answerIndex={quiz.options.indexOf(quiz.answer)} />
                     <QuestionCard.Explanation>{quiz.explanation}</QuestionCard.Explanation>
                   </QuestionCard>
                 ))}
