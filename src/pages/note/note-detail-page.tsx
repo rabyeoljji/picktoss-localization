@@ -3,11 +3,12 @@ import { useParams } from 'react-router'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 
-import { IcUpload } from '@/shared/assets/icon'
+import { IcArrange, IcChecknote, IcKebab, IcReplay, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
+import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -137,6 +138,37 @@ const NoteDetailPage = () => {
                 ))}
             </div>
           )}
+        </div>
+
+        <div className="absolute bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-md flex items-center rounded-[16px]">
+          <div className="flex items-center gap-2 shrink-0">
+            <Text typo="body-2-bold" color="sub">
+              정답
+            </Text>
+            <Switch
+              checked={showAnswer}
+              onCheckedChange={(checked) => {
+                setShowAnswer(checked)
+              }}
+            />
+          </div>
+
+          <div className="h-[24px] w-px bg-gray-100 mx-[16px] shrink-0" />
+
+          <div className="flex items-center text-icon-secondary">
+            <button className="p-2">
+              <IcReplay className="size-6" />
+            </button>
+            <button className="p-2">
+              <IcChecknote className="size-6" />
+            </button>
+            <button className="p-2">
+              <IcArrange className="size-6" />
+            </button>
+            <button className="p-2">
+              <IcKebab className="size-6" />
+            </button>
+          </div>
         </div>
       </main>
     </div>
