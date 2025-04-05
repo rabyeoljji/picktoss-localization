@@ -22,10 +22,7 @@ export interface CreateNoteState {
   documentName: string
   quizType: QuizType
   star: string
-  content: {
-    markdown: string
-    textLength: number
-  }
+  content: string
   emoji: string
 }
 
@@ -38,7 +35,7 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setDocumentName: (documentName: string) => void
   setQuizType: (quizType: QuizType) => void
   setStar: (star: string) => void
-  setContent: (content: { markdown: string; textLength: number }) => void
+  setContent: (content: string) => void
   setEmoji: (emoji: string) => void
 
   // Keyboard visibility state
@@ -79,10 +76,7 @@ export const CreateNoteProvider = ({
   const [documentName, setDocumentName] = useState<string>('')
   const [quizType, setQuizType] = useState<QuizType>('MULTIPLE_CHOICE')
   const [star, setStar] = useState<string>('5')
-  const [content, setContent] = useState<{ markdown: string; textLength: number }>({
-    markdown: '',
-    textLength: 0,
-  })
+  const [content, setContent] = useState('')
   const [emoji, setEmoji] = useState<string>('📝')
   const [fileInfo, setFileInfo] = useState<FileInfo | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -96,7 +90,7 @@ export const CreateNoteProvider = ({
   const { mutateAsync: createDocument, isPending } = useCreateDocument()
 
   // 문서 길이에 따라 생성 가능한 문제 수
-  const maxQuizCount = calculateAvailableQuizCount(content.textLength)
+  const maxQuizCount = calculateAvailableQuizCount(content.length)
   const DOCUMENT_MIN_QUIZ_COUNT = maxQuizCount < 5 ? maxQuizCount : 5
   const DOCUMENT_MAX_QUIZ_COUNT = Math.min(maxQuizCount, MAXIMUM_QUIZ_COUNT)
 
@@ -118,7 +112,7 @@ export const CreateNoteProvider = ({
   /** 만들기 버튼 활성화 조건 체크 함수 */
   const checkButtonActivate = () => {
     const isContentValid =
-      content.textLength >= DOCUMENT_CONSTRAINTS.CONTENT.MIN && content.textLength <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
+      content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN && content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
     const isNameValid = documentName.trim().length > 0
     const isTypeValid = documentType !== null
     return isContentValid && isNameValid && isTypeValid
@@ -180,7 +174,7 @@ export const CreateNoteProvider = ({
 
   /** 노트 생성 유효성 검사 함수 */
   const checkIsValid = () => {
-    const blob = new Blob([content.markdown], { type: 'text/markdown' })
+    const blob = new Blob([content], { type: 'text/markdown' })
     const file = new File([blob], `${documentName}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
@@ -213,7 +207,7 @@ export const CreateNoteProvider = ({
       return
     }
 
-    const blob = new Blob([content.markdown], { type: 'text/markdown' })
+    const blob = new Blob([content], { type: 'text/markdown' })
     const file = new File([blob], `${documentName}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {

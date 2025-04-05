@@ -21,20 +21,13 @@ const NoteCreatePageFile = () => {
   useEffect(() => {
     if (fileInfo) {
       setDocumentName(removeFileExtension(fileInfo.name))
-      setContent({ markdown: fileInfo.content, textLength: fileInfo.charCount })
     } else {
       setDocumentName('')
-      setContent({ markdown: '', textLength: 0 })
     }
   }, [fileInfo])
 
   // 에디터 내용 변경 핸들러
-  const handleEditorChange = (markdown: string) => {
-    setContent({
-      markdown,
-      textLength: markdown.length,
-    })
-  }
+  const handleEditorChange = (markdown: string) => {}
 
   if (isProcessing) {
     return (
@@ -47,7 +40,7 @@ const NoteCreatePageFile = () => {
   return (
     <>
       <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
-      {content.markdown && (
+      {content && (
         <div className="flex-1 overflow-auto scrollbar-hide text-disabled">
           <MarkdownEditor
             className="flex-1"
