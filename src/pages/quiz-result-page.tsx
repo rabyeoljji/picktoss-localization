@@ -132,8 +132,7 @@ const QuizResultPage = () => {
                 )}
                 {quizWithResult.quizType === 'MIX_UP' && (
                   <QuestionCard.OX
-                    answer={quizWithResult.answer as 'correct' | 'incorrect'}
-                    userAnswer={quizWithResult.userAnswer as 'correct' | 'incorrect'}
+                    answerIndex={quizWithResult.answer === 'correct' ? 0 : 1}
                     showIndexs={showIndexs}
                     disabledIndexs={[0, 1].filter((index) => !showIndexs.includes(index))}
                   />
