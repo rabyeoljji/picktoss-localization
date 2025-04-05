@@ -19,12 +19,10 @@ export const NoteCreateWrite = () => {
     setContent(content)
   }
 
-  // 커서 위치에 따른 스크롤 조정
   useEffect(() => {
     const editor = editorRef.current
     if (!editor) return
 
-    // 스크롤 위치 조정 함수
     const adjustScrollIfNeeded = () => {
       const selection = window.getSelection()
       if (!selection || selection.rangeCount === 0) return
@@ -32,30 +30,23 @@ export const NoteCreateWrite = () => {
       const range = selection.getRangeAt(0)
       const rect = range.getBoundingClientRect()
 
-      // 화면 하단에서 커서 위치
-      const bottomOffset = window.innerHeight - rect.bottom
-
-      // 하단 영역의 높이 (키보드 표시 여부에 따라 다름)
+      // 하단 고정 영역 높이 (키보드 상태에 따라 달라짐)
       const bottomBarHeight = isKeyboardVisible ? 40 : 96
 
-      // 커서가 하단 영역에 가려지는지 확인
-      if (bottomOffset < bottomBarHeight + 10) {
-        // 10px의 여유 공간 추가
-        // 스크롤을 아래로 조정
-        window.scrollBy({
-          top: bottomBarHeight + 10 - bottomOffset,
+      // 커서 위치가 하단 고정 영역에 가려진 경우
+      if (rect.bottom > window.innerHeight - bottomBarHeight) {
+        // 문서의 맨 아래로 스크롤
+        window.scrollTo({
+          top: document.documentElement.scrollHeight,
           behavior: 'smooth',
         })
       }
     }
 
-    // 입력 이벤트 리스너
     const handleInput = () => {
-      // 다음 프레임에서 스크롤 조정 (DOM 업데이트 후)
       requestAnimationFrame(adjustScrollIfNeeded)
     }
 
-    // 클릭 이벤트 리스너
     const handleClick = () => {
       requestAnimationFrame(adjustScrollIfNeeded)
     }
@@ -63,7 +54,6 @@ export const NoteCreateWrite = () => {
     editor.addEventListener('input', handleInput)
     editor.addEventListener('click', handleClick)
 
-    // MutationObserver로 DOM 변화 감지
     const observer = new MutationObserver(() => {
       requestAnimationFrame(adjustScrollIfNeeded)
     })
