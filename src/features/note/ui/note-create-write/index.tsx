@@ -2,7 +2,6 @@ import { KeyboardDetector } from '@/app/keyboard-detector'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { Textarea } from '@/shared/components/ui/textarea'
 import { cn } from '@/shared/lib/utils'
 
 import { DOCUMENT_CONSTRAINTS } from '../../config'
