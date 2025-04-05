@@ -1,4 +1,3 @@
-import { withHOC } from '@/app/hoc/with-page-config'
 import { useKeyboard } from '@/app/keyboard-detector'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 

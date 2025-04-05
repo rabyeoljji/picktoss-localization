@@ -10,7 +10,7 @@ import { IcChange, IcFile } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 
 const NoteCreatePageFile = () => {
-  const { setDocumentName, content, setContent, setIsKeyboardVisible, fileInfo, changeFileInfo, isProcessing } =
+  const { setDocumentName, content, setIsKeyboardVisible, fileInfo, changeFileInfo, isProcessing } =
     useCreateNoteContext()
 
   const removeFileExtension = (filename: string) => {
@@ -27,7 +27,7 @@ const NoteCreatePageFile = () => {
   }, [fileInfo])
 
   // 에디터 내용 변경 핸들러
-  const handleEditorChange = (markdown: string) => {}
+  const handleEditorChange = () => {}
 
   if (isProcessing) {
     return (
