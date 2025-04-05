@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
@@ -14,15 +15,42 @@ import { cn } from '@/shared/lib/utils'
 const NoteDetailPage = () => {
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/note/:noteId', 'quizType')
-
   const { data } = useGetSingleDocument(noteId ? Number(noteId) : -1)
 
+  // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
+  const [showTitleInHeader, setShowTitleInHeader] = useState(false)
+  const titleRef = useRef(null)
+
+  useEffect(() => {
+    const titleEl = titleRef.current
+    if (!titleEl) return
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        // entry.isIntersecting이 false면 제목이 보이지 않으므로 Header에 표시
+        setShowTitleInHeader(!entry.isIntersecting)
+      },
+      { threshold: 0.1 }, // 10% 이하로 보이면 false로 처리
+    )
+
+    observer.observe(titleEl)
+
+    return () => {
+      observer.disconnect()
+    }
+  }, [])
+
   return (
-    <div className="relative flex flex-col h-screen">
+    <div className="relative flex flex-col h-screen bg-base-1">
       <Header
         left={<BackButton />}
         content={
-          <div className="flex justify-end">
+          <div className={cn('flex items-center w-full', showTitleInHeader ? 'justify-between' : 'justify-end')}>
+            {showTitleInHeader && (
+              <Text typo="subtitle-2-medium" className="ml-2 text-ellipsis overflow-hidden whitespace-nowrap">
+                {data?.documentName}
+              </Text>
+            )}
             <Button size="sm" left={<IcUpload />}>
               공유하기
             </Button>
@@ -30,13 +58,13 @@ const NoteDetailPage = () => {
         }
       />
 
-      {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩을 줘서 컨텐츠가 가려지지 않도록 함) */}
+      {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
       <main className="flex-1 overflow-auto pt-[var(--header-height)]">
         {/* 상단 이미지(아이콘) + 제목 + 날짜 등 */}
         <div className="px-4 pb-6">
-          {/* size-[48px] 대신 w-[48px] h-[48px] 형태를 권장 */}
           <div className="w-[48px] h-[48px] bg-blue-300" />
-          <Text typo="h3" className="mt-3">
+          {/* 제목 요소에 ref 추가 */}
+          <Text ref={titleRef} typo="h3" className="mt-3">
             {data?.documentName ?? '전공 필기 요약'}
           </Text>
           <div className="mt-2">
@@ -46,7 +74,7 @@ const NoteDetailPage = () => {
           </div>
         </div>
 
-        {/* 3. 탭 바 - sticky로 설정하여 스크롤해도 상단에 붙음 */}
+        {/* 3. 탭 바 - sticky로 상단에 고정 */}
         <div className="sticky top-0 z-40 bg-white flex">
           <button
             onClick={() => setQuizType('MIX_UP')}
@@ -70,7 +98,7 @@ const NoteDetailPage = () => {
           </button>
         </div>
 
-        {/* 4. 실제 문제 리스트 */}
+        {/* 4. 문제 리스트 */}
         <div className="px-4 py-4">
           {quizType === 'MIX_UP' ? (
             <div className="grid gap-2">
