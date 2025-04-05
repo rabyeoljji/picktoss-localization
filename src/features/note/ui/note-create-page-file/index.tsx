@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
 
-import { KeyboardDetector } from '@/app/keyboard-detector'
-
 import { MarkdownEditor } from '@/features/editor'
 import { formatFileSize } from '@/features/note/lib'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
@@ -10,8 +8,7 @@ import { IcChange, IcFile } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 
 const NoteCreatePageFile = () => {
-  const { setDocumentName, content, setIsKeyboardVisible, fileInfo, changeFileInfo, isProcessing } =
-    useCreateNoteContext()
+  const { setDocumentName, content, fileInfo, changeFileInfo, isProcessing } = useCreateNoteContext()
 
   const removeFileExtension = (filename: string) => {
     const lastDotIndex = filename.lastIndexOf('.')
@@ -39,7 +36,6 @@ const NoteCreatePageFile = () => {
 
   return (
     <>
-      <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
       {content && (
         <div className="flex-1 overflow-auto scrollbar-hide text-disabled">
           <MarkdownEditor

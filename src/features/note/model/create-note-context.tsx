@@ -38,10 +38,6 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setContent: (content: string) => void
   setEmoji: (emoji: string) => void
 
-  // Keyboard visibility state
-  isKeyboardVisible: boolean
-  setIsKeyboardVisible: (isKeyboardVisible: boolean) => void
-
   isPending: boolean
   handleCreateDocument: () => Promise<void>
   checkButtonActivate: () => boolean
@@ -83,9 +79,6 @@ export const CreateNoteProvider = ({
 
   // 유효성 검사 에러 상태
   const [validationError, setValidationError] = useState<string | null>(null)
-
-  // 키보드 가시성 상태
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState<boolean>(false)
 
   const { mutateAsync: createDocument, isPending } = useCreateDocument()
 
@@ -250,7 +243,6 @@ export const CreateNoteProvider = ({
         star,
         content,
         emoji,
-        isKeyboardVisible,
 
         setDirectoryId,
         setDocumentType,
@@ -259,7 +251,6 @@ export const CreateNoteProvider = ({
         setStar,
         setContent,
         setEmoji,
-        setIsKeyboardVisible,
 
         fileInfo,
         changeFileInfo,
