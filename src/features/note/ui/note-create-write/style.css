@@ -3,3 +3,19 @@
   color: #aaa;
   pointer-events: none; /* placeholder에 대한 클릭 방지 */
 }
+
+/* iOS에서 자동 확대 방지 */
+@supports (-webkit-touch-callout: none) {
+  .editable {
+    font-size: 16px; /* iOS에서 16px 미만의 폰트는 자동 확대됨 */
+  }
+}
+
+/* 에디터 스타일 */
+.editable {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-tap-highlight-color: transparent;
+  word-break: break-word;
+  white-space: pre-wrap;
+}

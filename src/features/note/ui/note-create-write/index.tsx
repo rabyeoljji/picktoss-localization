@@ -1,4 +1,5 @@
 import { KeyboardDetector } from '@/app/keyboard-detector'
+import { useEffect, useRef } from 'react'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
@@ -10,15 +11,78 @@ import './style.css'
 
 export const NoteCreateWrite = () => {
   const { content, setContent, isKeyboardVisible, setIsKeyboardVisible } = useCreateNoteContext()
+  const editorRef = useRef<HTMLDivElement>(null)
 
   const handleEditorChange = (content: string) => {
     setContent(content)
   }
 
+  // 커서 위치에 따른 스크롤 조정
+  useEffect(() => {
+    const editor = editorRef.current
+    if (!editor) return
+
+    // 스크롤 위치 조정 함수
+    const adjustScrollIfNeeded = () => {
+      const selection = window.getSelection()
+      if (!selection || selection.rangeCount === 0) return
+
+      const range = selection.getRangeAt(0)
+      const rect = range.getBoundingClientRect()
+      
+      // 화면 하단에서 커서 위치
+      const bottomOffset = window.innerHeight - rect.bottom
+      
+      // 하단 영역의 높이 (키보드 표시 여부에 따라 다름)
+      const bottomBarHeight = isKeyboardVisible ? 40 : 96
+      
+      // 커서가 하단 영역에 가려지는지 확인
+      if (bottomOffset < bottomBarHeight + 20) { // 20px의 여유 공간 추가
+        // 스크롤을 아래로 조정
+        window.scrollBy({
+          top: bottomBarHeight + 20 - bottomOffset,
+          behavior: 'smooth'
+        })
+      }
+    }
+
+    // 입력 이벤트 리스너
+    const handleInput = () => {
+      // 다음 프레임에서 스크롤 조정 (DOM 업데이트 후)
+      requestAnimationFrame(adjustScrollIfNeeded)
+    }
+
+    // 클릭 이벤트 리스너
+    const handleClick = () => {
+      requestAnimationFrame(adjustScrollIfNeeded)
+    }
+
+    editor.addEventListener('input', handleInput)
+    editor.addEventListener('click', handleClick)
+    
+    // MutationObserver로 DOM 변화 감지
+    const observer = new MutationObserver(() => {
+      requestAnimationFrame(adjustScrollIfNeeded)
+    })
+    
+    observer.observe(editor, {
+      childList: true,
+      subtree: true,
+      characterData: true
+    })
+
+    return () => {
+      editor.removeEventListener('input', handleInput)
+      editor.removeEventListener('click', handleClick)
+      observer.disconnect()
+    }
+  }, [isKeyboardVisible])
+
   return (
     <>
       <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
       <div
+        ref={editorRef}
         contentEditable
         data-placeholder="여기를 탭하여 입력을 시작하세요"
         className={cn(

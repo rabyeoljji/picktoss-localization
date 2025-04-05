@@ -42,7 +42,7 @@ const NoteCreateContent = () => {
   const { documentType, setDocumentType, isKeyboardVisible, content, checkButtonActivate } = useCreateNoteContext()
 
   return (
-    <div className="min-h-[calc(var(--viewport-height,100vh)_-_(var(--header-height-safe)))] flex flex-col relative">
+    <div className="flex flex-col relative">
       <EmojiTitleInput />
       <div className="h-[56px] px-4 py-2 w-full border-b border-divider">
         <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
@@ -54,7 +54,6 @@ const NoteCreateContent = () => {
       </div>
 
       {documentType === 'TEXT' && <NoteCreateWrite />}
-      {/* {documentType === 'TEXT' && <NoteCreateMarkdown />} */}
       {documentType === 'FILE' && <NoteCreatePageFile />}
 
       {!isKeyboardVisible && (
