@@ -1,3 +1,4 @@
+import { Suspense } from 'react'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet } from 'react-router'
 
@@ -10,7 +11,9 @@ export const RootLayout = () => {
           return <div>error</div>
         }}
       >
-        <Outlet />
+        <Suspense>
+          <Outlet />
+        </Suspense>
       </ErrorBoundary>
     </div>
   )
