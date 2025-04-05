@@ -1,5 +1,6 @@
-import { KeyboardDetector } from '@/app/keyboard-detector'
 import { useEffect, useRef } from 'react'
+
+import { useKeyboard } from '@/app/keyboard-detector'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
@@ -10,8 +11,14 @@ import { useCreateNoteContext } from '../../model/create-note-context'
 import './style.css'
 
 export const NoteCreateWrite = () => {
-  const { content, setContent, isKeyboardVisible, setIsKeyboardVisible } = useCreateNoteContext()
+  const { content, setContent, setIsKeyboardVisible } = useCreateNoteContext()
   const editorRef = useRef<HTMLDivElement>(null)
+  const { isKeyboardVisible } = useKeyboard()
+
+  // 키보드 상태 변경 시 context 업데이트
+  useEffect(() => {
+    setIsKeyboardVisible(isKeyboardVisible)
+  }, [isKeyboardVisible, setIsKeyboardVisible])
 
   const handleEditorChange = (content: string) => {
     setContent(content)
@@ -29,19 +36,20 @@ export const NoteCreateWrite = () => {
 
       const range = selection.getRangeAt(0)
       const rect = range.getBoundingClientRect()
-      
+
       // 화면 하단에서 커서 위치
       const bottomOffset = window.innerHeight - rect.bottom
-      
+
       // 하단 영역의 높이 (키보드 표시 여부에 따라 다름)
       const bottomBarHeight = isKeyboardVisible ? 40 : 96
-      
+
       // 커서가 하단 영역에 가려지는지 확인
-      if (bottomOffset < bottomBarHeight + 20) { // 20px의 여유 공간 추가
+      if (bottomOffset < bottomBarHeight + 10) {
+        // 10px의 여유 공간 추가
         // 스크롤을 아래로 조정
         window.scrollBy({
-          top: bottomBarHeight + 20 - bottomOffset,
-          behavior: 'smooth'
+          top: bottomBarHeight + 10 - bottomOffset,
+          behavior: 'smooth',
         })
       }
     }
@@ -59,16 +67,16 @@ export const NoteCreateWrite = () => {
 
     editor.addEventListener('input', handleInput)
     editor.addEventListener('click', handleClick)
-    
+
     // MutationObserver로 DOM 변화 감지
     const observer = new MutationObserver(() => {
       requestAnimationFrame(adjustScrollIfNeeded)
     })
-    
+
     observer.observe(editor, {
       childList: true,
       subtree: true,
-      characterData: true
+      characterData: true,
     })
 
     return () => {
@@ -80,7 +88,6 @@ export const NoteCreateWrite = () => {
 
   return (
     <>
-      <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
       <div
         ref={editorRef}
         contentEditable
@@ -90,7 +97,9 @@ export const NoteCreateWrite = () => {
           isKeyboardVisible ? 'pb-[40px]' : 'pb-[96px]',
         )}
         onInput={(e) => handleEditorChange((e.target as HTMLDivElement).textContent || '')}
-        style={{ minHeight: 300 }}
+        style={{
+          minHeight: 300,
+        }}
       />
 
       {isKeyboardVisible && (

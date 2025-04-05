@@ -1,4 +1,5 @@
 import { withHOC } from '@/app/hoc/with-page-config'
+import { useKeyboard } from '@/app/keyboard-detector'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
@@ -39,10 +40,11 @@ const NoteCreatePage = () => {
 }
 
 const NoteCreateContent = () => {
-  const { documentType, setDocumentType, isKeyboardVisible, content, checkButtonActivate } = useCreateNoteContext()
+  const { documentType, setDocumentType, content, checkButtonActivate } = useCreateNoteContext()
+  const { isKeyboardVisible } = useKeyboard()
 
   return (
-    <div className="flex flex-col relative">
+    <div className="flex flex-col relative bg-base-1 h-[calc(100%+1px)]">
       <EmojiTitleInput />
       <div className="h-[56px] px-4 py-2 w-full border-b border-divider">
         <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
@@ -105,6 +107,8 @@ const NoteCreateContent = () => {
   )
 }
 
-export default withHOC(NoteCreatePage, {
-  backgroundColor: 'bg-surface-1',
-})
+// export default withHOC(NoteCreatePage, {
+//   backgroundColor: 'bg-surface-1',
+// })
+
+export default NoteCreatePage
