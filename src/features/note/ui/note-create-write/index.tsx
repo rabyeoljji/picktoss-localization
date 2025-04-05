@@ -11,14 +11,9 @@ import { useCreateNoteContext } from '../../model/create-note-context'
 import './style.css'
 
 export const NoteCreateWrite = () => {
-  const { content, setContent, setIsKeyboardVisible } = useCreateNoteContext()
+  const { content, setContent } = useCreateNoteContext()
   const editorRef = useRef<HTMLDivElement>(null)
   const { isKeyboardVisible } = useKeyboard()
-
-  // 키보드 상태 변경 시 context 업데이트
-  useEffect(() => {
-    setIsKeyboardVisible(isKeyboardVisible)
-  }, [isKeyboardVisible, setIsKeyboardVisible])
 
   const handleEditorChange = (content: string) => {
     setContent(content)
@@ -103,7 +98,7 @@ export const NoteCreateWrite = () => {
       />
 
       {isKeyboardVisible && (
-        <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider fixed bottom-0 w-full">
+        <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider fixed bottom-0 w-full max-w-xl">
           <div className="flex items-center gap-1">
             <IcInfo className="size-4 text-icon-sub" />
             <Text typo="body-1-regular" color="caption">
