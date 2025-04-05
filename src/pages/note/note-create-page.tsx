@@ -59,7 +59,7 @@ const NoteCreateContent = () => {
 
       {!isKeyboardVisible && (
         <div
-          className={`absolute bottom-0 h-[96px] border-t border-divider ${
+          className={`fixed bottom-0 bg-base-1 h-[96px] border-t border-divider ${
             checkButtonActivate() ? 'pt-3 pl-[19px] pr-4' : 'flex justify-between items-start pt-2.5 px-4 w-full'
           }`}
         >

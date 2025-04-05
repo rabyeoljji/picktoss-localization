@@ -1,0 +1,5 @@
+.editable:empty:before {
+  content: attr(data-placeholder);
+  color: #aaa;
+  pointer-events: none; /* placeholder에 대한 클릭 방지 */
+}
