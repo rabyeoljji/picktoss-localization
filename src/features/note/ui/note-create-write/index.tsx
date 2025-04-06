@@ -5,6 +5,7 @@ import { useKeyboard } from '@/app/keyboard-detector'
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { Textarea } from '@/shared/components/ui/textarea'
+import { usePWA } from '@/shared/hooks/use-pwa'
 import { useVirtualScrollPrevention } from '@/shared/hooks/use-virtual-scroll-prevention'
 import { cn } from '@/shared/lib/utils'
 
@@ -17,6 +18,7 @@ export const NoteCreateWrite = () => {
   const { isKeyboardVisible } = useKeyboard()
   const { viewportWrapRef } = useVirtualScrollPrevention()
   const [textareaHeight, setTextareaHeight] = useState(300)
+  const { isPWA } = usePWA()
 
   const handleTextareaChange = (content: string) => {
     setContent(content)
@@ -55,7 +57,7 @@ export const NoteCreateWrite = () => {
       >
         <Textarea
           placeholder="여기를 탭하여 입력을 시작하세요"
-          className="border-none px-4"
+          className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-bottom)]')}
           onChange={(e) => handleTextareaChange(e.target.value)}
           style={{
             height: textareaHeight,
