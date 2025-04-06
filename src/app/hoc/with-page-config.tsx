@@ -12,7 +12,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
   return (props: P) => (
     <div
       className={cn(
-        'relative size-full safe-area-space',
+        'relative size-full safe-area-space pt-[env(safe-area-inset-top)]',
         backgroundClass,
         config.activeTab && 'pb-tab-navigation',
         // before pseudo-element에 필요한 클래스들
