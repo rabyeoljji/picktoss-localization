@@ -81,6 +81,14 @@ interface GetSingleDocumentResponse {
   characterCount: number
   totalQuizCount: number
   updatedAt: string
+  quizzes: {
+    id: number
+    question: string
+    answer: string
+    explanation: string
+    options: string[]
+    quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  }[]
   // 추가 정보 (예: 디렉토리, 퀴즈 목록 등) 포함 가능
 }
 

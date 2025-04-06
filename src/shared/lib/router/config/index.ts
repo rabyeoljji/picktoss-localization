@@ -38,6 +38,11 @@ export const RouteConfig = {
   },
   noteDetail: {
     pathname: '/note/:noteId',
+    search: {
+      quizType: 'MULTIPLE_CHOICE' as 'MIX_UP' | 'MULTIPLE_CHOICE',
+      isExplanationOpen: false as boolean,
+      showAnswer: false as boolean,
+    },
   },
   noteQuiz: {
     pathname: '/note/quiz/:noteId',

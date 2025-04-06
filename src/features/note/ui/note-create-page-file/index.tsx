@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
 
-import { KeyboardDetector } from '@/app/keyboard-detector'
-
 import { MarkdownEditor } from '@/features/editor'
 import { formatFileSize } from '@/features/note/lib'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
@@ -10,8 +8,7 @@ import { IcChange, IcFile } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 
 const NoteCreatePageFile = () => {
-  const { setDocumentName, content, setContent, setIsKeyboardVisible, fileInfo, changeFileInfo, isProcessing } =
-    useCreateNoteContext()
+  const { setDocumentName, content, fileInfo, changeFileInfo, isProcessing } = useCreateNoteContext()
 
   const removeFileExtension = (filename: string) => {
     const lastDotIndex = filename.lastIndexOf('.')
@@ -21,20 +18,13 @@ const NoteCreatePageFile = () => {
   useEffect(() => {
     if (fileInfo) {
       setDocumentName(removeFileExtension(fileInfo.name))
-      setContent({ markdown: fileInfo.content, textLength: fileInfo.charCount })
     } else {
       setDocumentName('')
-      setContent({ markdown: '', textLength: 0 })
     }
   }, [fileInfo])
 
   // 에디터 내용 변경 핸들러
-  const handleEditorChange = (markdown: string) => {
-    setContent({
-      markdown,
-      textLength: markdown.length,
-    })
-  }
+  const handleEditorChange = () => {}
 
   if (isProcessing) {
     return (
@@ -46,8 +36,7 @@ const NoteCreatePageFile = () => {
 
   return (
     <>
-      <KeyboardDetector onKeyboardVisibilityChange={setIsKeyboardVisible} />
-      {content.markdown && (
+      {content && (
         <div className="flex-1 overflow-auto scrollbar-hide text-disabled">
           <MarkdownEditor
             className="flex-1"

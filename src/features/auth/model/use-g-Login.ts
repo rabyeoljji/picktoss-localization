@@ -26,7 +26,6 @@ export const useGLogin = () => {
           },
         })
         setToken(result.accessToken)
-
         router.replace('/')
       } catch (error) {
         console.error('Google 로그인 실패:', error)

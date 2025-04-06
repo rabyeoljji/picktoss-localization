@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { motion } from 'framer-motion'
 
@@ -6,10 +6,29 @@ import { IcChevronDown, IcChevronUp, IcO, IcX } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
+// 1. 내부 컨텍스트 생성
+const QuestionCardContext = createContext<{
+  isExplanationOpen: boolean
+  setExplanationOpen: (open: boolean) => void
+}>({
+  isExplanationOpen: false,
+  setExplanationOpen: () => {},
+})
+
+// 커스텀 훅으로 쉽게 사용
+const useQuestionCardContext = () => useContext(QuestionCardContext)
+
+// 2. QuestionCard 컴포넌트 (Provider 적용)
 export const QuestionCard = ({ children }: { children: React.ReactNode }) => {
-  return <div className="pt-5 rounded-[12px] bg-surface-1 border border-outline">{children}</div>
+  const [isExplanationOpen, setExplanationOpen] = useState(false)
+  return (
+    <QuestionCardContext.Provider value={{ isExplanationOpen, setExplanationOpen }}>
+      <div className="pt-5 rounded-[12px] bg-surface-1 border border-outline">{children}</div>
+    </QuestionCardContext.Provider>
+  )
 }
 
+// 서브컴포넌트: Header, Question 등은 그대로 둡니다.
 const QuestionCardHeader = ({ order, right }: { order: number; right?: React.ReactNode }) => {
   return (
     <div className="h-6 flex items-center justify-between px-4">
@@ -31,15 +50,21 @@ const QuestionCardQuestion = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
+// 3. 정답 표시를 위한 Multiple 컴포넌트 수정 (answerIndex 필수, showAnswer prop 추가)
 const QuestionCardMultiple = ({
   options,
   answerIndex,
   showIndexs,
+  showAnswer,
 }: {
   options: string[]
-  answerIndex?: number
+  answerIndex: number
   showIndexs?: number[]
+  showAnswer?: boolean
 }) => {
+  const { isExplanationOpen } = useQuestionCardContext()
+  // 해설이 열려있거나, showAnswer prop이 true이면 정답 인덱스를 자동으로 표시
+  const finalShowIndexs = isExplanationOpen || showAnswer ? [answerIndex] : showIndexs || []
   return (
     <div className="px-4 mt-4 mb-3">
       <div className="flex flex-col gap-2">
@@ -48,9 +73,9 @@ const QuestionCardMultiple = ({
             <div
               className={cn(
                 'bg-base-2 rounded-[4px] shrink-0 size-5 flex-center',
-                showIndexs?.includes(index) &&
+                finalShowIndexs.includes(index) &&
                   (answerIndex === index ? 'bg-correct text-correct' : 'bg-incorrect text-incorrect'),
-                showIndexs?.length && !showIndexs.includes(index) && 'bg-base-2 text-disabled',
+                finalShowIndexs.length && !finalShowIndexs.includes(index) && 'bg-base-2 text-disabled',
               )}
             >
               <Text typo="body-2-bold">{String.fromCharCode(65 + index)}</Text>
@@ -59,8 +84,8 @@ const QuestionCardMultiple = ({
               typo="body-1-medium"
               className={cn(
                 'text-secondary',
-                showIndexs?.includes(index) && (answerIndex === index ? 'text-correct' : 'text-incorrect'),
-                showIndexs?.length && !showIndexs.includes(index) && 'text-disabled',
+                finalShowIndexs.includes(index) && (answerIndex === index ? 'text-correct' : 'text-incorrect'),
+                finalShowIndexs.length && !finalShowIndexs.includes(index) && 'text-disabled',
               )}
             >
               {option}
@@ -72,30 +97,28 @@ const QuestionCardMultiple = ({
   )
 }
 
+// 4. OX 컴포넌트 수정 (answerIndex 필수, showAnswer prop 추가)
 const QuestionCardOX = ({
-  userAnswer,
-  answer,
+  answerIndex,
   showIndexs,
   disabledIndexs,
+  showAnswer,
 }: {
-  userAnswer?: 'correct' | 'incorrect'
-  answer?: 'correct' | 'incorrect'
+  answerIndex: number
   showIndexs?: number[]
   disabledIndexs?: number[]
+  showAnswer?: boolean
 }) => {
-  console.log('showIndexs', showIndexs)
+  const { isExplanationOpen } = useQuestionCardContext()
+  const finalShowIndexs = isExplanationOpen || showAnswer ? [answerIndex] : showIndexs || []
   return (
     <div className="px-4 mt-4 mb-3">
       <div className="px-[11.5px] flex items-center gap-2 w-full">
         <div
           className={cn(
             'bg-surface-2 rounded-[8px] text-icon-secondary aspect-[140/44] flex-1 flex-center',
-            showIndexs?.includes(0) &&
-              (answer === 'correct'
-                ? 'bg-correct text-green-500'
-                : userAnswer === 'correct'
-                  ? 'bg-incorrect text-red-500'
-                  : ''),
+            finalShowIndexs.includes(0) &&
+              (answerIndex === 0 ? 'bg-correct text-green-500' : 'bg-incorrect text-red-500'),
             disabledIndexs?.includes(0) && 'bg-disabled text-icon-disabled',
           )}
         >
@@ -104,12 +127,8 @@ const QuestionCardOX = ({
         <div
           className={cn(
             'bg-surface-2 rounded-[8px] text-icon-secondary aspect-[140/44] flex-1 flex-center',
-            showIndexs?.includes(1) &&
-              (answer === 'incorrect'
-                ? 'bg-correct text-green-500'
-                : userAnswer === 'incorrect'
-                  ? 'bg-incorrect text-red-500'
-                  : ''),
+            finalShowIndexs.includes(1) &&
+              (answerIndex === 1 ? 'bg-correct text-green-500' : 'bg-incorrect text-red-500'),
             disabledIndexs?.includes(1) && 'bg-disabled text-icon-disabled',
           )}
         >
@@ -120,6 +139,7 @@ const QuestionCardOX = ({
   )
 }
 
+// 5. Explanation 컴포넌트 수정: 외부에서 open, onOpenChange도 받을 수 있도록 하고 내부 상태와 동기화
 const QuestionCardExplanation = ({
   children,
   open,
@@ -129,9 +149,26 @@ const QuestionCardExplanation = ({
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }) => {
-  const [innerOpen, setInnerOpen] = useState(false)
-  const _openChange = onOpenChange ? onOpenChange : setInnerOpen
-  const _open = open ?? innerOpen
+  const { isExplanationOpen, setExplanationOpen } = useQuestionCardContext()
+
+  // 외부 prop open이 있다면 해당 값을 사용하고, 없으면 내부 상태를 사용
+  const effectiveOpen = open !== undefined ? open : isExplanationOpen
+
+  // 외부 open prop이 있을 경우 컨텍스트 상태와 동기화 (Multiple, OX 등에서 사용)
+  useEffect(() => {
+    if (open !== undefined) {
+      setExplanationOpen(open)
+    }
+  }, [open, setExplanationOpen])
+
+  // 토글 시 외부 onOpenChange가 있으면 호출, 아니면 내부 상태 변경
+  const handleToggle = () => {
+    if (onOpenChange) {
+      onOpenChange(!effectiveOpen)
+    } else {
+      setExplanationOpen(!effectiveOpen)
+    }
+  }
 
   const contentRef = useRef<HTMLDivElement>(null)
   const [contentHeight, setContentHeight] = useState<number | null>(null)
@@ -140,15 +177,15 @@ const QuestionCardExplanation = ({
     if (contentRef.current) {
       setContentHeight(contentRef.current.scrollHeight)
     }
-  }, [children, _open])
+  }, [children, effectiveOpen])
 
   return (
     <div>
       <motion.div
-        initial={!contentRef.current && false}
+        initial={false}
         layout
-        className={cn('px-4 overflow-hidden', _open && 'mt-6 mb-3')}
-        animate={{ height: _open && contentHeight ? contentHeight : 0 }}
+        className={cn('px-4 overflow-hidden', effectiveOpen && 'mt-6 mb-3')}
+        animate={{ height: effectiveOpen && contentHeight ? contentHeight : 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <div ref={contentRef} className="pl-3 border-l-2 border-divider">
@@ -157,13 +194,12 @@ const QuestionCardExplanation = ({
           </Text>
         </div>
       </motion.div>
-
-      <button className="w-full flex-center border-t border-divider" onClick={() => _openChange(!_open)}>
+      <button className="w-full flex-center border-t border-divider" onClick={handleToggle}>
         <div className="self-stretch h-11 flex-center gap-[4px]">
           <Text typo="body-2-medium" color="sub">
-            {_open ? '닫기' : '해설 보기'}
+            {effectiveOpen ? '닫기' : '해설 보기'}
           </Text>
-          {_open ? (
+          {effectiveOpen ? (
             <IcChevronUp className="size-[12px] text-icon-sub" />
           ) : (
             <IcChevronDown className="size-[12px] text-icon-sub" />
@@ -174,8 +210,11 @@ const QuestionCardExplanation = ({
   )
 }
 
+// 서브컴포넌트 할당
 QuestionCard.Header = QuestionCardHeader
 QuestionCard.Question = QuestionCardQuestion
 QuestionCard.Multiple = QuestionCardMultiple
 QuestionCard.OX = QuestionCardOX
 QuestionCard.Explanation = QuestionCardExplanation
+
+export default QuestionCard
