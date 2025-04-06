@@ -35,7 +35,6 @@ export const NoteCreateWrite = () => {
       } else {
         setTextareaHeight(textareaWrapperRef.current?.offsetHeight || 300)
       }
-      window.scrollTo(0, 0)
     }
 
     updateHeight()
