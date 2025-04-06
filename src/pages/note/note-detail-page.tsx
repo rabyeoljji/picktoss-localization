@@ -64,7 +64,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto">
+      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
         <div className="px-4 pb-6">
           <div className="w-[48px] h-[48px] bg-blue-300" />
           {/* 제목 요소에 ref 추가 */}

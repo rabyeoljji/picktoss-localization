@@ -7,7 +7,7 @@ const HeaderOffsetLayout = ({
   children: React.ReactNode
   className?: HTMLElement['className']
 }) => {
-  return <div className={cn('pt-[var(--header-height-safe)]', className)}>{children}</div>
+  return <div className={cn('pt-[var(--header-height)]', className)}>{children}</div>
 }
 
 export default HeaderOffsetLayout
