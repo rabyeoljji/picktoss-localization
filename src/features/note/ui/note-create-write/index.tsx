@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useKeyboard } from '@/app/keyboard-detector'
 
@@ -17,42 +17,71 @@ export const NoteCreateWrite = () => {
   const { isKeyboardVisible } = useKeyboard()
   const [textareaHeight, setTextareaHeight] = useState(300)
   const { isPWA } = usePWA()
+  const viewportWrapRef = useRef<HTMLDivElement>(null)
 
   const handleTextareaChange = (content: string) => {
     setContent(content)
   }
 
-  // 포커스 시 현재 스크롤 위치가 visualViewport 높이보다 내려갔다면 강제로 visualViewport의 끝으로 조정
-  const handleFocus = () => {
-    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight
-    if (window.scrollY > viewportHeight) {
-      window.scrollTo(0, viewportHeight)
+  // 포커스/블러 이벤트는 추가적인 처리가 필요하면 넣으시면 됩니다.
+  const handleFocus = () => {}
+  const handleBlur = () => {}
+
+  // window scroll 이벤트 핸들러:
+  // visualViewport의 pageTop과 offsetTop 차이를 이용해 translateY를 계산하고,
+  // 문서의 끝을 넘지 않도록 scroll을 클램핑합니다.
+  const handleWindowScroll = () => {
+    if (!window.visualViewport || !viewportWrapRef.current) return
+    const viewport = window.visualViewport
+    const viewportTopGap = viewport.pageTop - viewport.offsetTop
+    const translateY = window.scrollY - viewportTopGap
+    viewportWrapRef.current.style.transform = `translateY(${translateY}px)`
+
+    // 가상 영역까지 스크롤 내려가는 것을 방지
+    if (window.scrollY + viewport.height > document.body.offsetHeight - 2) {
+      window.scrollTo(0, document.body.offsetHeight - viewport.height - 1)
     }
-    // 필요에 따라 추가적인 스크롤 제어 로직을 넣을 수 있음
   }
 
-  const handleBlur = () => {
-    // 블러 시 별도 처리할 내용이 있다면 추가
+  // visualViewport scroll 이벤트 (추가 로직이 필요할 경우 사용)
+  const handleViewportScroll = (e: Event) => {
+    // 현재는 디버깅 또는 추가 처리를 위한 용도로 남겨둡니다.
   }
 
-  // 키보드가 보일 때, 스크롤 이벤트로 스크롤 위치가 visualViewport 높이를 초과하면 클램프 처리
+  // keyboard on/off 상태에 따라 scroll 이벤트 핸들러 등록/해제
   useEffect(() => {
-    if (isKeyboardVisible) {
-      const clampScrollPosition = () => {
-        const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight
-        if (window.scrollY > viewportHeight) {
-          window.scrollTo(0, viewportHeight)
+    if (window.visualViewport) {
+      const viewportHeight = window.visualViewport.height
+      if (window.innerHeight > viewportHeight) {
+        // 키보드 ON: viewportwrap 높이를 고정하고 scroll 이벤트 등록
+        if (viewportWrapRef.current) {
+          viewportWrapRef.current.style.height = `${viewportHeight}px`
         }
+        window.addEventListener('scroll', handleWindowScroll)
+        window.visualViewport.addEventListener('scroll', handleViewportScroll)
+      } else {
+        // 키보드 OFF: 원래 높이(100%)로 복원하고 scroll 이벤트 해제
+        if (viewportWrapRef.current) {
+          viewportWrapRef.current.style.height = '100%'
+          viewportWrapRef.current.style.transform = ''
+        }
+        window.removeEventListener('scroll', handleWindowScroll)
+        window.visualViewport.removeEventListener('scroll', handleViewportScroll)
       }
-      window.addEventListener('scroll', clampScrollPosition)
-      return () => window.removeEventListener('scroll', clampScrollPosition)
+    }
+
+    return () => {
+      window.removeEventListener('scroll', handleWindowScroll)
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('scroll', handleViewportScroll)
+      }
     }
   }, [isKeyboardVisible])
 
+  // 텍스트 에리아 높이를 계산 (고정영역 높이 고려)
   useEffect(() => {
     const updateHeight = () => {
       const availableHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight
-      // 키보드가 보일 때와 아닐 때 빼야 할 높이
       const topFixedAreaHeight = 114
       const bottomFixedAreaHeight = isKeyboardVisible ? 40 : 96
       setTextareaHeight(availableHeight - topFixedAreaHeight - bottomFixedAreaHeight)
@@ -74,11 +103,13 @@ export const NoteCreateWrite = () => {
 
   return (
     <div className="flex-1 relative">
+      {/* viewportwrap: scroll translate 및 높이 고정을 위한 div */}
       <div
+        ref={viewportWrapRef}
         style={{
-          // 컨테이너 높이를 실제 가시 영역에서 고정영역을 뺀 값으로 지정
           height: `calc(100% - ${isKeyboardVisible ? 50 : 96}px + 1px)`,
           backgroundColor: 'red',
+          transition: 'transform 0.1s ease-out',
         }}
       >
         <Textarea
