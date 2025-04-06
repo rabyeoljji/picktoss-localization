@@ -22,18 +22,32 @@ export const NoteCreateWrite = () => {
     setContent(content)
   }
 
-  // Body 스크롤 제어를 위한 focus/blur 핸들러
+  // 포커스 시 현재 스크롤 위치가 visualViewport 높이보다 내려갔다면 강제로 visualViewport의 끝으로 조정
   const handleFocus = () => {
-    // 필요 시 스크롤을 0,0 위치로 고정
-    setTimeout(() => window.scrollTo(0, 0))
-    // 포커스 시 body 스크롤 잠금
-    document.documentElement.style.overflow = 'hidden'
+    const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight
+    if (window.scrollY > viewportHeight) {
+      window.scrollTo(0, viewportHeight)
+    }
+    // 필요에 따라 추가적인 스크롤 제어 로직을 넣을 수 있음
   }
 
   const handleBlur = () => {
-    // 포커스 해제 시 body 스크롤 복원
-    document.documentElement.style.overflow = ''
+    // 블러 시 별도 처리할 내용이 있다면 추가
   }
+
+  // 키보드가 보일 때, 스크롤 이벤트로 스크롤 위치가 visualViewport 높이를 초과하면 클램프 처리
+  useEffect(() => {
+    if (isKeyboardVisible) {
+      const clampScrollPosition = () => {
+        const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight
+        if (window.scrollY > viewportHeight) {
+          window.scrollTo(0, viewportHeight)
+        }
+      }
+      window.addEventListener('scroll', clampScrollPosition)
+      return () => window.removeEventListener('scroll', clampScrollPosition)
+    }
+  }, [isKeyboardVisible])
 
   useEffect(() => {
     const updateHeight = () => {
@@ -70,7 +84,6 @@ export const NoteCreateWrite = () => {
         <Textarea
           placeholder="여기를 탭하여 입력을 시작하세요"
           className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-top)]')}
-          // 포커스 시 body 스크롤을 막기 위한 핸들러 추가
           onFocus={handleFocus}
           onBlur={handleBlur}
           onChange={(e) => handleTextareaChange(e.target.value)}
