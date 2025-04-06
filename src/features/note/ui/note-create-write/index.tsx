@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { useKeyboard } from '@/app/keyboard-detector'
 
@@ -17,7 +17,6 @@ export const NoteCreateWrite = () => {
   const { isKeyboardVisible } = useKeyboard()
   const [textareaHeight, setTextareaHeight] = useState(300)
   const { isPWA } = usePWA()
-  const viewportWrapRef = useRef<HTMLDivElement>(null)
 
   const handleTextareaChange = (content: string) => {
     setContent(content)
@@ -48,24 +47,14 @@ export const NoteCreateWrite = () => {
 
   return (
     <div className="flex-1 relative">
-      {/* viewportwrap: scroll translate 및 높이 고정을 위한 div */}
-      <div
-        ref={viewportWrapRef}
+      <Textarea
+        placeholder="여기를 탭하여 입력을 시작하세요"
+        className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-top)]')}
+        onChange={(e) => handleTextareaChange(e.target.value)}
         style={{
-          height: `calc(100% - ${isKeyboardVisible ? 40 : 96}px)`,
-          backgroundColor: 'red',
-          transition: 'transform 0.1s ease-out',
+          height: textareaHeight,
         }}
-      >
-        <Textarea
-          placeholder="여기를 탭하여 입력을 시작하세요"
-          className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-top)]')}
-          onChange={(e) => handleTextareaChange(e.target.value)}
-          style={{
-            height: textareaHeight,
-          }}
-        />
-      </div>
+      />
 
       {isKeyboardVisible && (
         <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider absolute bottom-0 w-full max-w-xl">
