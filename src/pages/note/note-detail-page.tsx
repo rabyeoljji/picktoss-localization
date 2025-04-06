@@ -62,7 +62,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <main className="flex-1 overflow-auto pt-[var(--header-height)]">
+      <main className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
         {/* 상단 이미지(아이콘) + 제목 + 날짜 등 */}
         <div className="px-4 pb-6">
           <div className="w-[48px] h-[48px] bg-blue-300" />

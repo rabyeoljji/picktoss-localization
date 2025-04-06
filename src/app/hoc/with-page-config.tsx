@@ -22,9 +22,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
         `before:${backgroundClass}`,
       )}
     >
-      <div className="pt-[env(safe-area-inset-top)]">
-        <Component {...props} />
-      </div>
+      <Component {...props} />
 
       {config.activeTab && <TabNavigation activeTab={config.activeTab} />}
     </div>
