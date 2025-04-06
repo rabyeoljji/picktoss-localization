@@ -50,7 +50,7 @@ export const NoteCreateWrite = () => {
       <div
         style={{
           // 컨테이너 높이를 실제 가시 영역에서 고정영역을 뺀 값으로 지정
-          height: `calc(100% - ${isKeyboardVisible ? 40 : 96}px + 1px)`,
+          height: `calc(100% - ${isKeyboardVisible ? 50 : 96}px + 1px)`,
           backgroundColor: 'red',
         }}
       >
