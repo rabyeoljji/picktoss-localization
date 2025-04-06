@@ -36,6 +36,7 @@ export const NoteCreateWrite = () => {
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', updateHeight)
     }
+
     return () => {
       window.removeEventListener('resize', updateHeight)
       if (window.visualViewport) {
@@ -45,7 +46,7 @@ export const NoteCreateWrite = () => {
   }, [isKeyboardVisible])
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 relative">
       <div
         style={{
           // 컨테이너 높이를 실제 가시 영역에서 고정영역을 뺀 값으로 지정
@@ -56,6 +57,7 @@ export const NoteCreateWrite = () => {
         <Textarea
           placeholder="여기를 탭하여 입력을 시작하세요"
           className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-bottom)]')}
+          onFocus={() => setTimeout(() => window.scrollTo(0, 0), 50)}
           onChange={(e) => handleTextareaChange(e.target.value)}
           style={{
             height: textareaHeight,
@@ -64,7 +66,7 @@ export const NoteCreateWrite = () => {
       </div>
 
       {isKeyboardVisible && (
-        <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider fixed bottom-0 w-full max-w-xl">
+        <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider absolute bottom-0 w-full max-w-xl">
           <div className="flex items-center gap-1">
             <IcInfo className="size-4 text-icon-sub" />
             <Text typo="body-1-regular" color="caption">
