@@ -6,7 +6,6 @@ import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { usePWA } from '@/shared/hooks/use-pwa'
-import { useVirtualScrollPrevention } from '@/shared/hooks/use-virtual-scroll-prevention'
 import { cn } from '@/shared/lib/utils'
 
 import { DOCUMENT_CONSTRAINTS } from '../../config'
@@ -16,7 +15,6 @@ import './style.css'
 export const NoteCreateWrite = () => {
   const { content, setContent } = useCreateNoteContext()
   const { isKeyboardVisible } = useKeyboard()
-  const { viewportWrapRef } = useVirtualScrollPrevention()
   const [textareaHeight, setTextareaHeight] = useState(300)
   const { isPWA } = usePWA()
 
@@ -47,11 +45,11 @@ export const NoteCreateWrite = () => {
   }, [isKeyboardVisible])
 
   return (
-    <div className="flex-1" ref={viewportWrapRef}>
+    <div className="flex-1">
       <div
         style={{
           // 컨테이너 높이를 실제 가시 영역에서 고정영역을 뺀 값으로 지정
-          height: `calc(100% - ${isKeyboardVisible ? 40 : 96}px)`,
+          height: `calc(100% - ${isKeyboardVisible ? 40 : 96}px + 1px)`,
           backgroundColor: 'red',
         }}
       >
