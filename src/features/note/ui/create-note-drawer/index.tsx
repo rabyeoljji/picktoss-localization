@@ -26,8 +26,17 @@ export const CreateNoteDrawer = () => {
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="special" disabled={isPending}>
-          {isPending ? '생성 중...' : '만들기'}
+        <Button
+          variant="special"
+          disabled={isPending}
+          right={
+            <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+              <ImgStar className="size-[16px] mr-[4px]" />
+              <Text typo="body-1-medium">{star}</Text>
+            </div>
+          }
+        >
+          {isPending ? '생성 중...' : '생성하기'}
         </Button>
       </DrawerTrigger>
       <DrawerContent height="md">

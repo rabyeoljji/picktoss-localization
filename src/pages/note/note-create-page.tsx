@@ -72,7 +72,7 @@ const NoteCreateContent = () => {
       {documentType === 'TEXT' && <NoteCreateWrite />}
       {documentType === 'FILE' && <NoteCreatePageFile />}
 
-      {!isKeyboardVisible && (
+      {documentType === 'TEXT' && !isKeyboardVisible && (
         <div
           className={`fixed bottom-0 w-full max-w-xl bg-base-1 h-[96px] border-t border-divider ${
             checkButtonActivate() ? 'pt-3 pl-[19px] pr-4' : 'flex justify-between items-start pt-2.5 px-4 w-full'
