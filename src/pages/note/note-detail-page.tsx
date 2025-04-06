@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 
 import { IcArrange, IcChecknote, IcKebab, IcReplay, IcUpload } from '@/shared/assets/icon'
@@ -62,8 +64,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <main className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
-        {/* 상단 이미지(아이콘) + 제목 + 날짜 등 */}
+      <HeaderOffsetLayout className="flex-1 overflow-auto">
         <div className="px-4 pb-6">
           <div className="w-[48px] h-[48px] bg-blue-300" />
           {/* 제목 요소에 ref 추가 */}
@@ -170,7 +171,7 @@ const NoteDetailPage = () => {
             </button>
           </div>
         </div>
-      </main>
+      </HeaderOffsetLayout>
     </div>
   )
 }
