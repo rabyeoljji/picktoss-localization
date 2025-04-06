@@ -69,7 +69,7 @@ export const NoteCreateWrite = () => {
       >
         <Textarea
           placeholder="여기를 탭하여 입력을 시작하세요"
-          className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-bottom)]')}
+          className={cn('border-none px-4', isPWA && 'pt-[env(safe-area-inset-bottom)]')}
           // 포커스 시 body 스크롤을 막기 위한 핸들러 추가
           onFocus={handleFocus}
           onBlur={handleBlur}
