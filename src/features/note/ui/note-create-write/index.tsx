@@ -45,6 +45,7 @@ export const NoteCreateWrite = () => {
 
   // visualViewport scroll 이벤트 (추가 로직이 필요할 경우 사용)
   const handleViewportScroll = (e: Event) => {
+    console.log(e)
     // 현재는 디버깅 또는 추가 처리를 위한 용도로 남겨둡니다.
   }
 
