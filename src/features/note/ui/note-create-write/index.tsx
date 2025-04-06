@@ -14,11 +14,37 @@ import './style.css'
 export const NoteCreateWrite = () => {
   const { content, setContent } = useCreateNoteContext()
   const textareaWrapperRef = useRef<HTMLDivElement>(null)
+  const viewportWrapRef = useRef<HTMLDivElement>(null)
   const { isKeyboardVisible, keyboardHeight } = useKeyboard()
   const [textareaHeight, setTextareaHeight] = useState(300)
 
   const handleTextareaChange = (content: string) => {
     setContent(content)
+  }
+
+  // 키보드로 인한 가상 공간으로 스크롤 방지
+  const handleWindowScroll = () => {
+    if (!window.visualViewport || !viewportWrapRef.current) return
+    
+    const viewportTopGap = window.visualViewport.pageTop - window.visualViewport.offsetTop
+    const translateY = window.scrollY - viewportTopGap
+    
+    // 스크롤 변화에 따라 viewport div 이동
+    viewportWrapRef.current.style.transform = `translateY(${translateY}px)`
+    
+    // 가상 영역까지 스크롤 내려가는 것을 방지
+    if (window.scrollY + window.visualViewport.height > document.body.offsetHeight - 2) {
+      window.scrollTo(0, document.body.offsetHeight - window.visualViewport.height - 1)
+    }
+  }
+
+  // 뷰포트 스크롤 이벤트 핸들러
+  const handleViewportScroll = (e: Event) => {
+    // visualViewport 스크롤 이벤트 (필요시 활용)
+    if (e.target && 'offsetTop' in e.target) {
+      // const viewportScrollY = (e.target as any).offsetTop
+      // console.log('Viewport scroll Y:', viewportScrollY)
+    }
   }
 
   useEffect(() => {
@@ -55,8 +81,43 @@ export const NoteCreateWrite = () => {
     }
   }, [isKeyboardVisible, keyboardHeight, textareaHeight])
 
+  // 키보드 가상 공간 스크롤 처리
+  useEffect(() => {
+    // VisualViewport가 없으면 작동하지 않음
+    if (!window.visualViewport) return
+    
+    const visualViewport = window.visualViewport
+    
+    const handleVisualViewportResize = () => {
+      const windowInnerHeight = window.innerHeight
+      const viewportHeight = visualViewport.height
+      
+      if (windowInnerHeight > viewportHeight) { // 키보드 ON
+        if (viewportWrapRef.current) {
+          viewportWrapRef.current.style.height = `${viewportHeight}px`
+        }
+        window.addEventListener('scroll', handleWindowScroll)
+        visualViewport.addEventListener('scroll', handleViewportScroll)
+      } else { // 키보드 OFF
+        if (viewportWrapRef.current) {
+          viewportWrapRef.current.style.height = '100%'
+        }
+        window.removeEventListener('scroll', handleWindowScroll)
+        visualViewport.removeEventListener('scroll', handleViewportScroll)
+      }
+    }
+
+    visualViewport.addEventListener('resize', handleVisualViewportResize)
+    
+    return () => {
+      window.removeEventListener('scroll', handleWindowScroll)
+      visualViewport.removeEventListener('scroll', handleViewportScroll)
+      visualViewport.removeEventListener('resize', handleVisualViewportResize)
+    }
+  }, [])
+
   return (
-    <>
+    <div className="h-full" ref={viewportWrapRef}>
       <div className="flex-1" ref={textareaWrapperRef}>
         <Textarea
           placeholder="여기를 탭하여 입력을 시작하세요"
@@ -90,6 +151,6 @@ export const NoteCreateWrite = () => {
           </Text>
         </div>
       )}
-    </>
+    </div>
   )
 }
