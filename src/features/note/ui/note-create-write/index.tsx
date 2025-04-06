@@ -22,6 +22,19 @@ export const NoteCreateWrite = () => {
     setContent(content)
   }
 
+  // Body 스크롤 제어를 위한 focus/blur 핸들러
+  const handleFocus = () => {
+    // 포커스 시 body 스크롤 잠금
+    document.body.style.overflow = 'hidden'
+    // 필요 시 스크롤을 0,0 위치로 고정
+    setTimeout(() => window.scrollTo(0, 0), 50)
+  }
+
+  const handleBlur = () => {
+    // 포커스 해제 시 body 스크롤 복원
+    document.body.style.overflow = ''
+  }
+
   useEffect(() => {
     const updateHeight = () => {
       const availableHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight
@@ -57,7 +70,9 @@ export const NoteCreateWrite = () => {
         <Textarea
           placeholder="여기를 탭하여 입력을 시작하세요"
           className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-bottom)]')}
-          onFocus={() => setTimeout(() => window.scrollTo(0, 0), 50)}
+          // 포커스 시 body 스크롤을 막기 위한 핸들러 추가
+          onFocus={handleFocus}
+          onBlur={handleBlur}
           onChange={(e) => handleTextareaChange(e.target.value)}
           style={{
             height: textareaHeight,
