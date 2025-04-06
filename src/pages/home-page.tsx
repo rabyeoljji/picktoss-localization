@@ -18,7 +18,7 @@ import {
   DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import { SearchInput } from '@/shared/components/ui/search-input'
-import { useRouter } from '@/shared/lib/router'
+import { Link, useRouter } from '@/shared/lib/router'
 
 const HomePage = () => {
   const router = useRouter()
@@ -32,6 +32,9 @@ const HomePage = () => {
   const [pickingDrawerOpen, setPickingDrawerOpen] = useState(false)
   return (
     <div className="flex flex-col gap-6 px-10">
+      <Link to="/note/:noteId" params={['37']}>
+        노트 상세
+      </Link>
       <PeekingDrawer
         open={pickingDrawerOpen}
         onOpenChange={setPickingDrawerOpen}
