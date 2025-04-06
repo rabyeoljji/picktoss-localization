@@ -14,7 +14,7 @@ import './style.css'
 export const NoteCreateWrite = () => {
   const { content, setContent } = useCreateNoteContext()
   const textareaWrapperRef = useRef<HTMLDivElement>(null)
-  const { isKeyboardVisible } = useKeyboard()
+  const { isKeyboardVisible, keyboardHeight } = useKeyboard()
   const [textareaHeight, setTextareaHeight] = useState(300)
 
   const handleTextareaChange = (content: string) => {
@@ -22,13 +22,19 @@ export const NoteCreateWrite = () => {
   }
 
   useEffect(() => {
+    if (!textareaWrapperRef.current) return
+
+    const textareaWrapperHeight = textareaWrapperRef.current.offsetHeight || 300
+    setTextareaHeight(textareaWrapperHeight)
+  }, [isKeyboardVisible])
+
+  useEffect(() => {
     const updateHeight = () => {
-      // visualViewport가 존재하면 현재 클라이언트 높이(키보드 반영된)를 사용
-      const newHeight = window.visualViewport
-        ? window.visualViewport.height
-        : textareaWrapperRef.current?.offsetHeight || 300
-      setTextareaHeight(newHeight)
-      // 항상 스크롤을 최상위로
+      if (isKeyboardVisible) {
+        setTextareaHeight((textareaWrapperRef.current?.offsetHeight || 300) - keyboardHeight)
+      } else {
+        setTextareaHeight(textareaWrapperRef.current?.offsetHeight || 300)
+      }
       window.scrollTo(0, 0)
     }
 
@@ -48,7 +54,7 @@ export const NoteCreateWrite = () => {
         window.removeEventListener('resize', updateHeight)
       }
     }
-  }, [])
+  }, [isKeyboardVisible, keyboardHeight, textareaHeight])
 
   return (
     <>
@@ -58,8 +64,7 @@ export const NoteCreateWrite = () => {
           className="border-none px-4"
           onChange={(e) => handleTextareaChange(e.target.value)}
           style={{
-            // visualViewport에 따른 높이 사용 (추가 오프셋이 필요하면 여기서 조절 가능)
-            height: textareaHeight,
+            height: textareaHeight - (isKeyboardVisible ? 40 : 96),
           }}
         />
       </div>
