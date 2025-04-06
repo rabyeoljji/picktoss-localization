@@ -29,6 +29,7 @@ export const MultipleDefault: StoryObj<typeof QuestionCard> = {
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
           <QuestionCard.Multiple
+            answerIndex={0}
             options={[
               '기존의 배양육이 기존방식에서 생산되는 육류보다 토양이 비축된다',
               '기존의 배양육이 기존방식에서 생산되는 육류보다 토양이 비축된다',
@@ -154,7 +155,7 @@ export const OXDefault: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX />
+          <QuestionCard.OX answerIndex={0} />
           <QuestionCard.Explanation>설명: 두 옵션("O"와 "X") 모두 표시되며, 정답은 "O"입니다.</QuestionCard.Explanation>
         </QuestionCard>
       </div>
@@ -171,7 +172,7 @@ export const OXCollect: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX answer="correct" showIndexs={[0]} disabledIndexs={[1]} />
+          <QuestionCard.OX answerIndex={0} showIndexs={[0]} disabledIndexs={[1]} />
           <QuestionCard.Explanation>
             설명: 정답인 "O"만 강조되고, "X"는 비활성화 처리되었습니다.
           </QuestionCard.Explanation>
@@ -190,7 +191,7 @@ export const OXIncorrect: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX answer="correct" showIndexs={[1]} disabledIndexs={[0]} />
+          <QuestionCard.OX answerIndex={1} showIndexs={[1]} disabledIndexs={[0]} />
           <QuestionCard.Explanation>
             설명: 오답인 "X"만 강조되고, 정답인 "O"는 비활성화 처리되었습니다.
           </QuestionCard.Explanation>
@@ -209,7 +210,7 @@ export const OXShowBoth: StoryObj<typeof QuestionCard> = {
           <QuestionCard.Question>
             식물기반 단백질 시장에서 대기업의 참여가 늘어나는 이유는 무엇인가요?
           </QuestionCard.Question>
-          <QuestionCard.OX answer="correct" showIndexs={[0, 1]} />
+          <QuestionCard.OX answerIndex={0} showIndexs={[0, 1]} />
           <QuestionCard.Explanation>설명: 두 옵션("O"와 "X") 모두 표시되며, 정답은 "O"입니다.</QuestionCard.Explanation>
         </QuestionCard>
       </div>

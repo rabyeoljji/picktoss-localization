@@ -1,6 +1,6 @@
 import { IcFolder } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { Link, RoutePath } from '@/shared/lib/router'
+import { Link } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
@@ -28,7 +28,7 @@ const SearchQuizNoteItem = ({
 }: Props) => {
   return (
     <Link
-      to={RoutePath.noteDetail}
+      to="/note/:noteId"
       params={[String(documentId)]}
       search={resultType === 'quiz' ? { tab: ['QUIZ'] } : {}}
       className={cn('border-b border-divider py-[24px] flex flex-col', lastItem && 'border-none')}
