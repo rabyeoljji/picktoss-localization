@@ -24,15 +24,15 @@ export const NoteCreateWrite = () => {
 
   // Body 스크롤 제어를 위한 focus/blur 핸들러
   const handleFocus = () => {
-    // 포커스 시 body 스크롤 잠금
-    document.body.style.overflow = 'hidden'
     // 필요 시 스크롤을 0,0 위치로 고정
-    setTimeout(() => window.scrollTo(0, 0), 50)
+    setTimeout(() => window.scrollTo(0, 0))
+    // 포커스 시 body 스크롤 잠금
+    document.documentElement.style.overflow = 'hidden'
   }
 
   const handleBlur = () => {
     // 포커스 해제 시 body 스크롤 복원
-    document.body.style.overflow = ''
+    document.documentElement.style.overflow = ''
   }
 
   useEffect(() => {
