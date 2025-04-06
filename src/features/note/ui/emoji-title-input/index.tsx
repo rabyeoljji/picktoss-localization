@@ -26,14 +26,14 @@ export const EmojiTitleInput = () => {
   }, [])
 
   return (
-    <div className="p-4 flex items-center gap-3 h-[56px]">
+    <div className="p-4 flex items-center gap-3 pt-3 pb-2">
       <div className="relative" ref={emojiPickerRef}>
         <button
           type="button"
           // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
           onMouseDown={(e) => e.preventDefault()}
           onClick={() => setShowEmojiPicker((prev) => !prev)}
-          className="typo-h4 flex-center size-[40px] px-[10px] py-2 rounded-[6px] border border-outline bg-base-2"
+          className="typo-h4 flex-center size-[40px] rounded-[6px] border border-outline bg-base-2"
         >
           {emoji}
         </button>

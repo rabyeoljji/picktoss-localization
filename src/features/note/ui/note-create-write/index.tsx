@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { useKeyboard } from '@/app/keyboard-detector'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
+import { Textarea } from '@/shared/components/ui/textarea'
 import { cn } from '@/shared/lib/utils'
 
 import { DOCUMENT_CONSTRAINTS } from '../../config'
@@ -12,80 +13,33 @@ import './style.css'
 
 export const NoteCreateWrite = () => {
   const { content, setContent } = useCreateNoteContext()
-  const editorRef = useRef<HTMLDivElement>(null)
+  const textareaWrapperRef = useRef<HTMLDivElement>(null)
   const { isKeyboardVisible } = useKeyboard()
+  const [textareaHeight, setTextareaHeight] = useState(300)
 
-  const handleEditorChange = (content: string) => {
+  const handleTextareaChange = (content: string) => {
     setContent(content)
   }
 
   useEffect(() => {
-    const editor = editorRef.current
-    if (!editor) return
+    if (!textareaWrapperRef.current) return
 
-    const adjustScrollIfNeeded = () => {
-      const selection = window.getSelection()
-      if (!selection || selection.rangeCount === 0) return
-
-      const range = selection.getRangeAt(0)
-      const rect = range.getBoundingClientRect()
-
-      // 하단 고정 영역 높이 (키보드 상태에 따라 달라짐)
-      const bottomBarHeight = isKeyboardVisible ? 40 : 96
-
-      // 커서 위치가 하단 고정 영역에 가려진 경우
-      if (rect.bottom > window.innerHeight - bottomBarHeight) {
-        // 문서의 맨 아래로 스크롤
-        window.scrollTo({
-          top: document.documentElement.scrollHeight,
-          behavior: 'smooth',
-        })
-      }
-    }
-
-    const handleInput = () => {
-      requestAnimationFrame(adjustScrollIfNeeded)
-    }
-
-    const handleClick = () => {
-      requestAnimationFrame(adjustScrollIfNeeded)
-    }
-
-    editor.addEventListener('input', handleInput)
-    editor.addEventListener('click', handleClick)
-
-    const observer = new MutationObserver(() => {
-      requestAnimationFrame(adjustScrollIfNeeded)
-    })
-
-    observer.observe(editor, {
-      childList: true,
-      subtree: true,
-      characterData: true,
-    })
-
-    return () => {
-      editor.removeEventListener('input', handleInput)
-      editor.removeEventListener('click', handleClick)
-      observer.disconnect()
-    }
+    const textareaWrapperHeight = textareaWrapperRef.current?.offsetHeight || 300
+    setTextareaHeight(textareaWrapperHeight)
   }, [isKeyboardVisible])
 
   return (
     <>
-      <div
-        ref={editorRef}
-        contentEditable
-        data-placeholder="여기를 탭하여 입력을 시작하세요"
-        className={cn(
-          'editable px-4 border-none pt-5 focus:outline-none',
-          isKeyboardVisible ? 'pb-[40px]' : 'pb-[96px]',
-        )}
-        onInput={(e) => handleEditorChange((e.target as HTMLDivElement).textContent || '')}
-        style={{
-          minHeight: 300,
-        }}
-      />
+      <div className="flex-1" ref={textareaWrapperRef}>
+        <Textarea
+          placeholder="여기를 탭하여 입력을 시작하세요"
+          className="border-none px-4"
+          onChange={(e) => handleTextareaChange(e.target.value)}
+          style={{
+            height: textareaHeight - (isKeyboardVisible ? 40 : 96),
+          }}
+        />
+      </div>
 
       {isKeyboardVisible && (
         <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider fixed bottom-0 w-full max-w-xl">

@@ -1,10 +1,10 @@
+import { withHOC } from '@/app/hoc/with-page-config'
 import { useKeyboard } from '@/app/keyboard-detector'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 import { CreateNoteProvider, DocumentType, useCreateNoteContext } from '@/features/note/model/create-note-context'
 import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
-import { DirectorySelector } from '@/features/note/ui/directory-selector'
 import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
 import NoteCreatePageFile from '@/features/note/ui/note-create-page-file'
 import { NoteCreateWrite } from '@/features/note/ui/note-create-write'
@@ -28,7 +28,7 @@ const NoteCreatePage = () => {
   return (
     <CreateNoteProvider directories={directories}>
       <div className="h-full max-w-xl mx-auto relative">
-        <Header className="z-50" left={<BackButton type="close" />} content={<DirectorySelector />} />
+        <NoteCreateHeader />
 
         <HeaderOffsetLayout className="h-full">
           <NoteCreateContent />
@@ -38,20 +38,35 @@ const NoteCreatePage = () => {
   )
 }
 
+const NoteCreateHeader = () => {
+  const { documentType, setDocumentType } = useCreateNoteContext()
+
+  return (
+    <Header
+      className="z-50"
+      left={<BackButton type="close" />}
+      content={
+        <div className="center">
+          <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
+            <TabsList className="w-[210px]">
+              <TabsTrigger value="FILE">파일 첨부</TabsTrigger>
+              <TabsTrigger value="TEXT">텍스트 작성</TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+      }
+    />
+  )
+}
+
 const NoteCreateContent = () => {
-  const { documentType, setDocumentType, content, checkButtonActivate } = useCreateNoteContext()
+  const { documentType, content, checkButtonActivate } = useCreateNoteContext()
   const { isKeyboardVisible } = useKeyboard()
 
   return (
-    <div className="flex flex-col relative bg-base-1 h-[calc(100%+1px)]">
-      <EmojiTitleInput />
-      <div className="h-[56px] px-4 py-2 w-full border-b border-divider">
-        <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
-          <TabsList>
-            <TabsTrigger value="FILE">파일 첨부</TabsTrigger>
-            <TabsTrigger value="TEXT">텍스트 작성</TabsTrigger>
-          </TabsList>
-        </Tabs>
+    <div className="flex flex-col relative bg-base-1 h-full">
+      <div className="border-b border-divider">
+        <EmojiTitleInput />
       </div>
 
       {documentType === 'TEXT' && <NoteCreateWrite />}
@@ -106,8 +121,6 @@ const NoteCreateContent = () => {
   )
 }
 
-// export default withHOC(NoteCreatePage, {
-//   backgroundColor: 'bg-surface-1',
-// })
-
-export default NoteCreatePage
+export default withHOC(NoteCreatePage, {
+  backgroundColor: 'bg-surface-1',
+})
