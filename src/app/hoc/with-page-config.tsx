@@ -12,7 +12,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
   return (props: P) => (
     <div
       className={cn(
-        'relative size-full safe-area-space pt-[env(safe-area-inset-top)]',
+        'relative size-full safe-area-space',
         backgroundClass,
         config.activeTab && 'pb-tab-navigation',
         // before pseudo-element에 필요한 클래스들
@@ -22,7 +22,9 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
         `before:${backgroundClass}`,
       )}
     >
-      <Component {...props} />
+      <div className="pt-[env(safe-area-inset-top)]">
+        <Component {...props} />
+      </div>
 
       {config.activeTab && <TabNavigation activeTab={config.activeTab} />}
     </div>
