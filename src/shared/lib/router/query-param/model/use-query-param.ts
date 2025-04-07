@@ -209,12 +209,10 @@ export function useQueryParam<
 
   // 값 설정 함수 - 객체 모드와 단일 키 모드 모두 지원
   const setValue = useCallback(
-    (newValueOrUpdater: Partial<T> | ((prev: T) => Partial<T>), overrideOptions?: QueryParamOptions) => {
+    (newValueOrUpdater: T | ((prev: T) => T), overrideOptions?: QueryParamOptions) => {
       // 함수형 업데이트 처리
       const newValue =
-        typeof newValueOrUpdater === 'function'
-          ? (newValueOrUpdater as (prev: T) => Partial<T>)(value)
-          : newValueOrUpdater
+        typeof newValueOrUpdater === 'function' ? (newValueOrUpdater as (prev: T) => T)(value) : newValueOrUpdater
 
       // 현재 옵션과 오버라이드 옵션 병합
       const mergedOptions = { ...options, ...(overrideOptions || {}) }
