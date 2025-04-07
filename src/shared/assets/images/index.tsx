@@ -4,15 +4,18 @@
 import imgBomb from "./img_bomb.png"
 import imgBombEmpty from "./img_bomb_empty.png"
 import imgBookmark from "./img_bookmark.png"
+import imgBookmarkEmpty from "./img_bookmark_empty.png"
 import imgCalender from "./img_calender.png"
 import imgCheckbadge from "./img_checkbadge.png"
+import imgCheckbadgeMono from "./img_checkbadge_mono.png"
 import imgConfirm from "./img_confirm.png"
 import imgDailygraph from "./img_dailygraph.png"
 import imgExit from "./img_exit.png"
 import imgGraph from "./img_graph.png"
 import imgInfinite from "./img_infinite.png"
-import imgInvite from "./img_invite.png"
 import imgInviteEmpty from "./img_invite_empty.png"
+import imgInvitePro from "./img_invite_pro.png"
+import imgInviteStar from "./img_invite_star.png"
 import imgMedal from "./img_medal.png"
 import imgMegaphoneEmpty from "./img_megaphone_empty.png"
 import imgMeteor from "./img_meteor.png"
@@ -21,9 +24,11 @@ import imgNetworkerror from "./img_networkerror.png"
 import imgNoteEmpty from "./img_note_empty.png"
 import imgOx from "./img_ox.png"
 import imgPageerror from "./img_pageerror.png"
+import imgPencil from "./img_pencil.png"
 import imgPush from "./img_push.png"
-import imgQuizerror from "./img_quizerror.png"
 import imgQuizEmpty from "./img_quiz_empty.png"
+import imgQuizcard from "./img_quizcard.png"
+import imgQuizerror from "./img_quizerror.png"
 import imgRandom from "./img_random.png"
 import imgRoundBook from "./img_round_book.png"
 import imgRoundCorrect from "./img_round_correct.png"
@@ -35,9 +40,11 @@ import imgRoundMeteor from "./img_round_meteor.png"
 import imgRoundPicktoss from "./img_round_picktoss.png"
 import imgRoundStar from "./img_round_star.png"
 import imgSpeechbubble from "./img_speechbubble.png"
+import imgSpeechbubbleMono from "./img_speechbubble_mono.png"
 import imgStar from "./img_star.png"
 import imgStarEmpty from "./img_star_empty.png"
 import imgStopwatch from "./img_stopwatch.png"
+import imgStopwatchMono from "./img_stopwatch_mono.png"
 import imgSymbol from "./img_symbol.png"
 import imgTodayquiz from "./img_todayquiz.png"
 import imgTreasure from "./img_treasure.png"
@@ -58,12 +65,20 @@ export const ImgBookmark: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgBookmark} alt="bookmark" {...props} />;
 };
 
+export const ImgBookmarkEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgBookmarkEmpty} alt="bookmark_empty" {...props} />;
+};
+
 export const ImgCalender: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgCalender} alt="calender" {...props} />;
 };
 
 export const ImgCheckbadge: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgCheckbadge} alt="checkbadge" {...props} />;
+};
+
+export const ImgCheckbadgeMono: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgCheckbadgeMono} alt="checkbadge_mono" {...props} />;
 };
 
 export const ImgConfirm: React.FC<ImageComponentProps> = ({ ...props }) => {
@@ -86,12 +101,16 @@ export const ImgInfinite: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgInfinite} alt="infinite" {...props} />;
 };
 
-export const ImgInvite: React.FC<ImageComponentProps> = ({ ...props }) => {
-  return <img src={imgInvite} alt="invite" {...props} />;
-};
-
 export const ImgInviteEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgInviteEmpty} alt="invite_empty" {...props} />;
+};
+
+export const ImgInvitePro: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgInvitePro} alt="invite_pro" {...props} />;
+};
+
+export const ImgInviteStar: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgInviteStar} alt="invite_star" {...props} />;
 };
 
 export const ImgMedal: React.FC<ImageComponentProps> = ({ ...props }) => {
@@ -126,16 +145,24 @@ export const ImgPageerror: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgPageerror} alt="pageerror" {...props} />;
 };
 
+export const ImgPencil: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgPencil} alt="pencil" {...props} />;
+};
+
 export const ImgPush: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgPush} alt="push" {...props} />;
 };
 
-export const ImgQuizerror: React.FC<ImageComponentProps> = ({ ...props }) => {
-  return <img src={imgQuizerror} alt="quizerror" {...props} />;
-};
-
 export const ImgQuizEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgQuizEmpty} alt="quiz_empty" {...props} />;
+};
+
+export const ImgQuizcard: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgQuizcard} alt="quizcard" {...props} />;
+};
+
+export const ImgQuizerror: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgQuizerror} alt="quizerror" {...props} />;
 };
 
 export const ImgRandom: React.FC<ImageComponentProps> = ({ ...props }) => {
@@ -182,6 +209,10 @@ export const ImgSpeechbubble: React.FC<ImageComponentProps> = ({ ...props }) => 
   return <img src={imgSpeechbubble} alt="speechbubble" {...props} />;
 };
 
+export const ImgSpeechbubbleMono: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgSpeechbubbleMono} alt="speechbubble_mono" {...props} />;
+};
+
 export const ImgStar: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgStar} alt="star" {...props} />;
 };
@@ -192,6 +223,10 @@ export const ImgStarEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {
 
 export const ImgStopwatch: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgStopwatch} alt="stopwatch" {...props} />;
+};
+
+export const ImgStopwatchMono: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgStopwatchMono} alt="stopwatch_mono" {...props} />;
 };
 
 export const ImgSymbol: React.FC<ImageComponentProps> = ({ ...props }) => {

@@ -6,11 +6,18 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 
-import { IcArrange, IcChecknote, IcKebab, IcReplay, IcUpload } from '@/shared/assets/icon'
+import { IcArrange, IcChecknote, IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { Header } from '@/shared/components/header/header'
 import { Button } from '@/shared/components/ui/button'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/shared/components/ui/dropdown-menu'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam } from '@/shared/lib/router'
@@ -22,6 +29,8 @@ const NoteDetailPage = () => {
   const [isExplanationOpen, setExplanationOpen] = useQueryParam('/note/:noteId', 'isExplanationOpen')
   const [showAnswer, setShowAnswer] = useQueryParam('/note/:noteId', 'showAnswer')
   const { data } = useGetSingleDocument(noteId ? Number(noteId) : -1)
+
+  const [isContentDrawerOpen, setIsContentDrawerOpen] = useState(false)
 
   // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
   const [showTitleInHeader, setShowTitleInHeader] = useState(false)
@@ -65,7 +74,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto">
+      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
         <div className="px-4 pb-6">
           <div className="w-[48px] h-[48px] bg-blue-300" />
           {/* 제목 요소에 ref 추가 */}
@@ -142,6 +151,7 @@ const NoteDetailPage = () => {
           )}
         </div>
 
+        {/* 5. 하단 툴바 */}
         <div className="absolute bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-md flex items-center rounded-[16px]">
           <div className="flex items-center gap-2 shrink-0">
             <Text typo="body-2-bold" color="sub">
@@ -159,7 +169,7 @@ const NoteDetailPage = () => {
 
           <div className="flex items-center text-icon-secondary">
             <button className="p-2">
-              <IcReplay className="size-6" />
+              <IcPlay className="size-6" />
             </button>
             <button className="p-2">
               <IcChecknote className="size-6" />
@@ -167,11 +177,35 @@ const NoteDetailPage = () => {
             <button className="p-2">
               <IcArrange className="size-6" />
             </button>
-            <button className="p-2">
-              <IcKebab className="size-6" />
-            </button>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="p-2">
+                <IcKebab className="size-6" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="-translate-y-2">
+                <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>
+                <DropdownMenuItem right={<IcNote />} onClick={() => setIsContentDrawerOpen(true)}>
+                  원본 노트 보기
+                </DropdownMenuItem>
+                <DropdownMenuItem className="text-red-500" right={<IcDelete className="text-icon-critical" />}>
+                  문서 전체 삭제
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
+
+        {/* 6. 원본 노트 drawer */}
+        <Drawer open={isContentDrawerOpen} onOpenChange={setIsContentDrawerOpen}>
+          <DrawerContent height="full">
+            <DrawerHeader>
+              <DrawerTitle>원본 노트</DrawerTitle>
+              <DrawerDescription>2025.03.28 등록 / 34,565자</DrawerDescription>
+            </DrawerHeader>
+            <div className="mt-5 flex-1 overflow-y-scroll pb-10">
+              <p>{data?.content}</p>
+            </div>
+          </DrawerContent>
+        </Drawer>
       </HeaderOffsetLayout>
     </div>
   )

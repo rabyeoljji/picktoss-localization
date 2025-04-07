@@ -1,5 +1,8 @@
 // This file is auto-generated. Do not edit manually
 
+import IcO from './ic_O.svg?react'
+import IcX from './ic_X.svg?react'
+import IcTalk from './ic__talk.svg?react'
 import IcAdd from './ic_add.svg?react'
 import IcAddSquare from './ic_add_square.svg?react'
 import IcArrange from './ic_arrange.svg?react'
@@ -13,8 +16,8 @@ import IcCamera from './ic_camera.svg?react'
 import IcCategory from './ic_category.svg?react'
 import IcChange from './ic_change.svg?react'
 import IcCheck from './ic_check.svg?react'
-import IcChecknote from './ic_checknote.svg?react'
 import IcCheckSquare from './ic_check_square.svg?react'
+import IcChecknote from './ic_checknote.svg?react'
 import IcChevronDown from './ic_chevron_down.svg?react'
 import IcChevronLeft from './ic_chevron_left.svg?react'
 import IcChevronRight from './ic_chevron_right.svg?react'
@@ -48,9 +51,11 @@ import IcNew from './ic_new.svg?react'
 import IcNote from './ic_note.svg?react'
 import IcNotification from './ic_notification.svg?react'
 import IcNotion from './ic_notion.svg?react'
-import IcO from './ic_O.svg?react'
+import IcPagelink from './ic_pagelink.svg?react'
 import IcPin from './ic_pin.svg?react'
 import IcPinFilled from './ic_pin_filled.svg?react'
+import IcPlay from './ic_play.svg?react'
+import IcPlayFilled from './ic_play_filled.svg?react'
 import IcProfile from './ic_profile.svg?react'
 import IcQuestion from './ic_question.svg?react'
 import IcQuiznote from './ic_quiznote.svg?react'
@@ -68,10 +73,11 @@ import IcViewFilled from './ic_view_filled.svg?react'
 import IcWarning from './ic_warning.svg?react'
 import IcWarningFilled from './ic_warning_filled.svg?react'
 import IcWrite from './ic_write.svg?react'
-import IcX from './ic_X.svg?react'
-import IcTalk from './ic__talk.svg?react'
 
 export {
+  IcO,
+  IcX,
+  IcTalk,
   IcAdd,
   IcAddSquare,
   IcArrange,
@@ -85,8 +91,8 @@ export {
   IcCategory,
   IcChange,
   IcCheck,
-  IcChecknote,
   IcCheckSquare,
+  IcChecknote,
   IcChevronDown,
   IcChevronLeft,
   IcChevronRight,
@@ -120,9 +126,11 @@ export {
   IcNote,
   IcNotification,
   IcNotion,
-  IcO,
+  IcPagelink,
   IcPin,
   IcPinFilled,
+  IcPlay,
+  IcPlayFilled,
   IcProfile,
   IcQuestion,
   IcQuiznote,
@@ -140,6 +148,4 @@ export {
   IcWarning,
   IcWarningFilled,
   IcWrite,
-  IcX,
-  IcTalk,
 }
