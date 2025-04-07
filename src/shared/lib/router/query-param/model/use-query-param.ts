@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router'
 
 import { SearchConfig } from '../../config/search-config'
 import { buildUrl } from '../../lib'
-import { Pathname } from '../../model/type'
+import type { Pathname } from '../../model/type'
 import { DEFAULT_QUERY_OPTIONS } from '../config'
 import { extractParamsFromPath } from '../lib'
-import { QueryParamOptions } from './type'
+import type { QueryParamOptions } from './type'
 
 // 더 명확한 리터럴 타입 추론을 위한 타입 정의
 type RouteNames = keyof typeof SearchConfig
@@ -74,13 +74,14 @@ export function useQueryParam<R extends RouteNames, K extends StrictQueryParamKe
 ]
 
 // 경로만 제공될 경우, 해당 경로의 모든 쿼리 파라미터 반환 (객체 형태)
+// 쿼리 중 일부 값만 정의해도 타입 검증에 문제가 없도록 Partial 추가
 export function useQueryParam<R extends RouteNames>(
   path: R,
   options?: QueryParamOptions,
 ): [
   QueryParamObject<R>,
   (
-    value: QueryParamObject<R> | ((prev: QueryParamObject<R>) => QueryParamObject<R>),
+    value: Partial<QueryParamObject<R>> | ((prev: QueryParamObject<R>) => Partial<QueryParamObject<R>>),
     overrideOptions?: QueryParamOptions,
   ) => void,
   (overrideOptions?: QueryParamOptions) => void,
@@ -91,7 +92,11 @@ export function useQueryParam(
   path: string,
   key: string,
   options?: QueryParamOptions,
-): [string, (value: string, overrideOptions?: QueryParamOptions) => void, (overrideOptions?: QueryParamOptions) => void]
+): [
+  string,
+  (value: string | ((prev: string) => string), overrideOptions?: QueryParamOptions) => void,
+  (overrideOptions?: QueryParamOptions) => void,
+]
 
 // 실제 구현
 export function useQueryParam<
@@ -194,11 +199,6 @@ export function useQueryParam<
       return (paramValue === 'true') as unknown as T
     }
 
-    // 특별한 경우 리터럴 타입을 유지하기 위한 처리
-    if (path === '/progress-quiz/:quizId' && key === 'name' && (paramValue === '유민' || paramValue === '정우')) {
-      return paramValue as unknown as T
-    }
-
     return paramValue as unknown as T
   }, [key, isObjectMode, searchParams, path])
 
@@ -209,10 +209,12 @@ export function useQueryParam<
 
   // 값 설정 함수 - 객체 모드와 단일 키 모드 모두 지원
   const setValue = useCallback(
-    (newValueOrUpdater: T | ((prev: T) => T), overrideOptions?: QueryParamOptions) => {
+    (newValueOrUpdater: Partial<T> | ((prev: T) => Partial<T>), overrideOptions?: QueryParamOptions) => {
       // 함수형 업데이트 처리
       const newValue =
-        typeof newValueOrUpdater === 'function' ? (newValueOrUpdater as (prev: T) => T)(value) : newValueOrUpdater
+        typeof newValueOrUpdater === 'function'
+          ? (newValueOrUpdater as (prev: T) => Partial<T>)(value)
+          : newValueOrUpdater
 
       // 현재 옵션과 오버라이드 옵션 병합
       const mergedOptions = { ...options, ...(overrideOptions || {}) }
@@ -225,8 +227,7 @@ export function useQueryParam<
 
         Object.entries(params).forEach(([paramKey, paramValue]) => {
           if (
-            paramValue === undefined ||
-            paramValue === null ||
+            paramValue == null ||
             (typeof paramValue === 'string' && paramValue === '' && mergedOptions.emptyHandling === 'remove')
           ) {
             newSearchParams.delete(paramKey)
@@ -237,8 +238,7 @@ export function useQueryParam<
       } else if (!isObjectMode && key) {
         // 단일 키 모드: 특정 키에 대해서만 처리
         if (
-          newValue === undefined ||
-          newValue === null ||
+          newValue == null ||
           (typeof newValue === 'string' && newValue === '' && mergedOptions.emptyHandling === 'remove')
         ) {
           newSearchParams.delete(key)
