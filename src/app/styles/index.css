@@ -45,6 +45,8 @@
 
   --color-red-200: #fde7dd;
   --color-red-500: #f4502c;
+
+  --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 }
 
 html {
@@ -69,8 +71,6 @@ body::-webkit-scrollbar {
 
 @theme {
   --font-display: 'SUIT-Regular', 'sans-serif';
-
-  --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 
   --spacing-tab-navigation: 84px;
 
