@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
+import EmojiPicker, { Theme } from 'emoji-picker-react'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -26,9 +28,13 @@ import { cn } from '@/shared/lib/utils'
 const NoteDetailPage = () => {
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/note/:noteId', 'quizType')
-  const [isExplanationOpen, setExplanationOpen] = useQueryParam('/note/:noteId', 'isExplanationOpen')
   const [showAnswer, setShowAnswer] = useQueryParam('/note/:noteId', 'showAnswer')
   const { data } = useGetSingleDocument(noteId ? Number(noteId) : -1)
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false)
+  const emojiPickerRef = useRef<HTMLDivElement>(null)
+  const [emoji, setEmoji] = useState('😍')
+
+  const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
 
   const [isContentDrawerOpen, setIsContentDrawerOpen] = useState(false)
 
@@ -76,14 +82,37 @@ const NoteDetailPage = () => {
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
       <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
         <div className="px-4 pb-6">
-          <div className="w-[48px] h-[48px] bg-blue-300" />
+          <div ref={emojiPickerRef} className="relative">
+            <button
+              type="button"
+              // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
+              onMouseDown={(e) => e.preventDefault()}
+              onClick={() => setShowEmojiPicker((prev) => !prev)}
+              className="typo-h1 flex-center size-[48px]"
+            >
+              {emoji}
+            </button>
+            {showEmojiPicker && (
+              <div className="absolute top-full bg-base-1 z-50 left-0 mt-1">
+                <EmojiPicker
+                  onEmojiClick={(data) => {
+                    setEmoji(data.emoji)
+                    setShowEmojiPicker(false)
+                  }}
+                  theme={Theme.LIGHT}
+                  width={300}
+                  height={400}
+                />
+              </div>
+            )}
+          </div>
           {/* 제목 요소에 ref 추가 */}
           <Text ref={titleRef} typo="h3" className="mt-3">
-            {data?.documentName ?? '전공 필기 요약'}
+            {data?.documentName ?? 'Loading...'}
           </Text>
           <div className="mt-2">
             <Text typo="body-1-medium" color="sub">
-              2025.05.28 · 28문제 · 공개됨
+              2025.05.28 · {data?.quizzes?.length}문제 · 공개됨
             </Text>
           </div>
         </div>
@@ -123,7 +152,10 @@ const NoteDetailPage = () => {
                     <QuestionCard.Header order={index + 1} right={<div>...</div>} />
                     <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
                     <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
-                    <QuestionCard.Explanation open={isExplanationOpen} onOpenChange={setExplanationOpen}>
+                    <QuestionCard.Explanation
+                      open={!!explanationOpenStates[quiz.id]}
+                      onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                    >
                       {quiz.explanation}
                     </QuestionCard.Explanation>
                   </QuestionCard>
@@ -142,7 +174,10 @@ const NoteDetailPage = () => {
                       answerIndex={quiz.options.indexOf(quiz.answer)}
                       showAnswer={showAnswer}
                     />
-                    <QuestionCard.Explanation open={isExplanationOpen} onOpenChange={setExplanationOpen}>
+                    <QuestionCard.Explanation
+                      open={!!explanationOpenStates[quiz.id]}
+                      onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                    >
                       {quiz.explanation}
                     </QuestionCard.Explanation>
                   </QuestionCard>
@@ -199,7 +234,7 @@ const NoteDetailPage = () => {
           <DrawerContent height="full">
             <DrawerHeader>
               <DrawerTitle>원본 노트</DrawerTitle>
-              <DrawerDescription>2025.03.28 등록 / 34,565자</DrawerDescription>
+              <DrawerDescription>2025.03.28 등록 / {data?.content?.length}자</DrawerDescription>
             </DrawerHeader>
             <div className="mt-5 flex-1 overflow-y-scroll pb-10">
               <p>{data?.content}</p>
