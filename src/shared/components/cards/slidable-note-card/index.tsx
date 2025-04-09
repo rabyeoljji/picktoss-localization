@@ -2,9 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 
 import { PanInfo, motion, useAnimation, useMotionValue } from 'framer-motion'
 
-import { IcQuestion } from '@/shared/assets/icon'
+import { IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { getRelativeTime } from '@/shared/lib/date'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
@@ -181,23 +180,45 @@ const SlidableNoteCardPreview = ({ content }: { content: string }) => {
 
 const SlidableNoteCardDetail = ({
   quizCount,
-  directory,
-  lastUpdated, // todo: api response필드 수정 확인 필요
+  isShared,
+  playedCount,
+  bookmarkCount,
 }: {
   quizCount: number
-  directory: string
-  lastUpdated: string
+  isShared?: boolean
+  playedCount?: number
+  bookmarkCount?: number
 }) => {
   return (
     <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[8px]">
       <div className="inline-flex justify-start items-center gap-1">
-        <IcQuestion className="size-[12px] text-icon-sub" />
-        <span>{quizCount}</span>
+        <span>{quizCount} 문제</span>
       </div>
-      <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
-      <span>{directory}</span>
-      <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
-      <span className="flex items-center">{getRelativeTime(lastUpdated)}</span>
+
+      {isShared && (
+        <>
+          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+
+          <div className="inline-flex justify-start items-center gap-1">
+            <IcPlayFilled className="size-[12px] text-icon-sub" />
+            <span>{playedCount}</span>
+          </div>
+
+          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+
+          <div className="inline-flex justify-start items-center gap-1">
+            <IcBookmarkFilled className="size-[12px] text-icon-sub" />
+            <span>{bookmarkCount}</span>
+          </div>
+        </>
+      )}
+
+      {!isShared && (
+        <>
+          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <span>비공개</span>
+        </>
+      )}
     </Text>
   )
 }

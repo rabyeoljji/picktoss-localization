@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useArgs } from '@storybook/preview-api'
 import { Meta, StoryObj } from '@storybook/react'
-import { subDays } from 'date-fns'
 
 import { IcDelete, IcUpload } from '@/shared/assets/icon'
 
@@ -39,7 +38,6 @@ export default meta
 
 export const DefaultNoteCard: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
-    const yesterday = subDays(new Date(), 1).toISOString()
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 0
 
@@ -79,7 +77,7 @@ export const DefaultNoteCard: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} directory="경영경제" lastUpdated={yesterday} />
+            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -89,7 +87,6 @@ export const DefaultNoteCard: StoryObj<typeof SlidableNoteCard> = {
 
 export const NoteCardWithCustomEmoji: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
-    const yesterday = subDays(new Date(), 1).toISOString()
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 0
 
@@ -129,7 +126,7 @@ export const NoteCardWithCustomEmoji: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} directory="경영경제" lastUpdated={yesterday} />
+            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -139,7 +136,6 @@ export const NoteCardWithCustomEmoji: StoryObj<typeof SlidableNoteCard> = {
 
 export const SlidNoteCard: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
-    const yesterday = subDays(new Date(), 1).toISOString()
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 0
 
@@ -180,7 +176,7 @@ export const SlidNoteCard: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} directory="경영경제" lastUpdated={yesterday} />
+            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -193,7 +189,6 @@ export const SelectModeNoteCard: StoryObj<typeof SlidableNoteCard> = {
     selectMode: true, // 기본값을 true로 설정
   },
   render: () => {
-    const yesterday = subDays(new Date(), 1).toISOString()
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 2
 
@@ -233,7 +228,7 @@ export const SelectModeNoteCard: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} directory="경영경제" lastUpdated={yesterday} />
+            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -246,7 +241,6 @@ export const SelectModeNoteCardIsSelected: StoryObj<typeof SlidableNoteCard> = {
     selectMode: true, // 기본값을 true로 설정
   },
   render: () => {
-    const yesterday = subDays(new Date(), 1).toISOString()
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 2
 
@@ -286,7 +280,7 @@ export const SelectModeNoteCardIsSelected: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} directory="경영경제" lastUpdated={yesterday} />
+            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -296,7 +290,6 @@ export const SelectModeNoteCardIsSelected: StoryObj<typeof SlidableNoteCard> = {
 
 export const NoteCardWithTag: StoryObj<typeof SlidableNoteCard> = {
   render: () => {
-    const yesterday = subDays(new Date(), 1).toISOString()
     const [{ selectMode }, updateArgs] = useArgs()
     const id = 3
 
@@ -336,7 +329,7 @@ export const NoteCardWithTag: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" tag={<Tag color="orange-weak">{5} 오답</Tag>} />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} directory="경영경제" lastUpdated={yesterday} />
+            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>

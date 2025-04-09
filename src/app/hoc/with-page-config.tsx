@@ -4,6 +4,7 @@ import { cn } from '@/shared/lib/utils'
 interface Props {
   backgroundColor?: HTMLElement['className']
   activeTab?: React.ComponentProps<typeof TabNavigation>['activeTab']
+  navClassName?: HTMLElement['className']
 }
 
 export function withHOC<P extends object>(Component: React.ComponentType<P>, config: Props) {
@@ -14,7 +15,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
       className={cn(
         'relative size-full safe-area-space',
         backgroundClass,
-        config.activeTab && 'pb-tab-navigation',
+        config.activeTab && 'pb-[var(--spacing-tab-navigation)]',
         // before pseudo-element에 필요한 클래스들
         "before:content-['']",
         'before:absolute before:top-0 before:left-0 before:z-50',
@@ -24,7 +25,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
     >
       <Component {...props} />
 
-      {config.activeTab && <TabNavigation activeTab={config.activeTab} />}
+      {config.activeTab && <TabNavigation activeTab={config.activeTab} className={config.navClassName} />}
     </div>
   )
 }

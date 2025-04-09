@@ -62,7 +62,7 @@ const NoteSearchPage = () => {
                 value={inputValue}
                 onChange={onChangeKeyword}
                 clearKeyword={handleClearKeyword}
-                placeholder="노트, 퀴즈 검색"
+                placeholder="퀴즈 제목, 내용 검색"
               />
             </form>
 
