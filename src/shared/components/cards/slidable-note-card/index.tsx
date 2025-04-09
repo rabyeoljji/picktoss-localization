@@ -16,6 +16,7 @@ interface Props {
   onClick: () => void
   swipeOptions: React.ReactNode[]
   className?: HTMLElement['className']
+  defaultSlid?: boolean
 }
 
 export const SlidableNoteCard = ({
@@ -27,15 +28,18 @@ export const SlidableNoteCard = ({
   onSelect,
   onClick,
   swipeOptions,
+  defaultSlid,
 }: Props) => {
+  const totalSwipeOptionsWidth = swipeOptions.length * 65
+
   const [innerSelectMode, setInnerSelectMode] = useState(false)
 
   const _selectMode = selectMode ?? innerSelectMode
   const _onSelectModeChange = changeSelectMode ?? setInnerSelectMode
 
-  const [isSwiped, setIsSwiped] = useState(false)
+  const [isSwiped, setIsSwiped] = useState(defaultSlid ?? false)
   const [isDragging, setIsDragging] = useState(false)
-  const x = useMotionValue(0)
+  const x = useMotionValue(defaultSlid ? -totalSwipeOptionsWidth : 0)
   const controls = useAnimation()
 
   const [isLongPress, setIsLongPress] = useState(false)
@@ -67,7 +71,7 @@ export const SlidableNoteCard = ({
   const handleDragEnd = async (_: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x < -30) {
       setIsSwiped(true) // 30px 이상 드래그하면 스와이프
-      await controls.start({ x: -(swipeOptions.length * 65) }) // 요소 왼쪽으로 이동
+      await controls.start({ x: -totalSwipeOptionsWidth }) // 요소 왼쪽으로 이동
     } else {
       setIsSwiped(false) // 스와이프 취소
       await controls.start({ x: 0 }) // 원래 위치로 이동
@@ -98,7 +102,7 @@ export const SlidableNoteCard = ({
       onTouchEnd={handlePressEnd}
       onTouchCancel={handlePressEnd}
       className={cn(
-        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] pb-[20px] pt-[17px] shrink-0 cursor-pointer`,
+        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] py-[19px] shrink-0 cursor-pointer`,
         className,
       )}
     >
