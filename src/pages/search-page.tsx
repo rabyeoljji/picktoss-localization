@@ -12,7 +12,7 @@ import {
 import { NoResults } from '@/entities/search/ui/no-results'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
-import { Header } from '@/shared/components/header/header'
+import { Header } from '@/shared/components/header'
 import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
 import { StorageKey } from '@/shared/lib/storage'

@@ -13,7 +13,7 @@ import { useGetAllDirectories } from '@/entities/directory/api/hooks'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
-import { Header } from '@/shared/components/header/header'
+import { Header } from '@/shared/components/header'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'

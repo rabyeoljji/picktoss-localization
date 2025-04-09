@@ -15,7 +15,7 @@ import { IcControl } from '@/shared/assets/icon'
 import { ImgExit, ImgRoundCorrect, ImgRoundIncorrect } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers/peeking-drawer'
-import { Header } from '@/shared/components/header/header'
+import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
