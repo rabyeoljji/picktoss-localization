@@ -4,7 +4,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import WithdrawForm from '@/features/withdraw/ui/withdraw-form'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
-import { Header } from '@/shared/components/header/header'
+import { Header } from '@/shared/components/header'
 import { Text } from '@/shared/components/ui/text'
 
 const WithdrawPage = () => {

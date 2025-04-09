@@ -11,7 +11,7 @@ import { useGetSingleDocument } from '@/entities/document/api/hooks'
 import { IcArrange, IcChecknote, IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
-import { Header } from '@/shared/components/header/header'
+import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer'
 import {

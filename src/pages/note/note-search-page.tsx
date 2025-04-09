@@ -9,7 +9,7 @@ import { useSearchDocumentsQuery } from '@/entities/search/api/hooks'
 import { NoResults } from '@/entities/search/ui/no-results'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
-import { Header } from '@/shared/components/header/header'
+import { Header } from '@/shared/components/header'
 import SearchQuizNoteItem from '@/shared/components/items/search-quiz-note-item'
 import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
@@ -62,7 +62,7 @@ const NoteSearchPage = () => {
                 value={inputValue}
                 onChange={onChangeKeyword}
                 clearKeyword={handleClearKeyword}
-                placeholder="노트, 퀴즈 검색"
+                placeholder="퀴즈 제목, 내용 검색"
               />
             </form>
 
