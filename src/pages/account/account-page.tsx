@@ -4,6 +4,4 @@ const AccountPage = () => {
   return <div>AccountPage</div>
 }
 
-export default withHOC(AccountPage, {
-  activeTab: '마이',
-})
+export default withHOC(AccountPage, {})
