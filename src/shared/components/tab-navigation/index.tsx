@@ -1,4 +1,4 @@
-import { IcCollection, IcHome, IcMy, IcQuiznote } from '@/shared/assets/icon'
+import { IcCollection, IcHome, IcQuiznote } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { RoutePath } from '@/shared/lib/router'
@@ -7,24 +7,19 @@ import { cn } from '@/shared/lib/utils'
 
 const navItems = [
   {
-    label: '홈',
+    label: '데일리',
     to: RoutePath.root,
     icon: <IcHome />,
   },
   {
-    label: '퀴즈노트',
-    to: RoutePath.note,
-    icon: <IcQuiznote />,
-  },
-  {
-    label: '컬렉션',
-    to: RoutePath.collection,
+    label: '탐험',
+    to: RoutePath.explore,
     icon: <IcCollection />,
   },
   {
-    label: '마이',
-    to: RoutePath.account,
-    icon: <IcMy />,
+    label: '도서관',
+    to: RoutePath.note,
+    icon: <IcQuiznote />,
   },
 ] as const
 
@@ -32,7 +27,7 @@ interface TabNavigationProps {
   activeTab: (typeof navItems)[number]['label']
 }
 
-export const TabNavigation = ({ activeTab = '홈' }: TabNavigationProps) => {
+export const TabNavigation = ({ activeTab = '데일리' }: TabNavigationProps) => {
   return (
     <div className="h-tab-navigation bg-surface-1 fixed bottom-0 w-full max-w-xl">
       <div className="mx-auto flex max-w-[500px] justify-between px-[30px] pt-2.5">

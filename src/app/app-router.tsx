@@ -18,15 +18,13 @@ import { FeedbackCompletePage } from '@/pages/account/feedback-complete-page'
 import FeedbackPage from '@/pages/account/feedback-page'
 import { LoginPage } from '@/pages/auth'
 import {
-  CollectionComplainPage,
-  CollectionCreatePage,
-  CollectionDetailPage,
-  CollectionEditInfoPage,
-  CollectionEditQuizPage,
-  CollectionQuizPage,
-  CollectionSearchPage,
-  CollectionsPage,
-} from '@/pages/collection'
+  ExploreComplainPage,
+  ExploreDetailPage,
+  ExplorePage,
+  ExploreQuizPage,
+  ExploreSearchPage,
+  ExploreSharePage,
+} from '@/pages/explore'
 import HomePage from '@/pages/home-page'
 import { InstallGuidePage } from '@/pages/install-guide-page'
 import {
@@ -67,7 +65,7 @@ export const AppRouter = () => {
               <Route path={RoutePath.root} element={<HomePage />} />
               <Route path={RoutePath.search} element={<SearchPage />} />
 
-              {/* Note */}
+              {/* Note (Library) */}
               <Route path={RoutePath.note}>
                 <Route index element={<NotesPage />} />
                 <Route path={RoutePath.noteDetail} element={<NoteDetailPage />} />
@@ -107,16 +105,14 @@ export const AppRouter = () => {
               </Route>
             </Route>
 
-            {/* 컬렉션 */}
-            <Route path={RoutePath.collection}>
-              <Route index element={<CollectionsPage />} />
-              <Route path={RoutePath.collectionDetail} element={<CollectionDetailPage />} />
-              <Route path={RoutePath.collectionQuiz} element={<CollectionQuizPage />} />
-              <Route path={RoutePath.collectionComplain} element={<CollectionComplainPage />} />
-              <Route path={RoutePath.collectionCreate} element={<CollectionCreatePage />} />
-              <Route path={RoutePath.collectionEditInfo} element={<CollectionEditInfoPage />} />
-              <Route path={RoutePath.collectionEditQuiz} element={<CollectionEditQuizPage />} />
-              <Route path={RoutePath.collectionSearch} element={<CollectionSearchPage />} />
+            {/* Explore */}
+            <Route path={RoutePath.explore}>
+              <Route index element={<ExplorePage />} />
+              <Route path={RoutePath.exploreQuiz} element={<ExploreQuizPage />} />
+              <Route path={RoutePath.exploreQuizDetail} element={<ExploreDetailPage />} />
+              <Route path={RoutePath.exploreQuizComplain} element={<ExploreComplainPage />} />
+              <Route path={RoutePath.exploreShare} element={<ExploreSharePage />} />
+              <Route path={RoutePath.exploreSearch} element={<ExploreSearchPage />} />
             </Route>
           </Route>
           {/* Auth */}

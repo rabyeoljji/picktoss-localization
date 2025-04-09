@@ -151,30 +151,24 @@ export const RouteConfig = {
     },
   },
 
-  /** 컬렉션 관련 페이지 */
-  collection: {
-    pathname: '/collection',
+  /** 탐험 관련 페이지 */
+  explore: {
+    pathname: '/explore',
   },
-  collectionDetail: {
-    pathname: '/collection/:collectionId',
+  exploreShare: {
+    pathname: '/explore/share',
   },
-  collectionQuiz: {
-    pathname: '/collection/quiz/:collectionId',
+  exploreQuiz: {
+    pathname: '/explore/quiz/:sharedNoteId',
   },
-  collectionComplain: {
-    pathname: '/collection/complain/:collectionId',
+  exploreQuizDetail: {
+    pathname: '/explore/quiz/detail/:sharedNoteId',
   },
-  collectionCreate: {
-    pathname: '/collection/create',
+  exploreQuizComplain: {
+    pathname: '/explore/quiz/complain/:sharedNoteId',
   },
-  collectionEditInfo: {
-    pathname: '/collection/edit/info/:collectionId',
-  },
-  collectionEditQuiz: {
-    pathname: '/collection/edit/quiz/:collectionId',
-  },
-  collectionSearch: {
-    pathname: '/collection/search',
+  exploreSearch: {
+    pathname: '/explore/search',
     search: {
       query: '' as string,
     },
