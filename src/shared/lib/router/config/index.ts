@@ -58,6 +58,9 @@ export const RouteConfig = {
   },
   noteCreate: {
     pathname: '/note/create',
+    search: {
+      documentType: 'TEXT' as 'TEXT' | 'FILE',
+    },
   },
   noteUpload: {
     pathname: '/note/upload',

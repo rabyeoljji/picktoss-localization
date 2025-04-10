@@ -11,7 +11,7 @@ import { CreateDocumentRequest } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
-import { useRouter } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 export type DocumentType = CreateDocumentRequest['documentType']
 export type QuizType = CreateDocumentRequest['quizType']
@@ -66,9 +66,11 @@ export const CreateNoteProvider = ({
 }) => {
   const router = useRouter()
 
+  const [initDocumentType] = useQueryParam('/note/create', 'documentType')
+
   // 기본 상태 정의
   const [directoryId, setDirectoryId] = useState<number>(directories[0].id)
-  const [documentType, setDocumentType] = useState<DocumentType>('FILE')
+  const [documentType, setDocumentType] = useState<DocumentType>(initDocumentType)
   const [documentName, setDocumentName] = useState<string>('')
   const [quizType, setQuizType] = useState<QuizType>('MULTIPLE_CHOICE')
   const [star, setStar] = useState<string>('5')

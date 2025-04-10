@@ -3,17 +3,20 @@ import { useEffect, useState } from 'react'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { IcProfile, IcSearch } from '@/shared/assets/icon'
+import { IcFile, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgStar } from '@/shared/assets/images'
 import { Header } from '@/shared/components/header'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const HomePage = () => {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(1)
   const [count, setCount] = useState(0)
+
+  const router = useRouter()
 
   useEffect(() => {
     if (!api) {
@@ -102,6 +105,36 @@ const HomePage = () => {
           </div>
         </div>
       </HeaderOffsetLayout>
+
+      <div className="px-4">
+        <button
+          className="absolute bg-base-3 rounded-full bottom-[var(--spacing-tab-navigation)] h-[48px] w-[calc(100%-32px)]"
+          onClick={() =>
+            router.push('/note/create', {
+              search: {
+                documentType: 'TEXT',
+              },
+            })
+          }
+        >
+          <Text typo="subtitle-2-medium" color="sub" className="center">
+            새로운 퀴즈 만들기...
+          </Text>
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              router.push('/note/create', {
+                search: {
+                  documentType: 'FILE',
+                },
+              })
+            }}
+            className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
+          >
+            <IcFile className="size-5 text-white" />
+          </button>
+        </button>
+      </div>
     </>
   )
 }
