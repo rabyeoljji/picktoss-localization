@@ -108,7 +108,7 @@ const HomePage = () => {
 
       <div className="px-4">
         <button
-          className="absolute bg-base-3 rounded-full bottom-[var(--spacing-tab-navigation)] h-[48px] w-[calc(100%-32px)]"
+          className="absolute bg-base-3 rounded-full bottom-[calc(var(--spacing-tab-navigation)+12px)] h-[48px] w-[calc(100%-32px)]"
           onClick={() =>
             router.push('/note/create', {
               search: {
