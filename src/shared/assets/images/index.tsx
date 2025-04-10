@@ -9,6 +9,9 @@ import imgCalender from "./img_calender.png"
 import imgCheckbadge from "./img_checkbadge.png"
 import imgCheckbadgeMono from "./img_checkbadge_mono.png"
 import imgConfirm from "./img_confirm.png"
+import imgDaily1 from "./img_daily_1.png"
+import imgDaily2 from "./img_daily_2.png"
+import imgDaily3 from "./img_daily_3.png"
 import imgDailygraph from "./img_dailygraph.png"
 import imgExit from "./img_exit.png"
 import imgGraph from "./img_graph.png"
@@ -30,7 +33,9 @@ import imgQuizEmpty from "./img_quiz_empty.png"
 import imgQuizcard from "./img_quizcard.png"
 import imgQuizerror from "./img_quizerror.png"
 import imgRandom from "./img_random.png"
+import imgRoundAnalysis from "./img_round_analysis.png"
 import imgRoundBook from "./img_round_book.png"
+import imgRoundCalender from "./img_round_calender.png"
 import imgRoundCorrect from "./img_round_correct.png"
 import imgRoundGoogle from "./img_round_google.png"
 import imgRoundIncorrect from "./img_round_incorrect.png"
@@ -83,6 +88,18 @@ export const ImgCheckbadgeMono: React.FC<ImageComponentProps> = ({ ...props }) =
 
 export const ImgConfirm: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgConfirm} alt="confirm" {...props} />;
+};
+
+export const ImgDaily1: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgDaily1} alt="daily_1" {...props} />;
+};
+
+export const ImgDaily2: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgDaily2} alt="daily_2" {...props} />;
+};
+
+export const ImgDaily3: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgDaily3} alt="daily_3" {...props} />;
 };
 
 export const ImgDailygraph: React.FC<ImageComponentProps> = ({ ...props }) => {
@@ -169,8 +186,16 @@ export const ImgRandom: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRandom} alt="random" {...props} />;
 };
 
+export const ImgRoundAnalysis: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgRoundAnalysis} alt="round_analysis" {...props} />;
+};
+
 export const ImgRoundBook: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgRoundBook} alt="round_book" {...props} />;
+};
+
+export const ImgRoundCalender: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgRoundCalender} alt="round_calender" {...props} />;
 };
 
 export const ImgRoundCorrect: React.FC<ImageComponentProps> = ({ ...props }) => {
