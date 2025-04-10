@@ -63,7 +63,7 @@ const HomePage = () => {
 
                 <div className="text-center mt-15">
                   <Text typo="h3">내 퀴즈 생성하기</Text>
-                  <Text as="p" typo="subtitle-2-medium" color="sub">
+                  <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
                     쌓아둔 필기, 메모, 저장한 자료 등<br />
                     공부한 내용으로 맞춤형 퀴즈를 생성해요
                   </Text>
