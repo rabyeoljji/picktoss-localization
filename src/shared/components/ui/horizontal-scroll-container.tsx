@@ -191,7 +191,7 @@ const HorizontalScrollContainer = ({
     >
       <motion.div
         ref={contentRef}
-        className="flex gap-[8px]"
+        className={cn('flex gap-[8px]', isMoving ? 'pointer-events-none' : 'pointer-events-auto')}
         style={{ x, gap }}
         animate={controls}
         drag="x"
@@ -201,9 +201,7 @@ const HorizontalScrollContainer = ({
         onPanEnd={handlePanEnd}
       >
         {items.map((item, index) => (
-          <div key={'item_' + index} className={cn(isMoving ? 'pointer-events-none' : 'pointer-events-auto')}>
-            {item}
-          </div>
+          <div key={'item_' + index}>{item}</div>
         ))}
       </motion.div>
     </motion.div>
