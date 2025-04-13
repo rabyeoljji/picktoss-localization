@@ -35,6 +35,9 @@ export const RouteConfig = {
   /** 노트 관련 페이지 */
   note: {
     pathname: '/note',
+    search: {
+      tab: 'MY' as 'MY' | 'BOOKMARK',
+    },
   },
   noteDetail: {
     pathname: '/note/:noteId',
