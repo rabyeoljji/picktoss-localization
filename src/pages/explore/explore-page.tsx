@@ -138,25 +138,27 @@ const ExplorePage = () => {
 
           <div
             className={cn(
-              'w-full py-[8px] sticky z-50 bg-[linear-gradient(to_bottom,#F8F8F7_50%,rgba(245,245,245,0)_100%)]',
+              'h-[calc(48px+env(safe-area-inset-top))] w-full py-[8px] sticky z-50 flex flex-col justify-end bg-[linear-gradient(to_bottom,#F8F8F7_60%,rgba(245,245,245,0)_100%)]',
               isHeaderHidden ? 'top-[env(safe-area-inset-top)]' : 'top-[var(--header-height-safe)]',
             )}
           >
-            <HorizontalScrollContainer
-              gap={6}
-              moveRatio={0.5}
-              items={categories.map((category, index) => (
-                <Chip
-                  key={index}
-                  variant={category.name === activeTab ? 'selected' : 'darken'}
-                  left={category.name === activeTab ? category.emoji : undefined}
-                  onClick={() => setTab(category.name as Tab)}
-                  className={cn(index === 0 && 'ml-[16px]')}
-                >
-                  {category.name}
-                </Chip>
-              ))}
-            />
+            <div className="h-fit bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)]">
+              <HorizontalScrollContainer
+                gap={6}
+                moveRatio={0.5}
+                items={categories.map((category, index) => (
+                  <Chip
+                    key={index}
+                    variant={category.name === activeTab ? 'selected' : 'darken'}
+                    left={category.name === activeTab ? category.emoji : undefined}
+                    onClick={() => setTab(category.name as Tab)}
+                    className={cn(index === 0 && 'ml-[16px]')}
+                  >
+                    {category.name}
+                  </Chip>
+                ))}
+              />
+            </div>
           </div>
 
           <div className="w-full p-[16px] flex flex-col gap-[10px]">
