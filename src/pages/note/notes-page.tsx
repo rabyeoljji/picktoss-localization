@@ -202,5 +202,5 @@ const BookmarkContents = () => {
 export default withHOC(NotesPage, {
   activeTab: '도서관',
   navClassName: 'border-t border-divider',
-  backgroundColor: 'bg-surface-2',
+  backgroundClassName: 'bg-surface-2',
 })

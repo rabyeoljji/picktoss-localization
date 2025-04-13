@@ -141,5 +141,5 @@ const HomePage = () => {
 
 export default withHOC(HomePage, {
   activeTab: '데일리',
-  backgroundColor: 'bg-surface-2',
+  backgroundClassName: 'bg-surface-2',
 })

@@ -8,7 +8,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 
-import { IcArrange, IcChecknote, IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcUpload } from '@/shared/assets/icon'
+import { IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcReview, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { Header } from '@/shared/components/header'
@@ -207,10 +207,10 @@ const NoteDetailPage = () => {
               <IcPlay className="size-6" />
             </button>
             <button className="p-2">
-              <IcChecknote className="size-6" />
+              <IcReview className="size-6" />
             </button>
             <button className="p-2">
-              <IcArrange className="size-6" />
+              <IcNote className="size-6" />
             </button>
             <DropdownMenu>
               <DropdownMenuTrigger className="p-2">

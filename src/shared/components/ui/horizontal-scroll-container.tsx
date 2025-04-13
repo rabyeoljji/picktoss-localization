@@ -44,8 +44,7 @@ const HorizontalScrollContainer = ({
   const [constraints, setConstraints] = useState({ left: 0, right: 0 })
 
   const [moveAtOnceWidth, setMoveAtOnceWidth] = useState(0)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [currentOffset, setCurrentOffset] = useState(0)
+  const [_, setCurrentOffset] = useState(0)
   const [isMoving, setIsMoving] = useState(false)
 
   // 컨테이너와 콘텐츠 너비 설정
