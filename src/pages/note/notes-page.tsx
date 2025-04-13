@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useSearchParams } from 'react-router'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -17,21 +16,16 @@ import {
 } from '@/shared/components/ui/dropdown-menu'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
-import { Link, RoutePath } from '@/shared/lib/router'
-
-type Tab = 'my' | 'bookmark'
-const TabValues = ['my', 'bookmark']
+import { Link, RoutePath, useQueryParam } from '@/shared/lib/router'
 
 const NotesPage = () => {
-  const [searchParams, setSearchParams] = useSearchParams()
-  const paramsTab = searchParams.get('tab') ?? ''
+  const [params, setParams] = useQueryParam(RoutePath.note)
+  const activeTab = params.tab
 
-  const activeTab = TabValues.includes(paramsTab) ? (paramsTab as Tab) : 'my'
+  type Tab = typeof params.tab
 
-  const setTab = (tab: Tab) => {
-    const newSearchParams = new URLSearchParams(searchParams)
-    newSearchParams.set('tab', tab)
-    setSearchParams(newSearchParams)
+  const setTab = (tab: typeof params.tab) => {
+    setParams({ ...params, tab })
   }
 
   return (
@@ -50,17 +44,17 @@ const NotesPage = () => {
         }
         content={
           <div className="center">
-            <Tabs value={activeTab} onValueChange={(tab) => TabValues.includes(tab) && setTab(tab as Tab)}>
+            <Tabs value={activeTab} onValueChange={(tab) => setTab(tab as Tab)}>
               <TabsList>
                 <TabsTrigger
                   className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full"
-                  value={'my'}
+                  value={'MY' as Tab}
                 >
                   내 퀴즈
                 </TabsTrigger>
                 <TabsTrigger
                   className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full"
-                  value={'bookmark'}
+                  value={'BOOKMARK' as Tab}
                 >
                   북마크
                 </TabsTrigger>
@@ -78,7 +72,7 @@ const NotesPage = () => {
         {/* {activeTab === 'bookmark' && <EmptyBookmarkQuiz />} */}
 
         {/* 3. 만든 노트 or 북마크한 퀴즈가 있을 경우 */}
-        {activeTab === 'my' ? <MyNotesContent /> : <BookmarkContents />}
+        {activeTab === 'MY' ? <MyNotesContent /> : <BookmarkContents />}
       </HeaderOffsetLayout>
     </>
   )
