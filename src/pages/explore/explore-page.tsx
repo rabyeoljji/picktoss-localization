@@ -136,29 +136,30 @@ const ExplorePage = () => {
             실시간 퀴즈
           </Text>
 
+          {isHeaderHidden && (
+            <div className="fixed top-0 z-50 bg-surface-2 h-[env(safe-area-inset-top)] w-full p-2"></div>
+          )}
           <div
             className={cn(
-              'h-[calc(48px+env(safe-area-inset-top))] w-full py-[8px] sticky z-50 flex flex-col justify-end bg-[linear-gradient(to_bottom,#F8F8F7_60%,rgba(245,245,245,0)_100%)]',
+              'w-full py-[8px] sticky z-50 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)]',
               isHeaderHidden ? 'top-[env(safe-area-inset-top)]' : 'top-[var(--header-height-safe)]',
             )}
           >
-            <div className="h-fit bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)]">
-              <HorizontalScrollContainer
-                gap={6}
-                moveRatio={0.5}
-                items={categories.map((category, index) => (
-                  <Chip
-                    key={index}
-                    variant={category.name === activeTab ? 'selected' : 'darken'}
-                    left={category.name === activeTab ? category.emoji : undefined}
-                    onClick={() => setTab(category.name as Tab)}
-                    className={cn(index === 0 && 'ml-[16px]')}
-                  >
-                    {category.name}
-                  </Chip>
-                ))}
-              />
-            </div>
+            <HorizontalScrollContainer
+              gap={6}
+              moveRatio={0.5}
+              items={categories.map((category, index) => (
+                <Chip
+                  key={index}
+                  variant={category.name === activeTab ? 'selected' : 'darken'}
+                  left={category.name === activeTab ? category.emoji : undefined}
+                  onClick={() => setTab(category.name as Tab)}
+                  className={cn(index === 0 && 'ml-[16px]')}
+                >
+                  {category.name}
+                </Chip>
+              ))}
+            />
           </div>
 
           <div className="w-full p-[16px] flex flex-col gap-[10px]">
