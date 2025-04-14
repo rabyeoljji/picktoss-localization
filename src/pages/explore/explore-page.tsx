@@ -11,7 +11,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Chip } from '@/shared/components/ui/chip'
 import HorizontalScrollContainer from '@/shared/components/ui/horizontal-scroll-container'
 import { Text } from '@/shared/components/ui/text'
-import { Link, RoutePath, useQueryParam } from '@/shared/lib/router'
+import { Link, useQueryParam } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const exampleQuestions = [
@@ -101,7 +101,7 @@ const ExplorePage = () => {
           </button>
         }
         right={
-          <Link to={RoutePath.exploreSearch} className="size-[40px] flex-center">
+          <Link to={'/explore/search'} className="size-[40px] flex-center">
             <IcSearch className="size-[24px] text-icon-secondary" />
           </Link>
         }
@@ -184,7 +184,7 @@ const ExplorePage = () => {
 
             {/* content */}
             {Array.from({ length: 10 }).map((_, index) => (
-              <Link key={index} to={RoutePath.noteDetail} params={[String(1)]}>
+              <Link key={index} to={'/note/:noteId'} params={[String(1)]}>
                 <BookmarkHorizontalCard>
                   <BookmarkHorizontalCard.Left content="📄" />
 

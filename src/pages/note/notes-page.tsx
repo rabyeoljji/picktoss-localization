@@ -16,10 +16,10 @@ import {
 } from '@/shared/components/ui/dropdown-menu'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
-import { Link, RoutePath, useQueryParam } from '@/shared/lib/router'
+import { Link, useQueryParam } from '@/shared/lib/router'
 
 const NotesPage = () => {
-  const [params, setParams] = useQueryParam(RoutePath.note)
+  const [params, setParams] = useQueryParam('/note')
   const activeTab = params.tab
 
   type Tab = typeof params.tab
@@ -85,7 +85,7 @@ const MyNotesContent = () => {
     <div className="size-full flex flex-col px-[16px] pt-[16px] overflow-y-auto">
       <div className="w-full flex items-center">
         <Link
-          to={RoutePath.noteSearch}
+          to={'/note/search'}
           className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
         >
           <IcSearch className="size-[20px] text-icon-secondary" />
@@ -155,7 +155,7 @@ const BookmarkContents = () => {
     <div className="size-full flex flex-col px-[16px] pt-[16px] overflow-y-auto">
       <div className="w-full flex items-center">
         <Link
-          to={RoutePath.noteSearch}
+          to={'/note/search'}
           className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
         >
           <IcSearch className="size-[20px] text-icon-secondary" />
@@ -178,7 +178,7 @@ const BookmarkContents = () => {
 
       <div className="py-[16px] h-fit w-full flex flex-col gap-[8px]">
         {Array.from({ length: 10 }).map((_, index) => (
-          <Link key={index} to={RoutePath.noteDetail} params={[String(1)]}>
+          <Link key={index} to={'/note/:noteId'} params={[String(1)]}>
             <BookmarkHorizontalCard>
               <BookmarkHorizontalCard.Left content="📄" />
 
