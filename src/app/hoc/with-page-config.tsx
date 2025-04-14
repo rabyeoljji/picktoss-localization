@@ -2,13 +2,13 @@ import { TabNavigation } from '@/shared/components/tab-navigation'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
-  backgroundColor?: HTMLElement['className']
+  backgroundClassName?: HTMLElement['className']
   activeTab?: React.ComponentProps<typeof TabNavigation>['activeTab']
   navClassName?: HTMLElement['className']
 }
 
 export function withHOC<P extends object>(Component: React.ComponentType<P>, config: Props) {
-  const backgroundClass = config.backgroundColor ?? 'bg-surface-1'
+  const backgroundClass = config.backgroundClassName ?? 'bg-surface-1'
 
   return (props: P) => (
     <div

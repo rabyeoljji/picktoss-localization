@@ -122,5 +122,5 @@ const NoteCreateContent = () => {
 }
 
 export default withHOC(NoteCreatePage, {
-  backgroundColor: 'bg-surface-1',
+  backgroundClassName: 'bg-surface-1',
 })

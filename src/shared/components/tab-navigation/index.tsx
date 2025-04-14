@@ -1,4 +1,4 @@
-import { IcCollection, IcHome, IcQuiznote } from '@/shared/assets/icon'
+import { IcDaily, IcExplore, IcLibrary } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { RoutePath } from '@/shared/lib/router'
@@ -9,17 +9,17 @@ const navItems = [
   {
     label: '데일리',
     to: RoutePath.root,
-    icon: <IcHome />,
+    icon: <IcDaily />,
   },
   {
     label: '탐험',
     to: RoutePath.explore,
-    icon: <IcCollection />,
+    icon: <IcExplore />,
   },
   {
     label: '도서관',
     to: RoutePath.note,
-    icon: <IcQuiznote />,
+    icon: <IcLibrary />,
   },
 ] as const
 

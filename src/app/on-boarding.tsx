@@ -74,5 +74,5 @@ const OnBoarding = () => {
 }
 
 export default withHOC(OnBoarding, {
-  backgroundColor: 'bg-surface-2',
+  backgroundClassName: 'bg-surface-2',
 })
