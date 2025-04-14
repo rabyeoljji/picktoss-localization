@@ -55,7 +55,7 @@ const categories = [
 ]
 
 const ExplorePage = () => {
-  const [params, setParams] = useQueryParam(RoutePath.explore)
+  const [params, setParams] = useQueryParam('/explore')
   const activeTab = params.tab
 
   const [isHeaderHidden, setIsHeaderHidden] = useState(false)
