@@ -1,9 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { QuizSetType } from '@/pages/progress-quiz-page'
-
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
-import { useCreateErrorCheckQuizSet } from '@/entities/quiz/api/hooks'
+import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 // 문서 상태 정의
 export type DocumentStatus =
@@ -50,8 +48,7 @@ export interface PollingResult {
  */
 export const useQuizGenerationPolling = (documentId: number, options?: PollingOptions) => {
   const { pollingInterval = 2000, maxPollingCount = 60, autoCompleteTime = 70000 } = options || {}
-  const [quizSetId, setQuizSetId] = useState<string | null>(null)
-  const [quizSetType, setQuizSetType] = useState<QuizSetType | null>(null)
+  const [quizSetId, setQuizSetId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pollingCount, setPollingCount] = useState(0)
 
@@ -59,7 +56,7 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
   const autoCompleteTimerRef = useRef<NodeJS.Timeout | null>(null)
 
   const { data: document, refetch } = useGetSingleDocument(documentId)
-  const { mutate: generateQuizSet } = useCreateErrorCheckQuizSet()
+  const { mutate: createQuizSet } = useCreateQuizSet(documentId)
 
   // 폴링 정지 함수
   const stopPolling = () => {
@@ -80,18 +77,20 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
 
     // 문서 상태에 따라 처리
     if (document.quizGenerationStatus === 'PROCESSED') {
-      generateQuizSet(documentId, {
-        onSuccess: ({ quizSetId, quizSetType }) => {
-          stopPolling()
-          setQuizSetId(quizSetId)
-          setQuizSetType(quizSetType)
+      createQuizSet(
+        { quizCount: 5 },
+        {
+          onSuccess: ({ quizSetId }) => {
+            stopPolling()
+            setQuizSetId(quizSetId)
+          },
+          onError: (err) => {
+            const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
+            setError(errorMessage)
+            stopPolling()
+          },
         },
-        onError: (err) => {
-          const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
-          setError(errorMessage)
-          stopPolling()
-        },
-      })
+      )
     } else if (
       document.quizGenerationStatus === 'COMPLETELY_FAILED' ||
       document.quizGenerationStatus === 'QUIZ_GENERATION_ERROR'
@@ -140,7 +139,6 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
 
   return {
     quizSetId,
-    quizSetType,
     error,
   }
 }

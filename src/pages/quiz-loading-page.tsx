@@ -37,7 +37,7 @@ const QuizLoadingPage = () => {
   })
 
   // 문서 퀴즈 상태 폴링 훅 사용
-  const { error, quizSetId, quizSetType } = useQuizGenerationPolling(documentId, {
+  const { error, quizSetId } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
@@ -78,7 +78,7 @@ const QuizLoadingPage = () => {
     )
   }
 
-  if (quizSetId != null && quizSetType != null) {
+  if (quizSetId != null) {
     return (
       <div className="relative h-svh bg-surface-1">
         <div className="center flex-center flex-col w-full px-[43px]">
@@ -96,10 +96,7 @@ const QuizLoadingPage = () => {
                 completeAnimation()
                 setTimeout(() => {
                   router.replace('/progress-quiz/:quizSetId', {
-                    params: [quizSetId],
-                    search: {
-                      quizSetType: quizSetType,
-                    },
+                    params: [String(quizSetId)],
                   })
                 }, 500)
               }}
