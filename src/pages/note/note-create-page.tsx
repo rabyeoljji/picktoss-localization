@@ -9,8 +9,6 @@ import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
 import NoteCreatePageFile from '@/features/note/ui/note-create-page-file'
 import { NoteCreateWrite } from '@/features/note/ui/note-create-write'
 
-import { useGetAllDocuments } from '@/entities/document/api/hooks'
-
 import { IcInfo } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
@@ -19,14 +17,8 @@ import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
 const NoteCreatePage = () => {
-  const { data: directories, isLoading: isDirectoryLoading } = useGetAllDocuments()
-
-  if (!directories || isDirectoryLoading) {
-    return <div className="center">Loading...</div>
-  }
-
   return (
-    <CreateNoteProvider directories={directories}>
+    <CreateNoteProvider>
       <div className="h-full max-w-xl mx-auto relative">
         <NoteCreateHeader />
 

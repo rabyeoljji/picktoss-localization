@@ -3,7 +3,7 @@ import { client } from '@/shared/lib/axios/client'
 import { DOCUMENT_ENDPOINTS } from './config'
 
 // 문서 생성
-export interface CreateDocumentRequest {
+export interface CreateDocumentPayload {
   file: File | Blob
   documentName: string
   categoryId: number
@@ -18,7 +18,7 @@ export interface CreateDocumentResponse {
   id: number
 }
 
-export const createDocument = async (data: CreateDocumentRequest): Promise<CreateDocumentResponse> => {
+export const createDocument = async (data: CreateDocumentPayload): Promise<CreateDocumentResponse> => {
   const formData = new FormData()
   formData.append('file', data.file)
   formData.append('documentName', data.documentName)

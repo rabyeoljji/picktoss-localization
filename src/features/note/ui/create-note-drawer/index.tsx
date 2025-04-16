@@ -1,27 +1,29 @@
 import { useState } from 'react'
 
+import { AnimatePresence, motion } from 'framer-motion'
+
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 
-import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
+import { useGetCategories } from '@/entities/category/api/hooks'
+
+import { ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/shared/components/ui/drawer'
-import { Slider } from '@/shared/components/ui/slider'
 import { Text } from '@/shared/components/ui/text'
-import { cn } from '@/shared/lib/utils'
 
 export const CreateNoteDrawer = () => {
-  const {
-    handleCreateDocument,
-    quizType,
-    setQuizType,
-    star,
-    setStar,
-    isPending,
-    DOCUMENT_MIN_QUIZ_COUNT,
-    DOCUMENT_MAX_QUIZ_COUNT,
-  } = useCreateNoteContext()
+  const { data: categories } = useGetCategories()
+  const { categoryId, setCategoryId, handleCreateDocument, quizType, setQuizType, star, isPending } =
+    useCreateNoteContext()
 
   const [open, setOpen] = useState(false)
+  // isExpanded 상태는 카테고리 목록의 열림/닫힘을 제어합니다.
+  const [isExpanded, setIsExpanded] = useState(false)
+
+  // 토글 함수: 카테고리 목록의 펼침 상태를 반전시킵니다.
+  const toggleExpand = () => setIsExpanded((prev) => !prev)
+
+  const selectedCategory = categories?.find((category) => category.id === categoryId)
 
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
@@ -40,80 +42,43 @@ export const CreateNoteDrawer = () => {
         </Button>
       </DrawerTrigger>
       <DrawerContent height="md">
-        <div className="overflow-auto h-[200vh]">
-          <div className="py-10 flex gap-3 w-full">
+        <div className="overflow-y-scroll p-4">
+          <div className="border rounded-[12px] bg-surface-1 border-outline">
+            {/* 제목 영역: 클릭하면 목록이 펼쳐지거나 접힙니다. */}
             <button
-              className={cn(
-                'flex-1 p-4 aspect-[16/12] rounded-[16px] border border-outline flex-center flex-col  gap-1',
-                'hover:bg-info hover:border-blue-300',
-                quizType === 'MULTIPLE_CHOICE' && 'bg-info border-blue-300',
-              )}
-              onClick={() => setQuizType('MULTIPLE_CHOICE')}
+              onClick={toggleExpand}
+              className="w-full py-[14px] flex justify-between px-5 items-center typo-subtitle-2-bold focus:outline-none"
             >
-              <ImgMultiple className="size-[64px]" />
-              <Text typo="subtitle-1-bold" color={quizType === 'MULTIPLE_CHOICE' ? 'info' : 'primary'}>
-                객관식
-              </Text>
+              {selectedCategory ? `${selectedCategory.emoji}\u00A0\u00A0${selectedCategory.name}` : '카테고리'}
             </button>
-            <button
-              className={cn(
-                'flex-1 p-4 aspect-[16/12] rounded-[16px] border border-outline flex-center flex-col gap-1',
-                'hover:bg-info hover:border-blue-300',
-                quizType === 'MIX_UP' && 'bg-info border-blue-300',
-              )}
-              onClick={() => setQuizType('MIX_UP')}
-            >
-              <ImgOx className="size-[64px]" />
-              <Text typo="subtitle-1-bold" color={quizType === 'MIX_UP' ? 'info' : 'primary'}>
-                O/X
-              </Text>
-            </button>
-          </div>
-
-          <div className="py-5 grid gap-[32px]">
-            <div className="grid gap-1 text-center">
-              <Text typo="body-2-medium" color="sub">
-                만들 문제 수
-              </Text>
-              <Text typo="h2" color="accent">
-                {star} 문제
-              </Text>
-            </div>
-            <div className="relative">
-              <Slider
-                value={[Number(star)]}
-                step={1}
-                onValueChange={(value: number[]) => setStar(String(value[0]))}
-                min={DOCUMENT_MIN_QUIZ_COUNT}
-                max={DOCUMENT_MAX_QUIZ_COUNT}
-              />
-              <Text typo="body-2-medium" color="sub" className="absolute top-5 left-0">
-                {DOCUMENT_MIN_QUIZ_COUNT} 문제
-              </Text>
-              <Text typo="body-2-medium" color="sub" className="absolute top-5 right-0">
-                {DOCUMENT_MAX_QUIZ_COUNT} 문제
-              </Text>
-            </div>
-
-            <div className="absolute bottom-0 w-[calc(100%-32px)] pb-12">
-              <Text typo="body-1-medium" color="sub" className="pt-[14px] pb-3 text-center">
-                현재 가진 별: {10}개
-              </Text>
-              <div className="flex">
-                <Button variant="special" onClick={() => handleCreateDocument()}>
-                  <div className="flex-center gap-1">
-                    <span>만들기</span>
-
-                    <div className="py-px px-2 flex items-center gap-[4.3px] rounded-full bg-[#D3DCE433]/80">
-                      <ImgStar className="size-[16px]" />
-                      <Text typo="body-1-medium" color="white">
-                        {star}
-                      </Text>
-                    </div>
+            {/* AnimatePresence를 사용해 조건부 렌더링된 영역에 애니메이션을 추가 */}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {/* 카테고리 버튼 리스트 */}
+                  <div className="flex flex-col">
+                    {categories?.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => {
+                          setCategoryId(category.id)
+                          // 카테고리 선택 후 목록을 닫고 싶다면 아래와 같이 상태를 변경할 수 있습니다.
+                          setIsExpanded(false)
+                        }}
+                        className="w-full px-4 py-2 text-left hover:bg-gray-100 focus:outline-none"
+                      >
+                        {category.name}
+                      </button>
+                    ))}
                   </div>
-                </Button>
-              </div>
-            </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </DrawerContent>
