@@ -29,6 +29,9 @@ export const useGetQuizzes = (
   return useQuery({
     queryKey: QUIZ_KEYS.getQuizzes,
     queryFn: () => getQuizzes(quizType, quizSource),
+    select: (data) => data.quizzes,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 }
 
