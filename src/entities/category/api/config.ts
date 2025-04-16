@@ -1,4 +1,4 @@
-import { createKey as originalCreateKey } from '@/shared/api/lib/create-key'
+import { createKey } from '@/shared/api/lib/create-key'
 
 const Category = 'category'
 
@@ -9,5 +9,5 @@ export const CATEGORY_ENDPOINTS = {
 
 export const CATEGORY_KEYS = {
   // GET
-  getCategories: originalCreateKey(Category, CATEGORY_ENDPOINTS.getCategories),
+  getCategories: createKey(Category, CATEGORY_ENDPOINTS.getCategories),
 }
