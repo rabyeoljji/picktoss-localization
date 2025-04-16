@@ -33,7 +33,8 @@ export type FileInfo = z.infer<typeof FileInfoSchema>
 
 // 문서 생성 요청 스키마
 export const CreateDocumentSchema = z.object({
-  directoryId: z.string().min(1, '폴더 선택은 필수입니다'),
+  categoryId: z.number().min(1, '카테고리 선택은 필수입니다'),
+  isPublic: z.boolean(),
   documentName: z
     .string()
     .min(DOCUMENT_CONSTRAINTS.TITLE.MIN, '노트 제목을 입력해주세요')

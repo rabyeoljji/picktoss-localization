@@ -52,7 +52,7 @@ const NoteCreateHeader = () => {
 }
 
 const NoteCreateContent = () => {
-  const { documentType, content, checkButtonActivate } = useCreateNoteContext()
+  const { documentType, content, checkDrawerTriggerActivate } = useCreateNoteContext()
   const { isKeyboardVisible } = useKeyboard()
 
   return (
@@ -67,17 +67,17 @@ const NoteCreateContent = () => {
       {documentType === 'TEXT' && !isKeyboardVisible && (
         <div
           className={`fixed bottom-0 w-full max-w-xl bg-base-1 h-[96px] border-t border-divider ${
-            checkButtonActivate() ? 'pt-3 pl-[19px] pr-4' : 'flex justify-between items-start pt-2.5 px-4 w-full'
+            checkDrawerTriggerActivate() ? 'pt-3 pl-[19px] pr-4' : 'flex justify-between items-start pt-2.5 px-4 w-full'
           }`}
         >
-          {checkButtonActivate() ? (
+          {checkDrawerTriggerActivate() ? (
             <div className="flex items-center gap-2 w-full">
               <div className="shrink-0">
                 <Text typo="body-2-medium" color="sub">
-                  현재 별 1,673개
+                  사용 가능 별
                 </Text>
                 <Text typo="subtitle-2-bold" color="primary">
-                  23,432자
+                  1,123개
                 </Text>
               </div>
               <div className="flex-1">

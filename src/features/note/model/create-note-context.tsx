@@ -36,10 +36,12 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setContent: (content: string) => void
   setEmoji: (emoji: string) => void
   setCategoryId: (categoryId: number) => void
+  setIsPublic: (isPublic: boolean) => void
 
   isPending: boolean
   handleCreateDocument: () => Promise<void>
-  checkButtonActivate: () => boolean
+  checkDrawerTriggerActivate: () => boolean
+  checkCreateActivate: () => boolean
 
   // upload file
   fileInfo: FileInfo | null
@@ -96,14 +98,18 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     }
   }, [validationError])
 
-  /** 만들기 버튼 활성화 조건 체크 함수 */
-  const checkButtonActivate = () => {
+  /** drawer trigger 활성화 조건 체크 함수 */
+  const checkDrawerTriggerActivate = () => {
     const isContentValid =
       state.content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN &&
       state.content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
     const isNameValid = state.documentName.trim().length > 0
     const isTypeValid = state.documentType !== null
     return isContentValid && isNameValid && isTypeValid
+  }
+
+  const checkCreateActivate = () => {
+    return checkDrawerTriggerActivate() && state.categoryId !== null && state.quizType !== null
   }
 
   /** fileInfo 유효성 검사 함수 */
@@ -166,6 +172,8 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
+      categoryId: state.categoryId,
+      isPublic: state.isPublic,
       documentName: state.documentName,
       file,
       quizType: state.quizType,
@@ -241,13 +249,15 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         setContent: (content: string) => setState({ ...state, content }),
         setEmoji: (emoji: string) => setState({ ...state, emoji }),
         setCategoryId: (categoryId: number) => setState({ ...state, categoryId }),
+        setIsPublic: (isPublic: boolean) => setState({ ...state, isPublic }),
 
         fileInfo: state.fileInfo,
         changeFileInfo,
         isProcessing,
         setIsProcessing,
 
-        checkButtonActivate,
+        checkDrawerTriggerActivate,
+        checkCreateActivate,
         handleCreateDocument,
         isPending,
         setValidationError,
