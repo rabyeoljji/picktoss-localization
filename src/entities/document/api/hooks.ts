@@ -4,14 +4,27 @@ import { DOCUMENT_KEYS } from './config'
 import {
   addQuizzes,
   createDocument,
+  createDocumentBookmark,
+  createDocumentComplaint,
+  createQuizSet,
+  deleteDocument,
+  deleteDocumentBookmark,
   downloadQuiz,
   getAllDocuments,
+  getBookmarkedDocuments,
   getDocumentQuizzes,
   getDocumentsNeedingReview,
+  getIsNotPublicDocuments,
+  getPublicDocuments,
+  getPublicSingleDocument,
   getSingleDocument,
   moveDocument,
   searchDocument,
+  searchPublicDocuments,
+  updateDocumentCategory,
   updateDocumentContent,
+  updateDocumentEmoji,
+  updateDocumentIsPublic,
   updateDocumentName,
 } from './index'
 
@@ -61,7 +74,10 @@ export const useGetDocumentQuizzes = ({
   })
 }
 
-export const useGetAllDocuments = (options?: { directoryId?: number; sortOption?: 'CREATED_AT' | 'UPDATED_AT' }) => {
+export const useGetAllDocuments = (options?: {
+  directoryId?: number
+  sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
+}) => {
   return useQuery({
     queryKey: [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
     queryFn: () => getAllDocuments(options),
@@ -100,5 +116,97 @@ export const useGetDocumentsNeedingReview = () => {
   return useQuery({
     queryKey: DOCUMENT_KEYS.getDocumentsNeedingReview,
     queryFn: () => getDocumentsNeedingReview(),
+  })
+}
+
+export const useGetIsNotPublicDocuments = () => {
+  return useQuery({
+    queryKey: DOCUMENT_KEYS.getIsNotPublicDocuments,
+    queryFn: () => getIsNotPublicDocuments(),
+  })
+}
+
+export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' | 'QUIZ_COUNT' }) => {
+  return useQuery({
+    queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments, options?.sortOption],
+    queryFn: () => getBookmarkedDocuments(options),
+  })
+}
+
+export const useGetPublicDocuments = (options?: { categoryId?: number; page?: number }) => {
+  return useQuery({
+    queryKey: [DOCUMENT_KEYS.getPublicDocuments, options?.categoryId, options?.page],
+    queryFn: () => getPublicDocuments(options),
+  })
+}
+
+export const useGetPublicSingleDocument = (documentId: number) => {
+  return useQuery({
+    queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId),
+    queryFn: () => getPublicSingleDocument(documentId),
+    enabled: !!documentId,
+  })
+}
+
+export const useSearchPublicDocuments = (params: { keyword: string }) => {
+  return useMutation({
+    mutationKey: [DOCUMENT_KEYS.searchPublicDocuments, params],
+    mutationFn: () => searchPublicDocuments(params),
+  })
+}
+
+export const useCreateDocumentComplaint = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.createDocumentComplaint(documentId),
+    mutationFn: (data: Parameters<typeof createDocumentComplaint>[1]) => createDocumentComplaint(documentId, data),
+  })
+}
+
+export const useCreateDocumentBookmark = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.createDocumentBookmark(documentId),
+    mutationFn: () => createDocumentBookmark(documentId),
+  })
+}
+
+export const useDeleteDocumentBookmark = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.deleteDocumentBookmark(documentId),
+    mutationFn: () => deleteDocumentBookmark(documentId),
+  })
+}
+
+export const useCreateQuizSet = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.createQuizSet(documentId),
+    mutationFn: (data: Parameters<typeof createQuizSet>[1]) => createQuizSet(documentId, data),
+  })
+}
+
+export const useUpdateDocumentIsPublic = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
+    mutationFn: (data: Parameters<typeof updateDocumentIsPublic>[1]) => updateDocumentIsPublic(documentId, data),
+  })
+}
+
+export const useUpdateDocumentEmoji = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.updateDocumentEmoji(documentId),
+    mutationFn: (data: Parameters<typeof updateDocumentEmoji>[1]) => updateDocumentEmoji(documentId, data),
+  })
+}
+
+export const useUpdateDocumentCategory = (documentId: number) => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.updateDocumentCategory(documentId),
+    mutationFn: (data: Parameters<typeof updateDocumentCategory>[1]) => updateDocumentCategory(documentId, data),
+  })
+}
+
+export const useDeleteDocument = () => {
+  return useMutation({
+    mutationKey: DOCUMENT_KEYS.deleteDocument,
+    mutationFn: (data: Parameters<typeof deleteDocument>[0]) => deleteDocument(data),
   })
 }

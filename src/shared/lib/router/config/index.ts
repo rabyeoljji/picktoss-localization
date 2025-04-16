@@ -35,6 +35,9 @@ export const RouteConfig = {
   /** 노트 관련 페이지 */
   note: {
     pathname: '/note',
+    search: {
+      tab: 'MY' as 'MY' | 'BOOKMARK',
+    },
   },
   noteDetail: {
     pathname: '/note/:noteId',
@@ -157,6 +160,10 @@ export const RouteConfig = {
   /** 탐험 관련 페이지 */
   explore: {
     pathname: '/explore',
+    search: {
+      // TODO: 서버 카테고리 response타입으로 타입 지정
+      tab: '전체' as '전체' | '학문·전공' | '자격증·수험' | 'IT·개발' | '재테크·시사' | '상식·교양' | '언어',
+    },
   },
   exploreShare: {
     pathname: '/explore/share',
