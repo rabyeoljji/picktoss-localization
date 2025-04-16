@@ -2,7 +2,7 @@ import { useProgressAnimation } from '@/features/quiz/model/use-progress-animati
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress-bar'
 
-import { ImgQuizEmpty } from '@/shared/assets/images'
+import { ImgQuizEmpty, ImgQuizcard } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
@@ -82,7 +82,7 @@ const QuizLoadingPage = () => {
     return (
       <div className="relative h-svh bg-surface-1">
         <div className="center flex-center flex-col w-full px-[43px]">
-          <ImgQuizEmpty className="w-[120px]" />
+          <ImgQuizcard className="w-[120px]" />
           <Text typo="h4" color="primary" className="mt-4">
             퀴즈 생성 완료!
           </Text>
