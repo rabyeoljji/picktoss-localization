@@ -10,8 +10,6 @@ export const AUTH_ENDPOINTS = {
 
   // POST
   postLogin: '/login',
-  postAuthVerification: '/auth/verification',
-  postAuthVerificationCheck: '/auth/verification/check',
   postAuthInviteVerify: '/auth/invite/verify',
   postAuthInviteReward: '/auth/invite/reward',
 }
@@ -25,8 +23,6 @@ export const AUTH_KEYS = {
 
   // POST
   postLogin: originalCreateKey(AUTH, AUTH_ENDPOINTS.postLogin),
-  postAuthVerification: originalCreateKey(AUTH, AUTH_ENDPOINTS.postAuthVerification),
-  postAuthVerificationCheck: originalCreateKey(AUTH, AUTH_ENDPOINTS.postAuthVerificationCheck),
   postAuthInviteVerify: originalCreateKey(AUTH, AUTH_ENDPOINTS.postAuthInviteVerify),
   postAuthInviteReward: originalCreateKey(AUTH, AUTH_ENDPOINTS.postAuthInviteReward),
 }
