@@ -2,104 +2,150 @@ import { useMutation, useQuery } from '@tanstack/react-query'
 
 import { QUIZ_KEYS } from './config'
 import {
-  createErrorCheckQuizSet,
-  createMemberGeneratedQuizSet,
-  createTodayQuizForTest,
-  getCurrentTodayQuizInfo,
+  createDailyQuizRecord,
+  createQuizSet,
+  deleteQuiz,
+  getConsecutiveSolvedDailyQuiz,
+  getConsecutiveSolvedQuizSetDates,
+  getQuizMonthlyAnalysis,
   getQuizSet,
-  getQuizSetToday,
-  getSingleQuizRecordByDate,
+  getQuizWeeklyAnalysis,
+  getQuizzes,
+  getQuizzesRecords,
+  getSingleDailyQuizRecord,
   getSingleQuizSetRecord,
-  getTodaySolvedQuizCount,
+  updateQuizInfo,
   updateQuizResult,
-  updateRandomQuizResult,
+  updateWrongAnswerConfirm,
 } from './index'
 
-export const useCreateTodayQuizForTest = () => {
-  return useMutation({
-    mutationKey: QUIZ_KEYS.postTestCreateTodayQuiz,
-    mutationFn: () => createTodayQuizForTest(),
-  })
-}
+// GET 훅
 
-export const useCreateMemberGeneratedQuizSet = (documentId: number) => {
-  return useMutation({
-    mutationKey: QUIZ_KEYS.postMemberGeneratedQuizSet(documentId),
-    mutationFn: (data: Parameters<typeof createMemberGeneratedQuizSet>[1]) =>
-      createMemberGeneratedQuizSet(documentId, data),
-  })
-}
-
-export const useCreateErrorCheckQuizSet = () => {
-  return useMutation({
-    mutationKey: QUIZ_KEYS.postErrorCheckQuizSet(),
-    mutationFn: (documentId: number) => createErrorCheckQuizSet(documentId),
-  })
-}
-
-export const useUpdateRandomQuizResult = () => {
-  return useMutation({
-    mutationKey: QUIZ_KEYS.patchRandomQuizResult,
-    mutationFn: ({ data }: { data: Parameters<typeof updateRandomQuizResult>[0]['data'] }) =>
-      updateRandomQuizResult({ data }),
-  })
-}
-
-export const useUpdateQuizResult = () => {
-  return useMutation({
-    mutationKey: QUIZ_KEYS.patchQuizResult,
-    mutationFn: ({ data }: { data: Parameters<typeof updateQuizResult>[0]['data'] }) => updateQuizResult({ data }),
-  })
-}
-
-export const useGetCurrentTodayQuizInfo = () => {
-  return useQuery({
-    queryKey: QUIZ_KEYS.getCurrentTodayQuizInfo,
-    queryFn: () => getCurrentTodayQuizInfo(),
-  })
-}
-
-export const useGetTodaySolvedQuizCount = () => {
-  return useQuery({
-    queryKey: QUIZ_KEYS.getTodaySolvedQuizCount,
-    queryFn: () => getTodaySolvedQuizCount(),
-  })
-}
-
-export const useGetSingleQuizRecordByDate = (solvedDate: string) => {
-  return useQuery({
-    queryKey: QUIZ_KEYS.getSingleQuizRecordByDate(solvedDate),
-    queryFn: () => getSingleQuizRecordByDate(solvedDate),
-  })
-}
-
-export const useGetSingleQuizSetRecord = (
-  quizSetId: string,
-  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET',
+// 데일리 퀴즈 가져오기
+export const useGetQuizzes = (
+  quizType?: 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE',
+  quizSource?: 'ALL' | 'BOOKMARK_QUIZ' | 'MY_QUIZ',
 ) => {
   return useQuery({
-    queryKey: QUIZ_KEYS.getSingleQuizSetRecord(quizSetId, quizSetType),
-    queryFn: () => getSingleQuizSetRecord(quizSetId, quizSetType),
+    queryKey: QUIZ_KEYS.getQuizzes,
+    queryFn: () => getQuizzes(quizType, quizSource),
   })
 }
 
-export const useGetQuizSetToday = () => {
+// 전체 퀴즈 기록 조회
+export const useGetQuizzesRecords = () => {
   return useQuery({
-    queryKey: QUIZ_KEYS.getQuizSetToday,
-    queryFn: () => getQuizSetToday(),
+    queryKey: QUIZ_KEYS.getQuizzesRecords,
+    queryFn: () => getQuizzesRecords(),
   })
 }
 
-export const useGetQuizSet = ({
-  quizSetId,
-  quizSetType,
-}: {
-  quizSetId: string
-  quizSetType: 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
-}) => {
+// 퀴즈 주단위 분석
+export const useGetQuizWeeklyAnalysis = (startDate?: string, endDate?: string) => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getQuizWeeklyAnalysis,
+    queryFn: () => getQuizWeeklyAnalysis(startDate, endDate),
+  })
+}
+
+// 퀴즈 월단위 분석
+export const useGetQuizMonthlyAnalysis = (month?: string) => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getQuizMonthlyAnalysis,
+    queryFn: () => getQuizMonthlyAnalysis(month),
+  })
+}
+
+// 퀴즈 세트 가져오기
+export const useGetQuizSet = (quizSetId: number) => {
   return useQuery({
     queryKey: QUIZ_KEYS.getQuizSet(quizSetId),
-    queryFn: () => getQuizSet({ quizSetId, quizSetType }),
-    select: (data) => data.quizzes,
+    queryFn: () => getQuizSet(quizSetId),
+  })
+}
+
+// 퀴즈 세트에 대한 상세 기록
+export const useGetSingleQuizSetRecord = (quizSetId: number) => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getSingleQuizSetRecord(quizSetId),
+    queryFn: () => getSingleQuizSetRecord(quizSetId),
+  })
+}
+
+// 데일리 퀴즈 연속일 현황
+export const useGetConsecutiveSolvedDailyQuiz = () => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getConsecutiveSolvedDailyQuiz,
+    queryFn: () => getConsecutiveSolvedDailyQuiz(),
+  })
+}
+
+// 월별 데일리 퀴즈 연속일 기록
+export const useGetConsecutiveSolvedQuizSetDates = (solvedDate: string) => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getConsecutiveSolvedQuizSetDates(solvedDate),
+    queryFn: () => getConsecutiveSolvedQuizSetDates(solvedDate),
+  })
+}
+
+// 데일리 퀴즈에 대한 상세 기록
+export const useGetSingleDailyQuizRecord = (dailyQuizRecordId: number) => {
+  return useQuery({
+    queryKey: QUIZ_KEYS.getSingleDailyQuizRecord(dailyQuizRecordId),
+    queryFn: () => getSingleDailyQuizRecord(dailyQuizRecordId),
+  })
+}
+
+// POST 훅
+
+// 데일리 퀴즈 풀기
+export const useCreateDailyQuizRecord = (quizId: number) => {
+  return useMutation({
+    mutationKey: QUIZ_KEYS.createDailyQuizRecord(quizId),
+    mutationFn: (data: Parameters<typeof createDailyQuizRecord>[1]) => createDailyQuizRecord(quizId, data),
+  })
+}
+
+// 퀴즈 시작하기 (퀴즈 세트 생성)
+export const useCreateQuizSet = (documentId: number) => {
+  return useMutation({
+    mutationKey: QUIZ_KEYS.createQuizSet(documentId),
+    mutationFn: (data: Parameters<typeof createQuizSet>[1]) => createQuizSet(documentId, data),
+  })
+}
+
+// PATCH 훅
+
+// 퀴즈 오답 확인(이해했습니다)
+export const useUpdateWrongAnswerConfirm = (quizId: number) => {
+  return useMutation({
+    mutationKey: QUIZ_KEYS.updateWrongAnswerConfirm(quizId),
+    mutationFn: () => updateWrongAnswerConfirm(quizId),
+  })
+}
+
+// 퀴즈 정보 변경
+export const useUpdateQuizInfo = (quizId: number) => {
+  return useMutation({
+    mutationKey: QUIZ_KEYS.updateQuizInfo(quizId),
+    mutationFn: (data: Parameters<typeof updateQuizInfo>[1]) => updateQuizInfo(quizId, data),
+  })
+}
+
+// 퀴즈 세트 결과 업데이트
+export const useUpdateQuizResult = (documentId: number, quizSetId: number) => {
+  return useMutation({
+    mutationKey: QUIZ_KEYS.updateQuizResult(documentId, quizSetId),
+    mutationFn: (data: Parameters<typeof updateQuizResult>[2]) => updateQuizResult(documentId, quizSetId, data),
+  })
+}
+
+// DELETE 훅
+
+// 퀴즈 삭제
+export const useDeleteQuiz = (quizId: number) => {
+  return useMutation({
+    mutationKey: QUIZ_KEYS.deleteQuiz(quizId),
+    mutationFn: () => deleteQuiz(quizId),
   })
 }
