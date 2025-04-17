@@ -28,6 +28,7 @@ import IcDateNext from './ic_date_next.svg?react'
 import IcDatePrevious from './ic_date_previous.svg?react'
 import IcDelete from './ic_delete.svg?react'
 import IcDisclaimer from './ic_disclaimer.svg?react'
+import IcDocs from './ic_docs.svg?react'
 import IcDownload from './ic_download.svg?react'
 import IcEdit from './ic_edit.svg?react'
 import IcExplore from './ic_explore.svg?react'
@@ -62,6 +63,7 @@ import IcReview from './ic_review.svg?react'
 import IcSearch from './ic_search.svg?react'
 import IcSetting from './ic_setting.svg?react'
 import IcShare from './ic_share.svg?react'
+import IcShuffle from './ic_shuffle.svg?react'
 import IcSparkle from './ic_sparkle.svg?react'
 import IcStar from './ic_star.svg?react'
 import IcStarFilled from './ic_star_filled.svg?react'
@@ -104,6 +106,7 @@ export {
   IcDatePrevious,
   IcDelete,
   IcDisclaimer,
+  IcDocs,
   IcDownload,
   IcEdit,
   IcExplore,
@@ -138,6 +141,7 @@ export {
   IcSearch,
   IcSetting,
   IcShare,
+  IcShuffle,
   IcSparkle,
   IcStar,
   IcStarFilled,
