@@ -1,6 +1,3 @@
-export const MINIMUM_QUIZ_COUNT = 5
-export const MAXIMUM_QUIZ_COUNT = 40
-
 /** 글자수 제한 */
 export const DOCUMENT_CONSTRAINTS = {
   TITLE: {

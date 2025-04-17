@@ -1,35 +1,19 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
 
-import { AUTH_KEYS } from './config'
 import {
   checkInviteCodeBySignUp,
   createInviteLink,
   getInviteMemberInfo,
   login,
   rewardForInviteCode,
-  sendVerificationCode,
   verifyInviteCode,
-  verifyVerificationCode,
-} from './index'
+} from '.'
+import { AUTH_KEYS } from './config'
 
 export const useLogin = () => {
   return useMutation({
     mutationKey: AUTH_KEYS.postLogin,
     mutationFn: ({ data }: { data: Parameters<typeof login>[0]['data'] }) => login({ data }),
-  })
-}
-
-export const useSendVerificationCode = () => {
-  return useMutation({
-    mutationKey: AUTH_KEYS.postAuthVerification,
-    mutationFn: ({ data }: { data: { email: string } }) => sendVerificationCode({ data }),
-  })
-}
-
-export const useVerifyVerificationCode = () => {
-  return useMutation({
-    mutationKey: AUTH_KEYS.postAuthVerificationCheck,
-    mutationFn: ({ data }: { data: { email: string; verificationCode: string } }) => verifyVerificationCode({ data }),
   })
 }
 

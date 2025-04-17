@@ -135,7 +135,7 @@ export const RouteConfig = {
   quizResult: {
     pathname: '/quiz-result',
     search: {
-      quizSetId: '' as string,
+      quizSetId: 0 as number,
       quizSetType: '' as QuizSetType,
       correctAnswerRate: 0 as number,
       totalElapsedTime: 0 as number,

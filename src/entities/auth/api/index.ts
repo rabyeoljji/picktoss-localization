@@ -19,27 +19,6 @@ export const login = async ({ data }: { data: LoginRequest }) => {
   return response.data
 }
 
-// 이메일 인증 코드 생성 및 발송
-interface SendVerificationCodeRequest {
-  email: string
-}
-
-export const sendVerificationCode = async ({ data }: { data: SendVerificationCodeRequest }) => {
-  const response = await client.post<void>(AUTH_ENDPOINTS.postAuthVerification, data)
-  return response.data
-}
-
-// 이메일 코드 인증
-interface VerifyVerificationCodeRequest {
-  email: string
-  verificationCode: string
-}
-
-export const verifyVerificationCode = async ({ data }: { data: VerifyVerificationCodeRequest }) => {
-  const response = await client.post<void>(AUTH_ENDPOINTS.postAuthVerificationCheck, data)
-  return response.data
-}
-
 // 초대 코드 유효성 검사
 interface VerifyInviteCodeRequest {
   inviteCode: string

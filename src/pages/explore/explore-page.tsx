@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import Marquee from 'react-fast-marquee'
 
+import { motion } from 'framer-motion'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -139,7 +141,7 @@ const ExplorePage = () => {
           {isHeaderHidden && (
             <div className="fixed top-0 z-50 bg-surface-2 h-[env(safe-area-inset-top)] w-full p-2"></div>
           )}
-          <div
+          <motion.div
             className={cn(
               'w-full py-[8px] sticky z-50 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)]',
               isHeaderHidden ? 'top-[env(safe-area-inset-top)]' : 'top-[var(--header-height-safe)]',
@@ -160,7 +162,7 @@ const ExplorePage = () => {
                 </Chip>
               ))}
             />
-          </div>
+          </motion.div>
 
           <div className="w-full p-[16px] flex flex-col gap-[10px]">
             {/* banner */}

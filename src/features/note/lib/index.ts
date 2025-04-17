@@ -19,15 +19,6 @@ export async function extractPlainText(markdownText: string) {
   return div.textContent || ''
 }
 
-// 1000자 당, 2문제 생성을 가정
-export const QUESTIONS_PER_THOUSAND = 2
-
-export const calculateAvailableQuizCount = (charCount: number) => {
-  // 문제 수 계산
-  const quizCount = Math.floor((charCount / 1000) * QUESTIONS_PER_THOUSAND)
-  return quizCount
-}
-
 export const formatFileSize = (size: number) => {
   if (size < 1024) return `${size} B`
   if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`
