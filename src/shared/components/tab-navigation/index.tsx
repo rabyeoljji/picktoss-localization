@@ -31,7 +31,7 @@ interface TabNavigationProps {
 export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigationProps) => {
   return (
     <div className={cn('h-tab-navigation bg-surface-2 fixed bottom-0 w-full max-w-xl', className)}>
-      <div className="mx-auto flex max-w-[500px] justify-between px-[30px] pt-2.5">
+      <div className="mx-auto flex max-w-[500px] justify-between px-[52px] pt-2.5">
         {navItems.map((item) => (
           <NavItem key={item.label} {...item} active={item.label === activeTab} />
         ))}
@@ -68,7 +68,7 @@ const NavItem = ({ to, icon, label, active = false }: NavItemProps) => {
       )}
     >
       {icon}
-      <Text typo="body-2-medium" color="sub">
+      <Text typo="body-2-medium" color={active ? 'primary' : 'sub'}>
         {label}
       </Text>
     </button>
