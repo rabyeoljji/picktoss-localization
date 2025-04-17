@@ -11,7 +11,7 @@ export interface CreateDocumentPayload {
   quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
   star: string
   emoji: string
-  documentType: 'FILE' | 'TEXT' | 'NOTION'
+  documentType: 'FILE' | 'TEXT'
 }
 
 export interface CreateDocumentResponse {
@@ -51,6 +51,8 @@ export interface GetAllDocumentsDocumentDto {
 export interface GetAllDocumentsResponse {
   documents: GetAllDocumentsDocumentDto[]
 }
+
+export type SortOption = 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
 
 export const getAllDocuments = async (options?: {
   sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
@@ -122,6 +124,8 @@ export interface GetBookmarkedDocumentsDto {
 export interface GetBookmarkedDocumentsResponse {
   documents: GetBookmarkedDocumentsDto[]
 }
+
+export type BookmarkedSortOption = 'CREATED_AT' | 'QUIZ_COUNT'
 
 export const getBookmarkedDocuments = async (options?: {
   sortOption?: 'CREATED_AT' | 'QUIZ_COUNT'

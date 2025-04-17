@@ -72,7 +72,7 @@ const QuizLoadingPage = () => {
             </ul>
           </div>
 
-          <Button>노트 수정하러 가기</Button>
+          <Button onClick={() => router.back()}>노트 수정하러 가기</Button>
         </div>
       </div>
     )

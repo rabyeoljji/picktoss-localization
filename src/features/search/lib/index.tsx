@@ -1,4 +1,4 @@
-import { JSX, useEffect, useState } from 'react'
+import { JSX } from 'react'
 
 import { extractPlainText } from '@/features/note/lib'
 
@@ -8,13 +8,8 @@ import { Text } from '@/shared/components/ui/text'
  * 문법을 제거하고 키워드에 강조를 해서 반환하는 컴포넌트
  */
 export const MarkdownProcessor = ({ markdownText, keyword }: { markdownText: string; keyword: string }) => {
-  const [highlightedText, setHighlightedText] = useState<React.ReactNode>('')
-
-  useEffect(() => {
-    extractPlainText(markdownText).then((plainText) => {
-      setHighlightedText(highlightAndTrimText(plainText, keyword))
-    })
-  }, [markdownText, keyword])
+  const plainText = extractPlainText(markdownText)
+  const highlightedText = highlightAndTrimText(plainText, keyword)
 
   return <div>{highlightedText}</div>
 }

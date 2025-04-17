@@ -1,9 +1,9 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { toast } from 'sonner'
 
 import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
-import { extractPlainText, generateMarkdownFromFile } from '@/features/note/lib'
+import { calculateStar, extractPlainTextAsync, generateMarkdownFromFile } from '@/features/note/lib'
 import { CreateDocumentSchema, FileInfo, FileInfoSchema, isValidFileType } from '@/features/note/model/schema'
 
 import { CreateDocumentPayload } from '@/entities/document/api'
@@ -37,6 +37,7 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setEmoji: (emoji: string) => void
   setCategoryId: (categoryId: number) => void
   setIsPublic: (isPublic: boolean) => void
+  clearNoteInfo: () => void
 
   isPending: boolean
   handleCreateDocument: () => Promise<void>
@@ -53,12 +54,24 @@ export interface CreateNoteContextValues extends CreateNoteState {
   setValidationError: (errorMessage: string | null) => void
 }
 
+const initialNoteState = {
+  star: '5',
+  emoji: '📝',
+  documentName: '',
+  categoryId: null,
+  isPublic: true,
+  quizType: null,
+  content: '',
+  fileInfo: null,
+}
+
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
 
 export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
 
-  const [initDocumentType] = useQueryParam('/note/create', 'documentType')
+  const [documentType, setDocumentType] = useQueryParam('/note/create', 'documentType')
+  const prevDocumentTypeRef = useRef<DocumentType | null>(null) // 안정성을 위해 ref에 값 저장
 
   const [state, setState] = useState<{
     star: string
@@ -69,24 +82,29 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     quizType: QuizType | null
     content: string
     fileInfo: FileInfo | null
-    documentType: DocumentType
-  }>({
-    star: '5',
-    emoji: '📝',
-    documentName: '',
-    categoryId: null,
-    isPublic: true,
-    quizType: null,
-    content: '',
-    fileInfo: null,
-    documentType: initDocumentType,
-  })
+  }>(initialNoteState)
   const [isProcessing, setIsProcessing] = useState(false)
 
   // 유효성 검사 에러 상태
   const [validationError, setValidationError] = useState<string | null>(null)
 
   const { mutateAsync: createDocument, isPending } = useCreateDocument()
+
+  // 탭을 변경하면 내용 초기화
+  useEffect(() => {
+    const prevDocumentType = prevDocumentTypeRef.current
+
+    if (prevDocumentType !== documentType) {
+      clearNoteInfo()
+    }
+
+    prevDocumentTypeRef.current = documentType
+  }, [documentType])
+
+  // 글자수에 따른 별 개수 설정
+  useEffect(() => {
+    setState((prev) => ({ ...prev, star: String(calculateStar(state.content.length)) }))
+  }, [state.content])
 
   // validation error가 설정될 때마다 토스트 생성
   useEffect(() => {
@@ -104,7 +122,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
       state.content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN &&
       state.content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
     const isNameValid = state.documentName.trim().length > 0
-    const isTypeValid = state.documentType !== null
+    const isTypeValid = documentType !== null
     return isContentValid && isNameValid && isTypeValid
   }
 
@@ -123,12 +141,12 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     return true
   }
 
-  /** file이 변경되면 fileInfo상태를 설정하는 함수 */
+  /** file이 변경되면 fileInfo상태와 name, content를 설정하는 함수 */
   const changeFileInfo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsProcessing(true)
 
     if (state.fileInfo) {
-      setState({ ...state, fileInfo: null })
+      setState((prev) => ({ ...prev, fileInfo: null }))
       setValidationError(null)
     }
 
@@ -145,7 +163,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
 
     try {
       const markdownString = await generateMarkdownFromFile(file)
-      const markdownText = await extractPlainText(markdownString)
+      const markdownText = await extractPlainTextAsync(markdownString)
 
       const newFileInfo = {
         name: file.name,
@@ -157,13 +175,27 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         return
       }
 
-      setState({ ...state, fileInfo: newFileInfo })
+      const removeFileExtension = (filename: string) => {
+        const lastDotIndex = filename.lastIndexOf('.')
+        return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
+      }
+
+      setState((prev) => ({
+        ...prev,
+        documentName: removeFileExtension(newFileInfo.name),
+        content: newFileInfo.content,
+        fileInfo: newFileInfo,
+      }))
     } catch (err) {
       console.error('파일 처리 중 오류 발생:', err)
       setValidationError('파일 처리 중 문제가 발생했습니다.')
     } finally {
       setIsProcessing(false)
     }
+  }
+
+  const clearNoteInfo = () => {
+    setState({ ...initialNoteState })
   }
 
   /** 노트 생성 유효성 검사 함수 */
@@ -179,7 +211,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
       quizType: state.quizType,
       star: state.star,
       emoji: state.emoji,
-      documentType: state.documentType ?? 'TEXT',
+      documentType: documentType,
     }
 
     const result = CreateDocumentSchema.safeParse(createDocumentData)
@@ -208,7 +240,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
       quizType: state.quizType || 'MIX_UP',
       star: state.star,
       emoji: state.emoji,
-      documentType: state.documentType,
+      documentType: documentType,
     }
 
     createDocument(createDocumentData, {
@@ -233,23 +265,24 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
   return (
     <CreateNoteContext.Provider
       value={{
+        documentType: documentType,
         categoryId: state.categoryId,
         isPublic: state.isPublic,
-        documentType: state.documentType,
         documentName: state.documentName,
         quizType: state.quizType,
         star: state.star,
         content: state.content,
         emoji: state.emoji,
 
-        setDocumentType: (documentType: DocumentType) => setState({ ...state, documentType }),
-        setDocumentName: (documentName: string) => setState({ ...state, documentName }),
-        setQuizType: (quizType: QuizType) => setState({ ...state, quizType }),
-        setStar: (star: string) => setState({ ...state, star }),
-        setContent: (content: string) => setState({ ...state, content }),
-        setEmoji: (emoji: string) => setState({ ...state, emoji }),
-        setCategoryId: (categoryId: number) => setState({ ...state, categoryId }),
-        setIsPublic: (isPublic: boolean) => setState({ ...state, isPublic }),
+        setDocumentType,
+        setDocumentName: (documentName: string) => setState((prev) => ({ ...prev, documentName })),
+        setQuizType: (quizType: QuizType) => setState((prev) => ({ ...prev, quizType })),
+        setStar: (star: string) => setState((prev) => ({ ...prev, star })),
+        setContent: (content: string) => setState((prev) => ({ ...prev, content })),
+        setEmoji: (emoji: string) => setState((prev) => ({ ...prev, emoji })),
+        setCategoryId: (categoryId: number) => setState((prev) => ({ ...prev, categoryId })),
+        setIsPublic: (isPublic: boolean) => setState((prev) => ({ ...prev, isPublic })),
+        clearNoteInfo,
 
         fileInfo: state.fileInfo,
         changeFileInfo,
