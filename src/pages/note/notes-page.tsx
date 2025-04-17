@@ -1,3 +1,5 @@
+import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -9,7 +11,6 @@ import MyNotesContent from '@/features/note/ui/my-notes-content'
 
 import { IcAdd, IcBack, IcProfile } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
-import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { TextButton } from '@/shared/components/ui/text-button'
 
 const NotesPage = () => {
@@ -70,13 +71,13 @@ const NotesPage = () => {
               <Tabs value={activeTab} onValueChange={(tab) => setTab(tab as Tab)}>
                 <TabsList>
                   <TabsTrigger
-                    className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full"
+                    className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full h-[36px] w-[72px]"
                     value={'MY' as Tab}
                   >
                     내 퀴즈
                   </TabsTrigger>
                   <TabsTrigger
-                    className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full"
+                    className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full h-[36px] w-[72px]"
                     value={'BOOKMARK' as Tab}
                   >
                     북마크

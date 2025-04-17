@@ -103,7 +103,7 @@ export const SlidableNoteCard = ({
       onTouchEnd={handlePressEnd}
       onTouchCancel={handlePressEnd}
       className={cn(
-        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] py-[19px] shrink-0 cursor-pointer`,
+        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white pl-[12px] pr-[16px] py-[19px] shrink-0 cursor-pointer`,
         className,
       )}
     >
@@ -166,7 +166,7 @@ const SlidableNoteCardLeft = ({
 }
 
 const SlidableNoteCardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="ml-[16px] flex w-[calc(100%-55px)] flex-col">{children}</div>
+  return <div className="ml-[12px] flex w-[calc(100%-55px)] flex-col">{children}</div>
 }
 
 const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
@@ -201,23 +201,23 @@ const SlidableNoteCardDetail = ({
   bookmarkCount?: number
 }) => {
   return (
-    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[8px]">
-      <div className="inline-flex justify-start items-center gap-1">
+    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[4px]">
+      <div className="inline-flex justify-start items-center gap-[2px]">
         <span>{quizCount} 문제</span>
       </div>
 
       {isShared && (
         <>
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-          <div className="inline-flex justify-start items-center gap-1">
+          <div className="inline-flex justify-start items-center gap-[2px]">
             <IcPlayFilled className="size-[12px] text-icon-sub" />
             <span>{playedCount}</span>
           </div>
 
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-          <div className="inline-flex justify-start items-center gap-1">
+          <div className="inline-flex justify-start items-center gap-[2px]">
             <IcBookmarkFilled className="size-[12px] text-icon-sub" />
             <span>{bookmarkCount}</span>
           </div>
@@ -226,7 +226,7 @@ const SlidableNoteCardDetail = ({
 
       {!isShared && (
         <>
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
           <span>비공개</span>
         </>
       )}

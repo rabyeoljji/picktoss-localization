@@ -50,10 +50,10 @@ const MyNotesContent = ({
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="size-fit py-[10px] pl-[10px] flex-center cursor-pointer">
-              <IcArrange className="size-[20px] text-icon-secondary" />
+              <IcArrange width={20} height={20} className=" text-icon-secondary" />
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent>
+            <DropdownMenuContent align="end">
               <DropdownMenuItem
                 onClick={() => setSortOption('WRONG_ANSWER_COUNT')}
                 right={activeSortOption === 'WRONG_ANSWER_COUNT' && <IcCheck className="size-[20px]" />}
@@ -98,13 +98,13 @@ const MyNotesContent = ({
             onClick={() => router.push('/note/:noteId', { params: [String(document.id)] })}
             swipeOptions={[
               <button key={'shareButton'} className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse">
-                <IcUpload className="mb-[4px] text-inverse" />
+                <IcUpload className="size-[20px] mb-[4px] text-inverse" />
                 <Text typo="body-1-medium" color="inverse" className="size-fit">
                   공유
                 </Text>
               </button>,
               <button key={'deleteButton'} className="flex-center w-[72px] flex-col bg-critical p-2 text-inverse">
-                <IcDelete className="mb-[4px]" />
+                <IcDelete className="size-[20px] mb-[4px]" />
                 <Text typo="body-1-medium" color="inverse" className="size-fit">
                   삭제
                 </Text>
@@ -118,7 +118,7 @@ const MyNotesContent = ({
                   id={`note_${document.id}`}
                   checked={isChecked(document.id)}
                   onCheckedChange={(checked) => (checked ? check(document.id) : unCheck(document.id))}
-                  className="mx-[8px] size-[20px]"
+                  className="mx-[10px] size-[20px]"
                 />
               }
               selectMode={selectMode}
