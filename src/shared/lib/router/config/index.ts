@@ -1,5 +1,7 @@
 import { QuizSetType } from '@/pages/progress-quiz-page'
 
+import { BookmarkedSortOption, SortOption } from '@/entities/document/api'
+
 /**
  * 애플리케이션의 모든 경로와 검색 파라미터를 관리하는 통합 설정
  *
@@ -37,6 +39,8 @@ export const RouteConfig = {
     pathname: '/note',
     search: {
       tab: 'MY' as 'MY' | 'BOOKMARK',
+      sortOption: null as SortOption | null,
+      bookmarkedSortOption: null as BookmarkedSortOption | null,
     },
   },
   noteDetail: {

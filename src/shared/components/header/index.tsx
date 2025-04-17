@@ -43,7 +43,7 @@ export const Header = <T extends React.ElementType = 'div'>({
           </div>
         )}
         {content && <div className="flex-1">{content}</div>}
-        {right && <div className="place-self-end">{right}</div>}
+        {right && <div className="absolute right-4">{right}</div>}
       </div>
     </Comp>
   )

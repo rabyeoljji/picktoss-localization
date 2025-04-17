@@ -11,7 +11,7 @@ interface Props {
   id: number
   selectMode: boolean
   changeSelectMode: (value: boolean) => void
-  onSelect: () => void
+  // onSelect: () => void
   onClick: () => void
   swipeOptions: React.ReactNode[]
   className?: HTMLElement['className']
@@ -24,7 +24,7 @@ export const SlidableNoteCard = ({
   className,
   selectMode,
   changeSelectMode,
-  onSelect,
+  // onSelect,
   onClick,
   swipeOptions,
   defaultSlid,
@@ -43,7 +43,7 @@ export const SlidableNoteCard = ({
 
   const [isLongPress, setIsLongPress] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
-  const longPressDuration = 500 // 0.5초 이상 누르면 selectMode로 전환
+  const longPressDuration = 700 // 0.7초 이상 누르면 selectMode로 전환
 
   useEffect(() => {
     if (selectMode !== undefined) {
@@ -52,6 +52,8 @@ export const SlidableNoteCard = ({
   }, [selectMode])
 
   const handlePressStart = () => {
+    if (isDragging) return
+
     setIsLongPress(false)
 
     longPressTimer.current = setTimeout(() => {
@@ -83,7 +85,7 @@ export const SlidableNoteCard = ({
       e.preventDefault()
     }
 
-    onSelect()
+    // onSelect()
 
     if (!_selectMode && !isDragging && !isSwiped) {
       onClick()
@@ -110,7 +112,16 @@ export const SlidableNoteCard = ({
         className="relative flex h-[104px] max-w-full items-center rounded-[16px]"
         drag={_selectMode ? false : 'x'}
         dragConstraints={{ left: -(swipeOptions.length * 65), right: 0 }}
-        onDrag={() => !_selectMode && setIsDragging(true)}
+        onDrag={() => {
+          if (!_selectMode) {
+            setIsDragging(true)
+            // 드래그 중에 longPress감지되는 현상 방지
+            if (longPressTimer.current) {
+              clearTimeout(longPressTimer.current)
+              longPressTimer.current = null
+            }
+          }
+        }}
         onDragEnd={handleDragEnd}
         animate={controls}
         style={{ x }}
