@@ -33,7 +33,7 @@ export const Header = <T extends React.ElementType = 'div'>({
       className={cn('w-full max-w-xl header-h-safe flex flex-col justify-end fixed z-50 top-0 bg-base-1', className)}
       {...props}
     >
-      <div className={cn('relative h-[var(--header-height)] flex items-center', left ? 'pl-2 pr-4' : 'px-4')}>
+      <div className={cn('relative h-[var(--header-height)] flex items-center')}>
         {left && left}
         {title && (
           <div className="center">
@@ -43,7 +43,7 @@ export const Header = <T extends React.ElementType = 'div'>({
           </div>
         )}
         {content && <div className="flex-1">{content}</div>}
-        {right && <div className="absolute right-4">{right}</div>}
+        {right && <div className="absolute right-0">{right}</div>}
       </div>
     </Comp>
   )

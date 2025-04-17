@@ -35,7 +35,7 @@ const NoteCreateHeader = () => {
 
   return (
     <Header
-      className="z-50"
+      className="z-50 px-2 py-[7px]"
       left={<BackButton type="close" />}
       content={
         <div className="center">

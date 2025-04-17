@@ -54,7 +54,7 @@ const NotesPage = () => {
         />
       ) : (
         <Header
-          className="bg-surface-2 py-[9px] px-[8px]"
+          className="bg-surface-2 py-[9px] px-2"
           left={
             <button className="size-[40px] flex-center">
               <IcProfile className="size-[24px] text-icon-secondary" />
