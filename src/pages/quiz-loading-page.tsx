@@ -104,7 +104,7 @@ const QuizLoadingPage = () => {
               시작하기
             </Button>
             <TextButton
-              onClick={() => router.replace('/note/:noteId', { params: [String(documentId)] })}
+              onClick={() => router.replace('/library/:noteId', { params: [String(documentId)] })}
               className="mt-4"
             >
               다음에

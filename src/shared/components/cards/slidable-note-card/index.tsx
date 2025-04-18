@@ -191,12 +191,12 @@ const SlidableNoteCardPreview = ({ content }: { content: string }) => {
 
 const SlidableNoteCardDetail = ({
   quizCount,
-  isShared,
+  isPublic,
   playedCount,
   bookmarkCount,
 }: {
   quizCount: number
-  isShared?: boolean
+  isPublic?: boolean
   playedCount?: number
   bookmarkCount?: number
 }) => {
@@ -206,7 +206,7 @@ const SlidableNoteCardDetail = ({
         <span>{quizCount} 문제</span>
       </div>
 
-      {isShared && (
+      {isPublic && (
         <>
           <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
@@ -224,7 +224,7 @@ const SlidableNoteCardDetail = ({
         </>
       )}
 
-      {!isShared && (
+      {!isPublic && (
         <>
           <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
           <span>비공개</span>

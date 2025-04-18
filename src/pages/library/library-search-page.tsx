@@ -155,8 +155,8 @@
 
 // export default withHOC(NoteSearchPage, {})
 
-export const NoteSearchPage = () => {
+export const LibrarySearchPage = () => {
   return null
 }
 
-export default NoteSearchPage
+export default LibrarySearchPage

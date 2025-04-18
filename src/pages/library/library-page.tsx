@@ -13,7 +13,7 @@ import { IcAdd, IcBack, IcProfile } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import { TextButton } from '@/shared/components/ui/text-button'
 
-const NotesPage = () => {
+const LibraryPage = () => {
   const {
     activeTab,
     setTab,
@@ -116,7 +116,7 @@ const NotesPage = () => {
   )
 }
 
-export default withHOC(NotesPage, {
+export default withHOC(LibraryPage, {
   activeTab: '도서관',
   navClassName: 'border-t border-divider',
   backgroundClassName: 'bg-surface-2',

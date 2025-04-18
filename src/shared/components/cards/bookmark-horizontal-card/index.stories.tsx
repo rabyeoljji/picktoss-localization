@@ -34,7 +34,7 @@ export const Default: StoryObj<typeof BookmarkHorizontalCard> = {
               onClickBookmark={() => {}}
             />
             <BookmarkHorizontalCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <BookmarkHorizontalCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <BookmarkHorizontalCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </BookmarkHorizontalCard.Content>
         </BookmarkHorizontalCard>
       </div>
@@ -56,7 +56,7 @@ export const Bookmarked: StoryObj<typeof BookmarkHorizontalCard> = {
               onClickBookmark={() => {}}
             />
             <BookmarkHorizontalCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <BookmarkHorizontalCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <BookmarkHorizontalCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </BookmarkHorizontalCard.Content>
         </BookmarkHorizontalCard>
       </div>

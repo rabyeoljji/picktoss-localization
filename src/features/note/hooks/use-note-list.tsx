@@ -8,7 +8,7 @@ import { useQueryParam } from '@/shared/lib/router'
 /**
  * useNoteList
  *
- * (도서관)노트 메인 페이지(`/note`)의 상태 및 데이터 관리를 담당하는 커스텀 훅입니다.
+ * (도서관)노트 메인 페이지(`/library`)의 상태 및 데이터 관리를 담당하는 커스텀 훅입니다.
  *
  * 주요 기능:
  * - 현재 활성 탭(`MY` / `BOOKMARK`) 관리
@@ -32,7 +32,7 @@ export const useNoteList = () => {
   const [selectMode, setSelectMode] = useState(false)
 
   // search params로 탭과 정렬 옵션 관리
-  const [params, setParams] = useQueryParam('/note')
+  const [params, setParams] = useQueryParam('/library')
   const activeTab = params.tab
   const sortOption = params.sortOption
   const bookmarkedSortOption = params.bookmarkedSortOption

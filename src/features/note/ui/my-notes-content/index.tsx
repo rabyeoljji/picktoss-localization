@@ -29,7 +29,7 @@ const MyNotesContent = ({
   changeSelectMode: (selectMode: boolean) => void
 }) => {
   const router = useRouter()
-  const [sortOption, setSortOption] = useQueryParam('/note', 'sortOption')
+  const [sortOption, setSortOption] = useQueryParam('/library', 'sortOption')
   const activeSortOption = sortOption ?? 'CREATED_AT'
 
   const { check, unCheck, isChecked } = checkList
@@ -39,7 +39,7 @@ const MyNotesContent = ({
       {!selectMode && (
         <div className="w-full flex items-center">
           <Link
-            to={'/note/search'}
+            to={'/library/search'}
             className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
           >
             <IcSearch className="size-[20px] text-icon-secondary" />
@@ -95,7 +95,7 @@ const MyNotesContent = ({
             selectMode={selectMode}
             changeSelectMode={changeSelectMode}
             // onSelect={() => {}}
-            onClick={() => router.push('/note/:noteId', { params: [String(document.id)] })}
+            onClick={() => router.push('/library/:noteId', { params: [String(document.id)] })}
             swipeOptions={[
               <button key={'shareButton'} className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse">
                 <IcUpload className="size-[20px] mb-[4px] text-inverse" />
@@ -131,7 +131,7 @@ const MyNotesContent = ({
                 quizCount={document.totalQuizCount}
                 playedCount={document.tryCount}
                 bookmarkCount={document.bookmarkCount}
-                isShared={document.isPublic}
+                isPublic={document.isPublic}
               />
             </SlidableNoteCard.Content>
           </SlidableNoteCard>

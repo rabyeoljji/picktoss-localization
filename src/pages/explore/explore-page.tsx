@@ -186,7 +186,7 @@ const ExplorePage = () => {
 
             {/* content */}
             {Array.from({ length: 10 }).map((_, index) => (
-              <Link key={index} to={'/note/:noteId'} params={[String(1)]}>
+              <Link key={index} to={'/library/:noteId'} params={[String(1)]}>
                 <BookmarkHorizontalCard>
                   <BookmarkHorizontalCard.Left content="📄" />
 
@@ -201,7 +201,7 @@ const ExplorePage = () => {
                       quizCount={28}
                       playedCount={345}
                       bookmarkCount={21}
-                      isShared={true}
+                      isPublic={true}
                     />
                   </BookmarkHorizontalCard.Content>
                 </BookmarkHorizontalCard>

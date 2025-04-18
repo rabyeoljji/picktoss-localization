@@ -34,43 +34,39 @@ export const RouteConfig = {
     pathname: '/install-guide',
   },
 
-  /** 노트 관련 페이지 */
-  note: {
-    pathname: '/note',
-    search: {
-      tab: 'MY' as 'MY' | 'BOOKMARK',
-      sortOption: null as SortOption | null,
-      bookmarkedSortOption: null as BookmarkedSortOption | null,
-    },
-  },
-  noteDetail: {
-    pathname: '/note/:noteId',
-    search: {
-      quizType: 'MULTIPLE_CHOICE' as 'MIX_UP' | 'MULTIPLE_CHOICE',
-      showAnswer: false as boolean,
-      tab: ['QUIZ'] as string[],
-    },
-  },
-  noteQuiz: {
-    pathname: '/note/quiz/:noteId',
-  },
-  noteArrange: {
-    pathname: '/note/arrange/:directoryId',
-  },
-  noteSearch: {
-    pathname: '/note/search',
-  },
-  noteEdit: {
-    pathname: '/note/edit/:noteId',
-  },
+  /** 노트 생성 페이지 */
   noteCreate: {
     pathname: '/note/create',
     search: {
       documentType: 'TEXT' as 'TEXT' | 'FILE',
     },
   },
-  noteUpload: {
-    pathname: '/note/upload',
+
+  /** 도서관 페이지 */
+  library: {
+    pathname: '/library',
+    search: {
+      tab: 'MY' as 'MY' | 'BOOKMARK',
+      sortOption: null as SortOption | null,
+      bookmarkedSortOption: null as BookmarkedSortOption | null,
+    },
+  },
+  librarySearch: {
+    pathname: '/library/search',
+  },
+  libraryNoteDetail: {
+    pathname: '/library/:noteId',
+    search: {
+      quizType: 'MULTIPLE_CHOICE' as 'MIX_UP' | 'MULTIPLE_CHOICE',
+      showAnswer: false as boolean,
+      tab: ['QUIZ'] as string[],
+    },
+  },
+  libraryNoteQuiz: {
+    pathname: '/library/quiz/:noteId',
+  },
+  libraryNoteEdit: {
+    pathname: '/library/edit/:noteId',
   },
 
   /** 계정 관련 페이지 */
@@ -169,17 +165,17 @@ export const RouteConfig = {
       tab: '전체' as '전체' | '학문·전공' | '자격증·수험' | 'IT·개발' | '재테크·시사' | '상식·교양' | '언어',
     },
   },
-  exploreShare: {
-    pathname: '/explore/share',
+  exploreRelease: {
+    pathname: '/explore/release',
   },
   exploreQuiz: {
-    pathname: '/explore/quiz/:sharedNoteId',
+    pathname: '/explore/quiz/:noteId',
   },
   exploreQuizDetail: {
-    pathname: '/explore/quiz/detail/:sharedNoteId',
+    pathname: '/explore/quiz/detail/:noteId',
   },
   exploreQuizComplain: {
-    pathname: '/explore/quiz/complain/:sharedNoteId',
+    pathname: '/explore/quiz/complain/:noteId',
   },
   exploreSearch: {
     pathname: '/explore/search',

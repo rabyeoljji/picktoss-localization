@@ -74,12 +74,12 @@ const BookmarkHorizontalCardPreview = ({ content }: { content: string }) => {
 
 const BookmarkHorizontalCardDetail = ({
   quizCount,
-  isShared,
+  isPublic,
   playedCount,
   bookmarkCount,
 }: {
   quizCount: number
-  isShared?: boolean
+  isPublic?: boolean
   playedCount?: number
   bookmarkCount?: number
 }) => {
@@ -89,7 +89,7 @@ const BookmarkHorizontalCardDetail = ({
         <span>{quizCount} 문제</span>
       </div>
 
-      {isShared && (
+      {isPublic && (
         <>
           <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
@@ -107,7 +107,7 @@ const BookmarkHorizontalCardDetail = ({
         </>
       )}
 
-      {!isShared && (
+      {!isPublic && (
         <>
           <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
           <span>비공개</span>

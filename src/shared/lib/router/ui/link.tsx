@@ -75,11 +75,11 @@ type CustomLinkProps<T extends Pathname> = Omit<RouterLinkProps, 'to'> &
  *
  * @example
  * // 파라미터가 있는 경로 (params 필수)
- * <Link to="/note/:noteId" params={['123']}>노트 123</Link>
+ * <Link to="/library/:noteId" params={['123']}>노트 123</Link>
  *
  * @example
  * // 해시와 함께 사용
- * <Link to="/note/:noteId" params={['123']} hash="comments">댓글로 이동</Link>
+ * <Link to="/library/:noteId" params={['123']} hash="comments">댓글로 이동</Link>
  *
  * @example
  * // 문자열 형태의 search 파라미터

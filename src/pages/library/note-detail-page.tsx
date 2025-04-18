@@ -27,8 +27,8 @@ import { cn } from '@/shared/lib/utils'
 
 const NoteDetailPage = () => {
   const { noteId } = useParams()
-  const [quizType, setQuizType] = useQueryParam('/note/:noteId', 'quizType')
-  const [showAnswer, setShowAnswer] = useQueryParam('/note/:noteId', 'showAnswer')
+  const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
+  const [showAnswer, setShowAnswer] = useQueryParam('/library/:noteId', 'showAnswer')
   const { data } = useGetSingleDocument(noteId ? Number(noteId) : -1)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
@@ -69,7 +69,7 @@ const NoteDetailPage = () => {
           <div className={cn('flex items-center w-full', showTitleInHeader ? 'justify-between' : 'justify-end')}>
             {showTitleInHeader && (
               <Text typo="subtitle-2-medium" className="ml-2 text-ellipsis overflow-hidden whitespace-nowrap">
-                {data?.documentName}
+                {data?.name}
               </Text>
             )}
             <Button size="sm" left={<IcUpload />}>
@@ -108,7 +108,7 @@ const NoteDetailPage = () => {
           </div>
           {/* 제목 요소에 ref 추가 */}
           <Text ref={titleRef} typo="h3" className="mt-3">
-            {data?.documentName ?? 'Loading...'}
+            {data?.name ?? 'Loading...'}
           </Text>
           <div className="mt-2">
             <Text typo="body-1-medium" color="sub">
