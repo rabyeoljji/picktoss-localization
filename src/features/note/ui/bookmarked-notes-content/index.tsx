@@ -18,7 +18,7 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
     <div className="size-full flex flex-col px-[16px] pt-[16px] overflow-y-auto">
       <div className="w-full flex items-center">
         <Link
-          to={'/note/search'}
+          to={'/library/search'}
           className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
         >
           <IcSearch className="size-[20px] text-icon-secondary" />
@@ -41,7 +41,7 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
 
       <div className="py-[16px] h-fit w-full flex flex-col gap-[8px]">
         {documents.map((document) => (
-          <Link key={document.id} to={'/note/:noteId'} params={[String(document.id)]}>
+          <Link key={document.id} to={'/library/:noteId'} params={[String(document.id)]}>
             <BookmarkHorizontalCard>
               <BookmarkHorizontalCard.Left content={document.emoji} />
 
@@ -56,7 +56,7 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
                   quizCount={document.totalQuizCount}
                   playedCount={document.tryCount}
                   bookmarkCount={document.bookmarkCount}
-                  isShared={true}
+                  isPublic={true}
                 />
               </BookmarkHorizontalCard.Content>
             </BookmarkHorizontalCard>

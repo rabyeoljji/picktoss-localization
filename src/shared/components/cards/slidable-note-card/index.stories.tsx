@@ -77,7 +77,7 @@ export const DefaultNoteCard: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <SlidableNoteCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -126,7 +126,7 @@ export const NoteCardWithCustomEmoji: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <SlidableNoteCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -176,7 +176,7 @@ export const SlidNoteCard: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <SlidableNoteCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -228,7 +228,7 @@ export const SelectModeNoteCard: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <SlidableNoteCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -280,7 +280,7 @@ export const SelectModeNoteCardIsSelected: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <SlidableNoteCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
@@ -329,7 +329,7 @@ export const NoteCardWithTag: StoryObj<typeof SlidableNoteCard> = {
           <SlidableNoteCard.Content>
             <SlidableNoteCard.Header title="금융투자분석사 노트정리" tag={<Tag color="orange-weak">{5} 오답</Tag>} />
             <SlidableNoteCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <SlidableNoteCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <SlidableNoteCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </SlidableNoteCard.Content>
         </SlidableNoteCard>
       </div>
