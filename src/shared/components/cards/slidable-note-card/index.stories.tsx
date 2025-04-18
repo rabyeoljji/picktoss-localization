@@ -51,7 +51,6 @@ export const DefaultNoteCard: StoryObj<typeof SlidableNoteCard> = {
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
-          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse">
@@ -100,7 +99,6 @@ export const NoteCardWithCustomEmoji: StoryObj<typeof SlidableNoteCard> = {
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
-          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse">
@@ -150,7 +148,6 @@ export const SlidNoteCard: StoryObj<typeof SlidableNoteCard> = {
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
-          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse">
@@ -202,7 +199,6 @@ export const SelectModeNoteCard: StoryObj<typeof SlidableNoteCard> = {
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
-          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2 text-info">
@@ -254,7 +250,6 @@ export const SelectModeNoteCardIsSelected: StoryObj<typeof SlidableNoteCard> = {
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
-          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2 text-info">
@@ -303,7 +298,6 @@ export const NoteCardWithTag: StoryObj<typeof SlidableNoteCard> = {
           id={id}
           selectMode={selectMode}
           changeSelectMode={changeSelectMode}
-          onSelect={() => {}}
           onClick={() => {}}
           swipeOptions={[
             <button className="flex-center w-[72px] flex-col bg-info p-2">

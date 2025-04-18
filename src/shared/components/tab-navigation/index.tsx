@@ -18,7 +18,7 @@ const navItems = [
   },
   {
     label: '도서관',
-    to: RoutePath.note,
+    to: RoutePath.library,
     icon: <IcLibrary />,
   },
 ] as const
