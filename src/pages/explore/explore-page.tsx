@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
+import { IcBookmarkFilled, IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { BookmarkHorizontalCard } from '@/shared/components/cards/bookmark-horizontal-card'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
@@ -191,11 +191,7 @@ const ExplorePage = () => {
                   <BookmarkHorizontalCard.Left content="📄" />
 
                   <BookmarkHorizontalCard.Content>
-                    <BookmarkHorizontalCard.Header
-                      title="금융투자분석사 노트정리"
-                      isBookmarked={true}
-                      onClickBookmark={() => alert('click bookmark')}
-                    />
+                    <BookmarkHorizontalCard.Header title="금융투자분석사 노트정리" />
                     <BookmarkHorizontalCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
                     <BookmarkHorizontalCard.Detail
                       quizCount={28}
@@ -204,6 +200,8 @@ const ExplorePage = () => {
                       isPublic={true}
                     />
                   </BookmarkHorizontalCard.Content>
+
+                  <BookmarkHorizontalCard.Right content={<IcBookmarkFilled className="size-[20px]" />} />
                 </BookmarkHorizontalCard>
               </Link>
             ))}

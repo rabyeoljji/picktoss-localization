@@ -2,7 +2,7 @@ import { extractPlainText } from '@/features/note/lib'
 
 import { GetBookmarkedDocumentsDto } from '@/entities/document/api'
 
-import { IcArrange, IcSearch } from '@/shared/assets/icon'
+import { IcArrange, IcBookmarkFilled, IcSearch } from '@/shared/assets/icon'
 import { BookmarkHorizontalCard } from '@/shared/components/cards/bookmark-horizontal-card'
 import {
   DropdownMenu,
@@ -46,11 +46,7 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
               <BookmarkHorizontalCard.Left content={document.emoji} />
 
               <BookmarkHorizontalCard.Content>
-                <BookmarkHorizontalCard.Header
-                  title={document.name}
-                  isBookmarked={true}
-                  onClickBookmark={() => alert('click bookmark')}
-                />
+                <BookmarkHorizontalCard.Header title={document.name} />
                 <BookmarkHorizontalCard.Preview content={extractPlainText(document.previewContent)} />
                 <BookmarkHorizontalCard.Detail
                   quizCount={document.totalQuizCount}
@@ -59,6 +55,8 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
                   isPublic={true}
                 />
               </BookmarkHorizontalCard.Content>
+
+              <BookmarkHorizontalCard.Right content={<IcBookmarkFilled className="size-[20px]" />} />
             </BookmarkHorizontalCard>
           </Link>
         ))}
