@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
@@ -204,9 +204,19 @@ export const useUpdateDocumentCategory = (documentId: number) => {
   })
 }
 
-export const useDeleteDocument = () => {
+export const useDeleteDocument = (options?: {
+  directoryId?: number
+  sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
+}) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DOCUMENT_KEYS.deleteDocument,
     mutationFn: (data: Parameters<typeof deleteDocument>[0]) => deleteDocument(data),
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
+      })
+    },
   })
 }

@@ -1,9 +1,15 @@
+import React, { useEffect, useMemo, useState } from 'react'
+
+import { toast } from 'sonner'
+
 import { extractPlainText } from '@/features/note/lib'
 
 import { GetAllDocumentsDocumentDto } from '@/entities/document/api'
+import { useDeleteDocument } from '@/entities/document/api/hooks'
 
 import { IcArrange, IcCheck, IcDelete, IcSearch, IcUpload } from '@/shared/assets/icon'
 import { SlidableNoteCard } from '@/shared/components/cards/slidable-note-card'
+import { SystemDialog } from '@/shared/components/system-dialog'
 import { Checkbox } from '@/shared/components/ui/checkbox'
 import {
   DropdownMenu,
@@ -32,7 +38,30 @@ const MyNotesContent = ({
   const [sortOption, setSortOption] = useQueryParam('/library', 'sortOption')
   const activeSortOption = sortOption ?? 'CREATED_AT'
 
-  const { check, unCheck, isChecked } = checkList
+  const [openDelete, setOpenDelete] = useState(false)
+  const { mutate: deleteDocument } = useDeleteDocument()
+
+  const { check, unCheck, unCheckAll, isChecked, getCheckedIds, getCheckedList } = checkList
+
+  const selectedTotalQuizCount = useMemo(
+    () => getCheckedList().reduce((acc, cur) => acc + cur.totalQuizCount, 0),
+    [getCheckedList()],
+  )
+
+  const handleDelete = (documentIds: number[]) => {
+    deleteDocument(
+      { documentIds },
+      {
+        onSuccess: () => toast.success('퀴즈가 삭제되었어요'),
+      },
+    )
+  }
+
+  useEffect(() => {
+    if (!openDelete && !selectMode) {
+      unCheckAll()
+    }
+  }, [openDelete])
 
   return (
     <div className="size-full flex flex-col px-[16px] pt-[16px] overflow-y-auto">
@@ -94,7 +123,6 @@ const MyNotesContent = ({
             id={document.id}
             selectMode={selectMode}
             changeSelectMode={changeSelectMode}
-            // onSelect={() => {}}
             onClick={() => router.push('/library/:noteId', { params: [String(document.id)] })}
             swipeOptions={[
               <button key={'shareButton'} className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse">
@@ -103,7 +131,13 @@ const MyNotesContent = ({
                   공유
                 </Text>
               </button>,
-              <button key={'deleteButton'} className="flex-center w-[72px] flex-col bg-critical p-2 text-inverse">
+              <button
+                onClick={() => {
+                  check(document.id)
+                  setOpenDelete(true)
+                }}
+                className="flex-center w-[72px] flex-col bg-critical p-2 text-inverse"
+              >
                 <IcDelete className="size-[20px] mb-[4px]" />
                 <Text typo="body-1-medium" color="inverse" className="size-fit">
                   삭제
@@ -144,11 +178,40 @@ const MyNotesContent = ({
             'h-tab-navigation bg-surface-1 fixed left-1/2 -translate-x-1/2 bottom-0 z-50 w-full max-w-xl border-t border-divider px-36 pt-5 pb-8 inline-flex flex-col justify-start items-center',
           )}
         >
-          <TextButton left={<IcDelete className="size-[20px] text-icon-critical" />} variant={'critical'} size={'lg'}>
+          <TextButton
+            onClick={() => {
+              setOpenDelete(true)
+            }}
+            left={<IcDelete className="size-[20px] text-icon-critical" />}
+            variant={'critical'}
+            size={'lg'}
+          >
             선택 삭제
           </TextButton>
         </div>
       )}
+
+      <SystemDialog
+        open={openDelete}
+        onOpenChange={setOpenDelete}
+        title="퀴즈를 삭제하시겠어요?"
+        content={
+          <Text typo="body-1-medium" color="sub">
+            선택한 퀴즈와{' '}
+            <Text as="span" typo="body-1-medium" color="incorrect">
+              {`${selectedTotalQuizCount}개의 문제`}
+            </Text>
+            가 모두 삭제되며, 복구할 수 없어요
+          </Text>
+        }
+        variant="critical"
+        confirmLabel="삭제"
+        onConfirm={() => {
+          handleDelete(getCheckedIds().map((id) => Number(id)))
+          setOpenDelete(false)
+          changeSelectMode(false)
+        }}
+      />
     </div>
   )
 }
