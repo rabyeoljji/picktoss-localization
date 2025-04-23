@@ -4,7 +4,7 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { IcLogo } from '@/shared/assets/icon'
-import { ImgInviteEmpty, ImgInviteStar } from '@/shared/assets/images'
+import { ImgInviteStar } from '@/shared/assets/images'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
@@ -68,37 +68,36 @@ const InvitePage = () => {
   )
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ExpiredInvite = () => {
-  const router = useRouter()
+// const ExpiredInvite = () => {
+//   const router = useRouter()
 
-  return (
-    <div className="mt-[88.5px] px-[16px] flex-center flex-col gap-[44px]">
-      <div className="flex-center flex-col gap-[32px]">
-        <ImgInviteEmpty width={160} height={160} />
+//   return (
+//     <div className="mt-[88.5px] px-[16px] flex-center flex-col gap-[44px]">
+//       <div className="flex-center flex-col gap-[32px]">
+//         <ImgInviteEmpty width={160} height={160} />
 
-        <div className="flex-center flex-col gap-[12px]">
-          <div className="flex-center flex-col gap-[8px]">
-            <Text typo="h3" color="sub">
-              이런!
-            </Text>
-            <Text typo="h2">초대장이 사라졌어요</Text>
-          </div>
+//         <div className="flex-center flex-col gap-[12px]">
+//           <div className="flex-center flex-col gap-[8px]">
+//             <Text typo="h3" color="sub">
+//               이런!
+//             </Text>
+//             <Text typo="h2">초대장이 사라졌어요</Text>
+//           </div>
 
-          <Text typo="body-1-medium" color="sub" className="text-center">
-            유효기간이 만료되어 새로운 초대 링크가 필요해요 <br />
-            퀴즈를 만들 수 있는 별을 더 받고 싶다면 <br />
-            친구에게 링크를 다시 요청해보세요
-          </Text>
-        </div>
-      </div>
+//           <Text typo="body-1-medium" color="sub" className="text-center">
+//             유효기간이 만료되어 새로운 초대 링크가 필요해요 <br />
+//             퀴즈를 만들 수 있는 별을 더 받고 싶다면 <br />
+//             친구에게 링크를 다시 요청해보세요
+//           </Text>
+//         </div>
+//       </div>
 
-      <Button onClick={() => router.replace('/invite/login')} className="max-w-[260px]">
-        그냥 바로 가입하기
-      </Button>
-    </div>
-  )
-}
+//       <Button onClick={() => router.replace('/invite/login')} className="max-w-[260px]">
+//         그냥 바로 가입하기
+//       </Button>
+//     </div>
+//   )
+// }
 
 export default withHOC(InvitePage, {
   backgroundClassName: 'bg-surface-2',
