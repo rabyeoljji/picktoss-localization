@@ -1,4 +1,4 @@
-import { IcBookmark, IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
+import { IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
@@ -15,7 +15,7 @@ export const BookmarkHorizontalCard = ({ children, className }: Props) => {
         className,
       )}
     >
-      <div className="relative flex h-[104px] max-w-full items-center rounded-[16px]">{children}</div>
+      <div className="relative flex h-full max-w-full items-center rounded-[16px]">{children}</div>
     </div>
   )
 }
@@ -28,21 +28,15 @@ const BookmarkHorizontalCardLeft = ({ content }: { content: string }) => {
   )
 }
 
-const BookmarkHorizontalCardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="ml-[12px] flex w-[calc(100%-55px)] flex-col">{children}</div>
+const BookmarkHorizontalCardRight = ({ content }: { content: React.ReactNode }) => {
+  return <div className={cn('h-full w-fit justify-self-end')}>{content}</div>
 }
 
-const BookmarkHorizontalCardHeader = ({
-  title,
-  isBookmarked,
-  onClickBookmark,
-  tag,
-}: {
-  title: string
-  isBookmarked: boolean
-  onClickBookmark: () => void
-  tag?: React.ReactNode
-}) => {
+const BookmarkHorizontalCardContent = ({ children }: { children: React.ReactNode }) => {
+  return <div className="ml-[12px] flex w-[calc(100%-55px-20px)] flex-col">{children}</div>
+}
+
+const BookmarkHorizontalCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
   return (
     <div className="relative mb-[2px] flex items-center gap-[8px]">
       <Text as="h4" typo="subtitle-2-bold" className="w-fit max-w-[calc(100%-100px)] overflow-x-hidden truncate">
@@ -50,16 +44,6 @@ const BookmarkHorizontalCardHeader = ({
       </Text>
 
       {tag}
-
-      <div
-        className="absolute top-0 right-0 cursor-pointer"
-        onClick={(e) => {
-          e.preventDefault()
-          onClickBookmark()
-        }}
-      >
-        {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
-      </div>
     </div>
   )
 }
@@ -118,6 +102,7 @@ const BookmarkHorizontalCardDetail = ({
 }
 
 BookmarkHorizontalCard.Left = BookmarkHorizontalCardLeft
+BookmarkHorizontalCard.Right = BookmarkHorizontalCardRight
 BookmarkHorizontalCard.Content = BookmarkHorizontalCardContent
 BookmarkHorizontalCard.Header = BookmarkHorizontalCardHeader
 BookmarkHorizontalCard.Preview = BookmarkHorizontalCardPreview
