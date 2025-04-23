@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { isIOS } from 'react-device-detect'
 
 import { initializeFirebaseMessaging } from '@/../firebase'
 
@@ -27,8 +26,8 @@ export const useMessaging = () => {
 
       if (!isBrowser) return
 
-      // 안드로이드 알림 권한 요청
-      if (Notification.permission === 'default' && isPWA && !isIOS) {
+      // 알림 권한 요청
+      if (isPWA) {
         try {
           await requestNotificationPermission()
         } catch (error) {
