@@ -92,15 +92,7 @@ type TextProps<T extends ElementType> = {
   ref?: React.Ref<T>
 } & HTMLAttributes<T>
 
-export function Text<T extends ElementType = 'div'>({
-  typo,
-  color,
-  className,
-  as,
-  children,
-  ref,
-  ...props
-}: TextProps<T>) {
+export function Text<T extends ElementType>({ typo, color, className, as, children, ref, ...props }: TextProps<T>) {
   const Component = as || ('div' as ElementType)
 
   return (
