@@ -11,16 +11,23 @@ import { useGetQuizzes } from '@/entities/quiz/api/hooks'
 import { IcFile, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgStar } from '@/shared/assets/images'
 import { Header } from '@/shared/components/header'
+import { Button } from '@/shared/components/ui/button'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useMessaging } from '@/shared/hooks/use-messaging'
 import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const HomePage = () => {
-  const { data: quizzes, isLoading } = useGetQuizzes()
-
   const router = useRouter()
+
+  const { data: quizzes, isLoading } = useGetQuizzes()
+  const { setupMessaging, isReadyNotification } = useMessaging()
+
+  useEffect(() => {
+    console.log('알림 준비: ' + isReadyNotification)
+  }, [isReadyNotification])
 
   return (
     <>
@@ -47,47 +54,56 @@ const HomePage = () => {
 
       {!isLoading && quizzes?.length === 0 && <BannerContent />}
 
-      <HeaderOffsetLayout className="px-3">
-        <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px]">
-          <div className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center">
-            <Tag>{quizzes?.[0].name}</Tag>
-            <Text typo="question" className="mt-3 text-center">
-              {quizzes?.[0].question}
-            </Text>
-          </div>
+      {quizzes && quizzes.length > 0 && (
+        <HeaderOffsetLayout className="px-3">
+          <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px]">
+            <div className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center">
+              <Tag>{quizzes?.[0].name}</Tag>
+              <Text typo="question" className="mt-3 text-center">
+                {quizzes?.[0].question}
+              </Text>
+            </div>
 
-          <div className="mt-2">
-            {quizzes?.[0].quizType === 'MIX_UP' ? (
-              <div className="flex items-center gap-3 pt-10">
-                {Array.from({ length: 2 }).map((_, index) => (
-                  <OXChoiceOption
-                    key={index}
-                    O={index === 0}
-                    X={index === 1}
-                    isCorrect={quizzes?.[0].answer === (index === 0 ? 'correct' : 'incorrect')}
-                    selectedOption={null}
-                    onClick={() => {}}
-                    className="flex-1"
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="grid gap-2">
-                {quizzes?.[0].options.map((option, index) => (
-                  <MultipleChoiceOption
-                    key={option}
-                    label={String.fromCharCode(65 + index)}
-                    option={option}
-                    isCorrect={option === quizzes?.[0].answer}
-                    selectedOption={null}
-                    onClick={() => {}}
-                  />
-                ))}
-              </div>
-            )}
+            <div className="mt-2">
+              {quizzes?.[0].quizType === 'MIX_UP' ? (
+                <div className="flex items-center gap-3 pt-10">
+                  {Array.from({ length: 2 }).map((_, index) => (
+                    <OXChoiceOption
+                      key={index}
+                      O={index === 0}
+                      X={index === 1}
+                      isCorrect={quizzes?.[0].answer === (index === 0 ? 'correct' : 'incorrect')}
+                      selectedOption={null}
+                      onClick={() => {}}
+                      className="flex-1"
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="grid gap-2">
+                  {quizzes?.[0].options.map((option, index) => (
+                    <MultipleChoiceOption
+                      key={option}
+                      label={String.fromCharCode(65 + index)}
+                      option={option}
+                      isCorrect={option === quizzes?.[0].answer}
+                      selectedOption={null}
+                      onClick={() => {}}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </HeaderOffsetLayout>
+        </HeaderOffsetLayout>
+      )}
+
+      <div className="w-full flex-center flex-col mt-2 gap-1">
+        <Text typo="button-2">테스트용</Text>
+        <Button onClick={async () => await setupMessaging()}>
+          알림 권한 요청 <br /> <Text typo="button-4">(재요청은 pwa앱 삭제 후 재설치)</Text>
+        </Button>
+      </div>
 
       <div className="px-4">
         <button
