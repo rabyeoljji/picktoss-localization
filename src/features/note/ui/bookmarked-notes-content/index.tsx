@@ -1,6 +1,9 @@
+import { toast } from 'sonner'
+
 import { extractPlainText } from '@/features/note/lib'
 
 import { GetBookmarkedDocumentsDto } from '@/entities/document/api'
+import { useCreateDocumentBookmark, useDeleteDocumentBookmark } from '@/entities/document/api/hooks'
 
 import { IcArrange, IcBookmarkFilled, IcSearch } from '@/shared/assets/icon'
 import { BookmarkHorizontalCard } from '@/shared/components/cards/bookmark-horizontal-card'
@@ -42,22 +45,15 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
       <div className="py-[16px] h-fit w-full flex flex-col gap-[8px]">
         {documents.map((document) => (
           <Link key={document.id} to={'/library/:noteId'} params={[String(document.id)]}>
-            <BookmarkHorizontalCard>
-              <BookmarkHorizontalCard.Left content={document.emoji} />
-
-              <BookmarkHorizontalCard.Content>
-                <BookmarkHorizontalCard.Header title={document.name} />
-                <BookmarkHorizontalCard.Preview content={extractPlainText(document.previewContent)} />
-                <BookmarkHorizontalCard.Detail
-                  quizCount={document.totalQuizCount}
-                  playedCount={document.tryCount}
-                  bookmarkCount={document.bookmarkCount}
-                  isPublic={true}
-                />
-              </BookmarkHorizontalCard.Content>
-
-              <BookmarkHorizontalCard.Right content={<IcBookmarkFilled className="size-[20px]" />} />
-            </BookmarkHorizontalCard>
+            <BookmarkedCard
+              id={document.id}
+              emoji={document.emoji}
+              name={document.name}
+              previewContent={document.previewContent}
+              totalQuizCount={document.totalQuizCount}
+              playedCount={document.tryCount}
+              bookmarkCount={document.bookmarkCount}
+            />
           </Link>
         ))}
       </div>
@@ -66,3 +62,60 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
 }
 
 export default BookmarkedNotesContent
+
+interface BookmarkedCardProps {
+  id: number
+  emoji: string
+  name: string
+  previewContent: string
+  totalQuizCount: number
+  playedCount: number
+  bookmarkCount: number
+}
+
+const BookmarkedCard = ({
+  id,
+  emoji,
+  name,
+  previewContent,
+  totalQuizCount,
+  playedCount,
+  bookmarkCount,
+}: BookmarkedCardProps) => {
+  const { mutate: deleteBookmark } = useDeleteDocumentBookmark(id)
+  const { mutate: createBookmark } = useCreateDocumentBookmark(id)
+
+  const handleDeleteBookmark = () => {
+    deleteBookmark(undefined, {
+      onSuccess: () => {
+        toast('북마크가 해제되었어요', {
+          action: {
+            label: '되돌리기',
+            onClick: () => createBookmark(),
+          },
+        })
+      },
+    })
+  }
+
+  return (
+    <BookmarkHorizontalCard>
+      <BookmarkHorizontalCard.Left content={emoji} />
+
+      <BookmarkHorizontalCard.Content>
+        <BookmarkHorizontalCard.Header title={name} />
+        <BookmarkHorizontalCard.Preview content={extractPlainText(previewContent)} />
+        <BookmarkHorizontalCard.Detail
+          quizCount={totalQuizCount}
+          playedCount={playedCount}
+          bookmarkCount={bookmarkCount}
+          isPublic={true}
+        />
+      </BookmarkHorizontalCard.Content>
+
+      <BookmarkHorizontalCard.Right
+        content={<IcBookmarkFilled className="size-[20px]" onClick={handleDeleteBookmark} />}
+      />
+    </BookmarkHorizontalCard>
+  )
+}
