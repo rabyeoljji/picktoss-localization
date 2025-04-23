@@ -23,7 +23,7 @@ export const MultipleChoiceOption = ({
   return (
     <button
       className={cn(
-        'transition-all flex items-center gap-3 py-3 px-2.5 rounded-[16px] ring-1',
+        'w-full transition-all flex items-center gap-3 py-3 px-2.5 rounded-[16px] ring-1',
         isCorrect ? 'bg-correct ring-success text-correct' : 'bg-disabled ring-outline text-disabled',
         selectedOption === null && 'bg-base-1 ring-outline text-secondary',
       )}

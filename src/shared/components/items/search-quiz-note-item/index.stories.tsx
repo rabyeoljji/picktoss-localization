@@ -7,11 +7,8 @@ import { Text } from '@/shared/components/ui/text'
 import SearchQuizNoteItem from '.'
 
 const meta: Meta<typeof SearchQuizNoteItem> = {
-  title: 'search/SearchQuizNoteItem',
+  title: 'Item/SearchQuizNoteItem',
   component: SearchQuizNoteItem,
-  parameters: {
-    layout: 'centered',
-  },
   decorators: [
     (Story) => (
       <div className="mx-auto max-w-xl">
