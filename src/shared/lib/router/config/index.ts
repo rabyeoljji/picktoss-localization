@@ -183,4 +183,15 @@ export const RouteConfig = {
       query: '' as string,
     },
   },
+
+  /** 초대 관련 페이지 */
+  invite: {
+    pathname: '/invite/:inviteCode',
+  },
+  inviteLogin: {
+    pathname: '/invite/login',
+    search: {
+      inviteCode: '' as string,
+    },
+  },
 } as const

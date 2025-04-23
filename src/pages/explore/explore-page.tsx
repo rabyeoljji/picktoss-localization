@@ -115,7 +115,12 @@ const ExplorePage = () => {
       />
 
       <HeaderOffsetLayout>
-        <div className="py-[42px] flex flex-col gap-[10px]">
+        <div
+          className="py-[42px] flex flex-col gap-[10px] bg-[radial-gradient(closest-side,_var(--tw-gradient-stops))]"
+          style={{
+            backgroundImage: 'radial-gradient(circle, var(--color-gray-100) 0%, var(--color-gray-50) 40%)',
+          }}
+        >
           <Marquee gradient={false} speed={20} direction="left">
             {exampleQuestions.map((item, index) => (
               <QuestionBox key={index} emoji={item.emoji} question={item.question} className="mr-[8px]" />
@@ -139,7 +144,7 @@ const ExplorePage = () => {
           </Text>
 
           {isHeaderHidden && (
-            <div className="fixed top-0 z-50 bg-surface-2 h-[env(safe-area-inset-top)] w-full p-2"></div>
+            <div className="fixed top-0 z-50 bg-surface-2 h-[env(safe-area-inset-top)] w-full max-w-xl p-2"></div>
           )}
           <motion.div
             className={cn(

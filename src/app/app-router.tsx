@@ -27,6 +27,8 @@ import {
 import ExploreReleasePage from '@/pages/explore/explore-release-page'
 import HomePage from '@/pages/home-page'
 import { InstallGuidePage } from '@/pages/install-guide-page'
+import InviteLoginPage from '@/pages/invite/invite-login-page'
+import InvitePage from '@/pages/invite/invite-page'
 import { LibraryPage, LibrarySearchPage, NoteDetailPage, NoteEditPage, NoteQuizPage } from '@/pages/library'
 import { NoteCreatePage } from '@/pages/note-create'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
@@ -107,6 +109,11 @@ export const AppRouter = () => {
               <Route path={RoutePath.exploreSearch} element={<ExploreSearchPage />} />
             </Route>
           </Route>
+
+          {/* Invite */}
+          <Route path={RoutePath.invite} element={<InvitePage />} />
+          <Route path={RoutePath.inviteLogin} element={<InviteLoginPage />} />
+
           {/* Auth */}
           <Route path={RoutePath.login} element={<LoginPage />} />
           {/* Install Induce */}
