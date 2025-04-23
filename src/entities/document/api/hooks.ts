@@ -163,16 +163,30 @@ export const useCreateDocumentComplaint = (documentId: number) => {
 }
 
 export const useCreateDocumentBookmark = (documentId: number) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DOCUMENT_KEYS.createDocumentBookmark(documentId),
     mutationFn: () => createDocumentBookmark(documentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
+    },
   })
 }
 
 export const useDeleteDocumentBookmark = (documentId: number) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DOCUMENT_KEYS.deleteDocumentBookmark(documentId),
     mutationFn: () => deleteDocumentBookmark(documentId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
+    },
   })
 }
 
