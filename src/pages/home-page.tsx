@@ -98,7 +98,7 @@ const HomePage = () => {
         </HeaderOffsetLayout>
       )}
 
-      <div className="w-full flex-center flex-col mt-2 gap-1">
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(var(--spacing-tab-navigation)+12px+52px)] w-[calc(100%-32px)] flex-center flex-col gap-1">
         <Text typo="button-2">테스트용</Text>
         <Button onClick={async () => await setupMessaging()}>
           알림 권한 요청 <br /> <Text typo="button-4">(재요청은 pwa앱 삭제 후 재설치)</Text>
