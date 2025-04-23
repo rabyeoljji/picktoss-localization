@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 
+import { motion } from 'framer-motion'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -57,12 +59,17 @@ const HomePage = () => {
       {quizzes && quizzes.length > 0 && (
         <HeaderOffsetLayout className="px-3">
           <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px]">
-            <div className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center">
+            <motion.div
+              className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+            >
               <Tag>{quizzes?.[0].name}</Tag>
               <Text typo="question" className="mt-3 text-center">
                 {quizzes?.[0].question}
               </Text>
-            </div>
+            </motion.div>
 
             <div className="mt-2">
               {quizzes?.[0].quizType === 'MIX_UP' ? (
@@ -88,6 +95,7 @@ const HomePage = () => {
                       option={option}
                       isCorrect={option === quizzes?.[0].answer}
                       selectedOption={null}
+                      animationDelay={index * 0.03}
                       onClick={() => {}}
                     />
                   ))}
