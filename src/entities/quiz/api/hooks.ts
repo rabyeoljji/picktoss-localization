@@ -79,6 +79,7 @@ export const useGetConsecutiveSolvedDailyQuiz = () => {
   return useQuery({
     queryKey: QUIZ_KEYS.getConsecutiveSolvedDailyQuiz,
     queryFn: () => getConsecutiveSolvedDailyQuiz(),
+    select: (data) => data.currentConsecutiveDays,
   })
 }
 

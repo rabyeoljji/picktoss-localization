@@ -9,7 +9,7 @@ import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
-import { useCreateDailyQuizRecord, useGetQuizzes } from '@/entities/quiz/api/hooks'
+import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
@@ -35,6 +35,15 @@ const HomePage = () => {
   const { data: quizzesData, isLoading } = useGetQuizzes()
 
   const [dailyQuizRecord, setDailyQuizRecord] = useState<CreateDailyQuizRecordResponse>()
+  const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
+
+  useEffect(() => {
+    setDailyQuizRecord({
+      reward: 0,
+      todaySolvedDailyQuizCount: 0,
+      consecutiveSolvedDailyQuizDays: consecutiveSolvedDailyQuiz ?? 0,
+    })
+  }, [consecutiveSolvedDailyQuiz])
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
@@ -113,7 +122,13 @@ const HomePage = () => {
                 <IcProfile className="size-6 text-icon-secondary" />
               </button>
 
-              <Tooltip open={10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) < 10}>
+              <Tooltip
+                open={
+                  // 연속일이 0이상일 때 혹은 보상 횟수를 표시할 때
+                  (dailyQuizRecord?.consecutiveSolvedDailyQuizDays ?? 0) > 0 ||
+                  10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) < 10
+                }
+              >
                 <TooltipTrigger>
                   <div className="p-1.5 flex-center">
                     <ImgStar className="size-[28px]" />
