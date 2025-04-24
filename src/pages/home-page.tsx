@@ -51,12 +51,6 @@ const HomePage = () => {
 
   const { mutate: createDailyQuizRecord } = useCreateDailyQuizRecord()
 
-  const { setupMessaging, isReadyNotification } = useMessaging()
-
-  useEffect(() => {
-    console.log('알림 준비: ' + isReadyNotification)
-  }, [isReadyNotification])
-
   const moveToNextQuiz = (quiz: Quiz) => {
     setQuizzes((prev) => prev?.filter((q) => q.id !== quiz.id))
     setQuizState((prev) => ({
@@ -86,8 +80,14 @@ const HomePage = () => {
     }, 700)
   }
 
-  const displayQuizzes = quizzes?.filter((quiz) => quiz.quizType === displayQuizType)
+  const displayQuizzes = quizzes?.filter((quiz) => quiz.quizType === displayQuizType || displayQuizType === 'ALL')
   const currQuiz = displayQuizzes?.[0]
+
+  const { setupMessaging, isReadyNotification } = useMessaging()
+
+  useEffect(() => {
+    console.log('알림 준비: ' + isReadyNotification)
+  }, [isReadyNotification])
 
   return (
     <>
@@ -114,12 +114,12 @@ const HomePage = () => {
 
       {!isLoading && quizzes?.length === 0 && <BannerContent />}
 
-      {displayQuizzes && displayQuizzes.length > 0 && (
+      {currQuiz && (
         <HeaderOffsetLayout className="px-3">
           {quizState.status !== 'wrong' && (
             <div
               className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative"
-              key={currQuiz?.id}
+              key={currQuiz.id}
             >
               <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
@@ -129,21 +129,21 @@ const HomePage = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <Tag>{currQuiz?.name}</Tag>
+                <Tag>{currQuiz.name}</Tag>
                 <Text typo="question" className="mt-3 text-center">
-                  {currQuiz?.question}
+                  {currQuiz.question}
                 </Text>
               </motion.div>
 
               <div className="mt-2">
-                {currQuiz?.quizType === 'MIX_UP' ? (
+                {currQuiz.quizType === 'MIX_UP' ? (
                   <div className="flex items-center gap-3 pt-10">
                     {Array.from({ length: 2 }).map((_, index) => (
                       <OXChoiceOption
                         key={index}
                         O={index === 0}
                         X={index === 1}
-                        isCorrect={currQuiz?.answer === (index === 0 ? 'correct' : 'incorrect')}
+                        isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
                         selectedOption={quizState.selectedAnswer}
                         onClick={() =>
                           handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
@@ -154,12 +154,12 @@ const HomePage = () => {
                   </div>
                 ) : (
                   <div className="grid gap-2">
-                    {currQuiz?.options.map((option, index) => (
+                    {currQuiz.options.map((option, index) => (
                       <MultipleChoiceOption
                         key={option}
                         label={String.fromCharCode(65 + index)}
                         option={option}
-                        isCorrect={option === currQuiz?.answer}
+                        isCorrect={option === currQuiz.answer}
                         selectedOption={quizState.selectedAnswer}
                         animationDelay={index * 0.03}
                         onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
@@ -171,60 +171,12 @@ const HomePage = () => {
             </div>
           )}
           {quizState.status === 'wrong' && (
-            <div className="mt-1 shadow-md rounded-[20px] px-[32px] pt-[64px] pb-6 bg-surface-1 min-h-[500px] relative">
-              <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
-
-              <div className="flex items-center gap-3 mx-auto w-fit">
-                <ImgRoundIncorrect className="size-[48px]" />
-                <Text typo="h2" color="incorrect">
-                  오답
-                </Text>
-              </div>
-
-              <div className="py-[24px]">
-                <div className="w-full h-px bg-gray-100" />
-              </div>
-
-              <div className="grid gap-3">
-                <Text typo="subtitle-1-bold" className="text-center">
-                  정답:{' '}
-                  {currQuiz?.quizType === 'MULTIPLE_CHOICE'
-                    ? currQuiz?.answer
-                    : currQuiz?.answer === 'correct'
-                      ? 'O'
-                      : 'X'}
-                </Text>
-                <Text typo="body-1-medium" as="p" color="secondary" className="text-center">
-                  {currQuiz?.explanation}
-                </Text>
-                <div className="mt-[24px] flex items-center mx-auto">
-                  <Text typo="body-1-medium" color="sub">
-                    출처
-                  </Text>
-
-                  <div className="h-[12px] w-px bg-gray-100 mx-2" />
-
-                  <div className="flex items-center gap-1">
-                    <Text typo="body-1-medium" color="sub">
-                      {currQuiz?.name}
-                    </Text>
-                    <IcPagelink className="size-4 text-icon-sub" />
-                  </div>
-                </div>
-              </div>
-
-              <Button
-                variant="tertiary"
-                left={<IcRefresh />}
-                size="md"
-                className="absolute bottom-[80px] w-[120px] right-1/2 translate-x-1/2"
-                onClick={() => {
-                  moveToNextQuiz(currQuiz!)
-                }}
-              >
-                문제 전환
-              </Button>
-            </div>
+            <WrongAnswerContent
+              currQuiz={currQuiz}
+              moveToNextQuiz={moveToNextQuiz}
+              settingDrawerOpen={settingDrawerOpen}
+              setSettingDrawerOpen={setSettingDrawerOpen}
+            />
           )}
         </HeaderOffsetLayout>
       )}
@@ -407,6 +359,70 @@ const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange
       }
       contentClassName="bg-surface-2"
     />
+  )
+}
+
+const WrongAnswerContent = ({
+  currQuiz,
+  moveToNextQuiz,
+  settingDrawerOpen,
+  setSettingDrawerOpen,
+}: {
+  currQuiz: Quiz
+  moveToNextQuiz: (currQuiz: Quiz) => void
+  settingDrawerOpen: boolean
+  setSettingDrawerOpen: (open: boolean) => void
+}) => {
+  return (
+    <div className="mt-1 shadow-md rounded-[20px] px-[32px] pt-[64px] pb-6 bg-surface-1 min-h-[500px] relative">
+      <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+
+      <div className="flex items-center gap-3 mx-auto w-fit">
+        <ImgRoundIncorrect className="size-[48px]" />
+        <Text typo="h2" color="incorrect">
+          오답
+        </Text>
+      </div>
+
+      <div className="py-[24px]">
+        <div className="w-full h-px bg-gray-100" />
+      </div>
+
+      <div className="grid gap-3">
+        <Text typo="subtitle-1-bold" className="text-center">
+          정답: {currQuiz.quizType === 'MULTIPLE_CHOICE' ? currQuiz.answer : currQuiz.answer === 'correct' ? 'O' : 'X'}
+        </Text>
+        <Text typo="body-1-medium" as="p" color="secondary" className="text-center">
+          {currQuiz.explanation}
+        </Text>
+        <div className="mt-[24px] flex items-center mx-auto">
+          <Text typo="body-1-medium" color="sub">
+            출처
+          </Text>
+
+          <div className="h-[12px] w-px bg-gray-100 mx-2" />
+
+          <div className="flex items-center gap-1">
+            <Text typo="body-1-medium" color="sub">
+              {currQuiz.name}
+            </Text>
+            <IcPagelink className="size-4 text-icon-sub" />
+          </div>
+        </div>
+      </div>
+
+      <Button
+        variant="tertiary"
+        left={<IcRefresh />}
+        size="md"
+        className="absolute bottom-[80px] w-[120px] right-1/2 translate-x-1/2"
+        onClick={() => {
+          moveToNextQuiz(currQuiz!)
+        }}
+      >
+        문제 전환
+      </Button>
+    </div>
   )
 }
 
