@@ -35,15 +35,15 @@ const HomePage = () => {
   const { data: quizzesData, isLoading } = useGetQuizzes()
 
   const [dailyQuizRecord, setDailyQuizRecord] = useState<CreateDailyQuizRecordResponse>()
-  const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
+  // const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
 
-  useEffect(() => {
-    setDailyQuizRecord({
-      reward: 0,
-      todaySolvedDailyQuizCount: 0,
-      consecutiveSolvedDailyQuizDays: consecutiveSolvedDailyQuiz ?? 0,
-    })
-  }, [consecutiveSolvedDailyQuiz])
+  // useEffect(() => {
+  //   setDailyQuizRecord({
+  //     reward: 0,
+  //     todaySolvedDailyQuizCount: 0,
+  //     consecutiveSolvedDailyQuizDays: consecutiveSolvedDailyQuiz ?? 0,
+  //   })
+  // }, [consecutiveSolvedDailyQuiz])
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
@@ -126,7 +126,8 @@ const HomePage = () => {
                 open={
                   // 연속일이 0이상일 때 혹은 보상 횟수를 표시할 때
                   (dailyQuizRecord?.consecutiveSolvedDailyQuizDays ?? 0) > 0 ||
-                  10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) < 10
+                  (10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) < 10 &&
+                    10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) > 0)
                 }
               >
                 <TooltipTrigger>
@@ -135,7 +136,7 @@ const HomePage = () => {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="right" color="inverse">
-                  {10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) ? (
+                  {10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) > 0 ? (
                     <Text typo="body-2-medium">
                       <span className="text-accent">{10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0)}문제</span>{' '}
                       <span>더 풀면 획득!</span>
