@@ -8,7 +8,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
-import { GetAllQuizzesResponse } from '@/entities/quiz/api'
+import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
@@ -21,6 +21,7 @@ import { Label } from '@/shared/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -32,6 +33,8 @@ const HomePage = () => {
 
   const [quizzes, setQuizzes] = useState<Quiz[]>()
   const { data: quizzesData, isLoading } = useGetQuizzes()
+
+  const [dailyQuizRecord, setDailyQuizRecord] = useState<CreateDailyQuizRecordResponse>()
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
@@ -61,6 +64,17 @@ const HomePage = () => {
   }
 
   const handleClickOption = ({ quiz, selectOption }: { quiz: Quiz; selectOption: string }) => {
+    createDailyQuizRecord(
+      {
+        quizId: quiz.id,
+        choseAnswer: selectOption,
+        isAnswer: quiz.answer === selectOption,
+      },
+      {
+        onSuccess: (data) => setDailyQuizRecord(data),
+      },
+    )
+
     setQuizState((prev) => ({
       ...prev,
       selectedAnswer: selectOption,
@@ -98,9 +112,24 @@ const HomePage = () => {
               <button className="p-2 flex-center">
                 <IcProfile className="size-6 text-icon-secondary" />
               </button>
-              <div className="p-1.5 flex-center">
-                <ImgStar className="size-[28px]" />
-              </div>
+
+              <Tooltip open={10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) < 10}>
+                <TooltipTrigger>
+                  <div className="p-1.5 flex-center">
+                    <ImgStar className="size-[28px]" />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="right" color="inverse">
+                  {10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) ? (
+                    <Text typo="body-2-medium">
+                      <span className="text-accent">{10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0)}문제</span>{' '}
+                      <span>더 풀면 획득!</span>
+                    </Text>
+                  ) : (
+                    <Text typo="body-2-medium">연속{dailyQuizRecord?.consecutiveSolvedDailyQuizDays}일 완료!</Text>
+                  )}
+                </TooltipContent>
+              </Tooltip>
             </div>
             <div className="ml-auto">
               <button className="p-2 flex-center">
