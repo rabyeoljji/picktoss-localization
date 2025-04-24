@@ -9,7 +9,11 @@ import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
-import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
+import {
+  useGetConsecutiveSolvedDailyQuiz as _,
+  useCreateDailyQuizRecord,
+  useGetQuizzes,
+} from '@/entities/quiz/api/hooks'
 
 import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
