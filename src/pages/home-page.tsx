@@ -8,23 +8,37 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
+import { GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
-import { IcFile, IcProfile, IcSearch } from '@/shared/assets/icon'
+import { IcControl, IcFile, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgStar } from '@/shared/assets/images'
+import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
+import { Label } from '@/shared/components/ui/label'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { useMessaging } from '@/shared/hooks/use-messaging'
-import { useRouter } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const HomePage = () => {
   const router = useRouter()
 
-  const { data: quizzes, isLoading } = useGetQuizzes()
+  const [quizzes, setQuizzes] = useState<GetAllQuizzesResponse['quizzes'] | null>(null)
+  const { data: quizzesData, isLoading } = useGetQuizzes()
+
+  const [displayQuizType] = useQueryParam('/', 'displayQuizType')
+  const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
+
+  useEffect(() => {
+    if (quizzesData) {
+      setQuizzes(quizzesData.quizzes)
+    }
+  }, [quizzesData])
 
   const { mutate: createDailyQuizRecord } = useCreateDailyQuizRecord()
 
@@ -33,6 +47,10 @@ const HomePage = () => {
   useEffect(() => {
     console.log('알림 준비: ' + isReadyNotification)
   }, [isReadyNotification])
+
+  const handleClickOption = ({ quizType }: { quizType: 'MULTIPLE_CHOICE' | 'MIX_UP' }) => {}
+
+  const displayQuizzes = quizzes?.filter((quiz) => quiz.quizType === displayQuizType)
 
   return (
     <>
@@ -59,30 +77,35 @@ const HomePage = () => {
 
       {!isLoading && quizzes?.length === 0 && <BannerContent />}
 
-      {quizzes && quizzes.length > 0 && (
+      {displayQuizzes && displayQuizzes.length > 0 && (
         <HeaderOffsetLayout className="px-3">
-          <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px]">
+          <div
+            className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative"
+            key={displayQuizzes?.[0].id}
+          >
+            <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+
             <motion.div
               className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Tag>{quizzes?.[0].name}</Tag>
+              <Tag>{displayQuizzes?.[0].name}</Tag>
               <Text typo="question" className="mt-3 text-center">
-                {quizzes?.[0].question}
+                {displayQuizzes?.[0].question}
               </Text>
             </motion.div>
 
             <div className="mt-2">
-              {quizzes?.[0].quizType === 'MIX_UP' ? (
+              {displayQuizzes?.[0].quizType === 'MIX_UP' ? (
                 <div className="flex items-center gap-3 pt-10">
                   {Array.from({ length: 2 }).map((_, index) => (
                     <OXChoiceOption
                       key={index}
                       O={index === 0}
                       X={index === 1}
-                      isCorrect={quizzes?.[0].answer === (index === 0 ? 'correct' : 'incorrect')}
+                      isCorrect={displayQuizzes?.[0].answer === (index === 0 ? 'correct' : 'incorrect')}
                       selectedOption={null}
                       onClick={() => {}}
                       className="flex-1"
@@ -91,12 +114,12 @@ const HomePage = () => {
                 </div>
               ) : (
                 <div className="grid gap-2">
-                  {quizzes?.[0].options.map((option, index) => (
+                  {displayQuizzes?.[0].options.map((option, index) => (
                     <MultipleChoiceOption
                       key={option}
                       label={String.fromCharCode(65 + index)}
                       option={option}
-                      isCorrect={option === quizzes?.[0].answer}
+                      isCorrect={option === displayQuizzes?.[0].answer}
                       selectedOption={null}
                       animationDelay={index * 0.03}
                       onClick={() => {}}
@@ -219,6 +242,74 @@ const BannerContent = () => {
         </div>
       </div>
     </HeaderOffsetLayout>
+  )
+}
+
+const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+  const [displayQuizType, setDisplayQuizType] = useQueryParam('/', 'displayQuizType')
+
+  return (
+    <AlertDrawer
+      open={open}
+      onOpenChange={onOpenChange}
+      trigger={
+        <button className="absolute top-4 right-4 p-1 rounded-[8px] border border-outline">
+          <IcControl className="size-4 text-icon-secondary" />
+        </button>
+      }
+      title="데일리 퀴즈 설정"
+      hasClose
+      height="lg"
+      body={
+        <div className="py-8">
+          <form
+            id="quiz-settings-form"
+            onSubmit={(e) => {
+              e.preventDefault()
+              const value = (e.target as HTMLFormElement).quizType.value
+              setDisplayQuizType(value)
+              onOpenChange(false)
+            }}
+          >
+            <div className="grid gap-2">
+              <Text typo="subtitle-2-bold" color="secondary">
+                문제 유형
+              </Text>
+              <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
+                <RadioGroup name="quizType" defaultValue={displayQuizType}>
+                  <Label className="flex items-center gap-3 w-full py-[10px]">
+                    <RadioGroupItem value="ALL" />
+                    <Text typo="subtitle-2-medium" color="primary">
+                      전체
+                    </Text>
+                  </Label>
+                  <Label className="flex items-center gap-3 w-full py-[10px]">
+                    <RadioGroupItem value="MULTIPLE_CHOICE" />
+                    <Text typo="subtitle-2-medium" color="primary">
+                      객관식
+                    </Text>
+                  </Label>
+                  <Label className="flex items-center gap-3 w-full py-[10px]">
+                    <RadioGroupItem value="MIX_UP" />
+                    <Text typo="subtitle-2-medium" color="primary">
+                      O/X
+                    </Text>
+                  </Label>
+                </RadioGroup>
+              </div>
+            </div>
+          </form>
+        </div>
+      }
+      footer={
+        <div className="h-[114px] pt-[14px]">
+          <Button type="submit" form="quiz-settings-form">
+            적용하기
+          </Button>
+        </div>
+      }
+      contentClassName="bg-surface-2"
+    />
   )
 }
 

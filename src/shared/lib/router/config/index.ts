@@ -17,6 +17,9 @@ export const RouteConfig = {
   /** 메인 홈 화면 */
   root: {
     pathname: '/',
+    search: {
+      displayQuizType: 'ALL' as 'ALL' | 'MULTIPLE_CHOICE' | 'MIX_UP',
+    },
   },
 
   /** 통합 검색 */

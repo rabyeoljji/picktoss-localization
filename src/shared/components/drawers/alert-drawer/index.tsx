@@ -21,6 +21,7 @@ interface AlertDrawerProps {
   description?: string
   body?: React.ReactNode
   footer?: React.ReactNode
+  contentClassName?: HTMLElement['className']
 }
 
 /** @none dismissible은 반드시 open 상태를 직접 control해야함 */
@@ -34,6 +35,7 @@ export const AlertDrawer = ({
   hasClose = true,
   body,
   footer,
+  contentClassName,
 }: AlertDrawerProps) => {
   const [_open, _setOpen] = useState(open)
 
@@ -50,7 +52,7 @@ export const AlertDrawer = ({
     <Drawer open={_open} onOpenChange={handleOpenChange} dismissible={false}>
       {trigger && <DrawerTrigger asChild>{trigger}</DrawerTrigger>}
 
-      <DrawerContent height={height} hasHandle={false}>
+      <DrawerContent height={height} hasHandle={false} className={contentClassName}>
         {hasClose || title || description ? (
           <DrawerHeader>
             <div className="relative flex justify-between">
