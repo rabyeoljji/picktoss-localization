@@ -25,14 +25,23 @@ import { useMessaging } from '@/shared/hooks/use-messaging'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
+type Quiz = GetAllQuizzesResponse['quizzes'][number]
+
 const HomePage = () => {
   const router = useRouter()
 
-  const [quizzes, setQuizzes] = useState<GetAllQuizzesResponse['quizzes'] | null>(null)
+  const [quizzes, setQuizzes] = useState<Quiz[]>()
   const { data: quizzesData, isLoading } = useGetQuizzes()
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
+  const [quizStatus, setQuizStatus] = useState<{
+    selectedAnswer: string | null
+    status: 'idle' | 'selected' | 'wrong'
+  }>({
+    selectedAnswer: null,
+    status: 'idle',
+  })
 
   useEffect(() => {
     if (quizzesData) {
@@ -48,9 +57,34 @@ const HomePage = () => {
     console.log('알림 준비: ' + isReadyNotification)
   }, [isReadyNotification])
 
-  const handleClickOption = ({ quizType }: { quizType: 'MULTIPLE_CHOICE' | 'MIX_UP' }) => {}
+  const handleClickOption = ({ quiz, selectOption }: { quiz: Quiz; selectOption: string }) => {
+    setQuizStatus((prev) => ({
+      ...prev,
+      selectedAnswer: selectOption,
+      status: 'selected',
+    }))
+
+    setTimeout(() => {
+      if (quiz.answer === selectOption) {
+        // 다음 퀴즈로
+        setQuizzes((prev) => prev?.filter((q) => q.id !== quiz.id))
+        setQuizStatus((prev) => ({
+          ...prev,
+          status: 'idle',
+          selectedAnswer: null,
+        }))
+      } else {
+        setQuizStatus((prev) => ({
+          ...prev,
+          selectedAnswer: selectOption,
+          status: 'wrong',
+        }))
+      }
+    }, 1000)
+  }
 
   const displayQuizzes = quizzes?.filter((quiz) => quiz.quizType === displayQuizType)
+  const currQuiz = displayQuizzes?.[0]
 
   return (
     <>
@@ -81,7 +115,7 @@ const HomePage = () => {
         <HeaderOffsetLayout className="px-3">
           <div
             className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative"
-            key={displayQuizzes?.[0].id}
+            key={currQuiz?.id}
           >
             <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
@@ -91,38 +125,40 @@ const HomePage = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <Tag>{displayQuizzes?.[0].name}</Tag>
+              <Tag>{currQuiz?.name}</Tag>
               <Text typo="question" className="mt-3 text-center">
-                {displayQuizzes?.[0].question}
+                {currQuiz?.question}
               </Text>
             </motion.div>
 
             <div className="mt-2">
-              {displayQuizzes?.[0].quizType === 'MIX_UP' ? (
+              {currQuiz?.quizType === 'MIX_UP' ? (
                 <div className="flex items-center gap-3 pt-10">
                   {Array.from({ length: 2 }).map((_, index) => (
                     <OXChoiceOption
                       key={index}
                       O={index === 0}
                       X={index === 1}
-                      isCorrect={displayQuizzes?.[0].answer === (index === 0 ? 'correct' : 'incorrect')}
-                      selectedOption={null}
-                      onClick={() => {}}
+                      isCorrect={currQuiz?.answer === (index === 0 ? 'correct' : 'incorrect')}
+                      selectedOption={quizStatus.selectedAnswer}
+                      onClick={() =>
+                        handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
+                      }
                       className="flex-1"
                     />
                   ))}
                 </div>
               ) : (
                 <div className="grid gap-2">
-                  {displayQuizzes?.[0].options.map((option, index) => (
+                  {currQuiz?.options.map((option, index) => (
                     <MultipleChoiceOption
                       key={option}
                       label={String.fromCharCode(65 + index)}
                       option={option}
-                      isCorrect={option === displayQuizzes?.[0].answer}
-                      selectedOption={null}
+                      isCorrect={option === currQuiz?.answer}
+                      selectedOption={quizStatus.selectedAnswer}
                       animationDelay={index * 0.03}
-                      onClick={() => {}}
+                      onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
                     />
                   ))}
                 </div>
