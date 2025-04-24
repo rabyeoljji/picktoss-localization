@@ -102,10 +102,10 @@ export const useGetSingleDailyQuizRecord = (dailyQuizRecordId: number) => {
 // POST 훅
 
 // 데일리 퀴즈 풀기
-export const useCreateDailyQuizRecord = (quizId: number) => {
+export const useCreateDailyQuizRecord = () => {
   return useMutation({
-    mutationKey: QUIZ_KEYS.createDailyQuizRecord(quizId),
-    mutationFn: (data: Parameters<typeof createDailyQuizRecord>[1]) => createDailyQuizRecord(quizId, data),
+    mutationKey: QUIZ_KEYS.createDailyQuizRecord(),
+    mutationFn: (data: Parameters<typeof createDailyQuizRecord>[0]) => createDailyQuizRecord(data),
   })
 }
 

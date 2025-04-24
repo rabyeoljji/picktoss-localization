@@ -25,7 +25,7 @@ export const QUIZ_ENDPOINTS = {
 
   // POST
   // 데일리 퀴즈 풀기
-  createDailyQuizRecord: (quizId: number) => `/quizzes/${quizId}/solve`,
+  createDailyQuizRecord: '/quizzes/solve',
   // 퀴즈 시작하기 (퀴즈 세트 생성)
   createQuizSet: (documentId: number) => `/documents/${documentId}/quiz-sets`,
 
@@ -58,7 +58,7 @@ export const QUIZ_KEYS = {
     createKey(QUIZ, QUIZ_ENDPOINTS.getSingleDailyQuizRecord(dailyQuizRecordId)),
 
   // POST
-  createDailyQuizRecord: (quizId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.createDailyQuizRecord(quizId)),
+  createDailyQuizRecord: () => createKey(QUIZ, QUIZ_ENDPOINTS.createDailyQuizRecord()),
   createQuizSet: (documentId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.createQuizSet(documentId)),
 
   // PATCH

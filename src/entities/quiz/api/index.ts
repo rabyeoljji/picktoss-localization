@@ -196,6 +196,7 @@ export const getSingleDailyQuizRecord = async (
 
 // POST: 데일리 퀴즈 풀기
 export interface CreateQuizSolveRecordRequest {
+  quizId: number
   isAnswer: boolean
   choseAnswer: string
 }
@@ -207,10 +208,9 @@ export interface CreateDailyQuizRecordResponse {
 }
 
 export const createDailyQuizRecord = async (
-  quizId: number,
   data: CreateQuizSolveRecordRequest,
 ): Promise<CreateDailyQuizRecordResponse> => {
-  const response = await client.post<CreateDailyQuizRecordResponse>(QUIZ_ENDPOINTS.createDailyQuizRecord(quizId), data)
+  const response = await client.post<CreateDailyQuizRecordResponse>(QUIZ_ENDPOINTS.createDailyQuizRecord, data)
   return response.data
 }
 

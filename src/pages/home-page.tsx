@@ -8,7 +8,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
-import { useGetQuizzes } from '@/entities/quiz/api/hooks'
+import { useCreateDailyQuizRecord, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcFile, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgStar } from '@/shared/assets/images'
@@ -25,6 +25,9 @@ const HomePage = () => {
   const router = useRouter()
 
   const { data: quizzes, isLoading } = useGetQuizzes()
+
+  const { mutate: createDailyQuizRecord } = useCreateDailyQuizRecord()
+
   const { setupMessaging, isReadyNotification } = useMessaging()
 
   useEffect(() => {
