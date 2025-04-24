@@ -11,8 +11,8 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
-import { IcControl, IcFile, IcProfile, IcSearch } from '@/shared/assets/icon'
-import { ImgDaily1, ImgDaily2, ImgDaily3, ImgStar } from '@/shared/assets/images'
+import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
+import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
@@ -35,7 +35,7 @@ const HomePage = () => {
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
-  const [quizStatus, setQuizStatus] = useState<{
+  const [quizState, setQuizState] = useState<{
     selectedAnswer: string | null
     status: 'idle' | 'selected' | 'wrong'
   }>({
@@ -57,8 +57,17 @@ const HomePage = () => {
     console.log('알림 준비: ' + isReadyNotification)
   }, [isReadyNotification])
 
+  const moveToNextQuiz = (quiz: Quiz) => {
+    setQuizzes((prev) => prev?.filter((q) => q.id !== quiz.id))
+    setQuizState((prev) => ({
+      ...prev,
+      status: 'idle',
+      selectedAnswer: null,
+    }))
+  }
+
   const handleClickOption = ({ quiz, selectOption }: { quiz: Quiz; selectOption: string }) => {
-    setQuizStatus((prev) => ({
+    setQuizState((prev) => ({
       ...prev,
       selectedAnswer: selectOption,
       status: 'selected',
@@ -66,21 +75,15 @@ const HomePage = () => {
 
     setTimeout(() => {
       if (quiz.answer === selectOption) {
-        // 다음 퀴즈로
-        setQuizzes((prev) => prev?.filter((q) => q.id !== quiz.id))
-        setQuizStatus((prev) => ({
-          ...prev,
-          status: 'idle',
-          selectedAnswer: null,
-        }))
+        moveToNextQuiz(quiz)
       } else {
-        setQuizStatus((prev) => ({
+        setQuizState((prev) => ({
           ...prev,
           selectedAnswer: selectOption,
           status: 'wrong',
         }))
       }
-    }, 1000)
+    }, 700)
   }
 
   const displayQuizzes = quizzes?.filter((quiz) => quiz.quizType === displayQuizType)
@@ -113,58 +116,116 @@ const HomePage = () => {
 
       {displayQuizzes && displayQuizzes.length > 0 && (
         <HeaderOffsetLayout className="px-3">
-          <div
-            className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative"
-            key={currQuiz?.id}
-          >
-            <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
-
-            <motion.div
-              className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+          {quizState.status !== 'wrong' && (
+            <div
+              className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative"
+              key={currQuiz?.id}
             >
-              <Tag>{currQuiz?.name}</Tag>
-              <Text typo="question" className="mt-3 text-center">
-                {currQuiz?.question}
-              </Text>
-            </motion.div>
+              <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
-            <div className="mt-2">
-              {currQuiz?.quizType === 'MIX_UP' ? (
-                <div className="flex items-center gap-3 pt-10">
-                  {Array.from({ length: 2 }).map((_, index) => (
-                    <OXChoiceOption
-                      key={index}
-                      O={index === 0}
-                      X={index === 1}
-                      isCorrect={currQuiz?.answer === (index === 0 ? 'correct' : 'incorrect')}
-                      selectedOption={quizStatus.selectedAnswer}
-                      onClick={() =>
-                        handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
-                      }
-                      className="flex-1"
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="grid gap-2">
-                  {currQuiz?.options.map((option, index) => (
-                    <MultipleChoiceOption
-                      key={option}
-                      label={String.fromCharCode(65 + index)}
-                      option={option}
-                      isCorrect={option === currQuiz?.answer}
-                      selectedOption={quizStatus.selectedAnswer}
-                      animationDelay={index * 0.03}
-                      onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
-                    />
-                  ))}
-                </div>
-              )}
+              <motion.div
+                className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <Tag>{currQuiz?.name}</Tag>
+                <Text typo="question" className="mt-3 text-center">
+                  {currQuiz?.question}
+                </Text>
+              </motion.div>
+
+              <div className="mt-2">
+                {currQuiz?.quizType === 'MIX_UP' ? (
+                  <div className="flex items-center gap-3 pt-10">
+                    {Array.from({ length: 2 }).map((_, index) => (
+                      <OXChoiceOption
+                        key={index}
+                        O={index === 0}
+                        X={index === 1}
+                        isCorrect={currQuiz?.answer === (index === 0 ? 'correct' : 'incorrect')}
+                        selectedOption={quizState.selectedAnswer}
+                        onClick={() =>
+                          handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
+                        }
+                        className="flex-1"
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    {currQuiz?.options.map((option, index) => (
+                      <MultipleChoiceOption
+                        key={option}
+                        label={String.fromCharCode(65 + index)}
+                        option={option}
+                        isCorrect={option === currQuiz?.answer}
+                        selectedOption={quizState.selectedAnswer}
+                        animationDelay={index * 0.03}
+                        onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+          {quizState.status === 'wrong' && (
+            <div className="mt-1 shadow-md rounded-[20px] px-[32px] pt-[64px] pb-6 bg-surface-1 min-h-[500px] relative">
+              <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+
+              <div className="flex items-center gap-3 mx-auto w-fit">
+                <ImgRoundIncorrect className="size-[48px]" />
+                <Text typo="h2" color="incorrect">
+                  오답
+                </Text>
+              </div>
+
+              <div className="py-[24px]">
+                <div className="w-full h-px bg-gray-100" />
+              </div>
+
+              <div className="grid gap-3">
+                <Text typo="subtitle-1-bold" className="text-center">
+                  정답:{' '}
+                  {currQuiz?.quizType === 'MULTIPLE_CHOICE'
+                    ? currQuiz?.answer
+                    : currQuiz?.answer === 'correct'
+                      ? 'O'
+                      : 'X'}
+                </Text>
+                <Text typo="body-1-medium" as="p" color="secondary" className="text-center">
+                  {currQuiz?.explanation}
+                </Text>
+                <div className="mt-[24px] flex items-center mx-auto">
+                  <Text typo="body-1-medium" color="sub">
+                    출처
+                  </Text>
+
+                  <div className="h-[12px] w-px bg-gray-100 mx-2" />
+
+                  <div className="flex items-center gap-1">
+                    <Text typo="body-1-medium" color="sub">
+                      {currQuiz?.name}
+                    </Text>
+                    <IcPagelink className="size-4 text-icon-sub" />
+                  </div>
+                </div>
+              </div>
+
+              <Button
+                variant="tertiary"
+                left={<IcRefresh />}
+                size="md"
+                className="absolute bottom-[80px] w-[120px] right-1/2 translate-x-1/2"
+                onClick={() => {
+                  moveToNextQuiz(currQuiz!)
+                }}
+              >
+                문제 전환
+              </Button>
+            </div>
+          )}
         </HeaderOffsetLayout>
       )}
 
