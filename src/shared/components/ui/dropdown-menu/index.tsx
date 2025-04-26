@@ -56,13 +56,14 @@ DropdownMenuSubContent.displayName = DropdownMenuPrimitive.SubContent.displayNam
 const DropdownMenuContent = React.forwardRef<
   React.ElementRef<typeof DropdownMenuPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Content>
->(({ className, sideOffset = 4, ...props }, ref) => (
+>(({ className, sideOffset = 4, align = 'center', ...props }, ref) => (
   <DropdownMenuPrimitive.Portal>
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
+      align={align}
       className={cn(
-        'bg-surface-1 text-primary z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-[240px] overflow-x-hidden overflow-y-auto rounded-[12px] shadow-[var(--shadow-md)]',
+        'bg-surface-1 text-primary z-50 max-h-[var(--radix-dropdown-menu-content-available-height)] min-w-[220px] overflow-x-hidden overflow-y-auto rounded-[12px] shadow-[var(--shadow-md)]',
         'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2',
         className,
       )}
@@ -83,7 +84,7 @@ const DropdownMenuItem = React.forwardRef<
   <DropdownMenuPrimitive.Item
     ref={ref}
     className={cn(
-      'focus:bg-active active:bg-active text-primary typo-subtitle-2-medium data-[disabled]:[&>svg]:text-icon-disabled data-[disabled]:text-disabled relative flex cursor-default items-center px-5 py-3 transition-colors outline-none select-none data-[disabled]:pointer-events-none [&>svg]:size-5 [&>svg]:shrink-0',
+      'focus:bg-active active:bg-active text-primary typo-subtitle-2-medium data-[disabled]:[&>svg]:text-icon-disabled data-[disabled]:text-disabled relative flex cursor-default items-center px-[20px] py-[12px] h-[48px] transition-colors outline-none select-none data-[disabled]:pointer-events-none [&>svg]:size-5 [&>svg]:shrink-0',
       'border-divider not-last:border-b',
       inset && 'pl-8',
       color === 'critical' && 'text-critical [&>svg]:text-icon-critical',

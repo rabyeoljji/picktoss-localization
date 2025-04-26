@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react'
 
+import { IcBookmark, IcBookmarkFilled } from '@/shared/assets/icon'
 import { BookmarkHorizontalCard } from '@/shared/components/cards/bookmark-horizontal-card'
 
 const meta: Meta<typeof BookmarkHorizontalCard> = {
@@ -28,14 +29,12 @@ export const Default: StoryObj<typeof BookmarkHorizontalCard> = {
           <BookmarkHorizontalCard.Left content="📄" />
 
           <BookmarkHorizontalCard.Content>
-            <BookmarkHorizontalCard.Header
-              title="금융투자분석사 노트정리"
-              isBookmarked={false}
-              onClickBookmark={() => {}}
-            />
+            <BookmarkHorizontalCard.Header title="금융투자분석사 노트정리" />
             <BookmarkHorizontalCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <BookmarkHorizontalCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <BookmarkHorizontalCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </BookmarkHorizontalCard.Content>
+
+          <BookmarkHorizontalCard.Right content={<IcBookmark className="size-[20px]" />} />
         </BookmarkHorizontalCard>
       </div>
     )
@@ -50,14 +49,12 @@ export const Bookmarked: StoryObj<typeof BookmarkHorizontalCard> = {
           <BookmarkHorizontalCard.Left content="📄" />
 
           <BookmarkHorizontalCard.Content>
-            <BookmarkHorizontalCard.Header
-              title="금융투자분석사 노트정리"
-              isBookmarked={true}
-              onClickBookmark={() => {}}
-            />
+            <BookmarkHorizontalCard.Header title="금융투자분석사 노트정리" />
             <BookmarkHorizontalCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-            <BookmarkHorizontalCard.Detail quizCount={28} isShared playedCount={345} bookmarkCount={21} />
+            <BookmarkHorizontalCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
           </BookmarkHorizontalCard.Content>
+
+          <BookmarkHorizontalCard.Right content={<IcBookmarkFilled className="size-[20px]" />} />
         </BookmarkHorizontalCard>
       </div>
     )

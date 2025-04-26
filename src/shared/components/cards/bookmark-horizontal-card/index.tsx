@@ -1,4 +1,4 @@
-import { IcBookmark, IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
+import { IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
@@ -11,11 +11,11 @@ export const BookmarkHorizontalCard = ({ children, className }: Props) => {
   return (
     <div
       className={cn(
-        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] py-[19px] shrink-0 cursor-pointer`,
+        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white pl-[12px] pr-[16px] py-[19px] shrink-0 cursor-pointer`,
         className,
       )}
     >
-      <div className="relative flex h-[104px] max-w-full items-center rounded-[16px]">{children}</div>
+      <div className="relative flex h-full max-w-full items-center rounded-[16px]">{children}</div>
     </div>
   )
 }
@@ -28,21 +28,15 @@ const BookmarkHorizontalCardLeft = ({ content }: { content: string }) => {
   )
 }
 
-const BookmarkHorizontalCardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="ml-[16px] flex w-[calc(100%-55px)] flex-col">{children}</div>
+const BookmarkHorizontalCardRight = ({ content }: { content: React.ReactNode }) => {
+  return <div className={cn('h-full w-fit justify-self-end')}>{content}</div>
 }
 
-const BookmarkHorizontalCardHeader = ({
-  title,
-  isBookmarked,
-  onClickBookmark,
-  tag,
-}: {
-  title: string
-  isBookmarked: boolean
-  onClickBookmark: () => void
-  tag?: React.ReactNode
-}) => {
+const BookmarkHorizontalCardContent = ({ children }: { children: React.ReactNode }) => {
+  return <div className="ml-[12px] flex w-[calc(100%-55px-20px)] flex-col">{children}</div>
+}
+
+const BookmarkHorizontalCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
   return (
     <div className="relative mb-[2px] flex items-center gap-[8px]">
       <Text as="h4" typo="subtitle-2-bold" className="w-fit max-w-[calc(100%-100px)] overflow-x-hidden truncate">
@@ -50,16 +44,6 @@ const BookmarkHorizontalCardHeader = ({
       </Text>
 
       {tag}
-
-      <div
-        className="absolute top-0 right-0 cursor-pointer"
-        onClick={(e) => {
-          e.preventDefault()
-          onClickBookmark()
-        }}
-      >
-        {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
-      </div>
     </div>
   )
 }
@@ -74,42 +58,42 @@ const BookmarkHorizontalCardPreview = ({ content }: { content: string }) => {
 
 const BookmarkHorizontalCardDetail = ({
   quizCount,
-  isShared,
+  isPublic,
   playedCount,
   bookmarkCount,
 }: {
   quizCount: number
-  isShared?: boolean
+  isPublic?: boolean
   playedCount?: number
   bookmarkCount?: number
 }) => {
   return (
-    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[8px]">
-      <div className="inline-flex justify-start items-center gap-1">
+    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[4px]">
+      <div className="inline-flex justify-start items-center gap-[2px]">
         <span>{quizCount} 문제</span>
       </div>
 
-      {isShared && (
+      {isPublic && (
         <>
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-          <div className="inline-flex justify-start items-center gap-1">
+          <div className="inline-flex justify-start items-center gap-[2px]">
             <IcPlayFilled className="size-[12px] text-icon-sub" />
             <span>{playedCount}</span>
           </div>
 
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-          <div className="inline-flex justify-start items-center gap-1">
+          <div className="inline-flex justify-start items-center gap-[2px]">
             <IcBookmarkFilled className="size-[12px] text-icon-sub" />
             <span>{bookmarkCount}</span>
           </div>
         </>
       )}
 
-      {!isShared && (
+      {!isPublic && (
         <>
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
           <span>비공개</span>
         </>
       )}
@@ -118,6 +102,7 @@ const BookmarkHorizontalCardDetail = ({
 }
 
 BookmarkHorizontalCard.Left = BookmarkHorizontalCardLeft
+BookmarkHorizontalCard.Right = BookmarkHorizontalCardRight
 BookmarkHorizontalCard.Content = BookmarkHorizontalCardContent
 BookmarkHorizontalCard.Header = BookmarkHorizontalCardHeader
 BookmarkHorizontalCard.Preview = BookmarkHorizontalCardPreview

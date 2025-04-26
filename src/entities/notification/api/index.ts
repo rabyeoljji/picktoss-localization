@@ -2,21 +2,23 @@ import { client } from '@/shared/lib/axios/client'
 
 import { NOTIFICATION_ENDPOINTS } from './config'
 
+export type NotificationType = 'GENERAL' | 'TODAY_QUIZ' | 'STAR_REWARD' | 'UPDATE_NEWS'
+
 // GET: 모든 알림 조회
-interface GetNotificationsDto {
+interface NotificationDto {
   notificationKey: string
   title: string
   content: string
-  notificationType: 'GENERAL' | 'TODAY_QUIZ' | 'COLLECTION' | 'STAR_REWARD' | 'UPDATE_NEWS'
+  notificationType: NotificationType
   receivedTime: string // ISO 문자열
 }
 
-interface GetNotificationsResponse {
-  notifications: GetNotificationsDto[]
+interface GetAllNotificationsResponse {
+  notifications: NotificationDto[]
 }
 
-export const getNotifications = async (): Promise<GetNotificationsResponse> => {
-  const response = await client.get<GetNotificationsResponse>(NOTIFICATION_ENDPOINTS.getNotifications())
+export const getAllNotifications = async (): Promise<GetAllNotificationsResponse> => {
+  const response = await client.get<GetAllNotificationsResponse>(NOTIFICATION_ENDPOINTS.getAllNotifications())
   return response.data
 }
 

@@ -1,5 +1,3 @@
-import { useEffect } from 'react'
-
 import { marked } from 'marked'
 import styled from 'styled-components'
 
@@ -12,22 +10,7 @@ import FixedBottom from '@/shared/components/fixed-bottom'
 import { Text } from '@/shared/components/ui/text'
 
 const NoteCreatePageFile = () => {
-  const { setDocumentName, content, setContent, fileInfo, changeFileInfo, isProcessing } = useCreateNoteContext()
-
-  const removeFileExtension = (filename: string) => {
-    const lastDotIndex = filename.lastIndexOf('.')
-    return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
-  }
-
-  useEffect(() => {
-    if (fileInfo) {
-      setDocumentName(removeFileExtension(fileInfo.name))
-      setContent(fileInfo.content)
-    } else {
-      setDocumentName('')
-      setContent('')
-    }
-  }, [fileInfo])
+  const { content, fileInfo, changeFileInfo, isProcessing } = useCreateNoteContext()
 
   if (!fileInfo) {
     return (
@@ -67,9 +50,9 @@ const NoteCreatePageFile = () => {
   return (
     <>
       {content && (
-        <FileContentWrapper>
+        <FileContentWrapper className="flex-1 text-disabled pb-[100px] overflow-hidden">
           <div
-            className="FileContent flex-1 overflow-auto scrollbar-hide text-disabled p-[20px]"
+            className="FileContent overflow-auto scrollbar-hide p-[20px]"
             dangerouslySetInnerHTML={{ __html: marked(content) }}
           />
         </FileContentWrapper>
@@ -136,7 +119,6 @@ const FileContentWrapper = styled.div`
     width: 100% !important;
     height: 100% !important;
     box-sizing: border-box !important;
-    padding: 20px 16px !important;
     margin: 0 !important;
     overflow-y: auto !important;
 

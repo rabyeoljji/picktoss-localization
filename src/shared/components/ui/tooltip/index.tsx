@@ -25,8 +25,12 @@ function TooltipContent({
   sideOffset = 0,
   arrowPosition = 'left',
   children,
+  color = 'blue',
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content> & { arrowPosition?: 'left' | 'right' | 'center' }) {
+}: React.ComponentProps<typeof TooltipPrimitive.Content> & {
+  arrowPosition?: 'left' | 'right' | 'center'
+  color?: 'inverse' | 'blue'
+}) {
   const arrowRef = React.useRef<SVGSVGElement | null>(null)
 
   React.useEffect(() => {
@@ -58,8 +62,9 @@ function TooltipContent({
         data-slot="tooltip-content"
         sideOffset={sideOffset}
         className={cn(
-          ' animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 origin-(--radix-tooltip-content-transform-origin) typo-body-2-medium text-balance text-inverse size-fit px-[16px] py-[7px] relative bg-blue-strong rounded-[8px] inline-flex justify-center items-center gap-2.5 leading-none',
+          'animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 origin-(--radix-tooltip-content-transform-origin) typo-body-2-medium text-balance text-inverse size-fit px-[16px] py-[7px] relative rounded-[8px] inline-flex justify-center items-center gap-2.5 leading-none',
           className,
+          color === 'blue' ? 'bg-blue-strong' : 'bg-inverse',
         )}
         {...props}
       >
@@ -67,7 +72,10 @@ function TooltipContent({
         <TooltipPrimitive.Arrow
           ref={arrowRef}
           className={cn(
-            'bg-blue-strong fill-[var(--color-blue-500)] z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45',
+            'z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45',
+            color === 'blue'
+              ? 'bg-blue-strong fill-[var(--color-blue-500)]'
+              : 'bg-inverse fill-[var(--color-gray-800)]',
           )}
         />
       </TooltipPrimitive.Content>

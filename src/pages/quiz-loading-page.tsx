@@ -2,7 +2,7 @@ import { useProgressAnimation } from '@/features/quiz/model/use-progress-animati
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress-bar'
 
-import { ImgQuizEmpty } from '@/shared/assets/images'
+import { ImgQuizEmpty, ImgQuizcard } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
@@ -37,7 +37,7 @@ const QuizLoadingPage = () => {
   })
 
   // 문서 퀴즈 상태 폴링 훅 사용
-  const { error, quizSetId, quizSetType } = useQuizGenerationPolling(documentId, {
+  const { error, quizSetId } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
@@ -72,17 +72,17 @@ const QuizLoadingPage = () => {
             </ul>
           </div>
 
-          <Button>노트 수정하러 가기</Button>
+          <Button onClick={() => router.back()}>노트 수정하러 가기</Button>
         </div>
       </div>
     )
   }
 
-  if (quizSetId != null && quizSetType != null) {
+  if (quizSetId != null) {
     return (
       <div className="relative h-svh bg-surface-1">
         <div className="center flex-center flex-col w-full px-[43px]">
-          <ImgQuizEmpty className="w-[120px]" />
+          <ImgQuizcard className="w-[120px]" />
           <Text typo="h4" color="primary" className="mt-4">
             퀴즈 생성 완료!
           </Text>
@@ -96,10 +96,7 @@ const QuizLoadingPage = () => {
                 completeAnimation()
                 setTimeout(() => {
                   router.replace('/progress-quiz/:quizSetId', {
-                    params: [quizSetId],
-                    search: {
-                      quizSetType: quizSetType,
-                    },
+                    params: [String(quizSetId)],
                   })
                 }, 500)
               }}
@@ -107,7 +104,7 @@ const QuizLoadingPage = () => {
               시작하기
             </Button>
             <TextButton
-              onClick={() => router.replace('/note/:noteId', { params: [String(documentId)] })}
+              onClick={() => router.replace('/library/:noteId', { params: [String(documentId)] })}
               className="mt-4"
             >
               다음에

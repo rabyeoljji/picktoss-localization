@@ -11,7 +11,7 @@ interface Props {
   id: number
   selectMode: boolean
   changeSelectMode: (value: boolean) => void
-  onSelect: () => void
+  // onSelect: () => void
   onClick: () => void
   swipeOptions: React.ReactNode[]
   className?: HTMLElement['className']
@@ -24,7 +24,7 @@ export const SlidableNoteCard = ({
   className,
   selectMode,
   changeSelectMode,
-  onSelect,
+  // onSelect,
   onClick,
   swipeOptions,
   defaultSlid,
@@ -43,7 +43,7 @@ export const SlidableNoteCard = ({
 
   const [isLongPress, setIsLongPress] = useState(false)
   const longPressTimer = useRef<NodeJS.Timeout | null>(null)
-  const longPressDuration = 500 // 0.5초 이상 누르면 selectMode로 전환
+  const longPressDuration = 700 // 0.7초 이상 누르면 selectMode로 전환
 
   useEffect(() => {
     if (selectMode !== undefined) {
@@ -52,6 +52,8 @@ export const SlidableNoteCard = ({
   }, [selectMode])
 
   const handlePressStart = () => {
+    if (isDragging) return
+
     setIsLongPress(false)
 
     longPressTimer.current = setTimeout(() => {
@@ -83,7 +85,7 @@ export const SlidableNoteCard = ({
       e.preventDefault()
     }
 
-    onSelect()
+    // onSelect()
 
     if (!_selectMode && !isDragging && !isSwiped) {
       onClick()
@@ -101,7 +103,7 @@ export const SlidableNoteCard = ({
       onTouchEnd={handlePressEnd}
       onTouchCancel={handlePressEnd}
       className={cn(
-        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white px-[16px] py-[19px] shrink-0 cursor-pointer`,
+        `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white pl-[12px] pr-[16px] py-[19px] shrink-0 cursor-pointer`,
         className,
       )}
     >
@@ -110,7 +112,16 @@ export const SlidableNoteCard = ({
         className="relative flex h-[104px] max-w-full items-center rounded-[16px]"
         drag={_selectMode ? false : 'x'}
         dragConstraints={{ left: -(swipeOptions.length * 65), right: 0 }}
-        onDrag={() => !_selectMode && setIsDragging(true)}
+        onDrag={() => {
+          if (!_selectMode) {
+            setIsDragging(true)
+            // 드래그 중에 longPress감지되는 현상 방지
+            if (longPressTimer.current) {
+              clearTimeout(longPressTimer.current)
+              longPressTimer.current = null
+            }
+          }
+        }}
         onDragEnd={handleDragEnd}
         animate={controls}
         style={{ x }}
@@ -155,7 +166,7 @@ const SlidableNoteCardLeft = ({
 }
 
 const SlidableNoteCardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="ml-[16px] flex w-[calc(100%-55px)] flex-col">{children}</div>
+  return <div className="ml-[12px] flex w-[calc(100%-55px)] flex-col">{children}</div>
 }
 
 const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
@@ -180,42 +191,42 @@ const SlidableNoteCardPreview = ({ content }: { content: string }) => {
 
 const SlidableNoteCardDetail = ({
   quizCount,
-  isShared,
+  isPublic,
   playedCount,
   bookmarkCount,
 }: {
   quizCount: number
-  isShared?: boolean
+  isPublic?: boolean
   playedCount?: number
   bookmarkCount?: number
 }) => {
   return (
-    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[8px]">
-      <div className="inline-flex justify-start items-center gap-1">
+    <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[4px]">
+      <div className="inline-flex justify-start items-center gap-[2px]">
         <span>{quizCount} 문제</span>
       </div>
 
-      {isShared && (
+      {isPublic && (
         <>
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-          <div className="inline-flex justify-start items-center gap-1">
+          <div className="inline-flex justify-start items-center gap-[2px]">
             <IcPlayFilled className="size-[12px] text-icon-sub" />
             <span>{playedCount}</span>
           </div>
 
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-          <div className="inline-flex justify-start items-center gap-1">
+          <div className="inline-flex justify-start items-center gap-[2px]">
             <IcBookmarkFilled className="size-[12px] text-icon-sub" />
             <span>{bookmarkCount}</span>
           </div>
         </>
       )}
 
-      {!isShared && (
+      {!isPublic && (
         <>
-          <div className="inline-block size-fit mx-[4px] text-icon-disabled">•</div>
+          <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
           <span>비공개</span>
         </>
       )}

@@ -9,6 +9,13 @@ import { Tag } from '../../ui/tag'
 const meta: Meta<typeof QuestionCard> = {
   title: 'Card/QuestionCard',
   component: QuestionCard,
+  decorators: [
+    (Story) => (
+      <div className="mx-auto max-w-xl">
+        <Story />
+      </div>
+    ),
+  ],
 }
 export default meta
 

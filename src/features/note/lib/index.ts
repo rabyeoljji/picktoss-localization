@@ -8,10 +8,19 @@ import { isValidFileType } from '@/features/note/model/schema'
 
 import '@/shared/lib/pdf'
 
+// 1000자 당, 재화 2개 소모를 가정
+export const STAR_PER_THOUSAND = 2
+
+// 글자 수에 따른 소모 재화 계산
+export const calculateStar = (charCount: number) => {
+  const star = Math.floor((charCount / 1000) * STAR_PER_THOUSAND)
+  return star
+}
+
 /** markdown string을 받아 markdown 문법을 제거해 텍스트만 반환하는 함수 */
-export async function extractPlainText(markdownText: string) {
+export function extractPlainText(markdownText: string) {
   // 마크다운 -> HTML 변환
-  const html = await marked(markdownText, { gfm: true })
+  const html = marked(markdownText, { gfm: true, async: false })
 
   // HTML -> 텍스트 추출
   const div = document.createElement('div')
@@ -19,13 +28,15 @@ export async function extractPlainText(markdownText: string) {
   return div.textContent || ''
 }
 
-// 1000자 당, 2문제 생성을 가정
-export const QUESTIONS_PER_THOUSAND = 2
+/** 비동기 처리 - markdown string을 받아 markdown 문법을 제거해 텍스트만 반환하는 함수 */
+export async function extractPlainTextAsync(markdownText: string) {
+  // 마크다운 -> HTML 변환
+  const html = await marked(markdownText, { gfm: true })
 
-export const calculateAvailableQuizCount = (charCount: number) => {
-  // 문제 수 계산
-  const quizCount = Math.floor((charCount / 1000) * QUESTIONS_PER_THOUSAND)
-  return quizCount
+  // HTML -> 텍스트 추출
+  const div = document.createElement('div')
+  div.innerHTML = html
+  return div.textContent || ''
 }
 
 export const formatFileSize = (size: number) => {
@@ -407,96 +418,6 @@ const handlePdfFile = async (file: File): Promise<string> => {
 
   return markdown.trim()
 }
-
-// pdf 핸들러 (처음 버전)
-// const handlePdfFile = async (file: File): Promise<string> => {
-//   const fileBuffer = await file.arrayBuffer()
-
-//   // CMap 설정 추가
-//   const loadingTask = pdfjs.getDocument({
-//     data: fileBuffer,
-//     cMapUrl: '/cmaps/', // public 폴더 내의 cmaps 경로
-//     cMapPacked: true,
-//   })
-
-//   const pdf = await loadingTask.promise
-//   let markdown = ''
-
-//   for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-//     try {
-//       const page = await pdf.getPage(pageNum)
-//       const textContent = await page.getTextContent()
-
-//       // Y 좌표와 텍스트 데이터를 저장
-//       const textItems: { y: number; text: string }[] = textContent.items
-//         .filter(isTextItem)
-//         .map((item) => {
-//           const transform: number[] = item.transform as number[]
-//           const y = transform[5] ?? 0
-//           return { y, text: item.str }
-//         })
-
-//       // Y 좌표 기준으로 정렬 (위에서 아래로)
-//       textItems.sort((a, b) => b.y - a.y)
-
-//       // 줄바꿈 감지 및 텍스트 조합
-//       let previousY: number | null = null
-//       let currentLine = ''
-
-//       textItems.forEach(({ y, text }) => {
-//         // 현재 텍스트가 기호인지 확인
-//         const isSymbol = SYMBOL_REGEX.test(text)
-
-//         // 1. 기호 기준 줄바꿈
-//         if (isSymbol) {
-//           if (currentLine) {
-//             // 현재 라인의 시작/끝 공백은 보존하되, 중복 공백만 제거
-//             markdown += currentLine.replace(/\s+/g, ' ') + '\n<br/>\n'
-//             currentLine = ''
-//           }
-//           markdown += text
-//           previousY = y
-//           return
-//         }
-
-//         // 2. Y 좌표 기반 줄바꿈
-//         if (previousY !== null && Math.abs(previousY - y) > Y_COORDINATE_THRESHOLD) {
-//           if (currentLine) {
-//             markdown += currentLine.replace(/\s+/g, ' ') + '\n\n'
-//             currentLine = ''
-//           }
-//         }
-
-//         // 띄어쓰기 처리
-//         // 기호가 아닌 경우에만 띄어쓰기 추가
-//         if (!isSymbol) {
-//           // 현재 라인이 비어있지 않고, 마지막 문자가 띄어쓰기가 아닌 경우에만 띄어쓰기 추가
-//           if (currentLine && !currentLine.endsWith(' ')) {
-//             currentLine += ' '
-//           }
-//           currentLine += text
-//         } else {
-//           currentLine += text
-//         }
-
-//         previousY = y
-//       })
-
-//       // 마지막 라인 처리
-//       if (currentLine) {
-//         markdown += currentLine.replace(/\s+/g, ' ')
-//       }
-
-//       // 페이지 구분
-//       markdown += '\n<br/><br/>\n'
-//     } catch (error) {
-//       console.error(`PDF 페이지 ${pageNum} 처리 중 오류:`, error)
-//       throw new Error(`PDF 페이지 ${pageNum} 처리 중 오류가 발생했습니다.`)
-//     }
-//   }
-
-//   return markdown.trim()
-// }
 
 // docx 핸들러
 const handleDocxFile = async (file: File): Promise<string> => {

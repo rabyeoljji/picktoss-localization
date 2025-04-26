@@ -1,46 +1,48 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 
 import { toast } from 'sonner'
 
-import { DOCUMENT_CONSTRAINTS, MAXIMUM_QUIZ_COUNT } from '@/features/note/config'
-import { calculateAvailableQuizCount, extractPlainText, generateMarkdownFromFile } from '@/features/note/lib'
+import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
+import { calculateStar, extractPlainTextAsync, generateMarkdownFromFile } from '@/features/note/lib'
 import { CreateDocumentSchema, FileInfo, FileInfoSchema, isValidFileType } from '@/features/note/model/schema'
 
-import { GetAllDirectoriesResponse } from '@/entities/directory/api'
-import { CreateDocumentRequest } from '@/entities/document/api'
+import { CreateDocumentPayload } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
-export type DocumentType = CreateDocumentRequest['documentType']
-export type QuizType = CreateDocumentRequest['quizType']
+export type DocumentType = CreateDocumentPayload['documentType']
+export type QuizType = CreateDocumentPayload['quizType']
 
 export interface CreateNoteState {
-  directoryId: number
   documentType: DocumentType
   documentName: string
-  quizType: QuizType
+  quizType: QuizType | null
   star: string
   content: string
   emoji: string
+  categoryId: number | null
+  isPublic: boolean
+  fileInfo: FileInfo | null
 }
 
 export interface CreateNoteContextValues extends CreateNoteState {
-  directories: GetAllDirectoriesResponse['directories']
-
   // Setter functions
-  setDirectoryId: (directoryId: number) => void
   setDocumentType: (documentType: DocumentType) => void
   setDocumentName: (documentName: string) => void
   setQuizType: (quizType: QuizType) => void
   setStar: (star: string) => void
   setContent: (content: string) => void
   setEmoji: (emoji: string) => void
+  setCategoryId: (categoryId: number) => void
+  setIsPublic: (isPublic: boolean) => void
+  clearNoteInfo: () => void
 
   isPending: boolean
   handleCreateDocument: () => Promise<void>
-  checkButtonActivate: () => boolean
+  checkDrawerTriggerActivate: () => boolean
+  checkCreateActivate: () => boolean
 
   // upload file
   fileInfo: FileInfo | null
@@ -50,33 +52,37 @@ export interface CreateNoteContextValues extends CreateNoteState {
 
   // 유효성 에러 메세지 설정 함수
   setValidationError: (errorMessage: string | null) => void
+}
 
-  DOCUMENT_MIN_QUIZ_COUNT: number
-  DOCUMENT_MAX_QUIZ_COUNT: number
+const initialNoteState = {
+  star: '5',
+  emoji: '📝',
+  documentName: '',
+  categoryId: null,
+  isPublic: true,
+  quizType: null,
+  content: '',
+  fileInfo: null,
 }
 
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
 
-export const CreateNoteProvider = ({
-  directories,
-  children,
-}: {
-  directories: GetAllDirectoriesResponse['directories']
-  children: React.ReactNode
-}) => {
+export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
 
-  const [initDocumentType] = useQueryParam('/note/create', 'documentType')
+  const [documentType, setDocumentType] = useQueryParam('/note/create', 'documentType')
+  const prevDocumentTypeRef = useRef<DocumentType | null>(null) // 안정성을 위해 ref에 값 저장
 
-  // 기본 상태 정의
-  const [directoryId, setDirectoryId] = useState<number>(directories[0].id)
-  const [documentType, setDocumentType] = useState<DocumentType>(initDocumentType)
-  const [documentName, setDocumentName] = useState<string>('')
-  const [quizType, setQuizType] = useState<QuizType>('MULTIPLE_CHOICE')
-  const [star, setStar] = useState<string>('5')
-  const [content, setContent] = useState('')
-  const [emoji, setEmoji] = useState<string>('📝')
-  const [fileInfo, setFileInfo] = useState<FileInfo | null>(null)
+  const [state, setState] = useState<{
+    star: string
+    emoji: string
+    documentName: string
+    categoryId: number | null
+    isPublic: boolean
+    quizType: QuizType | null
+    content: string
+    fileInfo: FileInfo | null
+  }>(initialNoteState)
   const [isProcessing, setIsProcessing] = useState(false)
 
   // 유효성 검사 에러 상태
@@ -84,15 +90,21 @@ export const CreateNoteProvider = ({
 
   const { mutateAsync: createDocument, isPending } = useCreateDocument()
 
-  // 문서 길이에 따라 생성 가능한 문제 수
-  const maxQuizCount = calculateAvailableQuizCount(content.length)
-  const DOCUMENT_MIN_QUIZ_COUNT = maxQuizCount < 5 ? maxQuizCount : 5
-  const DOCUMENT_MAX_QUIZ_COUNT = Math.min(maxQuizCount, MAXIMUM_QUIZ_COUNT)
-
-  // 기본 문제 수 : 최댓값
+  // 탭을 변경하면 내용 초기화
   useEffect(() => {
-    setStar(String(DOCUMENT_MAX_QUIZ_COUNT))
-  }, [DOCUMENT_MAX_QUIZ_COUNT])
+    const prevDocumentType = prevDocumentTypeRef.current
+
+    if (prevDocumentType !== documentType) {
+      clearNoteInfo()
+    }
+
+    prevDocumentTypeRef.current = documentType
+  }, [documentType])
+
+  // 글자수에 따른 별 개수 설정
+  useEffect(() => {
+    setState((prev) => ({ ...prev, star: String(calculateStar(state.content.length)) }))
+  }, [state.content])
 
   // validation error가 설정될 때마다 토스트 생성
   useEffect(() => {
@@ -104,13 +116,18 @@ export const CreateNoteProvider = ({
     }
   }, [validationError])
 
-  /** 만들기 버튼 활성화 조건 체크 함수 */
-  const checkButtonActivate = () => {
+  /** drawer trigger 활성화 조건 체크 함수 */
+  const checkDrawerTriggerActivate = () => {
     const isContentValid =
-      content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN && content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
-    const isNameValid = documentName.trim().length > 0
+      state.content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN &&
+      state.content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
+    const isNameValid = state.documentName.trim().length > 0
     const isTypeValid = documentType !== null
     return isContentValid && isNameValid && isTypeValid
+  }
+
+  const checkCreateActivate = () => {
+    return checkDrawerTriggerActivate() && state.categoryId !== null && state.quizType !== null
   }
 
   /** fileInfo 유효성 검사 함수 */
@@ -124,12 +141,12 @@ export const CreateNoteProvider = ({
     return true
   }
 
-  /** file이 변경되면 fileInfo상태를 설정하는 함수 */
+  /** file이 변경되면 fileInfo상태와 name, content를 설정하는 함수 */
   const changeFileInfo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsProcessing(true)
 
-    if (fileInfo) {
-      setFileInfo(null)
+    if (state.fileInfo) {
+      setState((prev) => ({ ...prev, fileInfo: null }))
       setValidationError(null)
     }
 
@@ -146,7 +163,7 @@ export const CreateNoteProvider = ({
 
     try {
       const markdownString = await generateMarkdownFromFile(file)
-      const markdownText = await extractPlainText(markdownString)
+      const markdownText = await extractPlainTextAsync(markdownString)
 
       const newFileInfo = {
         name: file.name,
@@ -158,7 +175,17 @@ export const CreateNoteProvider = ({
         return
       }
 
-      setFileInfo(newFileInfo)
+      const removeFileExtension = (filename: string) => {
+        const lastDotIndex = filename.lastIndexOf('.')
+        return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
+      }
+
+      setState((prev) => ({
+        ...prev,
+        documentName: removeFileExtension(newFileInfo.name),
+        content: newFileInfo.content,
+        fileInfo: newFileInfo,
+      }))
     } catch (err) {
       console.error('파일 처리 중 오류 발생:', err)
       setValidationError('파일 처리 중 문제가 발생했습니다.')
@@ -167,19 +194,24 @@ export const CreateNoteProvider = ({
     }
   }
 
+  const clearNoteInfo = () => {
+    setState({ ...initialNoteState })
+  }
+
   /** 노트 생성 유효성 검사 함수 */
   const checkIsValid = () => {
-    const blob = new Blob([content], { type: 'text/markdown' })
-    const file = new File([blob], `${documentName}.md`, { type: 'text/markdown' })
+    const blob = new Blob([state.content], { type: 'text/markdown' })
+    const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
-      directoryId: String(directoryId),
-      documentName,
+      categoryId: state.categoryId,
+      isPublic: state.isPublic,
+      documentName: state.documentName,
       file,
-      quizType,
-      star,
-      emoji,
-      documentType: documentType ?? 'TEXT',
+      quizType: state.quizType,
+      star: state.star,
+      emoji: state.emoji,
+      documentType: documentType,
     }
 
     const result = CreateDocumentSchema.safeParse(createDocumentData)
@@ -193,26 +225,22 @@ export const CreateNoteProvider = ({
   }
 
   const handleCreateDocument = async () => {
-    if (directoryId == null) {
-      setValidationError('폴더 선택은 필수입니다')
-      return
-    }
-
     if (!checkIsValid()) {
       return
     }
 
-    const blob = new Blob([content], { type: 'text/markdown' })
-    const file = new File([blob], `${documentName}.md`, { type: 'text/markdown' })
+    const blob = new Blob([state.content], { type: 'text/markdown' })
+    const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
-      directoryId: String(directoryId),
-      documentName,
+      documentName: state.documentName,
       file,
-      quizType,
-      star,
-      emoji,
-      documentType: documentType ?? 'TEXT',
+      categoryId: state.categoryId || 0,
+      isPublic: state.isPublic,
+      quizType: state.quizType || 'MIX_UP',
+      star: state.star,
+      emoji: state.emoji,
+      documentType: documentType,
     }
 
     createDocument(createDocumentData, {
@@ -221,8 +249,8 @@ export const CreateNoteProvider = ({
         router.push('/quiz-loading', {
           search: {
             documentId: id,
-            documentName,
-            star: Number(star),
+            documentName: state.documentName,
+            star: Number(state.star),
           },
         })
       },
@@ -237,35 +265,35 @@ export const CreateNoteProvider = ({
   return (
     <CreateNoteContext.Provider
       value={{
-        directories,
-        directoryId,
-        documentType,
-        documentName,
-        quizType,
-        star,
-        content,
-        emoji,
+        documentType: documentType,
+        categoryId: state.categoryId,
+        isPublic: state.isPublic,
+        documentName: state.documentName,
+        quizType: state.quizType,
+        star: state.star,
+        content: state.content,
+        emoji: state.emoji,
 
-        setDirectoryId,
         setDocumentType,
-        setDocumentName,
-        setQuizType,
-        setStar,
-        setContent,
-        setEmoji,
+        setDocumentName: (documentName: string) => setState((prev) => ({ ...prev, documentName })),
+        setQuizType: (quizType: QuizType) => setState((prev) => ({ ...prev, quizType })),
+        setStar: (star: string) => setState((prev) => ({ ...prev, star })),
+        setContent: (content: string) => setState((prev) => ({ ...prev, content })),
+        setEmoji: (emoji: string) => setState((prev) => ({ ...prev, emoji })),
+        setCategoryId: (categoryId: number) => setState((prev) => ({ ...prev, categoryId })),
+        setIsPublic: (isPublic: boolean) => setState((prev) => ({ ...prev, isPublic })),
+        clearNoteInfo,
 
-        fileInfo,
+        fileInfo: state.fileInfo,
         changeFileInfo,
         isProcessing,
         setIsProcessing,
 
-        checkButtonActivate,
+        checkDrawerTriggerActivate,
+        checkCreateActivate,
         handleCreateDocument,
         isPending,
         setValidationError,
-
-        DOCUMENT_MIN_QUIZ_COUNT,
-        DOCUMENT_MAX_QUIZ_COUNT,
       }}
     >
       {children}

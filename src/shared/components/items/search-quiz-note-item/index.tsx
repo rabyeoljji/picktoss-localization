@@ -28,7 +28,7 @@ const SearchQuizNoteItem = ({
 }: Props) => {
   return (
     <Link
-      to="/note/:noteId"
+      to="/library/:noteId"
       params={[String(documentId)]}
       search={resultType === 'quiz' ? { tab: ['QUIZ'] } : {}}
       className={cn('border-b border-divider py-[24px] flex flex-col', lastItem && 'border-none')}

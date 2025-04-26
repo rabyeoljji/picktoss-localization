@@ -1,18 +1,26 @@
-import * as React from 'react'
-
+import { HTMLMotionProps, motion } from 'framer-motion'
 import { CircleIcon, XIcon } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
 
-export interface OXChoiceOptionProps extends React.HTMLAttributes<HTMLButtonElement> {
+export interface OXChoiceOptionProps extends Omit<HTMLMotionProps<'button'>, 'onDrag'> {
   O: boolean
   X: boolean
   isCorrect: boolean
   selectedOption: string | null
   className?: HTMLButtonElement['className']
+  animationDelay?: number
 }
 
-export const OXChoiceOption = ({ O, X, isCorrect, selectedOption, className, ...props }: OXChoiceOptionProps) => {
+export const OXChoiceOption = ({
+  O,
+  X,
+  isCorrect,
+  selectedOption,
+  className,
+  animationDelay = 0,
+  ...props
+}: OXChoiceOptionProps) => {
   const isSelected = selectedOption === (O ? 'correct' : 'incorrect')
 
   // 컴포넌트 상태에 따른 스타일 계산
@@ -36,9 +44,15 @@ export const OXChoiceOption = ({ O, X, isCorrect, selectedOption, className, ...
   }
 
   return (
-    <button className={cn('flex-center rounded-[20px] aspect-[165/126]', getStateStyles(), className)} {...props}>
+    <motion.button
+      className={cn('flex-center rounded-[20px] aspect-[165/126]', getStateStyles(), className)}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3, delay: animationDelay }}
+      {...props}
+    >
       {O && <CircleIcon className="size-[80px] stroke-[4]" />}
       {X && <XIcon className="size-[80px] stroke-[3]" />}
-    </button>
+    </motion.button>
   )
 }
