@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { motion } from 'framer-motion'
+import { motion, useAnimation } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -9,12 +9,7 @@ import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
-import {
-  useGetConsecutiveSolvedDailyQuiz as _,
-  useCreateDailyQuizRecord,
-  useGetConsecutiveSolvedDailyQuiz,
-  useGetQuizzes,
-} from '@/entities/quiz/api/hooks'
+import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
 import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
@@ -24,6 +19,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
 import { Label } from '@/shared/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
+import { Spinner } from '@/shared/components/ui/spinner'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
@@ -37,7 +33,10 @@ const HomePage = () => {
   const router = useRouter()
 
   const [quizzes, setQuizzes] = useState<Quiz[]>()
-  const { data: quizzesData, isLoading } = useGetQuizzes()
+  const { data: quizzesData, isLoading, refetch } = useGetQuizzes()
+  const refreshIndicatorControls = useAnimation()
+  const [isRefreshing, setIsRefreshing] = useState(false)
+  const [pullDistance, setPullDistance] = useState(0)
 
   const [dailyQuizRecord, setDailyQuizRecord] = useState<Partial<CreateDailyQuizRecordResponse>>()
   const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
@@ -63,7 +62,6 @@ const HomePage = () => {
       setQuizzes(quizzesData.quizzes)
     }
   }, [quizzesData])
-  console.log(dailyQuizRecord)
 
   const [rewardDrawerOpen, setRewardDrawerOpen] = useState(false)
 
@@ -179,10 +177,67 @@ const HomePage = () => {
 
       {currQuiz && (
         <HeaderOffsetLayout className="px-3">
+          {!isRefreshing ? (
+            <Text typo="subtitle-1-bold" color="sub" className="absolute right-1/2 translate-x-1/2 pt-[16px]">
+              당겨서 새 문제 가져오기...💡
+            </Text>
+          ) : (
+            <div className="absolute right-1/2 translate-x-1/2 pt-[16px] flex items-center gap-2">
+              <Spinner className="size-6 text-sub" />
+            </div>
+          )}
+
           {quizState.status !== 'wrong' && (
-            <div
-              className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative"
+            <motion.div
+              className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden"
               key={currQuiz.id}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.6}
+              animate={{
+                y: isRefreshing ? pullDistance : 0,
+              }}
+              transition={{
+                type: 'spring',
+                stiffness: 400,
+                damping: 40,
+              }}
+              onDrag={(_, info) => {
+                if (info.offset.y > 0) {
+                  setPullDistance(Math.min(info.offset.y, 60))
+                  refreshIndicatorControls.start({
+                    opacity: Math.min(info.offset.y / 60, 1),
+                    rotate: Math.min(info.offset.y * 2, 360),
+                    y: Math.min(info.offset.y / 3, 30),
+                  })
+                }
+              }}
+              onDragEnd={(_, info) => {
+                if (info.offset.y > 80) {
+                  setIsRefreshing(true)
+                  refreshIndicatorControls.start({
+                    opacity: 1,
+                    rotate: 360,
+                    transition: { duration: 0.5, repeat: Infinity, ease: 'linear' },
+                  })
+                  refetch().finally(() => {
+                    setIsRefreshing(false)
+                    setPullDistance(0)
+                    refreshIndicatorControls.start({
+                      opacity: 0,
+                      y: 0,
+                      transition: { duration: 0.3 },
+                    })
+                  })
+                } else {
+                  setPullDistance(0)
+                  refreshIndicatorControls.start({
+                    opacity: 0,
+                    y: 0,
+                    transition: { duration: 0.3 },
+                  })
+                }
+              }}
             >
               <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
@@ -231,7 +286,7 @@ const HomePage = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
           )}
           {quizState.status === 'wrong' && (
             <WrongAnswerContent
