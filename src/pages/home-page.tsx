@@ -39,13 +39,11 @@ const HomePage = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>()
   const { data: quizzesData, isLoading } = useGetQuizzes()
 
-  const [dailyQuizRecord, setDailyQuizRecord] = useState<CreateDailyQuizRecordResponse>()
+  const [dailyQuizRecord, setDailyQuizRecord] = useState<Partial<CreateDailyQuizRecordResponse>>()
   const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
 
   useEffect(() => {
     setDailyQuizRecord({
-      reward: 0,
-      todaySolvedDailyQuizCount: 0,
       consecutiveSolvedDailyQuizDays: consecutiveSolvedDailyQuiz ?? 0,
     })
   }, [consecutiveSolvedDailyQuiz])
@@ -65,6 +63,15 @@ const HomePage = () => {
       setQuizzes(quizzesData.quizzes)
     }
   }, [quizzesData])
+  console.log(dailyQuizRecord)
+
+  const [rewardDrawerOpen, setRewardDrawerOpen] = useState(false)
+
+  useEffect(() => {
+    if (dailyQuizRecord && (dailyQuizRecord.reward ?? 0) > 0) {
+      setRewardDrawerOpen(true)
+    }
+  }, [dailyQuizRecord])
 
   const { mutate: createDailyQuizRecord } = useCreateDailyQuizRecord()
 
@@ -117,6 +124,9 @@ const HomePage = () => {
     console.log('알림 준비: ' + isReadyNotification)
   }, [isReadyNotification])
 
+  const consecutiveSolvedDailyQuizDays = dailyQuizRecord?.consecutiveSolvedDailyQuizDays
+  const todaySolvedDailyQuizCount = dailyQuizRecord?.todaySolvedDailyQuizCount
+
   return (
     <>
       <Header
@@ -130,9 +140,12 @@ const HomePage = () => {
               <Tooltip
                 open={
                   // 연속일이 0이상일 때 혹은 보상 횟수를 표시할 때
-                  (dailyQuizRecord?.consecutiveSolvedDailyQuizDays ?? 0) > 0 ||
-                  (10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) < 10 &&
-                    10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) > 0)
+                  (consecutiveSolvedDailyQuizDays && consecutiveSolvedDailyQuizDays > 0) ||
+                  !!(
+                    todaySolvedDailyQuizCount &&
+                    10 - todaySolvedDailyQuizCount < 10 &&
+                    10 - todaySolvedDailyQuizCount > 0
+                  )
                 }
               >
                 <TooltipTrigger>
@@ -141,13 +154,13 @@ const HomePage = () => {
                   </div>
                 </TooltipTrigger>
                 <TooltipContent side="right" color="inverse">
-                  {10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0) > 0 ? (
+                  {todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount > 0 ? (
                     <Text typo="body-2-medium">
-                      <span className="text-accent">{10 - (dailyQuizRecord?.todaySolvedDailyQuizCount ?? 0)}문제</span>{' '}
+                      <span className="text-accent">{10 - todaySolvedDailyQuizCount}문제</span>{' '}
                       <span>더 풀면 획득!</span>
                     </Text>
                   ) : (
-                    <Text typo="body-2-medium">연속{dailyQuizRecord?.consecutiveSolvedDailyQuizDays}일 완료!</Text>
+                    <Text typo="body-2-medium">연속 {consecutiveSolvedDailyQuizDays}일 완료!</Text>
                   )}
                 </TooltipContent>
               </Tooltip>
@@ -267,6 +280,59 @@ const HomePage = () => {
           </button>
         </button>
       </div>
+
+      <AlertDrawer
+        open={rewardDrawerOpen}
+        onOpenChange={setRewardDrawerOpen}
+        hasClose={false}
+        body={
+          <div className="pt-5">
+            <ImgStar className="size-[120px] mx-auto" />
+            <Text typo="h2" className="mt-4 text-center">
+              연속 <span className="text-accent">{dailyQuizRecord?.consecutiveSolvedDailyQuizDays}일</span> 완료
+            </Text>
+            <Text typo="subtitle-2-medium" color="sub" className="text-center mt-2">
+              매일 데일리 10문제를 풀면 별 5개를 받아요
+              <br />
+              5일 연속 완료할 때마다 20개!
+            </Text>
+
+            <div className="mt-[32px] pt-[30px] border-t border-divider flex justify-around">
+              {(() => {
+                const boxes = [
+                  { threshold: 1, label: '5개', delay: 0.5 },
+                  { threshold: 2, label: '5개', delay: 0.6 },
+                  { threshold: 3, label: '5개', delay: 0.7 },
+                  { threshold: 4, label: '5개', delay: 0.8 },
+                  { threshold: 5, label: '20개', delay: 0.9 },
+                ]
+
+                if (!consecutiveSolvedDailyQuizDays) {
+                  return
+                }
+
+                return boxes.map((box) => (
+                  <div key={box.threshold} className="flex flex-col items-center gap-1">
+                    {box.threshold <= ((consecutiveSolvedDailyQuizDays - 1) % 5) + 1 ? (
+                      <Check delay={box.delay} />
+                    ) : (
+                      <UnCheck />
+                    )}
+                    <Text typo="body-1-bold" color="caption">
+                      {box.label}
+                    </Text>
+                  </div>
+                ))
+              })()}
+            </div>
+          </div>
+        }
+        footer={
+          <div className="h-[144px] pt-[14px]">
+            <Button onClick={() => setRewardDrawerOpen(false)}>확인</Button>
+          </div>
+        }
+      />
     </>
   )
 }
@@ -473,6 +539,35 @@ const WrongAnswerContent = ({
         문제 전환
       </Button>
     </div>
+  )
+}
+
+const Check = ({ delay }: { delay: number }) => {
+  return (
+    <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay }}>
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect width="40" height="40" rx="20" fill="#FDA53A" />
+        <path
+          d="M12.3047 19.5L17.8049 25L27.6962 15"
+          stroke="white"
+          stroke-width="4"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </motion.div>
+  )
+}
+
+const UnCheck = () => {
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="40" height="40" rx="20" fill="#F8F8F7" />
+      <path
+        d="M21.5941 9.84L23.8215 14.3354C24.0796 14.8589 24.5821 15.2245 25.1616 15.3058L30.137 16.0279C31.5993 16.24 32.1833 18.0319 31.1239 19.0564L27.5248 22.5543C27.1038 22.9605 26.9136 23.5518 27.0132 24.125L27.8643 29.0672C28.1133 30.516 26.5877 31.6263 25.2793 30.9402L20.829 28.6068C20.3084 28.336 19.6882 28.336 19.1721 28.6068L14.7218 30.9402C13.4134 31.6263 11.8877 30.5205 12.1367 29.0672L12.9879 24.125C13.0875 23.5473 12.8973 22.9605 12.4763 22.5543L8.87714 19.0564C7.81777 18.0273 8.40178 16.24 9.86408 16.0279L14.8395 15.3058C15.419 15.22 15.9215 14.8589 16.1796 14.3354L18.407 9.84C19.0589 8.52208 20.9467 8.52208 21.6032 9.84H21.5941Z"
+        fill="#EBEBE8"
+      />
+    </svg>
   )
 }
 
