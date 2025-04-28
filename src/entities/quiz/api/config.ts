@@ -17,9 +17,9 @@ export const QUIZ_ENDPOINTS = {
   // 퀴즈 세트에 대한 상세 기록
   getSingleQuizSetRecord: (quizSetId: number) => `/quiz-sets/${quizSetId}/record`,
   // 데일리 퀴즈 연속일 현황
-  getConsecutiveSolvedDailyQuiz: '/daily-quiz_records/consecutive-days',
+  getConsecutiveSolvedDailyQuiz: '/daily-quiz-records/consecutive-days',
   // 월별 데일리 퀴즈 연속일 기록
-  getConsecutiveSolvedQuizSetDates: (solvedDate: string) => `/daily-quiz_records/${solvedDate}/consecutive-days`,
+  getConsecutiveSolvedQuizSetDates: (solvedDate: string) => `/daily-quiz-records/${solvedDate}/consecutive-days`,
   // 데일리 퀴즈에 대한 상세 기록
   getSingleDailyQuizRecord: (dailyQuizRecordId: number) => `/daily-quiz-records/${dailyQuizRecordId}/record`,
 

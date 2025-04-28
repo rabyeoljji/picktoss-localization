@@ -12,6 +12,7 @@ import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities
 import {
   useGetConsecutiveSolvedDailyQuiz as _,
   useCreateDailyQuizRecord,
+  useGetConsecutiveSolvedDailyQuiz,
   useGetQuizzes,
 } from '@/entities/quiz/api/hooks'
 
@@ -39,15 +40,15 @@ const HomePage = () => {
   const { data: quizzesData, isLoading } = useGetQuizzes()
 
   const [dailyQuizRecord, setDailyQuizRecord] = useState<CreateDailyQuizRecordResponse>()
-  // const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
+  const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
 
-  // useEffect(() => {
-  //   setDailyQuizRecord({
-  //     reward: 0,
-  //     todaySolvedDailyQuizCount: 0,
-  //     consecutiveSolvedDailyQuizDays: consecutiveSolvedDailyQuiz ?? 0,
-  //   })
-  // }, [consecutiveSolvedDailyQuiz])
+  useEffect(() => {
+    setDailyQuizRecord({
+      reward: 0,
+      todaySolvedDailyQuizCount: 0,
+      consecutiveSolvedDailyQuizDays: consecutiveSolvedDailyQuiz ?? 0,
+    })
+  }, [consecutiveSolvedDailyQuiz])
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
