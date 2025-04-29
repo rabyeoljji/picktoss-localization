@@ -158,7 +158,11 @@ const HomePage = () => {
                       <span>더 풀면 획득!</span>
                     </Text>
                   ) : (
-                    <Text typo="body-2-medium">연속 {consecutiveSolvedDailyQuizDays}일 완료!</Text>
+                    <>
+                      {consecutiveSolvedDailyQuizDays && (
+                        <Text typo="body-2-medium">연속 {consecutiveSolvedDailyQuizDays}일 완료!</Text>
+                      )}
+                    </>
                   )}
                 </TooltipContent>
               </Tooltip>
@@ -178,7 +182,7 @@ const HomePage = () => {
       {currQuiz && (
         <HeaderOffsetLayout className="px-3">
           {!isRefreshing ? (
-            <Text typo="subtitle-1-bold" color="sub" className="absolute right-1/2 translate-x-1/2 pt-[16px]">
+            <Text typo="subtitle-1-bold" color="sub" className="absolute right-1/2 translate-x-1/2 pt-[16px] shrink-0">
               당겨서 새 문제 가져오기...💡
             </Text>
           ) : (

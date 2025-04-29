@@ -1,8 +1,10 @@
 import { ImgCheckbadge, ImgMedal, ImgSpeechbubble, ImgStopwatch } from '@/shared/assets/images'
 import { QuestionCard } from '@/shared/components/cards/question-card'
+import FixedBottom from '@/shared/components/fixed-bottom'
+import { Button } from '@/shared/components/ui/button'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
-import { useQueryParam } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 // 퀴즈 결과 아이템 타입 정의
 interface QuizItem {
@@ -18,6 +20,8 @@ interface QuizItem {
 }
 
 const QuizResultPage = () => {
+  const router = useRouter()
+
   const [params] = useQueryParam('/quiz-result')
 
   const quizWithResultDataDecoded = decodeURIComponent(escape(atob(params.quizWithResultDataEncoded)))
@@ -37,11 +41,10 @@ const QuizResultPage = () => {
   )
   // 분 단위로 변환하고 소수점 첫째 자리까지 표시
   const totalElapsedTime = (totalElapsedTimeMs / 60000).toFixed(1)
-  console.log(quizWithResultData)
 
   return (
     <div className="min-h-screen bg-surface-2">
-      <div className="px-4">
+      <div className="px-4 pb-[162px]">
         <div>
           <div>
             <ImgMedal className="w-[160px] mx-auto pt-[70px]" />
@@ -143,6 +146,10 @@ const QuizResultPage = () => {
           })}
         </div>
       </div>
+
+      <FixedBottom className="bg-surface-2 h-[114px]">
+        <Button onClick={() => router.back()}>확인</Button>
+      </FixedBottom>
     </div>
   )
 }

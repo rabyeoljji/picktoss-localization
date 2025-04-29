@@ -120,6 +120,7 @@ export const RouteConfig = {
   progressQuiz: {
     pathname: '/progress-quiz/:quizSetId',
     search: {
+      documentId: 0 as number,
       quizIndex: 0 as number,
       selectedOption: null as string | null,
       hideTimeSpent: true as boolean,
@@ -140,10 +141,7 @@ export const RouteConfig = {
     search: {
       quizSetId: 0 as number,
       quizSetType: '' as QuizSetType,
-      correctAnswerRate: 0 as number,
       totalElapsedTime: 0 as number,
-      totalQuizCount: 0 as number,
-      reward: 0 as number,
       quizWithResultDataEncoded: '' as string,
     },
   },

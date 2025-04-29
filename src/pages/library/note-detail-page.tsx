@@ -7,6 +7,7 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
+import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 import { IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcReview, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -20,12 +21,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
+import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
-import { useQueryParam } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const NoteDetailPage = () => {
+  const router = useRouter()
+
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
   const [showAnswer, setShowAnswer] = useQueryParam('/library/:noteId', 'showAnswer')
@@ -41,6 +45,8 @@ const NoteDetailPage = () => {
   // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
   const [showTitleInHeader, setShowTitleInHeader] = useState(false)
   const titleRef = useRef(null)
+
+  const { mutate: createQuizSet, isPending: isCreatingQuizSet } = useCreateQuizSet(Number(noteId))
 
   useEffect(() => {
     const titleEl = titleRef.current
@@ -60,6 +66,24 @@ const NoteDetailPage = () => {
       observer.disconnect()
     }
   }, [])
+
+  const handlePlay = () => {
+    createQuizSet(
+      {
+        quizCount: 3,
+      },
+      {
+        onSuccess: (data) => {
+          router.push('/progress-quiz/:quizSetId', {
+            params: [String(data.quizSetId)],
+            search: {
+              documentId: Number(noteId ?? 0),
+            },
+          })
+        },
+      },
+    )
+  }
 
   return (
     <div className="relative flex flex-col h-screen bg-base-1">
@@ -203,8 +227,8 @@ const NoteDetailPage = () => {
           <div className="h-[24px] w-px bg-gray-100 mx-[16px] shrink-0" />
 
           <div className="flex items-center text-icon-secondary">
-            <button className="p-2">
-              <IcPlay className="size-6" />
+            <button className="p-2" onClick={handlePlay}>
+              {isCreatingQuizSet ? <Spinner className="size-6" /> : <IcPlay className="size-6" />}
             </button>
             <button className="p-2">
               <IcReview className="size-6" />
