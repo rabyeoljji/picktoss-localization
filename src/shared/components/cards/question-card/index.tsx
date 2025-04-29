@@ -64,7 +64,7 @@ const QuestionCardMultiple = ({
 }) => {
   const { isExplanationOpen } = useQuestionCardContext()
   // 해설이 열려있거나, showAnswer prop이 true이면 정답 인덱스를 자동으로 표시
-  const finalShowIndexs = isExplanationOpen || showAnswer ? [answerIndex] : showIndexs || []
+  const finalShowIndexs = isExplanationOpen || showAnswer ? [...(showIndexs || []), answerIndex] : showIndexs || []
   return (
     <div className="px-4 mt-4 mb-3">
       <div className="flex flex-col gap-2">
@@ -110,7 +110,7 @@ const QuestionCardOX = ({
   showAnswer?: boolean
 }) => {
   const { isExplanationOpen } = useQuestionCardContext()
-  const finalShowIndexs = isExplanationOpen || showAnswer ? [answerIndex] : showIndexs || []
+  const finalShowIndexs = isExplanationOpen || showAnswer ? [...(showIndexs || []), answerIndex] : showIndexs || []
   return (
     <div className="px-4 mt-4 mb-3">
       <div className="px-[11.5px] flex items-center gap-2 w-full">
