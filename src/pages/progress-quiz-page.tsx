@@ -144,6 +144,7 @@ export const ProgressQuizPage = () => {
         }
         return {
           ...quiz,
+          totalElapsedTime: result.totalElapsedTime,
           userAnswer: userResult.choseAnswer,
           isCorrect: userResult.answer,
         }

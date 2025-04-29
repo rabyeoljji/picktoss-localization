@@ -26,6 +26,7 @@ const QuizResultPage = () => {
 
   const quizWithResultDataDecoded = decodeURIComponent(escape(atob(params.quizWithResultDataEncoded)))
   const quizWithResultData = JSON.parse(quizWithResultDataDecoded) as QuizItem[]
+  console.log(quizWithResultData)
 
   // 전체 통계 계산
   const totalQuizCount = quizWithResultData.length
@@ -35,12 +36,7 @@ const QuizResultPage = () => {
   const correctAnswerRate = totalQuizCount > 0 ? Math.round((correctAnswers / totalQuizCount) * 100) : 0
 
   // 총 소요 시간 계산 (밀리초 단위)
-  const totalElapsedTimeMs = quizWithResultData.reduce(
-    (total: number, quiz: QuizItem) => total + (quiz.elapsedTime || 0),
-    0,
-  )
-  // 분 단위로 변환하고 소수점 첫째 자리까지 표시
-  const totalElapsedTime = (totalElapsedTimeMs / 60000).toFixed(1)
+  const totalElapsedTime = (params.totalElapsedTime / 60000).toFixed(1)
 
   return (
     <div className="min-h-screen bg-surface-2">

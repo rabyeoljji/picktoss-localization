@@ -63,6 +63,8 @@ export const useGetQuizSet = (quizSetId: number) => {
   return useQuery({
     queryKey: QUIZ_KEYS.getQuizSet(quizSetId),
     queryFn: () => getQuizSet(quizSetId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   })
 }
 
