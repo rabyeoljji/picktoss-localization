@@ -93,12 +93,12 @@ const ExplorePage = () => {
         className={cn('transition-all duration-300 ease-in-out', 'bg-surface-2 py-[9px] px-[8px]')}
         left={
           <button className="size-[40px] flex-center">
-            <IcProfile className="size-[24px] text-icon-secondary" />
+            <IcProfile className="size-[24px]" />
           </button>
         }
         right={
           <Link to={'/explore/search'} className="size-[40px] flex-center">
-            <IcSearch className="size-[24px] text-icon-secondary" />
+            <IcSearch className="size-[24px]" />
           </Link>
         }
         content={
@@ -110,7 +110,7 @@ const ExplorePage = () => {
 
       <HeaderOffsetLayout>
         <div
-          className="py-[42px] flex flex-col gap-[10px] bg-[radial-gradient(closest-side,_var(--tw-gradient-stops))]"
+          className="py-[55px] flex flex-col gap-[10px] bg-[radial-gradient(closest-side,_var(--tw-gradient-stops))]"
           style={{
             backgroundImage: 'radial-gradient(circle, var(--color-gray-100) 0%, var(--color-gray-50) 40%)',
           }}
@@ -132,21 +132,21 @@ const ExplorePage = () => {
           </Marquee>
         </div>
 
-        <div className="pt-[25px]">
+        <div className="pt-[56px]">
           <Text as="h2" typo="h3" className="px-[16px] mb-[12px]">
-            오늘의 퀴즈
+            실시간 퀴즈
           </Text>
 
           <ScrollableChips />
 
           <button
             type="button"
-            className="self-stretch h-[48px] w-full min-w-28 px-[24px] py-[12px] mt-[8px] bg-transparent inline-flex justify-center items-center gap-28"
+            className="self-stretch h-[48px] w-full min-w-28 px-[24px] py-[12px] mt-[8px] bg-transparent inline-flex justify-between items-center"
           >
             <div className="flex-1 flex items-center">
               <div className="flex items-center gap-2">
                 <IcLibrary className="size-[20px] text-icon-accent" />
-                <Text typo="body-1-bold" color="secondary">
+                <Text typo="body-1-bold" color="secondary" className="w-fit shrink-0">
                   공개할 수 있는 퀴즈가{' '}
                   <Text as="span" typo="body-1-bold" color="accent">
                     3개
@@ -158,7 +158,7 @@ const ExplorePage = () => {
             <IcChevronRight className="size-[16px] text-icon-secondary" />
           </button>
 
-          <div className="w-full h-[calc(100vh-184px)] p-[16px] pt-[36px] flex flex-col items-center gap-[10px] overflow-hidden">
+          <div className="w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
             <VerticalSwipeList />
           </div>
         </div>
@@ -228,7 +228,7 @@ function ScrollableChips() {
   return (
     <div
       ref={scrollRef}
-      className="sticky top-[var(--header-height-safe)] bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px]"
+      className="sticky top-[var(--header-height-safe)] bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
     >
       {/* Chip 요소들 */}
       {categories.map((category, index) => (
@@ -252,12 +252,14 @@ function VerticalSwipeList() {
 
   useEffect(() => {
     const handleScroll = (event: WheelEvent) => {
-      const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
+      const scrollY = window.scrollY
+      // const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
       const scrollingUp = event.deltaY < 0
 
       if (!swiperRef.current) return
 
-      if (swiperTopOffset <= 136) {
+      // if (swiperTopOffset <= 136) {
+      if (scrollY > 100) {
         if (scrollingUp && activeIndex === 0) {
           // 위로 스크롤 + 첫 번째 카드일 때 swiper 비활성화
           swiperRef.current.mousewheel.disable()
