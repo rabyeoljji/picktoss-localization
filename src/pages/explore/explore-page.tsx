@@ -226,7 +226,10 @@ function ScrollableChips() {
   }, [])
 
   return (
-    <div ref={scrollRef} className="flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px]">
+    <div
+      ref={scrollRef}
+      className="sticky top-[var(--header-height-safe)] bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px]"
+    >
       {/* Chip 요소들 */}
       {categories.map((category, index) => (
         <Chip
