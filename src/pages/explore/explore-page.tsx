@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import Marquee from 'react-fast-marquee'
 
+import { motion } from 'framer-motion'
 import SwiperCore from 'swiper'
 import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -130,9 +131,10 @@ const ExplorePage = () => {
             <IcChevronRight className="size-[16px] text-icon-secondary" />
           </button>
 
-          <div className="sticky top-[calc(var(--header-height-safe)+46px)] w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
+          <VerticalSwipeList />
+          {/* <div className="sticky top-[calc(var(--header-height-safe)+46px)] w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
             <VerticalSwipeList />
-          </div>
+          </div> */}
         </div>
       </HeaderOffsetLayout>
     </>
@@ -229,83 +231,130 @@ function ScrollableChips({ categories }: { categories?: Category[] }) {
 function VerticalSwipeList() {
   const [activeIndex, setActiveIndex] = useState(0)
   const swiperRef = useRef<SwiperCore>(null)
+  // const startYRef = useRef<number>(0)
 
   useEffect(() => {
-    const handleScroll = (event: WheelEvent | TouchEvent) => {
+    const handleWheel = (event: WheelEvent) => {
       const scrollY = window.scrollY
-      const scrollingUp = (event as WheelEvent).deltaY ? (event as WheelEvent).deltaY < 0 : false
-
-      if (!swiperRef.current) return
-
-      if (scrollY > 100) {
-        if (scrollingUp && activeIndex === 0) {
-          // 위로 스크롤 + 첫 번째 카드일 때 swiper 비활성화
-          swiperRef.current.mousewheel.disable()
-          swiperRef.current.allowTouchMove = false
-        } else {
-          // 그 외에는 swiper 활성화
-          swiperRef.current.mousewheel.enable()
-          swiperRef.current.allowTouchMove = true
-        }
-      } else {
-        // swiper가 화면 아래쪽이면 swiper 비활성화
-        swiperRef.current.mousewheel.disable()
-        swiperRef.current.allowTouchMove = false
-      }
+      const scrollingUp = event.deltaY < 0
+      updateSwiperLock(scrollY, scrollingUp)
     }
 
-    window.addEventListener('wheel', handleScroll, { passive: false })
-    window.addEventListener('touchmove', handleScroll, { passive: false })
+    window.addEventListener('wheel', handleWheel, { passive: false })
 
     return () => {
-      window.removeEventListener('wheel', handleScroll)
-      window.removeEventListener('touchmove', handleScroll)
+      window.removeEventListener('wheel', handleWheel)
     }
   }, [activeIndex])
 
+  const updateSwiperLock = (scrollY: number, scrollingUp: boolean) => {
+    if (!swiperRef.current) return
+
+    const isBeyond = scrollY >= 372.8
+    const isAtTop = activeIndex === 0
+
+    if (isBeyond) {
+      if (scrollingUp && isAtTop) {
+        swiperRef.current.mousewheel.disable()
+        swiperRef.current.allowTouchMove = false
+      } else {
+        swiperRef.current.mousewheel.enable()
+        swiperRef.current.allowTouchMove = true
+      }
+    } else {
+      swiperRef.current.mousewheel.disable()
+      swiperRef.current.allowTouchMove = false
+    }
+  }
+  // useEffect(() => {
+  //   const handleScroll = (event: WheelEvent | TouchEvent) => {
+  //     const scrollY = window.scrollY
+  //     const scrollingUp = (event as WheelEvent).deltaY ? (event as WheelEvent).deltaY < 0 : false
+
+  //     if (!swiperRef.current) return
+
+  //     if (scrollY > 472.8) {
+  //       if (scrollingUp && activeIndex === 0) {
+  //         // 위로 스크롤 + 첫 번째 카드일 때 swiper 비활성화
+  //         swiperRef.current.mousewheel.disable()
+  //         swiperRef.current.allowTouchMove = false
+  //       } else {
+  //         // 그 외에는 swiper 활성화
+  //         swiperRef.current.mousewheel.enable()
+  //         swiperRef.current.allowTouchMove = true
+  //       }
+  //     } else {
+  //       // swiper가 화면 아래쪽이면 swiper 비활성화
+  //       swiperRef.current.mousewheel.disable()
+  //       swiperRef.current.allowTouchMove = false
+  //     }
+  //   }
+
+  //   window.addEventListener('wheel', handleScroll, { passive: false })
+  //   window.addEventListener('touchmove', handleScroll, { passive: false })
+
+  //   return () => {
+  //     window.removeEventListener('wheel', handleScroll)
+  //     window.removeEventListener('touchmove', handleScroll)
+  //   }
+  // }, [activeIndex])
+
   return (
-    <Swiper
-      direction="vertical"
-      slidesPerView={1}
-      spaceBetween={0.01}
-      mousewheel={{
-        forceToAxis: true,
-        enabled: false, // 초기에 비활성화
+    <motion.div
+      onPan={(_, info) => {
+        const scrollY = window.scrollY
+        const scrollingUp = info.delta.y < 0
+        updateSwiperLock(scrollY, scrollingUp)
       }}
-      modules={[Mousewheel]}
-      onSwiper={(swiper) => (swiperRef.current = swiper)}
-      onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-      style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center' }}
+      className="sticky top-[calc(var(--header-height-safe)+46px)] w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden"
     >
-      {Array.from({ length: 3 }).map((_, index) => (
-        <SwiperSlide key={index}>
-          <ExploreQuizCard
-            index={index}
-            activeIndex={activeIndex}
-            header={
-              <ExploreQuizCard.Header
-                owner={'picktoss'}
-                isBookmarked={false}
-                onClickShare={() => {}}
-                onClickBookmark={() => {}}
-              />
-            }
-            content={
-              <ExploreQuizCard.Content
-                emoji={'🪶'}
-                title={'인지주의 심리학 관련 퀴즈 모음'}
-                category={'IT·개발'}
-                playedCount={345}
-                bookmarkCount={28}
-              />
-            }
-            quizzes={
-              <ExploreQuizCard.Quizzes quizzes={quizzes} totalQuizCount={quizzes.length} onClickViewAllBtn={() => {}} />
-            }
-            footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
-          />
-        </SwiperSlide>
-      ))}
-    </Swiper>
+      <Swiper
+        direction="vertical"
+        slidesPerView={1}
+        spaceBetween={0.01}
+        mousewheel={{
+          forceToAxis: true,
+          enabled: false, // 초기에 비활성화
+        }}
+        modules={[Mousewheel]}
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+        style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center' }}
+      >
+        {Array.from({ length: 3 }).map((_, index) => (
+          <SwiperSlide key={index}>
+            <ExploreQuizCard
+              index={index}
+              activeIndex={activeIndex}
+              header={
+                <ExploreQuizCard.Header
+                  owner={'picktoss'}
+                  isBookmarked={false}
+                  onClickShare={() => {}}
+                  onClickBookmark={() => {}}
+                />
+              }
+              content={
+                <ExploreQuizCard.Content
+                  emoji={'🪶'}
+                  title={'인지주의 심리학 관련 퀴즈 모음'}
+                  category={'IT·개발'}
+                  playedCount={345}
+                  bookmarkCount={28}
+                />
+              }
+              quizzes={
+                <ExploreQuizCard.Quizzes
+                  quizzes={quizzes}
+                  totalQuizCount={quizzes.length}
+                  onClickViewAllBtn={() => {}}
+                />
+              }
+              footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
+            />
+          </SwiperSlide>
+        ))}
+      </Swiper>
+    </motion.div>
   )
 }
