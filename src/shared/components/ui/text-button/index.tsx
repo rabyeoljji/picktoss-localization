@@ -13,7 +13,7 @@ const textButtonVariants = cva(
         secondary: 'text-gray-700',
         primary: 'text-orange-500',
         critical: 'text-red-500',
-        sub: 'text-gray-500',
+        sub: 'text-gray-300',
       },
       size: {
         lg: 'typo-button-2 gap-2 [&_svg]:size-5',
