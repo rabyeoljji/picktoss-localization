@@ -8,6 +8,8 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import { Category } from '@/entities/category/api'
+import { useGetCategories } from '@/entities/category/api/hooks'
 import { GetAllQuizzesDto } from '@/entities/quiz/api'
 
 import { IcChevronRight, IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
@@ -25,38 +27,6 @@ const exampleQuestions = [
   { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
   { emoji: '👠 ', question: '프로세스는 무엇인가요?' },
   { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
-]
-
-// 임시 (서버에서 가져오기)
-const categories = [
-  {
-    emoji: '💫',
-    name: '전체',
-  },
-  {
-    emoji: '🎓',
-    name: '학문·전공',
-  },
-  {
-    emoji: '💯',
-    name: '자격증·수험',
-  },
-  {
-    emoji: '🤖',
-    name: 'IT·개발',
-  },
-  {
-    emoji: '📊',
-    name: '재테크·시사',
-  },
-  {
-    emoji: '🧠',
-    name: '상식·교양',
-  },
-  {
-    emoji: '💬',
-    name: '언어',
-  },
 ]
 
 const quizzes = [
@@ -87,6 +57,8 @@ const quizzes = [
 ] as GetAllQuizzesDto[]
 
 const ExplorePage = () => {
+  const { data } = useGetCategories()
+
   return (
     <>
       <Header
@@ -137,7 +109,7 @@ const ExplorePage = () => {
             실시간 퀴즈
           </Text>
 
-          <ScrollableChips />
+          <ScrollableChips categories={data} />
 
           <button
             type="button"
@@ -158,7 +130,7 @@ const ExplorePage = () => {
             <IcChevronRight className="size-[16px] text-icon-secondary" />
           </button>
 
-          <div className="w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
+          <div className="sticky top-[calc(var(--header-height-safe)+46px)] w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
             <VerticalSwipeList />
           </div>
         </div>
@@ -195,14 +167,12 @@ function QuestionBox({
   )
 }
 
-function ScrollableChips() {
+function ScrollableChips({ categories }: { categories?: Category[] }) {
   const [params, setParams] = useQueryParam('/explore')
-  const activeTab = params.tab
+  const activeCategory = params.category
 
-  type Tab = typeof params.tab
-
-  const setTab = (tab: Tab) => {
-    setParams({ ...params, tab })
+  const setCategory = (categoryId: number) => {
+    setParams({ ...params, category: categoryId })
   }
 
   const scrollRef = useRef<HTMLDivElement>(null)
@@ -230,18 +200,28 @@ function ScrollableChips() {
       ref={scrollRef}
       className="sticky top-[var(--header-height-safe)] bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
     >
+      {/* 전체 */}
+      <Chip
+        variant={activeCategory === 0 ? 'selected' : 'darken'}
+        left={activeCategory === 0 ? '💫' : undefined}
+        onClick={() => setCategory(0)}
+        className={cn('ml-[16px]')}
+      >
+        전체
+      </Chip>
+
       {/* Chip 요소들 */}
-      {categories.map((category, index) => (
-        <Chip
-          key={index}
-          variant={category.name === activeTab ? 'selected' : 'darken'}
-          left={category.name === activeTab ? category.emoji : undefined}
-          onClick={() => setTab(category.name as Tab)}
-          className={cn(index === 0 && 'ml-[16px]')}
-        >
-          {category.name}
-        </Chip>
-      ))}
+      {categories &&
+        categories.map((category, index) => (
+          <Chip
+            key={index}
+            variant={category.id === activeCategory ? 'selected' : 'darken'}
+            left={category.id === activeCategory ? category.emoji : undefined}
+            onClick={() => setCategory(category.id)}
+          >
+            {category.name}
+          </Chip>
+        ))}
     </div>
   )
 }

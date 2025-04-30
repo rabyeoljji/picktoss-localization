@@ -2,12 +2,15 @@ import { client } from '@/shared/lib/axios/client'
 
 import { CATEGORY_ENDPOINTS } from './config'
 
+export interface Category {
+  id: number
+  name: string
+  emoji: string
+  orders: number
+}
+
 interface CategoriesResponse {
-  categories: {
-    id: number
-    name: string
-    emoji: string
-  }[]
+  categories: Category[]
 }
 
 export const getCategories = async () => {

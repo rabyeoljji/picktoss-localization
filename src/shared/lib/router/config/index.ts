@@ -162,8 +162,8 @@ export const RouteConfig = {
   explore: {
     pathname: '/explore',
     search: {
-      // TODO: 서버 카테고리 response타입으로 타입 지정
-      tab: '전체' as '전체' | '학문·전공' | '자격증·수험' | 'IT·개발' | '재테크·시사' | '상식·교양' | '언어',
+      // category id
+      category: 0 as number,
     },
   },
   exploreRelease: {
