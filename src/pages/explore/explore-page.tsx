@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import Marquee from 'react-fast-marquee'
 
-import { motion } from 'framer-motion'
 import SwiperCore from 'swiper'
 import { Mousewheel } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -9,10 +8,13 @@ import { Swiper, SwiperSlide } from 'swiper/react'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import { GetAllQuizzesDto } from '@/entities/quiz/api'
+
 import { IcChevronRight, IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
+import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
+// import ExploreQuizCard from '@/shared/components/cards/explore-quiz-card'
 import { Header } from '@/shared/components/header'
 import { Chip } from '@/shared/components/ui/chip'
-import HorizontalScrollContainer from '@/shared/components/ui/horizontal-scroll-container'
 import { Text } from '@/shared/components/ui/text'
 import { Link, useQueryParam } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -57,16 +59,34 @@ const categories = [
   },
 ]
 
+const quizzes = [
+  {
+    id: 0,
+    name: 'picktoss',
+    question: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수인가요?',
+    answer: 'correct',
+    explanation: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수',
+    quizType: 'MIX_UP',
+  },
+  {
+    id: 1,
+    name: 'picktoss',
+    question: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수인가요?',
+    answer: 'correct',
+    explanation: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수',
+    quizType: 'MIX_UP',
+  },
+  {
+    id: 2,
+    name: 'picktoss',
+    question: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수인가요?',
+    answer: 'correct',
+    explanation: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수',
+    quizType: 'MIX_UP',
+  },
+] as GetAllQuizzesDto[]
+
 const ExplorePage = () => {
-  const [params, setParams] = useQueryParam('/explore')
-  const activeTab = params.tab
-
-  type Tab = typeof params.tab
-
-  const setTab = (tab: Tab) => {
-    setParams({ ...params, tab })
-  }
-
   return (
     <>
       <Header
@@ -89,28 +109,6 @@ const ExplorePage = () => {
       />
 
       <HeaderOffsetLayout>
-        {/* banner */}
-        <div className="py-[12px] px-[16px] w-full h-fit">
-          <button
-            type="button"
-            className="self-stretch h-14 w-full min-w-28 px-4 py-3 bg-accent rounded-[12px] inline-flex justify-center items-center gap-28"
-          >
-            <div className="flex-1 flex items-center">
-              <div className="flex items-center gap-2">
-                <IcLibrary className="size-[20px] text-icon-accent" />
-                <Text typo="body-1-bold" color="secondary">
-                  공개할 수 있는 퀴즈가{' '}
-                  <Text as="span" typo="body-1-bold" color="accent">
-                    3개
-                  </Text>{' '}
-                  있어요
-                </Text>
-              </div>
-            </div>
-            <IcChevronRight className="size-[16px] text-icon-secondary" />
-          </button>
-        </div>
-
         <div
           className="py-[42px] flex flex-col gap-[10px] bg-[radial-gradient(closest-side,_var(--tw-gradient-stops))]"
           style={{
@@ -139,27 +137,26 @@ const ExplorePage = () => {
             오늘의 퀴즈
           </Text>
 
-          <motion.div
-            className={cn(
-              'w-full py-[8px] sticky z-50 bg-[linear-gradient(to_bottom,#F8F8F7_28%,rgba(245,245,245,0)_100%)] top-[var(--header-height-safe)]',
-            )}
+          <ScrollableChips />
+
+          <button
+            type="button"
+            className="self-stretch h-[48px] w-full min-w-28 px-[24px] py-[12px] mt-[8px] bg-transparent inline-flex justify-center items-center gap-28"
           >
-            <HorizontalScrollContainer
-              gap={6}
-              moveRatio={0.5}
-              items={categories.map((category, index) => (
-                <Chip
-                  key={index}
-                  variant={category.name === activeTab ? 'selected' : 'darken'}
-                  left={category.name === activeTab ? category.emoji : undefined}
-                  onClick={() => setTab(category.name as Tab)}
-                  className={cn(index === 0 && 'ml-[16px]')}
-                >
-                  {category.name}
-                </Chip>
-              ))}
-            />
-          </motion.div>
+            <div className="flex-1 flex items-center">
+              <div className="flex items-center gap-2">
+                <IcLibrary className="size-[20px] text-icon-accent" />
+                <Text typo="body-1-bold" color="secondary">
+                  공개할 수 있는 퀴즈가{' '}
+                  <Text as="span" typo="body-1-bold" color="accent">
+                    3개
+                  </Text>{' '}
+                  있어요
+                </Text>
+              </div>
+            </div>
+            <IcChevronRight className="size-[16px] text-icon-secondary" />
+          </button>
 
           <div className="w-full h-[calc(100vh-184px)] p-[16px] pt-[36px] flex flex-col items-center gap-[10px] overflow-hidden">
             <VerticalSwipeList />
@@ -176,7 +173,7 @@ export default withHOC(ExplorePage, {
   backgroundClassName: 'bg-surface-2 h-fit',
 })
 
-const QuestionBox = ({
+function QuestionBox({
   emoji,
   question,
   className,
@@ -184,7 +181,7 @@ const QuestionBox = ({
   emoji: string
   question: string
   className?: HTMLElement['className']
-}) => {
+}) {
   return (
     <div
       className={cn('px-2.5 py-1.5 bg-base-1 rounded-lg inline-flex justify-center items-center gap-2.5', className)}
@@ -194,6 +191,54 @@ const QuestionBox = ({
           {emoji} {question}
         </Text>
       </div>
+    </div>
+  )
+}
+
+function ScrollableChips() {
+  const [params, setParams] = useQueryParam('/explore')
+  const activeTab = params.tab
+
+  type Tab = typeof params.tab
+
+  const setTab = (tab: Tab) => {
+    setParams({ ...params, tab })
+  }
+
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const handleWheel = (e: WheelEvent) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault() // ✅ preventDefault 이제 가능
+        el.scrollLeft += e.deltaY
+      }
+    }
+
+    el.addEventListener('wheel', handleWheel, { passive: false }) // ✅ 핵심
+
+    return () => {
+      el.removeEventListener('wheel', handleWheel)
+    }
+  }, [])
+
+  return (
+    <div ref={scrollRef} className="flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px]">
+      {/* Chip 요소들 */}
+      {categories.map((category, index) => (
+        <Chip
+          key={index}
+          variant={category.name === activeTab ? 'selected' : 'darken'}
+          left={category.name === activeTab ? category.emoji : undefined}
+          onClick={() => setTab(category.name as Tab)}
+          className={cn(index === 0 && 'ml-[16px]')}
+        >
+          {category.name}
+        </Chip>
+      ))}
     </div>
   )
 }
@@ -245,18 +290,35 @@ function VerticalSwipeList() {
       modules={[Mousewheel]}
       onSwiper={(swiper) => (swiperRef.current = swiper)}
       onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-      style={{ height: '508px', width: '100%', display: 'flex', justifyContent: 'center' }}
+      style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center' }}
     >
       {Array.from({ length: 3 }).map((_, index) => (
         <SwiperSlide key={index}>
-          <div
-            className={cn(
-              'w-[311px] h-[462px] relative bg-gradient-to-b from-bg-surface-1 to-bg-accent rounded-[20px] shadow-[0px_4px_28px_0px_rgba(0,0,0,0.10)] overflow-hidden transition-transform duration-300 swiper-slide-active:scale-110',
-              activeIndex === index && 'scale-110',
-            )}
-          >
-            card {index + 1}
-          </div>
+          <ExploreQuizCard
+            index={index}
+            activeIndex={activeIndex}
+            header={
+              <ExploreQuizCard.Header
+                owner={'picktoss'}
+                isBookmarked={false}
+                onClickShare={() => {}}
+                onClickBookmark={() => {}}
+              />
+            }
+            content={
+              <ExploreQuizCard.Content
+                emoji={'🪶'}
+                title={'인지주의 심리학 관련 퀴즈 모음'}
+                category={'IT·개발'}
+                playedCount={345}
+                bookmarkCount={28}
+              />
+            }
+            quizzes={
+              <ExploreQuizCard.Quizzes quizzes={quizzes} totalQuizCount={quizzes.length} onClickViewAllBtn={() => {}} />
+            }
+            footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
+          />
         </SwiperSlide>
       ))}
     </Swiper>
