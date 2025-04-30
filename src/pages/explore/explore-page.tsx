@@ -251,14 +251,12 @@ function VerticalSwipeList() {
   const swiperRef = useRef<SwiperCore>(null)
 
   useEffect(() => {
-    const handleScroll = (event: WheelEvent) => {
+    const handleScroll = (event: WheelEvent | TouchEvent) => {
       const scrollY = window.scrollY
-      // const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
-      const scrollingUp = event.deltaY < 0
+      const scrollingUp = (event as WheelEvent).deltaY ? (event as WheelEvent).deltaY < 0 : false
 
       if (!swiperRef.current) return
 
-      // if (swiperTopOffset <= 136) {
       if (scrollY > 100) {
         if (scrollingUp && activeIndex === 0) {
           // 위로 스크롤 + 첫 번째 카드일 때 swiper 비활성화
@@ -277,9 +275,11 @@ function VerticalSwipeList() {
     }
 
     window.addEventListener('wheel', handleScroll, { passive: false })
+    window.addEventListener('touchmove', handleScroll, { passive: false })
 
     return () => {
       window.removeEventListener('wheel', handleScroll)
+      window.removeEventListener('touchmove', handleScroll)
     }
   }, [activeIndex])
 
