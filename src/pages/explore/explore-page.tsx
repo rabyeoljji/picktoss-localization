@@ -15,7 +15,6 @@ import { GetAllQuizzesDto } from '@/entities/quiz/api'
 
 import { IcChevronRight, IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
-// import ExploreQuizCard from '@/shared/components/cards/explore-quiz-card'
 import { Header } from '@/shared/components/header'
 import { Chip } from '@/shared/components/ui/chip'
 import { Text } from '@/shared/components/ui/text'
@@ -231,80 +230,70 @@ function ScrollableChips({ categories }: { categories?: Category[] }) {
 function VerticalSwipeList() {
   const [activeIndex, setActiveIndex] = useState(0)
   const swiperRef = useRef<SwiperCore>(null)
-  // const startYRef = useRef<number>(0)
+  const startYRef = useRef<number>(0)
 
   useEffect(() => {
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        startYRef.current = event.touches[0].clientY
+      }
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (startYRef.current !== null && event.touches.length > 0) {
+        const currentY = event.touches[0].clientY
+        const scrollingUp = currentY < startYRef.current
+        const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
+        updateSwiperLock(swiperTopOffset, scrollingUp)
+      }
+    }
+
     const handleWheel = (event: WheelEvent) => {
-      const scrollY = window.scrollY
+      const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
       const scrollingUp = event.deltaY < 0
-      updateSwiperLock(scrollY, scrollingUp)
+      updateSwiperLock(swiperTopOffset, scrollingUp)
     }
 
     window.addEventListener('wheel', handleWheel, { passive: false })
+    window.addEventListener('touchstart', handleTouchStart, { passive: false })
+    window.addEventListener('touchmove', handleTouchMove, { passive: false })
 
     return () => {
       window.removeEventListener('wheel', handleWheel)
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchmove', handleTouchMove)
     }
   }, [activeIndex])
 
-  const updateSwiperLock = (scrollY: number, scrollingUp: boolean) => {
+  const updateSwiperLock = (swiperTopOffset: number, scrollingUp: boolean) => {
     if (!swiperRef.current) return
 
-    const isBeyond = scrollY >= 372.8
+    const safeAreaInsetTop = parseInt(
+      getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0',
+    )
+    const isBeyond = swiperTopOffset > 150 + safeAreaInsetTop
     const isAtTop = activeIndex === 0
 
     if (isBeyond) {
-      if (scrollingUp && isAtTop) {
+      swiperRef.current.mousewheel.disable()
+      swiperRef.current.allowTouchMove = false
+    } else {
+      if (isAtTop && scrollingUp) {
         swiperRef.current.mousewheel.disable()
         swiperRef.current.allowTouchMove = false
       } else {
         swiperRef.current.mousewheel.enable()
         swiperRef.current.allowTouchMove = true
       }
-    } else {
-      swiperRef.current.mousewheel.disable()
-      swiperRef.current.allowTouchMove = false
     }
   }
-  // useEffect(() => {
-  //   const handleScroll = (event: WheelEvent | TouchEvent) => {
-  //     const scrollY = window.scrollY
-  //     const scrollingUp = (event as WheelEvent).deltaY ? (event as WheelEvent).deltaY < 0 : false
-
-  //     if (!swiperRef.current) return
-
-  //     if (scrollY > 472.8) {
-  //       if (scrollingUp && activeIndex === 0) {
-  //         // 위로 스크롤 + 첫 번째 카드일 때 swiper 비활성화
-  //         swiperRef.current.mousewheel.disable()
-  //         swiperRef.current.allowTouchMove = false
-  //       } else {
-  //         // 그 외에는 swiper 활성화
-  //         swiperRef.current.mousewheel.enable()
-  //         swiperRef.current.allowTouchMove = true
-  //       }
-  //     } else {
-  //       // swiper가 화면 아래쪽이면 swiper 비활성화
-  //       swiperRef.current.mousewheel.disable()
-  //       swiperRef.current.allowTouchMove = false
-  //     }
-  //   }
-
-  //   window.addEventListener('wheel', handleScroll, { passive: false })
-  //   window.addEventListener('touchmove', handleScroll, { passive: false })
-
-  //   return () => {
-  //     window.removeEventListener('wheel', handleScroll)
-  //     window.removeEventListener('touchmove', handleScroll)
-  //   }
-  // }, [activeIndex])
 
   return (
     <motion.div
       onPan={(_, info) => {
-        const scrollY = window.scrollY
+        const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
         const scrollingUp = info.delta.y < 0
-        updateSwiperLock(scrollY, scrollingUp)
+        updateSwiperLock(swiperTopOffset, scrollingUp)
       }}
       className="sticky top-[calc(var(--header-height-safe)+46px)] w-full h-[calc(100vh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden"
     >
