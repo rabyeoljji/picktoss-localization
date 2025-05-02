@@ -100,7 +100,7 @@ const QuizVerticalSwipe = () => {
   }
 
   return (
-    <div className="sticky top-[calc(env(--header-height-safe)+46px)] w-full h-[calc(100dvh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
+    <div className="sticky top-[calc(var(--header-height-safe)+46px)] w-full h-[calc(100dvh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden">
       <Swiper
         direction="vertical"
         slidesPerView={1}
