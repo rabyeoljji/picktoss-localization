@@ -57,11 +57,14 @@ html {
 
 body {
   overscroll-behavior-x: none;
-  overflow-y: auto;
   -ms-overflow-style: none; /* IE, Edge */
 }
 body::-webkit-scrollbar {
   display: none; /* Chrome, Safari */
+}
+
+#root {
+  @apply h-screen w-screen overflow-y-auto;
 }
 
 @font-face {
