@@ -106,6 +106,6 @@ const ExplorePage = () => {
 
 export default withHOC(ExplorePage, {
   activeTab: '탐험',
-  navClassName: 'border-t border-divider',
+  navClassName: 'border-t border-divider z-40',
   backgroundClassName: 'bg-surface-2 h-fit',
 })
