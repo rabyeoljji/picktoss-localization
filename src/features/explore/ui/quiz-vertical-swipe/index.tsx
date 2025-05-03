@@ -38,100 +38,117 @@ const quizzes = [
 
 const QuizVerticalSwipe = () => {
   const [activeIndex, setActiveIndex] = useState(0)
-  const [isSwiperActive, setIsSwiperActive] = useState(false)
+  const [safeAreaInsetTop, setSafeAreaInsetTop] = useState(0)
+  const [isTopReached, setIsTopReached] = useState(false)
   const swiperRef = useRef<SwiperCore>(null)
   const swiperContainerRef = useRef<HTMLDivElement>(null)
-  const startYRef = useRef<number>(0)
+  const touchStartY = useRef<number | null>(null)
 
+  // root요소 스크롤 제어 + HOC에서 safe-area-inset-top을 계산하기 위해서 사용
   useEffect(() => {
-    if (!swiperContainerRef.current) return
+    const root = document.getElementById('root')
+    const hocElement = document.getElementById('hoc')
+    if (!root || !hocElement) return
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsSwiperActive(entry.isIntersecting)
-      },
-      {
-        root: null,
-        threshold: 1.0,
-        rootMargin: '0px 0px -84px 0px',
-      },
-    )
+    root.classList.add('overscroll-none')
 
-    observer.observe(swiperContainerRef.current)
+    const computedStyle = window.getComputedStyle(hocElement)
+    const paddingTopValue = computedStyle.getPropertyValue('padding-top')
+
+    const safeAreaInsetTop = parseFloat(paddingTopValue) || 0
+    setSafeAreaInsetTop(safeAreaInsetTop)
 
     return () => {
-      observer.disconnect()
+      root.classList.remove('overscroll-none')
     }
   }, [])
 
+  // 퀴즈 카드 스와이프 영역 스크롤 제어
   useEffect(() => {
-    const handleTouchStart = (event: TouchEvent) => {
-      if (event.touches.length > 0) {
-        startYRef.current = event.touches[0].clientY
+    const handleScrollOrResize = () => {
+      if (!swiperContainerRef.current || !swiperRef.current) return
+
+      const topOffset = swiperContainerRef.current.getBoundingClientRect().top
+
+      setIsTopReached(topOffset <= 110 + safeAreaInsetTop)
+    }
+
+    const handleWheelEvent = (e: WheelEvent) => {
+      if (!swiperRef.current) return
+
+      const isWheelUp = e.deltaY < 0
+      const isSwiperAtBeginning = swiperRef.current.isBeginning // 스와이프 카드 시작 지점 (첫번째 카드)
+
+      // isSwiperAtBeginning 상태일 때, 위로 이동하는 경우
+      if (isSwiperAtBeginning && isWheelUp) {
+        setIsTopReached(false)
+        return
       }
     }
 
-    const handleTouchMove = (event: TouchEvent) => {
-      if (startYRef.current !== null && event.touches.length > 0) {
-        const currentY = event.touches[0].clientY
-        const scrollingUp = currentY < startYRef.current
-        updateSwiperLock(scrollingUp)
+    const handleTouchMoveEvent = (e: TouchEvent) => {
+      if (!swiperRef.current) return
+
+      const touchMoveY = e.touches[0].clientY
+      const isSwiperAtBeginning = swiperRef.current.isBeginning
+
+      // 터치 시작 위치가 없으면 처리하지 않음
+      if (touchStartY.current === null) return
+
+      const isSwipeDown = touchStartY.current < touchMoveY // 아래로 스와이프
+
+      // isSwiperAtBeginning 상태일 때, 터치로 아래로 스와이프하는 경우 (위로 이동)
+      if (isSwiperAtBeginning && isSwipeDown) {
+        setIsTopReached(false)
+        return
       }
     }
 
-    const handleWheel = (event: WheelEvent) => {
-      const scrollingUp = event.deltaY < 0
-
-      // Swiper 영역이 활성화되어있으면 preventDefault
-      if (isSwiperActive && !(activeIndex === 0 && scrollingUp)) {
-        event.preventDefault()
-      }
-
-      updateSwiperLock(scrollingUp)
+    const handleTouchStartEvent = (e: TouchEvent) => {
+      touchStartY.current = e.touches[0].clientY // 터치 시작 Y 좌표 저장
     }
 
-    window.addEventListener('wheel', handleWheel, { passive: false })
-    window.addEventListener('touchstart', handleTouchStart, { passive: false })
-    window.addEventListener('touchmove', handleTouchMove, { passive: false })
+    const root = document.getElementById('root')
+
+    if (!root) return
+
+    handleScrollOrResize()
+    root.addEventListener('scroll', handleScrollOrResize)
+    root.addEventListener('wheel', handleWheelEvent)
+    window.addEventListener('resize', handleScrollOrResize)
+    window.addEventListener('touchstart', handleTouchStartEvent)
+    window.addEventListener('touchmove', handleTouchMoveEvent)
 
     return () => {
-      window.removeEventListener('wheel', handleWheel)
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchmove', handleTouchMove)
+      root.removeEventListener('scroll', handleScrollOrResize)
+      root.removeEventListener('wheel', handleWheelEvent)
+      window.removeEventListener('resize', handleScrollOrResize)
+      window.removeEventListener('touchstart', handleTouchStartEvent)
+      window.removeEventListener('touchmove', handleTouchMoveEvent)
     }
-  }, [activeIndex, isSwiperActive])
-
-  const updateSwiperLock = (scrollingUp: boolean) => {
-    if (!swiperRef.current) return
-
-    const isAtTop = activeIndex === 0
-
-    if (!isSwiperActive) {
-      swiperRef.current.mousewheel.disable()
-      swiperRef.current.allowTouchMove = false
-    } else {
-      if (isAtTop && scrollingUp) {
-        swiperRef.current.mousewheel.disable()
-        swiperRef.current.allowTouchMove = false
-      } else {
-        swiperRef.current.mousewheel.enable()
-        swiperRef.current.allowTouchMove = true
-        swiperRef.current.update()
-      }
-    }
-  }
+  }, [safeAreaInsetTop])
 
   return (
     <div
       ref={swiperContainerRef}
-      className="w-full h-[calc(100dvh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2 touch-pan-y overscroll-contain"
+      style={{
+        height: 'calc(100vh - env(safe-area-inset-top) - 184px)',
+        touchAction: 'pan-y',
+        overscrollBehaviorY: 'contain',
+        WebkitOverflowScrolling: 'touch',
+      }}
+      className="relative w-full p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2"
     >
+      {!isTopReached && (
+        <div className="absolute inset-0 z-30" style={{ background: 'transparent', pointerEvents: 'all' }} />
+      )}
+
       <Swiper
         direction="vertical"
         slidesPerView={1}
         spaceBetween={0.01}
-        mousewheel={{ forceToAxis: true, enabled: false }}
-        allowTouchMove={false}
+        mousewheel={{ forceToAxis: true, enabled: true }}
+        allowTouchMove={true}
         cssMode={false}
         simulateTouch={true}
         touchStartPreventDefault={false}
@@ -177,141 +194,5 @@ const QuizVerticalSwipe = () => {
     </div>
   )
 }
-
-// const QuizVerticalSwipe = () => {
-//   const [activeIndex, setActiveIndex] = useState(0)
-//   const swiperRef = useRef<SwiperCore>(null)
-//   const startYRef = useRef<number>(0)
-
-//   useEffect(() => {
-//     const handleTouchStart = (event: TouchEvent) => {
-//       if (event.touches.length > 0) {
-//         startYRef.current = event.touches[0].clientY
-//       }
-//     }
-
-//     const handleTouchMove = (event: TouchEvent) => {
-//       if (startYRef.current !== null && event.touches.length > 0) {
-//         const currentY = event.touches[0].clientY
-//         const scrollingUp = currentY < startYRef.current
-//         const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
-//         updateSwiperLock(swiperTopOffset, scrollingUp)
-//       }
-//     }
-
-//     const handleWheel = (event: WheelEvent) => {
-//       const swiperTopOffset = swiperRef.current?.el?.getBoundingClientRect().top ?? 0
-//       const scrollingUp = event.deltaY < 0
-
-//       const safeAreaInsetTop = parseInt(
-//         getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0',
-//       )
-//       const isBeyond = swiperTopOffset > 150 + safeAreaInsetTop
-
-//       if (!isBeyond && !(activeIndex === 0 && scrollingUp)) {
-//         event.preventDefault()
-//       }
-
-//       updateSwiperLock(swiperTopOffset, scrollingUp)
-//     }
-
-//     window.addEventListener('wheel', handleWheel, { passive: false })
-//     window.addEventListener('touchstart', handleTouchStart, { passive: false })
-//     window.addEventListener('touchmove', handleTouchMove, { passive: false })
-
-//     return () => {
-//       window.removeEventListener('wheel', handleWheel)
-//       window.removeEventListener('touchstart', handleTouchStart)
-//       window.removeEventListener('touchmove', handleTouchMove)
-//     }
-//   }, [activeIndex])
-
-//   // 처음에는 페이지 스크롤이 동작하게, swiper영역이 상단에 도달했을 시 swipe기능 동작하도록
-//   const updateSwiperLock = (swiperTopOffset: number, scrollingUp: boolean) => {
-//     if (!swiperRef.current) return
-
-//     const safeAreaInsetTop = parseInt(
-//       getComputedStyle(document.documentElement).getPropertyValue('--safe-area-inset-top') || '0',
-//     )
-//     const isBeyond = swiperTopOffset > 150 + safeAreaInsetTop
-//     const isAtTop = activeIndex === 0
-
-//     if (isBeyond) {
-//       if (!isAtTop && scrollingUp) {
-//         swiperRef.current.mousewheel.enable()
-//         swiperRef.current.allowTouchMove = true
-//         swiperRef.current.update()
-//       } else {
-//         swiperRef.current.mousewheel.disable()
-//         swiperRef.current.allowTouchMove = false
-//       }
-//     } else {
-//       if (isAtTop && scrollingUp) {
-//         swiperRef.current.mousewheel.disable()
-//         swiperRef.current.allowTouchMove = false
-//       } else {
-//         swiperRef.current.mousewheel.enable()
-//         swiperRef.current.allowTouchMove = true
-//         swiperRef.current.update()
-//       }
-//     }
-//   }
-
-//   return (
-//     <div className="w-full h-[calc(100dvh-184px)] p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2 touch-pan-y overscroll-contain">
-//       <Swiper
-//         direction="vertical"
-//         slidesPerView={1}
-//         spaceBetween={0.01}
-//         mousewheel={{
-//           forceToAxis: true,
-//           enabled: false, // 초기에 비활성화
-//         }}
-//         allowTouchMove={false} // 초기에는 터치 이동 비활성화
-//         cssMode={false} // true일 경우 네이티브 스크롤로 처리되어 충돌 가능
-//         simulateTouch={true} // 터치 시뮬레이션 보장
-//         touchStartPreventDefault={false} // preventDefault 충돌 방지
-//         modules={[Mousewheel]}
-//         onSwiper={(swiper) => (swiperRef.current = swiper)}
-//         onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-//         style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center' }}
-//       >
-//         {Array.from({ length: 3 }).map((_, index) => (
-//           <SwiperSlide key={index}>
-//             <ExploreQuizCard
-//               index={index}
-//               activeIndex={activeIndex}
-//               header={
-//                 <ExploreQuizCard.Header
-//                   owner={'picktoss'}
-//                   isBookmarked={false}
-//                   onClickShare={() => {}}
-//                   onClickBookmark={() => {}}
-//                 />
-//               }
-//               content={
-//                 <ExploreQuizCard.Content
-//                   emoji={'🪶'}
-//                   title={'인지주의 심리학 관련 퀴즈 모음'}
-//                   category={'IT·개발'}
-//                   playedCount={345}
-//                   bookmarkCount={28}
-//                 />
-//               }
-//               quizzes={
-//                 <ExploreQuizCard.Quizzes
-//                   quizzes={quizzes}
-//                   totalQuizCount={quizzes.length}
-//                   onClickViewAllBtn={() => {}}
-//                 />
-//               }
-//               footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
-//             />
-//           </SwiperSlide>
-//         ))}
-//       </Swiper>
-//     </div>
-//   )
-// }
 
 export default QuizVerticalSwipe

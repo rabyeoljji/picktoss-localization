@@ -12,6 +12,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
 
   return (props: P) => (
     <div
+      id="hoc"
       className={cn(
         'relative size-full safe-area-space',
         backgroundClass,

@@ -37,7 +37,7 @@ const CategoriesHorizontalChips = ({ categories }: { categories?: Category[] }) 
   return (
     <div
       ref={scrollRef}
-      className="sticky top-[var(--header-height-safe)] bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
+      className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
     >
       {/* 전체 */}
       <Chip
