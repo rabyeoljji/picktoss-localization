@@ -95,8 +95,8 @@ const QuizVerticalSwipe = () => {
       // 터치 시작 위치가 없으면 처리하지 않음
       if (touchStartY.current === null) return
 
-      const isSwipeDown = touchStartY.current < touchMoveY // 아래로 스와이프
-
+      const deltaY = touchStartY.current - touchMoveY // 이동한 거리 계산
+      const isSwipeDown = deltaY < -60 // 아래로 스와이프
       // isSwiperAtBeginning 상태일 때, 터치로 아래로 스와이프하는 경우 (위로 이동)
       if (isSwiperAtBeginning && isSwipeDown) {
         setIsTopReached(false)
