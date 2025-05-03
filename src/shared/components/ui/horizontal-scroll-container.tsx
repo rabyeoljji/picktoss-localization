@@ -80,6 +80,9 @@ const HorizontalScrollContainer = ({
       }
     }
 
+    const root = document.getElementById('root')
+    if (!root) return
+
     window.addEventListener('wheel', handleWheelEvent, { passive: false })
 
     return () => {
@@ -186,7 +189,7 @@ const HorizontalScrollContainer = ({
     <motion.div
       ref={containerRef}
       onWheel={handleWheel}
-      className={cn('h-fit w-dvw max-w-full select-none overflow-hidden scrollbar-hide')}
+      className={cn('h-fit w-dvw max-w-full select-none overflow-hidden scrollbar-hide', 'touch-pan-x')}
     >
       <motion.div
         ref={contentRef}

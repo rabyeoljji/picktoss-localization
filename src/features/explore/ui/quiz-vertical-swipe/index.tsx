@@ -42,7 +42,6 @@ const QuizVerticalSwipe = () => {
   const [isTopReached, setIsTopReached] = useState(false)
   const swiperRef = useRef<SwiperCore>(null)
   const swiperContainerRef = useRef<HTMLDivElement>(null)
-  const touchStartY = useRef<number | null>(null)
 
   // root요소 스크롤 제어 + HOC에서 safe-area-inset-top을 계산하기 위해서 사용
   useEffect(() => {
@@ -73,58 +72,17 @@ const QuizVerticalSwipe = () => {
       setIsTopReached(topOffset <= 110 + safeAreaInsetTop)
     }
 
-    const handleWheelEvent = (e: WheelEvent) => {
-      if (!swiperRef.current) return
-
-      const isWheelUp = e.deltaY < 0
-      const isSwiperAtBeginning = swiperRef.current.isBeginning // 스와이프 카드 시작 지점 (첫번째 카드)
-
-      // isSwiperAtBeginning 상태일 때, 위로 이동하는 경우
-      if (isSwiperAtBeginning && isWheelUp) {
-        setIsTopReached(false)
-        return
-      }
-    }
-
-    const handleTouchMoveEvent = (e: TouchEvent) => {
-      if (!swiperRef.current) return
-
-      const touchMoveY = e.touches[0].clientY
-      const isSwiperAtBeginning = swiperRef.current.isBeginning
-
-      // 터치 시작 위치가 없으면 처리하지 않음
-      if (touchStartY.current === null) return
-
-      const deltaY = touchStartY.current - touchMoveY // 이동한 거리 계산
-      const isSwipeDown = deltaY < -60 // 아래로 스와이프
-      // isSwiperAtBeginning 상태일 때, 터치로 아래로 스와이프하는 경우 (위로 이동)
-      if (isSwiperAtBeginning && isSwipeDown) {
-        setIsTopReached(false)
-        return
-      }
-    }
-
-    const handleTouchStartEvent = (e: TouchEvent) => {
-      touchStartY.current = e.touches[0].clientY // 터치 시작 Y 좌표 저장
-    }
-
     const root = document.getElementById('root')
 
     if (!root) return
 
     handleScrollOrResize()
     root.addEventListener('scroll', handleScrollOrResize)
-    root.addEventListener('wheel', handleWheelEvent)
     window.addEventListener('resize', handleScrollOrResize)
-    window.addEventListener('touchstart', handleTouchStartEvent)
-    window.addEventListener('touchmove', handleTouchMoveEvent)
 
     return () => {
       root.removeEventListener('scroll', handleScrollOrResize)
-      root.removeEventListener('wheel', handleWheelEvent)
       window.removeEventListener('resize', handleScrollOrResize)
-      window.removeEventListener('touchstart', handleTouchStartEvent)
-      window.removeEventListener('touchmove', handleTouchMoveEvent)
     }
   }, [safeAreaInsetTop])
 
