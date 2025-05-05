@@ -43,11 +43,13 @@ export const ExploreQuizCard = ({ index, activeIndex, header, content, quizzes, 
 
 const ExploreQuizCardHeader = ({
   creator,
+  isOwner,
   isBookmarked,
   onClickShare,
   onClickBookmark,
 }: {
   creator: string
+  isOwner: boolean
   isBookmarked: boolean
   onClickShare: () => void
   onClickBookmark: () => void
@@ -66,9 +68,11 @@ const ExploreQuizCardHeader = ({
         <ButtonSolidIcon onClick={onClickShare} variant={'tertiary'} size={'md'}>
           <IcUpload className="size-[20px]" />
         </ButtonSolidIcon>
-        <ButtonSolidIcon onClick={onClickBookmark} variant={'tertiary'} size={'md'}>
-          {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
-        </ButtonSolidIcon>
+        {!isOwner && (
+          <ButtonSolidIcon onClick={onClickBookmark} variant={'tertiary'} size={'md'}>
+            {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
+          </ButtonSolidIcon>
+        )}
       </div>
     </div>
   )

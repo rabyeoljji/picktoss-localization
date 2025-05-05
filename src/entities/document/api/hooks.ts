@@ -150,12 +150,6 @@ export const useGetPublicDocuments = ({
     enabled: enabled ?? true,
   })
 }
-// export const useGetPublicDocuments = (options?: { categoryId?: number; page?: number; pageSize?: number }) => {
-//   return useQuery({
-//     queryKey: [DOCUMENT_KEYS.getPublicDocuments, options?.categoryId, options?.page],
-//     queryFn: () => getPublicDocuments(options),
-//   })
-// }
 
 export const useGetPublicSingleDocument = (documentId: number) => {
   return useQuery({

@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { toast } from 'sonner'
 import SwiperCore from 'swiper'
 import { Mousewheel, Virtual } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import { GetPublicDocumentsDto } from '@/entities/document/api'
-import { useGetPublicDocuments } from '@/entities/document/api/hooks'
+import {
+  useCreateDocumentBookmark,
+  useDeleteDocumentBookmark,
+  useGetPublicDocuments,
+} from '@/entities/document/api/hooks'
 
+import { IcBookmarkFilled } from '@/shared/assets/icon'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
-import { useQueryParam } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 const QuizVerticalSwipe = () => {
   const DATA_PER_PAGE = 10
@@ -157,39 +163,96 @@ const QuizVerticalSwipe = () => {
       >
         {documents.map((document, index) => (
           <SwiperSlide key={document.id} virtualIndex={index}>
-            <ExploreQuizCard
-              index={index}
-              activeIndex={activeIndex}
-              header={
-                <ExploreQuizCard.Header
-                  creator={document.creator}
-                  isBookmarked={document.isBookmarked}
-                  onClickShare={() => {}}
-                  onClickBookmark={() => {}}
-                />
-              }
-              content={
-                <ExploreQuizCard.Content
-                  emoji={document.emoji}
-                  title={document.name}
-                  category={document.category}
-                  playedCount={document.tryCount}
-                  bookmarkCount={document.bookmarkCount}
-                />
-              }
-              quizzes={
-                <ExploreQuizCard.Quizzes
-                  quizzes={document.quizzes}
-                  totalQuizCount={document.quizzes.length}
-                  onClickViewAllBtn={() => {}}
-                />
-              }
-              footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
-            />
+            <ExploreSwipeCard index={index} activeIndex={activeIndex} document={document} setDocuments={setDocuments} />
           </SwiperSlide>
         ))}
       </Swiper>
     </div>
+  )
+}
+
+const ExploreSwipeCard = ({
+  index,
+  activeIndex,
+  document,
+  setDocuments,
+}: {
+  index: number
+  activeIndex: number
+  document: GetPublicDocumentsDto
+  setDocuments: React.Dispatch<React.SetStateAction<GetPublicDocumentsDto[]>>
+}) => {
+  const { id, creator, isBookmarked, isOwner, name, emoji, category, tryCount, bookmarkCount, quizzes } = document
+
+  const router = useRouter()
+
+  const { mutate: documentBookmark } = useCreateDocumentBookmark(id)
+  const { mutate: deleteDocumentBookmark } = useDeleteDocumentBookmark(id)
+
+  const handleBookmark = () => {
+    // 낙관적 UI 업데이트
+    setDocuments((prev) =>
+      prev.map((doc) => (doc.id === document.id ? { ...doc, isBookmarked: !doc.isBookmarked } : doc)),
+    )
+
+    const isCurrentlyBookmarked = document.isBookmarked
+
+    const onError = () => {
+      // 실패 시 롤백
+      setDocuments((prev) =>
+        prev.map((doc) => (doc.id === document.id ? { ...doc, isBookmarked: isCurrentlyBookmarked } : doc)),
+      )
+      toast.error('북마크에 실패했어요')
+    }
+
+    const onSuccess = () => {
+      if (!isCurrentlyBookmarked) {
+        toast('퀴즈가 도서관에 저장되었어요', {
+          icon: <IcBookmarkFilled className="size-4" />,
+          action: {
+            label: '보러가기',
+            onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
+          },
+        })
+      }
+    }
+
+    if (isCurrentlyBookmarked) {
+      deleteDocumentBookmark(undefined, { onSuccess, onError })
+    } else {
+      documentBookmark(undefined, { onSuccess, onError })
+    }
+  }
+
+  return (
+    <ExploreQuizCard
+      index={index}
+      activeIndex={activeIndex}
+      header={
+        <ExploreQuizCard.Header
+          creator={creator}
+          isOwner={isOwner}
+          isBookmarked={isBookmarked}
+          onClickShare={() => {
+            alert('공유하기 클릭')
+          }}
+          onClickBookmark={handleBookmark}
+        />
+      }
+      content={
+        <ExploreQuizCard.Content
+          emoji={emoji}
+          title={name}
+          category={category}
+          playedCount={tryCount}
+          bookmarkCount={bookmarkCount}
+        />
+      }
+      quizzes={
+        <ExploreQuizCard.Quizzes quizzes={quizzes} totalQuizCount={quizzes.length} onClickViewAllBtn={() => {}} />
+      }
+      footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
+    />
   )
 }
 
