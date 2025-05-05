@@ -8,6 +8,7 @@ import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
 import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
 import NoteCreatePageFile from '@/features/note/ui/note-create-page-file'
 import { NoteCreateWrite } from '@/features/note/ui/note-create-write'
+import { QuizLoadingDrawer } from '@/features/note/ui/quiz-loading-drawer'
 
 import { IcInfo } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -109,6 +110,8 @@ const NoteCreateContent = () => {
           )}
         </div>
       )}
+
+      <QuizLoadingDrawer />
     </div>
   )
 }

@@ -91,7 +91,6 @@ export const AppRouter = () => {
 
               {/* Theme Quiz */}
               <Route>
-                <Route path={RoutePath.quizLoading} element={<QuizLoadingPage />} />
                 <Route path={RoutePath.progressQuiz} element={<ProgressQuizPage />} />
                 <Route path={RoutePath.randomQuiz} element={<RandomQuizPage />} />
                 <Route path={RoutePath.bombQuiz} element={<BombQuizPage />} />

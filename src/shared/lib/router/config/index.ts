@@ -42,6 +42,8 @@ export const RouteConfig = {
     pathname: '/note/create',
     search: {
       documentType: 'TEXT' as 'TEXT' | 'FILE',
+      isLoading: false as boolean,
+      documentId: 0 as number,
     },
   },
 
@@ -126,14 +128,6 @@ export const RouteConfig = {
       hideTimeSpent: true as boolean,
       autoNext: true as boolean,
       quizSetType: 'TODAY_QUIZ_SET' as QuizSetType,
-    },
-  },
-  quizLoading: {
-    pathname: '/quiz-loading',
-    search: {
-      documentId: 0 as number,
-      documentName: '' as string,
-      star: 0 as number,
     },
   },
   quizResult: {

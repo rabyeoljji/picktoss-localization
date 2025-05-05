@@ -22,13 +22,13 @@ import {
 // GET 훅
 
 // 데일리 퀴즈 가져오기
-export const useGetQuizzes = (
-  quizType?: 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE',
-  quizSource?: 'ALL' | 'BOOKMARK_QUIZ' | 'MY_QUIZ',
-) => {
+export const useGetQuizzes = (params?: {
+  quizType?: 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE'
+  quizSource?: 'ALL' | 'BOOKMARK_QUIZ' | 'MY_QUIZ'
+}) => {
   return useQuery({
     queryKey: QUIZ_KEYS.getQuizzes,
-    queryFn: () => getQuizzes(quizType, quizSource),
+    queryFn: () => getQuizzes(params?.quizType, params?.quizSource),
     refetchOnWindowFocus: false,
     refetchOnMount: false,
   })

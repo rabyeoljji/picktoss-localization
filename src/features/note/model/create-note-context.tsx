@@ -40,7 +40,7 @@ export interface CreateNoteContextValues extends CreateNoteState {
   clearNoteInfo: () => void
 
   isPending: boolean
-  handleCreateDocument: () => Promise<void>
+  handleCreateDocument: ({ onSuccess }: { onSuccess: () => void }) => Promise<void>
   checkDrawerTriggerActivate: () => boolean
   checkCreateActivate: () => boolean
 
@@ -70,7 +70,7 @@ export const CreateNoteContext = createContext<CreateNoteContextValues | null>(n
 export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter()
 
-  const [documentType, setDocumentType] = useQueryParam('/note/create', 'documentType')
+  const [{ documentType }, setParams] = useQueryParam('/note/create')
   const prevDocumentTypeRef = useRef<DocumentType | null>(null) // 안정성을 위해 ref에 값 저장
 
   const [state, setState] = useState<{
@@ -224,7 +224,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     return true
   }
 
-  const handleCreateDocument = async () => {
+  const handleCreateDocument = async ({ onSuccess }: { onSuccess: () => void }) => {
     if (!checkIsValid()) {
       return
     }
@@ -246,13 +246,8 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     createDocument(createDocumentData, {
       onSuccess: ({ id }) => {
         toast.success('문서가 생성되었습니다.')
-        router.push('/quiz-loading', {
-          search: {
-            documentId: id,
-            documentName: state.documentName,
-            star: Number(state.star),
-          },
-        })
+        setParams({ isLoading: true, documentId: id })
+        onSuccess()
       },
       onError: (error) => {
         toast.error('문서 생성에 실패했습니다. / errorMessage: ' + error.message, {
@@ -274,7 +269,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         content: state.content,
         emoji: state.emoji,
 
-        setDocumentType,
+        setDocumentType: (documentType: DocumentType) => setParams({ documentType }),
         setDocumentName: (documentName: string) => setState((prev) => ({ ...prev, documentName })),
         setQuizType: (quizType: QuizType) => setState((prev) => ({ ...prev, quizType })),
         setStar: (star: string) => setState((prev) => ({ ...prev, star })),

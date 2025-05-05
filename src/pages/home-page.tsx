@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { motion, useAnimation } from 'framer-motion'
 
@@ -32,11 +32,32 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 const HomePage = () => {
   const router = useRouter()
 
+  // 메인 퀴즈 상태 관리
   const [quizzes, setQuizzes] = useState<Quiz[]>()
-  const { data: quizzesData, isLoading, refetch } = useGetQuizzes()
+  // 백그라운드 퀴즈 캐시 (리페치된 퀴즈를 임시 저장)
+  const backgroundQuizzesRef = useRef<Quiz[]>([])
+
+  const [displayQuizType] = useQueryParam('/', 'displayQuizType')
+
+  const { data: quizData, isLoading, refetch } = useGetQuizzes()
+
+  useEffect(() => {
+    setQuizState((prev) => ({
+      ...prev,
+      status: 'idle',
+      selectedAnswer: null,
+    }))
+    setQuizzes(quizData?.quizzes.filter((quiz) => quiz.quizType === displayQuizType || displayQuizType === 'ALL') ?? [])
+  }, [quizData, displayQuizType])
+
   const refreshIndicatorControls = useAnimation()
   const [isRefreshing, setIsRefreshing] = useState(false)
   const [pullDistance, setPullDistance] = useState(0)
+
+  // 백그라운드 리페치 상태 관리
+  const isBackgroundRefetchingRef = useRef(false)
+  // 퀴즈 전환 애니메이션 상태
+  const [isTransitioning, setIsTransitioning] = useState(false)
 
   const [dailyQuizRecord, setDailyQuizRecord] = useState<Partial<CreateDailyQuizRecordResponse>>()
   const { data: consecutiveSolvedDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
@@ -47,7 +68,6 @@ const HomePage = () => {
     })
   }, [consecutiveSolvedDailyQuiz])
 
-  const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
   const [quizState, setQuizState] = useState<{
     selectedAnswer: string | null
@@ -56,12 +76,6 @@ const HomePage = () => {
     selectedAnswer: null,
     status: 'idle',
   })
-
-  useEffect(() => {
-    if (quizzesData) {
-      setQuizzes(quizzesData.quizzes)
-    }
-  }, [quizzesData])
 
   const [rewardDrawerOpen, setRewardDrawerOpen] = useState(false)
 
@@ -73,13 +87,69 @@ const HomePage = () => {
 
   const { mutate: createDailyQuizRecord } = useCreateDailyQuizRecord()
 
+  // 문제를 거의 다 풀었을 때 백그라운드에서 새로운 문제를 가져오는 함수
+  const fetchMoreQuizzesInBackground = async () => {
+    // 이미 백그라운드 리페치가 진행 중이면 중복 실행 방지
+    if (isBackgroundRefetchingRef.current) return
+
+    isBackgroundRefetchingRef.current = true
+
+    try {
+      const newQuizzesData = await refetch()
+
+      if (newQuizzesData.data) {
+        // 백그라운드 캐시에 새 퀴즈 저장 (화면 깜빡임 방지)
+        const currentQuizzes = quizzes || []
+
+        // 중복 퀴즈 필터링
+        const newQuizzes = newQuizzesData.data.quizzes.filter(
+          (newQuiz) => !currentQuizzes.some((existingQuiz) => existingQuiz.id === newQuiz.id),
+        )
+
+        // 백그라운드 캐시 업데이트
+        backgroundQuizzesRef.current = newQuizzes
+      }
+    } catch (error) {
+      console.error('백그라운드 문제 가져오기 실패:', error)
+    } finally {
+      isBackgroundRefetchingRef.current = false
+    }
+  }
+
   const moveToNextQuiz = (quiz: Quiz) => {
-    setQuizzes((prev) => prev?.filter((q) => q.id !== quiz.id))
-    setQuizState((prev) => ({
-      ...prev,
-      status: 'idle',
-      selectedAnswer: null,
-    }))
+    // 전환 애니메이션 시작
+    setIsTransitioning(true)
+
+    // 애니메이션 완료 후 상태 업데이트 (깜빡임 방지)
+    setTimeout(() => {
+      setQuizzes((prev) => {
+        if (!prev) return prev
+
+        // 현재 문제를 제거한 후 남은 문제 수 확인
+        const remainingQuizzes = prev.filter((q) => q.id !== quiz.id)
+
+        // 남은 문제가 2개 이하일 경우 백그라운드에서 새 문제 가져오기
+        if (remainingQuizzes.length <= 2 && !isBackgroundRefetchingRef.current) {
+          fetchMoreQuizzesInBackground()
+        }
+
+        // 남은 문제가 1개이고 백그라운드 캐시에 문제가 있으면 병합
+        if (remainingQuizzes.length <= 1 && backgroundQuizzesRef.current.length > 0) {
+          return [...remainingQuizzes, ...backgroundQuizzesRef.current]
+        }
+
+        return remainingQuizzes
+      })
+
+      setQuizState((prev) => ({
+        ...prev,
+        status: 'idle',
+        selectedAnswer: null,
+      }))
+
+      // 전환 애니메이션 종료
+      setIsTransitioning(false)
+    }, 300) // 애니메이션 지속 시간과 일치시킴
   }
 
   const handleClickOption = ({ quiz, selectOption }: { quiz: Quiz; selectOption: string }) => {
@@ -113,8 +183,7 @@ const HomePage = () => {
     }, 700)
   }
 
-  const displayQuizzes = quizzes?.filter((quiz) => quiz.quizType === displayQuizType || displayQuizType === 'ALL')
-  const currQuiz = displayQuizzes?.[0]
+  const currQuiz = quizzes?.[0]
 
   const { setupMessaging, isReadyNotification } = useMessaging()
 
@@ -198,13 +267,20 @@ const HomePage = () => {
               drag="y"
               dragConstraints={{ top: 0, bottom: 0 }}
               dragElastic={0.6}
+              initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
               animate={{
+                opacity: 1,
+                x: 0,
                 y: isRefreshing ? pullDistance : 0,
               }}
               transition={{
-                type: 'spring',
-                stiffness: 400,
-                damping: 40,
+                opacity: { duration: 0.3 },
+                x: { duration: 0.3 },
+                y: {
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 40,
+                },
               }}
               onDrag={(_, info) => {
                 if (info.offset.y > 0) {
@@ -270,7 +346,7 @@ const HomePage = () => {
                         onClick={() =>
                           handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
                         }
-                        className="flex-1"
+                        className={cn('flex-1', quizState.status !== 'idle' && 'pointer-events-none')}
                       />
                     ))}
                   </div>
@@ -285,6 +361,7 @@ const HomePage = () => {
                         selectedOption={quizState.selectedAnswer}
                         animationDelay={index * 0.03}
                         onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
+                        className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
                       />
                     ))}
                   </div>
@@ -350,45 +427,12 @@ const HomePage = () => {
             <Text typo="h2" className="mt-4 text-center">
               연속 <span className="text-accent">{dailyQuizRecord?.consecutiveSolvedDailyQuizDays}일</span> 완료
             </Text>
-            <Text typo="subtitle-2-medium" color="sub" className="text-center mt-2">
-              매일 데일리 10문제를 풀면 별 5개를 받아요
-              <br />
-              5일 연속 완료할 때마다 20개!
+            <Text typo="body-1-medium" color="sub" className="mt-2 text-center">
+              <span className="text-accent">{dailyQuizRecord?.reward}개</span>의 별을 획득했어요!
             </Text>
-
-            <div className="mt-[32px] pt-[30px] border-t border-divider flex justify-around">
-              {(() => {
-                const boxes = [
-                  { threshold: 1, label: '5개', delay: 0.5 },
-                  { threshold: 2, label: '5개', delay: 0.6 },
-                  { threshold: 3, label: '5개', delay: 0.7 },
-                  { threshold: 4, label: '5개', delay: 0.8 },
-                  { threshold: 5, label: '20개', delay: 0.9 },
-                ]
-
-                if (!consecutiveSolvedDailyQuizDays) {
-                  return
-                }
-
-                return boxes.map((box) => (
-                  <div key={box.threshold} className="flex flex-col items-center gap-1">
-                    {box.threshold <= ((consecutiveSolvedDailyQuizDays - 1) % 5) + 1 ? (
-                      <Check delay={box.delay} />
-                    ) : (
-                      <UnCheck />
-                    )}
-                    <Text typo="body-1-bold" color="caption">
-                      {box.label}
-                    </Text>
-                  </div>
-                ))
-              })()}
+            <div className="mt-10 px-4">
+              <Button onClick={() => setRewardDrawerOpen(false)}>확인</Button>
             </div>
-          </div>
-        }
-        footer={
-          <div className="h-[144px] pt-[14px]">
-            <Button onClick={() => setRewardDrawerOpen(false)}>확인</Button>
           </div>
         }
       />

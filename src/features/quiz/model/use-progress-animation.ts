@@ -185,12 +185,16 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
   }
 
   /**
-   * 재설정 함수 - 진행률을 0으로 초기화
+   * 재설정 함수 - 진행률을 0으로 초기화하고 애니메이션 재시작
    */
   const reset = () => {
     setProgress(0)
     maxReachedProgressRef.current = 0
     stopAnimation()
+    // 애니메이션 재시작
+    setTimeout(() => {
+      startAnimation()
+    }, 0)
   }
 
   useEffect(() => {

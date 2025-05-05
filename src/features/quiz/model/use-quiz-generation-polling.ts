@@ -71,9 +71,11 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
     }
   }
 
+  const clearError = () => setError(null)
+
   // 문서 상태 확인 및 처리
   useEffect(() => {
-    if (!document) return
+    if (!document || documentId === 0) return
 
     // 문서 상태에 따라 처리
     if (document.quizGenerationStatus === 'PROCESSED') {
@@ -99,7 +101,7 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
       setError('퀴즈 생성에 실패했습니다.')
       stopPolling()
     }
-  }, [document])
+  }, [document, documentId])
 
   const startPolling = () => {
     // 폴링이 진행 중이면 중단
@@ -130,15 +132,18 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
 
   // 컴포넌트 언마운트 시 타이머 정리
   useEffect(() => {
-    startPolling()
+    if (documentId !== 0) {
+      startPolling()
+    }
 
     return () => {
       stopPolling()
     }
-  }, [])
+  }, [documentId])
 
   return {
     quizSetId,
     error,
+    clearError,
   }
 }
