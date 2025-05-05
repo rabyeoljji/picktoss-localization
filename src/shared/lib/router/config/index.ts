@@ -42,6 +42,8 @@ export const RouteConfig = {
     pathname: '/note/create',
     search: {
       documentType: 'TEXT' as 'TEXT' | 'FILE',
+      isLoading: false as boolean,
+      documentId: 0 as number,
     },
   },
 

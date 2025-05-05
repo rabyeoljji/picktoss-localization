@@ -1,21 +1,25 @@
 import { useProgressAnimation } from '@/features/quiz/model/use-progress-animation'
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
-import { QuizLoadingProgressBar } from '@/features/quiz/ui/quiz-loading-progress-bar'
+import QuizLoadingProgressBar from '@/features/quiz/ui/quiz-loading-progress-bar'
 
 import { ImgQuizEmpty, ImgQuizcard } from '@/shared/assets/images'
+import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
+import { useCreateNoteContext } from '../model/create-note-context'
+
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
-const QuizLoadingPage = () => {
-  const [params] = useQueryParam('/quiz-loading')
-  const { documentId, documentName, star } = params
-
+export const QuizLoadingDrawer = () => {
   const router = useRouter()
+  const { documentName, quizType } = useCreateNoteContext()
+
+  // 로딩 상태를 queryParam으로 관리
+  const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
 
   // 단계적 진행 타임라인 정의
   const progressTimeline = [
@@ -31,23 +35,32 @@ const QuizLoadingPage = () => {
   ]
 
   // 프로그레스 애니메이션 훅 사용
-  const { progress, complete: completeAnimation } = useProgressAnimation({
+  const {
+    progress,
+    complete: completeAnimation,
+    reset: resetProgressAnimation,
+  } = useProgressAnimation({
     timeline: progressTimeline,
     estimatedLoadingTime: ESTIMATED_LOADING_TIME,
   })
 
-  // 문서 퀴즈 상태 폴링 훅 사용
-  const { error, quizSetId } = useQuizGenerationPolling(documentId, {
+  // 문서 퀴즈 상태 폴링 훅 사용 (로딩 중일 때만 활성화)
+  const { error, quizSetId, clearError } = useQuizGenerationPolling(documentId, {
     pollingInterval: 2000,
     maxPollingCount: 60,
     autoCompleteTime: 70000,
   })
 
-  // 에러 발생 시 에러 화면 표시
-  if (error != null) {
-    return (
-      <div className="relative h-svh bg-surface-1">
-        <div className="center flex-center flex-col w-full px-[43px]">
+  // 로딩 상태 토글 함수
+  const toggleLoading = (state: boolean) => {
+    setParams((prev) => ({ ...prev, isLoading: state, documentId: state ? documentId : 0 }))
+  }
+
+  const renderQuizLoadingDrawerContent = () => {
+    // 에러 발생 시 에러 화면 표시
+    if (error != null) {
+      return (
+        <div className="px-[57px] w-full center">
           <div className="flex-center flex-col">
             <ImgQuizEmpty className="w-[120px]" />
             <Text typo="subtitle-1-bold" color="primary" className="mt-4">
@@ -72,23 +85,31 @@ const QuizLoadingPage = () => {
             </ul>
           </div>
 
-          <Button onClick={() => router.back()}>노트 수정하러 가기</Button>
+          <Button
+            onClick={() => {
+              toggleLoading(false)
+              clearError()
+              resetProgressAnimation()
+            }}
+          >
+            노트 수정하러 가기
+          </Button>
         </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  if (quizSetId != null) {
-    return (
-      <div className="relative h-svh bg-surface-1">
-        <div className="center flex-center flex-col w-full px-[43px]">
-          <ImgQuizcard className="w-[120px]" />
-          <Text typo="h4" color="primary" className="mt-4">
-            퀴즈 생성 완료!
-          </Text>
-          <Text typo="subtitle-2-medium" color="sub">
-            새로 생긴 문제를 지금 확인해보세요
-          </Text>
+    if (quizSetId != null) {
+      return (
+        <div className="px-[57px] w-full center">
+          <div className="flex-center flex-col">
+            <ImgQuizcard className="w-[120px]" />
+            <Text typo="h4" color="primary" className="mt-4">
+              퀴즈 생성 완료!
+            </Text>
+            <Text typo="subtitle-2-medium" color="sub">
+              새로 생긴 문제를 지금 확인해보세요
+            </Text>
+          </div>
 
           <div className="mt-10 w-full flex flex-col items-center">
             <Button
@@ -111,26 +132,35 @@ const QuizLoadingPage = () => {
             </TextButton>
           </div>
         </div>
+      )
+    }
+
+    return (
+      <div className="p-0">
+        <div className="border-b border-divider">
+          <div className="pt-[14px] pb-[2px] pl-[17px] pr-[18px] flex items-center gap-2.5">
+            <Text typo="subtitle-2-bold" color="primary">
+              {documentName}
+            </Text>
+            <Text typo="body-1-medium" color="sub">
+              {quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X'}
+            </Text>
+          </div>
+
+          <QuizLoadingProgressBar progressOverride={progress} text="내용을 읽고 있어요" />
+        </div>
       </div>
     )
   }
 
   return (
-    <div>
-      <div className="border-divider border">
-        <div className="pt-[14px] pb-[2px] pl-[17px] pr-[18px] flex items-center gap-2.5">
-          <Text typo="subtitle-2-bold" color="primary">
-            {documentName}
-          </Text>
-          <Text typo="body-1-medium" color="sub">
-            {star} 문제
-          </Text>
-        </div>
-
-        <QuizLoadingProgressBar progressOverride={progress} text="내용을 읽고 있어요" />
-      </div>
-    </div>
+    <AlertDrawer
+      open={isLoading}
+      onOpenChange={toggleLoading}
+      height="full"
+      hasClose={false}
+      body={renderQuizLoadingDrawerContent()}
+      contentClassName="bg-surface-1 p-0 rounded-t-none"
+    />
   )
 }
-
-export default QuizLoadingPage

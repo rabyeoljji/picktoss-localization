@@ -10,6 +10,7 @@ import { IcCheck, IcChevronDown, IcChevronUp } from '@/shared/assets/icon'
 import { ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/shared/components/ui/drawer'
+import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
@@ -133,7 +134,13 @@ export const CreateNoteDrawer = () => {
           <div className="pb-12 pt-[14px] mt-auto px-1">
             <Button
               variant="special"
-              onClick={handleCreateDocument}
+              onClick={() => {
+                handleCreateDocument({
+                  onSuccess: () => {
+                    setOpen(false)
+                  },
+                })
+              }}
               disabled={isPending}
               right={
                 <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
@@ -142,7 +149,7 @@ export const CreateNoteDrawer = () => {
                 </div>
               }
             >
-              완료
+              {isPending ? <Spinner /> : '완료'}
             </Button>
           </div>
         )}
