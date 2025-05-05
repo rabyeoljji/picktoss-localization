@@ -130,14 +130,6 @@ export const RouteConfig = {
       quizSetType: 'TODAY_QUIZ_SET' as QuizSetType,
     },
   },
-  quizLoading: {
-    pathname: '/quiz-loading',
-    search: {
-      documentId: 0 as number,
-      documentName: '' as string,
-      star: 0 as number,
-    },
-  },
   quizResult: {
     pathname: '/quiz-result',
     search: {
