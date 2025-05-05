@@ -58,7 +58,8 @@ export const Default: StoryObj<typeof ExploreQuizCard> = {
           activeIndex={0}
           header={
             <ExploreQuizCard.Header
-              owner={'picktoss'}
+              creator={'picktoss'}
+              isOwner={false}
               isBookmarked={false}
               onClickShare={() => {}}
               onClickBookmark={() => {}}
@@ -125,7 +126,43 @@ export const Bookmarked: StoryObj<typeof ExploreQuizCard> = {
           activeIndex={0}
           header={
             <ExploreQuizCard.Header
-              owner={'picktoss'}
+              creator={'picktoss'}
+              isOwner={false}
+              isBookmarked={true}
+              onClickShare={() => {}}
+              onClickBookmark={() => {}}
+            />
+          }
+          content={
+            <ExploreQuizCard.Content
+              emoji={'🪶'}
+              title={'인지주의 심리학 관련 퀴즈 모음'}
+              category={'IT·개발'}
+              playedCount={345}
+              bookmarkCount={28}
+            />
+          }
+          quizzes={
+            <ExploreQuizCard.Quizzes quizzes={quizzes} totalQuizCount={quizzes.length} onClickViewAllBtn={() => {}} />
+          }
+          footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
+        />
+      </div>
+    )
+  },
+}
+
+export const Owner: StoryObj<typeof ExploreQuizCard> = {
+  render: () => {
+    return (
+      <div className="p-10 flex-center">
+        <ExploreQuizCard
+          index={0}
+          activeIndex={0}
+          header={
+            <ExploreQuizCard.Header
+              creator={'picktoss'}
+              isOwner={true}
               isBookmarked={true}
               onClickShare={() => {}}
               onClickBookmark={() => {}}

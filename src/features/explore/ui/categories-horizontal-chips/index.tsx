@@ -22,12 +22,12 @@ const CategoriesHorizontalChips = ({ categories }: { categories?: Category[] }) 
 
     const handleWheel = (e: WheelEvent) => {
       if (e.deltaY !== 0) {
-        e.preventDefault() // ✅ preventDefault 이제 가능
+        e.preventDefault()
         el.scrollLeft += e.deltaY
       }
     }
 
-    el.addEventListener('wheel', handleWheel, { passive: false }) // ✅ 핵심
+    el.addEventListener('wheel', handleWheel, { passive: false })
 
     return () => {
       el.removeEventListener('wheel', handleWheel)

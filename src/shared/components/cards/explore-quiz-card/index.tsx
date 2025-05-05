@@ -1,11 +1,8 @@
 import React from 'react'
 
-import { GetAllQuizzesDto } from '@/entities/quiz/api'
-
 import { IcBookmark, IcBookmarkFilled, IcMy, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
 import { Button } from '@/shared/components/ui/button'
 import { ButtonSolidIcon } from '@/shared/components/ui/button-solid-icon'
-import HorizontalScrollContainer from '@/shared/components/ui/horizontal-scroll-container'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { cn } from '@/shared/lib/utils'
@@ -45,12 +42,14 @@ export const ExploreQuizCard = ({ index, activeIndex, header, content, quizzes, 
 }
 
 const ExploreQuizCardHeader = ({
-  owner,
+  creator,
+  isOwner,
   isBookmarked,
   onClickShare,
   onClickBookmark,
 }: {
-  owner: string
+  creator: string
+  isOwner: boolean
   isBookmarked: boolean
   onClickShare: () => void
   onClickBookmark: () => void
@@ -62,16 +61,18 @@ const ExploreQuizCardHeader = ({
           <IcMy className="size-[12px] text-icon-sub" />
         </div>
         <Text typo="body-1-medium" color="sub">
-          {owner}
+          {creator}
         </Text>
       </div>
       <div className="flex gap-[16px]">
         <ButtonSolidIcon onClick={onClickShare} variant={'tertiary'} size={'md'}>
           <IcUpload className="size-[20px]" />
         </ButtonSolidIcon>
-        <ButtonSolidIcon onClick={onClickBookmark} variant={'tertiary'} size={'md'}>
-          {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
-        </ButtonSolidIcon>
+        {!isOwner && (
+          <ButtonSolidIcon onClick={onClickBookmark} variant={'tertiary'} size={'md'}>
+            {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
+          </ButtonSolidIcon>
+        )}
       </div>
     </div>
   )
@@ -127,7 +128,7 @@ const ExploreQuizCardQuizzes = ({
 }: {
   totalQuizCount: number
   onClickViewAllBtn: () => void
-  quizzes: GetAllQuizzesDto[]
+  quizzes: { id: number; question: string }[]
 }) => {
   return (
     <div className="flex flex-col gap-[10px]">
@@ -144,11 +145,8 @@ const ExploreQuizCardQuizzes = ({
         </TextButton>
       </div>
 
-      <HorizontalScrollContainer
-        gap={8}
-        moveRatio={0.9}
-        paddingX={28}
-        items={quizzes.map((quiz, index) => (
+      <div className="flex gap-[8px] overflow-x-auto scrollbar-hide">
+        {quizzes.map((quiz, index) => (
           <div
             key={`quiz-${quiz.id}`}
             className={cn(
@@ -164,7 +162,7 @@ const ExploreQuizCardQuizzes = ({
             </Text>
           </div>
         ))}
-      />
+      </div>
     </div>
   )
 }

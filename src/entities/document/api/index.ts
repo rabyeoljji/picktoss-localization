@@ -100,9 +100,18 @@ export const getSingleDocument = async (documentId: number): Promise<GetSingleDo
   return response.data
 }
 
-// 사용자의 비공개된 문서 수
+// 사용자의 비공개된 모든 문서 가져오기
 export interface GetIsNotPublicDocumentsResponse {
-  documentCount: number
+  documents: [
+    {
+      id: number
+      name: string
+      emoji: string
+      previewContent: string
+      isPublic: boolean
+      totalQuizCount: number
+    },
+  ]
 }
 
 export const getIsNotPublicDocuments = async (): Promise<GetIsNotPublicDocumentsResponse> => {
@@ -142,11 +151,15 @@ export interface GetPublicDocumentsDto {
   id: number
   name: string
   emoji: string
+  creator: string
+  category: string
   previewContent: string
   tryCount: number
   bookmarkCount: number
   totalQuizCount: number
   isBookmarked: boolean
+  isOwner: boolean
+  quizzes: { id: number; question: string }[]
 }
 
 export interface GetPublicDocumentsResponse {
@@ -158,10 +171,12 @@ export interface GetPublicDocumentsResponse {
 export const getPublicDocuments = async (options?: {
   categoryId?: number
   page?: number
+  pageSize?: number
 }): Promise<GetPublicDocumentsResponse> => {
   const params: Record<string, string | number> = {}
   if (options?.categoryId) params['category-id'] = options.categoryId
   if (options?.page !== undefined) params['page'] = options.page
+  if (options?.pageSize !== undefined) params['page-size'] = options.pageSize
 
   const response = await client.get<GetPublicDocumentsResponse>(DOCUMENT_ENDPOINTS.getPublicDocuments, { params })
   return response.data

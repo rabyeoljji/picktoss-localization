@@ -33,7 +33,11 @@ const BookmarkHorizontalCardRight = ({ content }: { content: React.ReactNode }) 
 }
 
 const BookmarkHorizontalCardContent = ({ children }: { children: React.ReactNode }) => {
-  return <div className="ml-[12px] flex w-[calc(100%-55px-20px)] flex-col">{children}</div>
+  return (
+    <div style={{ width: 'calc(100% - 75px)' }} className="ml-[12px] flex w-[calc(100%-55px-20px)] flex-col">
+      {children}
+    </div>
+  )
 }
 
 const BookmarkHorizontalCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
