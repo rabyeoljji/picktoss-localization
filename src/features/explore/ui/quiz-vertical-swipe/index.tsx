@@ -1,47 +1,83 @@
 import { useEffect, useRef, useState } from 'react'
 
 import SwiperCore from 'swiper'
-import { Mousewheel } from 'swiper/modules'
+import { Mousewheel, Virtual } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
-import { GetAllQuizzesDto } from '@/entities/quiz/api'
+import { GetPublicDocumentsDto } from '@/entities/document/api'
+import { useGetPublicDocuments } from '@/entities/document/api/hooks'
 
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
-
-// mock
-const quizzes = [
-  {
-    id: 0,
-    name: 'picktoss',
-    question: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수인가요?',
-    answer: 'correct',
-    explanation: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수',
-    quizType: 'MIX_UP',
-  },
-  {
-    id: 1,
-    name: 'picktoss',
-    question: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수인가요?',
-    answer: 'correct',
-    explanation: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수',
-    quizType: 'MIX_UP',
-  },
-  {
-    id: 2,
-    name: 'picktoss',
-    question: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수인가요?',
-    answer: 'correct',
-    explanation: '데킬라의 주 원료는 멕시코 할리스코 주에 서식하는 옥수수',
-    quizType: 'MIX_UP',
-  },
-] as GetAllQuizzesDto[]
+import { useQueryParam } from '@/shared/lib/router'
 
 const QuizVerticalSwipe = () => {
+  const DATA_PER_PAGE = 10
+
+  const [categoryId] = useQueryParam('/explore', 'category')
+
+  const [fetchParams, setFetchParams] = useState({ categoryId, page: 0 })
+  const [documents, setDocuments] = useState<GetPublicDocumentsDto[]>([])
+  const [isFetching, setIsFetching] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const lastRequestedPageRef = useRef<number>(-1)
+
   const [activeIndex, setActiveIndex] = useState(0)
+
   const [safeAreaInsetTop, setSafeAreaInsetTop] = useState(0)
   const [isTopReached, setIsTopReached] = useState(false)
+
   const swiperRef = useRef<SwiperCore>(null)
   const swiperContainerRef = useRef<HTMLDivElement>(null)
+
+  const shouldFetch = categoryId !== undefined && fetchParams.page >= 0
+  const { data: publicData, isFetched } = useGetPublicDocuments({
+    ...fetchParams,
+    pageSize: DATA_PER_PAGE,
+    enabled: shouldFetch,
+  })
+
+  // 카테고리 변경 시 데이터 초기화
+  useEffect(() => {
+    setFetchParams({ categoryId, page: 0 })
+    setDocuments([])
+    setHasMore(true)
+    setIsFetching(true)
+    lastRequestedPageRef.current = -1
+  }, [categoryId])
+
+  // 초기 로딩 또는 page 변경 시 데이터 추가
+  useEffect(() => {
+    if (!isFetched) return
+
+    if (publicData?.documents?.length) {
+      setDocuments((prev) => [...prev, ...publicData.documents.filter((doc) => !prev.find((d) => d.id === doc.id))])
+
+      if (publicData.documents.length < DATA_PER_PAGE) {
+        setHasMore(false)
+      }
+    }
+
+    setIsFetching(false)
+  }, [publicData, isFetched])
+
+  // activeIndex가 마지막에서 2번째 카드에 도달했을 때 다음 페이지 가져오기
+  useEffect(() => {
+    const nextPage = fetchParams.page + 1
+
+    const shouldFetchNext =
+      documents.length > 0 &&
+      activeIndex === documents.length - 2 &&
+      !isFetching &&
+      documents.length < (publicData?.totalDocuments ?? Infinity) && // 서버 데이터를 이용한 마지막 페이지 감지
+      hasMore && // 프론트 측 마지막 페이지 감지 도구
+      lastRequestedPageRef.current < nextPage // 중복된 페이지 요청 방지
+
+    if (shouldFetchNext) {
+      setIsFetching(true)
+      lastRequestedPageRef.current = nextPage
+      setFetchParams((prev) => ({ ...prev, page: prev.page + 1 }))
+    }
+  }, [activeIndex, documents.length, isFetching, publicData])
 
   // root요소 스크롤 제어 + HOC에서 safe-area-inset-top을 계산하기 위해서 사용
   useEffect(() => {
@@ -110,37 +146,41 @@ const QuizVerticalSwipe = () => {
         cssMode={false}
         simulateTouch={true}
         touchStartPreventDefault={false}
-        modules={[Mousewheel]}
+        modules={[Mousewheel, Virtual]}
         onSwiper={(swiper) => (swiperRef.current = swiper)}
-        onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
+        onSlideChange={(swiper) => {
+          if (swiper.activeIndex !== activeIndex) {
+            setActiveIndex(swiper.activeIndex)
+          }
+        }}
         style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center' }}
       >
-        {Array.from({ length: 3 }).map((_, index) => (
-          <SwiperSlide key={index}>
+        {documents.map((document, index) => (
+          <SwiperSlide key={document.id} virtualIndex={index}>
             <ExploreQuizCard
               index={index}
               activeIndex={activeIndex}
               header={
                 <ExploreQuizCard.Header
-                  owner="picktoss"
-                  isBookmarked={false}
+                  creator={document.creator}
+                  isBookmarked={document.isBookmarked}
                   onClickShare={() => {}}
                   onClickBookmark={() => {}}
                 />
               }
               content={
                 <ExploreQuizCard.Content
-                  emoji="🪶"
-                  title="인지주의 심리학 관련 퀴즈 모음"
-                  category="IT·개발"
-                  playedCount={345}
-                  bookmarkCount={28}
+                  emoji={document.emoji}
+                  title={document.name}
+                  category={document.category}
+                  playedCount={document.tryCount}
+                  bookmarkCount={document.bookmarkCount}
                 />
               }
               quizzes={
                 <ExploreQuizCard.Quizzes
-                  quizzes={quizzes}
-                  totalQuizCount={quizzes.length}
+                  quizzes={document.quizzes}
+                  totalQuizCount={document.quizzes.length}
                   onClickViewAllBtn={() => {}}
                 />
               }

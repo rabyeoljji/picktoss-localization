@@ -7,6 +7,7 @@ import CategoriesHorizontalChips from '@/features/explore/ui/categories-horizont
 import QuizVerticalSwipe from '@/features/explore/ui/quiz-vertical-swipe'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
+import { useGetIsNotPublicDocuments } from '@/entities/document/api/hooks'
 
 import { IcChevronRight, IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
@@ -24,7 +25,10 @@ const exampleQuestions = [
 ]
 
 const ExplorePage = () => {
-  const { data } = useGetCategories()
+  const { data: categoryData } = useGetCategories()
+  const { data: notPublicDocumentsData } = useGetIsNotPublicDocuments()
+
+  const notPublicCount = notPublicDocumentsData?.documents.length ?? 0
 
   return (
     <>
@@ -76,26 +80,29 @@ const ExplorePage = () => {
             실시간 퀴즈
           </Text>
 
-          <CategoriesHorizontalChips categories={data} />
+          <CategoriesHorizontalChips categories={categoryData} />
 
-          <button
-            type="button"
-            className="self-stretch h-[48px] w-full min-w-28 px-[24px] py-[12px] mt-[8px] bg-transparent inline-flex justify-between items-center"
-          >
-            <div className="flex-1 flex items-center">
-              <div className="flex items-center gap-2">
-                <IcLibrary className="size-[20px] text-icon-accent" />
-                <Text typo="body-1-bold" color="secondary" className="w-fit shrink-0">
-                  공개할 수 있는 퀴즈가{' '}
-                  <Text as="span" typo="body-1-bold" color="accent">
-                    3개
-                  </Text>{' '}
-                  있어요
-                </Text>
+          {notPublicCount > 0 && (
+            <Link
+              to={'/explore/release'}
+              type="button"
+              className="self-stretch h-[48px] w-full min-w-28 px-[24px] py-[12px] mt-[8px] bg-transparent inline-flex justify-between items-center"
+            >
+              <div className="flex-1 flex items-center">
+                <div className="flex items-center gap-2">
+                  <IcLibrary className="size-[20px] text-icon-accent" />
+                  <Text typo="body-1-bold" color="secondary" className="w-fit shrink-0">
+                    공개할 수 있는 퀴즈가{' '}
+                    <Text as="span" typo="body-1-bold" color="accent">
+                      {notPublicCount}개
+                    </Text>{' '}
+                    있어요
+                  </Text>
+                </div>
               </div>
-            </div>
-            <IcChevronRight className="size-[16px] text-icon-secondary" />
-          </button>
+              <IcChevronRight className="size-[16px] text-icon-secondary" />
+            </Link>
+          )}
 
           <QuizVerticalSwipe />
         </div>

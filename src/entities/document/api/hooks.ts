@@ -133,12 +133,29 @@ export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' 
   })
 }
 
-export const useGetPublicDocuments = (options?: { categoryId?: number; page?: number }) => {
+export const useGetPublicDocuments = ({
+  categoryId,
+  page,
+  pageSize,
+  enabled,
+}: {
+  categoryId?: number
+  page?: number
+  pageSize?: number
+  enabled?: boolean
+}) => {
   return useQuery({
-    queryKey: [DOCUMENT_KEYS.getPublicDocuments, options?.categoryId, options?.page],
-    queryFn: () => getPublicDocuments(options),
+    queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId, page],
+    queryFn: () => getPublicDocuments({ categoryId, page, pageSize }),
+    enabled: enabled ?? true,
   })
 }
+// export const useGetPublicDocuments = (options?: { categoryId?: number; page?: number; pageSize?: number }) => {
+//   return useQuery({
+//     queryKey: [DOCUMENT_KEYS.getPublicDocuments, options?.categoryId, options?.page],
+//     queryFn: () => getPublicDocuments(options),
+//   })
+// }
 
 export const useGetPublicSingleDocument = (documentId: number) => {
   return useQuery({
