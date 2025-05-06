@@ -209,9 +209,16 @@ export const useCreateQuizSet = (documentId: number) => {
 }
 
 export const useUpdateDocumentIsPublic = (documentId: number) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
     mutationFn: (data: Parameters<typeof updateDocumentIsPublic>[1]) => updateDocumentIsPublic(documentId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getAllDocuments] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getSingleDocument(documentId)] })
+    },
   })
 }
 

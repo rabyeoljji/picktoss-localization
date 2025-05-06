@@ -34,7 +34,7 @@ import { cn } from '@/shared/lib/utils'
 /**
  * 퀴즈 세트 타입
  */
-export type QuizSetType = 'TODAY_QUIZ_SET' | 'DOCUMENT_QUIZ_SET' | 'COLLECTION_QUIZ_SET' | 'FIRST_QUIZ_SET'
+export type QuizSetType = 'DOCUMENT_QUIZ_SET' | 'EXPLORE_QUIZ_SET' | 'FIRST_QUIZ_SET'
 
 // 각 퀴즈 결과 저장을 위한 타입
 type QuizResult = {
