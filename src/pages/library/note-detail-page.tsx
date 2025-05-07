@@ -11,6 +11,7 @@ import { useGetSingleDocument, useUpdateDocumentEmoji, useUpdateDocumentName } f
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 import {
+  IcArrange,
   IcChange,
   IcChevronDown,
   IcChevronUp,
@@ -45,6 +46,7 @@ import { Slider } from '@/shared/components/ui/slider'
 import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
+import { TextButton } from '@/shared/components/ui/text-button'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -98,6 +100,21 @@ const NoteDetailPage = () => {
     }
   }, [])
 
+  useEffect(() => {
+    if (!document) return
+
+    const hasMultipleChoiceQuiz = document.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
+    const hasMixUpQuiz = document.quizzes.some((quiz) => quiz.quizType === 'MIX_UP')
+
+    if (hasMultipleChoiceQuiz && hasMixUpQuiz) {
+      setQuizType('ALL')
+    } else if (hasMultipleChoiceQuiz) {
+      setQuizType('MULTIPLE_CHOICE')
+    } else if (hasMixUpQuiz) {
+      setQuizType('MIX_UP')
+    }
+  }, [document, setQuizType])
+
   const handlePlay = (quizCount: number) => {
     createQuizSet(
       {
@@ -115,6 +132,12 @@ const NoteDetailPage = () => {
       },
     )
   }
+
+  const hasMultipleChoiceQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
+  const hasMixUpQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MIX_UP')
+
+  const quizzes =
+    quizType === 'ALL' ? document?.quizzes : document?.quizzes?.filter((quiz) => quiz.quizType === quizType)
 
   return (
     <div className="relative flex flex-col h-screen bg-base-1">
@@ -232,72 +255,73 @@ const NoteDetailPage = () => {
         </div>
 
         {/* 3. 탭 바 - sticky로 상단에 고정 */}
-        <div className="sticky top-0 z-40 bg-white flex">
-          <button
-            onClick={() => setQuizType('MULTIPLE_CHOICE')}
-            className={cn(
-              'flex-1 typo-subtitle-2-bold pt-[14px] pb-[10px] text-center',
-              quizType === 'MULTIPLE_CHOICE'
-                ? 'text-primary border-b-2 border-[#393B3D]'
-                : 'border-b border-divider text-sub',
+        <div className="sticky top-0 z-40 bg-white flex pl-2 pr-5 pt-[10px] pb-[6px] justify-between">
+          <div>
+            {hasMultipleChoiceQuiz && hasMixUpQuiz && (
+              <TextButton
+                className={cn(quizType === 'ALL' ? 'text-primary' : 'text-sub')}
+                onClick={() => setQuizType('ALL')}
+              >
+                전체
+              </TextButton>
             )}
-          >
-            객관식
-          </button>
-          <button
-            onClick={() => setQuizType('MIX_UP')}
-            className={cn(
-              'flex-1 typo-subtitle-2-bold pt-[14px] pb-[10px] text-center',
-              quizType === 'MIX_UP' ? 'text-primary border-b-2 border-[#393B3D]' : 'border-b border-divider text-sub',
+            {hasMultipleChoiceQuiz && (
+              <TextButton
+                className={cn(quizType === 'MULTIPLE_CHOICE' ? 'text-primary' : 'text-sub')}
+                onClick={() => setQuizType('MULTIPLE_CHOICE')}
+              >
+                객관식
+              </TextButton>
             )}
-          >
-            O/X
+            {hasMixUpQuiz && (
+              <TextButton
+                className={cn(quizType === 'MIX_UP' ? 'text-primary' : 'text-sub')}
+                onClick={() => setQuizType('MIX_UP')}
+              >
+                O/X
+              </TextButton>
+            )}
+          </div>
+          <button className="p-2">
+            <IcArrange className="size-4 text-icon-secondary" />
           </button>
         </div>
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2">
-          {quizType === 'MIX_UP' ? (
-            <div className="grid gap-2">
-              {document?.quizzes
-                ?.filter((quiz) => quiz.quizType === 'MIX_UP')
-                .map((quiz, index) => (
-                  <QuestionCard key={quiz.id}>
-                    <QuestionCard.Header order={index + 1} right={<div>...</div>} />
-                    <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                    <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
-                    <QuestionCard.Explanation
-                      open={!!explanationOpenStates[quiz.id]}
-                      onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
-                    >
-                      {quiz.explanation}
-                    </QuestionCard.Explanation>
-                  </QuestionCard>
-                ))}
-            </div>
-          ) : (
-            <div className="grid gap-2">
-              {document?.quizzes
-                ?.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
-                .map((quiz, index) => (
-                  <QuestionCard key={quiz.id}>
-                    <QuestionCard.Header order={index + 1} right={<div>...</div>} />
-                    <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                    <QuestionCard.Multiple
-                      options={quiz.options}
-                      answerIndex={quiz.options.indexOf(quiz.answer)}
-                      showAnswer={showAnswer}
-                    />
-                    <QuestionCard.Explanation
-                      open={!!explanationOpenStates[quiz.id]}
-                      onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
-                    >
-                      {quiz.explanation}
-                    </QuestionCard.Explanation>
-                  </QuestionCard>
-                ))}
-            </div>
-          )}
+          <div className="grid gap-2">
+            {quizzes?.map((quiz, index) =>
+              quiz.quizType === 'MIX_UP' ? (
+                <QuestionCard key={quiz.id}>
+                  <QuestionCard.Header order={index + 1} right={<div>...</div>} />
+                  <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                  <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
+                  <QuestionCard.Explanation
+                    open={!!explanationOpenStates[quiz.id]}
+                    onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                  >
+                    {quiz.explanation}
+                  </QuestionCard.Explanation>
+                </QuestionCard>
+              ) : (
+                <QuestionCard key={quiz.id}>
+                  <QuestionCard.Header order={index + 1} right={<div>...</div>} />
+                  <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                  <QuestionCard.Multiple
+                    options={quiz.options}
+                    answerIndex={quiz.options.indexOf(quiz.answer)}
+                    showAnswer={showAnswer}
+                  />
+                  <QuestionCard.Explanation
+                    open={!!explanationOpenStates[quiz.id]}
+                    onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                  >
+                    {quiz.explanation}
+                  </QuestionCard.Explanation>
+                </QuestionCard>
+              ),
+            )}
+          </div>
         </div>
 
         {/* 5. 하단 툴바 */}
@@ -323,7 +347,7 @@ const NoteDetailPage = () => {
                   <IcPlay className="size-6" />
                 </button>
               </DrawerTrigger>
-              <DrawerContent height="md">
+              <DrawerContent height="sm">
                 <div className="py-[20px]">
                   <Text typo="body-1-medium" color="sub" className="text-center">
                     풀 문제 수
