@@ -330,7 +330,7 @@ const ExploreDetailPage = () => {
             <DrawerTrigger asChild>
               <Button>퀴즈 시작하기</Button>
             </DrawerTrigger>
-            <DrawerContent height="md">
+            <DrawerContent height="sm">
               <div className="py-[20px]">
                 <Text typo="body-1-medium" color="sub" className="text-center">
                   풀 문제 수

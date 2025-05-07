@@ -82,19 +82,25 @@ function DialogCTA({
   onClick,
   hasClose = false,
   closeLabel = '닫기',
+  customButton,
   className,
 }: React.ComponentProps<'button'> & {
-  label: string
-  onClick: () => void
+  label?: string
+  onClick?: () => void
   hasClose?: boolean
   closeLabel?: string
+  customButton?: React.ReactNode
   className?: HTMLElement['className']
 }) {
   return (
     <div className="w-full">
-      <Button onClick={onClick} className={className}>
-        {label}
-      </Button>
+      {customButton ? (
+        customButton
+      ) : (
+        <Button onClick={onClick} className={className}>
+          {label}
+        </Button>
+      )}
       {hasClose && <DialogCloseTextButton label={closeLabel} />}
     </div>
   )

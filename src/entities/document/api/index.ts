@@ -204,6 +204,7 @@ export interface GetPublicSingleDocumentResponse {
   isBookmarked: boolean
   createdAt: string
   quizzes: GetPublicSingleDocumentQuizDto[]
+  isOwner: boolean
 }
 
 export const getPublicSingleDocument = async (documentId: number): Promise<GetPublicSingleDocumentResponse> => {

@@ -10,7 +10,7 @@ import { CreateDocumentPayload } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
-import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useQueryParam } from '@/shared/lib/router'
 
 export type DocumentType = CreateDocumentPayload['documentType']
 export type QuizType = CreateDocumentPayload['quizType']
@@ -68,8 +68,6 @@ const initialNoteState = {
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
 
 export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) => {
-  const router = useRouter()
-
   const [{ documentType }, setParams] = useQueryParam('/note/create')
   const prevDocumentTypeRef = useRef<DocumentType | null>(null) // 안정성을 위해 ref에 값 저장
 

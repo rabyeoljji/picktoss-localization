@@ -64,7 +64,7 @@ export const MultipleChoiceOption = ({
         </div>
       )}
 
-      <span className="typo-body-2 text-start flex-1">{option}</span>
+      <span className="typo-body-1-medium text-start flex-1">{option}</span>
     </motion.button>
   )
 }
