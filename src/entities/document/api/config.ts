@@ -83,7 +83,7 @@ export const DOCUMENT_KEYS = {
   bookmarkDocument: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.createDocumentBookmark(documentId)),
   createDocumentBookmark: (documentId: number) =>
     createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.createDocumentBookmark(documentId)),
-  addQuizzes: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.addQuizzes(documentId)),
+  addQuizzes: createKey(DOCUMENTS, 'addQuizzes'),
   createQuizSet: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.createQuizSet(documentId)),
   searchDocument: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.searchDocument),
   searchPublicDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.searchPublicDocuments),

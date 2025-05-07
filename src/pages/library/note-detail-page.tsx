@@ -9,7 +9,12 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { calculateStar } from '@/features/note/lib'
 
-import { useGetSingleDocument, useUpdateDocumentEmoji, useUpdateDocumentName } from '@/entities/document/api/hooks'
+import {
+  useAddQuizzes,
+  useGetSingleDocument,
+  useUpdateDocumentEmoji,
+  useUpdateDocumentName,
+} from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 import {
@@ -64,7 +69,7 @@ const NoteDetailPage = () => {
   const { data: document } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
-
+  console.log(document)
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
 
@@ -85,6 +90,8 @@ const NoteDetailPage = () => {
   const titleRef = useRef(null)
 
   const { mutate: createQuizSet, isPending: isCreatingQuizSet } = useCreateQuizSet(Number(noteId))
+
+  const { mutate: addQuizzes } = useAddQuizzes()
 
   useEffect(() => {
     const titleEl = titleRef.current
@@ -118,7 +125,7 @@ const NoteDetailPage = () => {
     } else if (hasMixUpQuiz) {
       setQuizType('MIX_UP')
     }
-  }, [document, setQuizType])
+  }, [document])
 
   const handlePlay = (quizCount: number) => {
     createQuizSet(
@@ -199,6 +206,7 @@ const NoteDetailPage = () => {
               typo="h3"
               className="mt-3 outline-none"
               contentEditable
+              suppressContentEditableWarning={true}
               onBlur={(e) => {
                 updateDocumentName({
                   documentId: Number(noteId),
@@ -264,7 +272,7 @@ const NoteDetailPage = () => {
           <div>
             {hasMultipleChoiceQuiz && hasMixUpQuiz && (
               <TextButton
-                className={cn(quizType === 'ALL' ? 'text-primary' : 'text-sub')}
+                className={cn('px-3 h-[32px]', quizType === 'ALL' ? 'text-primary' : 'text-sub')}
                 onClick={() => setQuizType('ALL')}
               >
                 전체
@@ -272,7 +280,7 @@ const NoteDetailPage = () => {
             )}
             {hasMultipleChoiceQuiz && (
               <TextButton
-                className={cn(quizType === 'MULTIPLE_CHOICE' ? 'text-primary' : 'text-sub')}
+                className={cn('px-3 h-[32px]', quizType === 'MULTIPLE_CHOICE' ? 'text-primary' : 'text-sub')}
                 onClick={() => setQuizType('MULTIPLE_CHOICE')}
               >
                 객관식
@@ -280,7 +288,7 @@ const NoteDetailPage = () => {
             )}
             {hasMixUpQuiz && (
               <TextButton
-                className={cn(quizType === 'MIX_UP' ? 'text-primary' : 'text-sub')}
+                className={cn('px-3 h-[32px]', quizType === 'MIX_UP' ? 'text-primary' : 'text-sub')}
                 onClick={() => setQuizType('MIX_UP')}
               >
                 O/X
@@ -294,8 +302,8 @@ const NoteDetailPage = () => {
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2">
-          {(hasMixUpQuiz && !hasMultipleChoiceQuiz) ||
-            (!hasMixUpQuiz && hasMultipleChoiceQuiz && (
+          {!hasMixUpQuiz ||
+            (!hasMultipleChoiceQuiz && (
               <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
                 <IcSparkle className="text-icon-accent size-4" />
                 <Text typo="body-1-bold">
@@ -341,6 +349,15 @@ const NoteDetailPage = () => {
                               <ImgStar className="size-[16px] mr-[4px]" />
                               <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
                             </div>
+                          }
+                          onClick={() =>
+                            addQuizzes({
+                              documentId: Number(noteId),
+                              data: {
+                                star: calculateStar(document?.content.length || 0),
+                                quizType: quizType === 'MIX_UP' ? 'MULTIPLE_CHOICE' : 'MIX_UP',
+                              },
+                            })
                           }
                         >
                           생성하기
@@ -489,6 +506,8 @@ const NoteDetailPage = () => {
           </DrawerContent>
         </Drawer>
       </HeaderOffsetLayout>
+
+      {/* <QuizLoadingDrawer /> */}
     </div>
   )
 }

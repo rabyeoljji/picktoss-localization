@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
+  CreateQuizzesRequest,
   GetSingleDocumentResponse,
   UpdateDocumentContentRequest,
   UpdateDocumentEmojiRequest,
@@ -56,10 +57,11 @@ export const useGetSingleDocument = (documentId: number) => {
   })
 }
 
-export const useAddQuizzes = (documentId: number) => {
+export const useAddQuizzes = () => {
   return useMutation({
-    mutationKey: DOCUMENT_KEYS.addQuizzes(documentId),
-    mutationFn: (data: Parameters<typeof addQuizzes>[1]) => addQuizzes(documentId, data),
+    mutationKey: DOCUMENT_KEYS.addQuizzes,
+    mutationFn: ({ documentId, data }: { documentId: number; data: CreateQuizzesRequest }) =>
+      addQuizzes(documentId, data),
   })
 }
 
@@ -235,16 +237,9 @@ export const useCreateQuizSet = (documentId: number) => {
 }
 
 export const useUpdateDocumentIsPublic = (documentId: number) => {
-  const queryClient = useQueryClient()
-
   return useMutation({
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
     mutationFn: (data: Parameters<typeof updateDocumentIsPublic>[1]) => updateDocumentIsPublic(documentId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getAllDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getSingleDocument(documentId)] })
-    },
   })
 }
 
