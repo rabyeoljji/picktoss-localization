@@ -6,7 +6,7 @@ import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useGetSingleDocument } from '@/entities/document/api/hooks'
+import { useGetSingleDocument, useUpdateDocumentEmoji, useUpdateDocumentName } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 import { IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcReview, IcUpload } from '@/shared/assets/icon'
@@ -42,10 +42,12 @@ const NoteDetailPage = () => {
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
   const [showAnswer, setShowAnswer] = useQueryParam('/library/:noteId', 'showAnswer')
-  const { data: document } = useGetSingleDocument(noteId ? Number(noteId) : -1)
+  const { data: document } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
-  const [emoji, setEmoji] = useState('😍')
+
+  const { mutate: updateDocumentName } = useUpdateDocumentName()
+  const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
 
   const [selectedQuizCount, setSelectedQuizCount] = useState(0)
   useEffect(() => {
@@ -130,14 +132,17 @@ const NoteDetailPage = () => {
               onClick={() => setShowEmojiPicker((prev) => !prev)}
               className="typo-h1 flex-center size-[48px]"
             >
-              {emoji}
+              {document?.emoji}
             </button>
             {showEmojiPicker && (
               <div className="absolute top-full bg-base-1 z-50 left-0 mt-1">
                 <EmojiPicker
                   onEmojiClick={(data) => {
-                    setEmoji(data.emoji)
                     setShowEmojiPicker(false)
+                    updateDocumentEmoji({
+                      documentId: Number(noteId),
+                      data: { emoji: data.emoji },
+                    })
                   }}
                   theme={Theme.LIGHT}
                   width={300}
@@ -147,7 +152,18 @@ const NoteDetailPage = () => {
             )}
           </div>
           {/* 제목 요소에 ref 추가 */}
-          <Text ref={titleRef} typo="h3" className="mt-3">
+          <Text
+            ref={titleRef}
+            typo="h3"
+            className="mt-3 outline-none"
+            contentEditable
+            onBlur={(e) => {
+              updateDocumentName({
+                documentId: Number(noteId),
+                data: { name: (e.target as unknown as HTMLDivElement).innerText.trim() || document?.name || '' },
+              })
+            }}
+          >
             {document?.name ?? 'Loading...'}
           </Text>
           <div className="mt-2">

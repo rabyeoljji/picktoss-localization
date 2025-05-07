@@ -2,6 +2,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
+  GetSingleDocumentResponse,
+  UpdateDocumentContentRequest,
+  UpdateDocumentEmojiRequest,
+  UpdateDocumentNameRequest,
   addQuizzes,
   createDocument,
   createDocumentBookmark,
@@ -49,7 +53,6 @@ export const useGetSingleDocument = (documentId: number) => {
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
-    enabled: !!documentId,
   })
 }
 
@@ -91,17 +94,40 @@ export const useDownloadQuiz = (documentId: number) => {
   })
 }
 
-export const useUpdateDocumentName = (documentId: number) => {
+export const useUpdateDocumentName = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationKey: DOCUMENT_KEYS.updateDocumentName(documentId),
-    mutationFn: (data: Parameters<typeof updateDocumentName>[1]) => updateDocumentName(documentId, data),
+    mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentNameRequest }) =>
+      updateDocumentName(documentId, data),
+    onMutate: ({ documentId, data }) => {
+      queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), (oldData: Document) => ({
+        ...oldData,
+        name: data.name,
+      }))
+    },
+    onSuccess: (_, { documentId }) => {
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
+    },
   })
 }
 
-export const useUpdateDocumentContent = (documentId: number) => {
+export const useUpdateDocumentContent = () => {
+  const queryClient = useQueryClient()
   return useMutation({
-    mutationKey: DOCUMENT_KEYS.updateDocumentContent(documentId),
-    mutationFn: (data: Parameters<typeof updateDocumentContent>[1]) => updateDocumentContent(documentId, data),
+    mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentContentRequest }) =>
+      updateDocumentContent(documentId, data),
+    onMutate: ({ documentId, data }) => {
+      queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), (oldData: Document) => ({
+        ...oldData,
+        content: data.file,
+      }))
+    },
+    onSuccess: (_, { documentId }) => {
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
+    },
   })
 }
 
@@ -215,10 +241,35 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
   })
 }
 
-export const useUpdateDocumentEmoji = (documentId: number) => {
+export const useUpdateDocumentEmoji = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationKey: DOCUMENT_KEYS.updateDocumentEmoji(documentId),
-    mutationFn: (data: Parameters<typeof updateDocumentEmoji>[1]) => updateDocumentEmoji(documentId, data),
+    mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentEmojiRequest }) =>
+      updateDocumentEmoji(documentId, data),
+    onMutate: async ({ documentId, data }) => {
+      await queryClient.cancelQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+
+      const previousData = queryClient.getQueryData(
+        DOCUMENT_KEYS.getSingleDocument(documentId),
+      ) as GetSingleDocumentResponse
+
+      queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), {
+        ...previousData,
+        emoji: data.emoji,
+      })
+
+      return { previousData, documentId }
+    },
+    onError: (_, { documentId }, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), context.previousData)
+      }
+    },
+    onSuccess: (_, { documentId }) => {
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
+    },
   })
 }
 
