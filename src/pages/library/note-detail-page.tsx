@@ -59,6 +59,7 @@ const NoteDetailPage = () => {
   const emojiPickerRef = useRef<HTMLDivElement>(null)
 
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
+  const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
@@ -71,8 +72,6 @@ const NoteDetailPage = () => {
   }, [document])
 
   const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
-
-  const [isContentDrawerOpen, setIsContentDrawerOpen] = useState(false)
 
   // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
   const [showTitleInHeader, setShowTitleInHeader] = useState(false)
@@ -183,9 +182,9 @@ const NoteDetailPage = () => {
             </Text>
             <button onClick={() => setDetailInfoOpen((prev) => !prev)} className="p-1">
               {detailInfoOpen ? (
-                <IcChevronDown className="text-icon-secondary" />
-              ) : (
                 <IcChevronUp className="text-icon-secondary" />
+              ) : (
+                <IcChevronDown className="text-icon-secondary" />
               )}
             </button>
           </div>
@@ -215,7 +214,10 @@ const NoteDetailPage = () => {
                   <Text typo="body-1-regular" color="gray-600" className="mt-2 line-clamp-3">
                     {document?.content}
                   </Text>
-                  <button className="typo-body-1-regular w-[120px] bg-base-1 absolute bottom-0 right-0 text-start">
+                  <button
+                    className="typo-body-1-regular w-[120px] bg-base-1 absolute bottom-0 right-0 text-start"
+                    onClick={() => setContentDrawerOpen(true)}
+                  >
                     ...<span className="text-blue-500">더보기</span>
                   </button>
                 </div>
@@ -224,7 +226,7 @@ const NoteDetailPage = () => {
           </AnimatePresence>
           <div className="mt-2">
             <Text typo="body-1-medium" color="sub">
-              2025.05.28 · {document?.quizzes?.length}문제 · 공개됨
+              {document?.createdAt.split('T')[0].split('-').join('.')} · {document?.quizzes?.length}문제 · 공개됨
             </Text>
           </div>
         </div>
@@ -361,7 +363,7 @@ const NoteDetailPage = () => {
             <button className="p-2">
               <IcReview className="size-6" />
             </button>
-            <button className="p-2">
+            <button className="p-2" onClick={() => setContentDrawerOpen(true)}>
               <IcNote className="size-6" />
             </button>
             <DropdownMenu>
@@ -370,9 +372,6 @@ const NoteDetailPage = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="-translate-y-2">
                 <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>
-                <DropdownMenuItem right={<IcNote />} onClick={() => setIsContentDrawerOpen(true)}>
-                  원본 노트 보기
-                </DropdownMenuItem>
                 <DropdownMenuItem className="text-red-500" right={<IcDelete className="text-icon-critical" />}>
                   문서 전체 삭제
                 </DropdownMenuItem>
@@ -381,12 +380,15 @@ const NoteDetailPage = () => {
           </div>
         </div>
 
+        {/* TODO: Markdown Viewer */}
         {/* 6. 원본 노트 drawer */}
-        <Drawer open={isContentDrawerOpen} onOpenChange={setIsContentDrawerOpen}>
+        <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
           <DrawerContent height="full">
             <DrawerHeader>
               <DrawerTitle>원본 노트</DrawerTitle>
-              <DrawerDescription>2025.03.28 등록 / {document?.content?.length}자</DrawerDescription>
+              <DrawerDescription>
+                {document?.createdAt.split('T')[0].split('-').join('.')} 등록 / {document?.content?.length}자
+              </DrawerDescription>
             </DrawerHeader>
             <div className="mt-5 flex-1 overflow-y-scroll pb-10">
               <p>{document?.content}</p>
