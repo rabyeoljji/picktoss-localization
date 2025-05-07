@@ -10,6 +10,8 @@ import NoteCreatePageFile from '@/features/note/ui/note-create-page-file'
 import { NoteCreateWrite } from '@/features/note/ui/note-create-write'
 import { QuizLoadingDrawer } from '@/features/note/ui/quiz-loading-drawer'
 
+import { useUser } from '@/entities/member/api/hooks'
+
 import { IcInfo } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
@@ -55,6 +57,7 @@ const NoteCreateHeader = () => {
 const NoteCreateContent = () => {
   const { documentType, content, checkDrawerTriggerActivate } = useCreateNoteContext()
   const { isKeyboardVisible } = useKeyboard()
+  const { data: user } = useUser()
 
   return (
     <div className="flex flex-col relative bg-base-1 h-full">
@@ -78,7 +81,7 @@ const NoteCreateContent = () => {
                   사용 가능 별
                 </Text>
                 <Text typo="subtitle-2-bold" color="primary">
-                  1,123개
+                  {user?.star.toLocaleString('ko-kr')}개
                 </Text>
               </div>
               <div className="flex-1">
