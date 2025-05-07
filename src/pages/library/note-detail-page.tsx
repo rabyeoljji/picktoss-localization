@@ -156,7 +156,7 @@ const NoteDetailPage = () => {
       <Header
         left={<BackButton />}
         content={
-          <div className={cn('flex items-center w-full', showTitleInHeader ? 'justify-between' : 'justify-end')}>
+          <div className={cn('flex items-center w-full pr-4', showTitleInHeader ? 'justify-between' : 'justify-end')}>
             {showTitleInHeader && (
               <Text typo="subtitle-2-medium" className="ml-2 text-ellipsis overflow-hidden whitespace-nowrap">
                 {document?.name}
@@ -170,7 +170,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
+      <HeaderOffsetLayout className="flex-1 overflow-auto">
         <div className="px-4 pb-6">
           <div ref={emojiPickerRef} className="relative">
             <button
