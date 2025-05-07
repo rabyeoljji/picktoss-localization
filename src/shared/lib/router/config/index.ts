@@ -165,6 +165,9 @@ export const RouteConfig = {
   },
   exploreDetail: {
     pathname: '/explore/detail/:noteId',
+    search: {
+      quizType: 'ALL' as 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE',
+    },
   },
   exploreComplain: {
     pathname: '/explore/complain/:noteId',

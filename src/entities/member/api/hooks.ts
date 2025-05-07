@@ -13,7 +13,7 @@ import {
   updateQuizNotification,
 } from './index'
 
-export const useGetMemberInfo = () => {
+export const useUser = () => {
   return useQuery({
     queryKey: MEMBER_KEYS.getMemberInfo,
     queryFn: () => getMemberInfo(),

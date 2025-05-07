@@ -5,6 +5,7 @@ import QuizLoadingProgressBar from '@/features/quiz/ui/quiz-loading-progress-bar
 import { ImgQuizEmpty, ImgQuizcard } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Button } from '@/shared/components/ui/button'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
@@ -149,6 +150,8 @@ export const QuizLoadingDrawer = () => {
 
           <QuizLoadingProgressBar progressOverride={progress} text="내용을 읽고 있어요" />
         </div>
+
+        <Loading size="small" className="center" />
       </div>
     )
   }

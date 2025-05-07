@@ -61,6 +61,7 @@ export const DOCUMENT_ENDPOINTS = {
 }
 
 export const DOCUMENT_KEYS = {
+  root: createKey(DOCUMENTS),
   // GET
   getAllDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getAllDocuments),
   getSingleDocument: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getSingleDocument(documentId)),
@@ -90,8 +91,6 @@ export const DOCUMENT_KEYS = {
   // PATCH
   updateDocumentIsPublic: (documentId: number) =>
     createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.updateDocumentIsPublic(documentId)),
-  updateDocumentName: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.updateDocumentName(documentId)),
-  updateDocumentEmoji: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.updateDocumentEmoji(documentId)),
   updateDocumentContent: (documentId: number) =>
     createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.updateDocumentContent(documentId)),
   updateDocumentCategory: (documentId: number) =>
