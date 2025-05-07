@@ -170,7 +170,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto">
+      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
         <div className="px-4 pb-6">
           <div ref={emojiPickerRef} className="relative">
             <button
@@ -406,90 +406,6 @@ const NoteDetailPage = () => {
           </div>
         </div>
 
-        {/* 5. 하단 툴바 */}
-        <div className="absolute bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-md flex items-center rounded-[16px]">
-          <div className="flex items-center gap-2 shrink-0">
-            <Text typo="body-2-bold" color="sub">
-              정답
-            </Text>
-            <Switch
-              checked={showAnswer}
-              onCheckedChange={(checked) => {
-                setShowAnswer(checked)
-              }}
-            />
-          </div>
-
-          <div className="h-[24px] w-px bg-gray-100 mx-[16px] shrink-0" />
-
-          <div className="flex items-center text-icon-secondary">
-            <Drawer>
-              <DrawerTrigger asChild>
-                <button className="p-2">
-                  <IcPlay className="size-6" />
-                </button>
-              </DrawerTrigger>
-              <DrawerContent height="sm">
-                <div className="py-[20px]">
-                  <Text typo="body-1-medium" color="sub" className="text-center">
-                    풀 문제 수
-                  </Text>
-                  <Text typo="h2" color="accent" className="mt-1 text-center">
-                    {selectedQuizCount} 문제
-                  </Text>
-                  {document && (
-                    <div className="mt-[32px]">
-                      <Slider
-                        min={1}
-                        max={document.quizzes.length}
-                        step={1}
-                        defaultValue={[document.quizzes.length]}
-                        value={[selectedQuizCount]}
-                        onValueChange={(value) => setSelectedQuizCount(value[0])}
-                      />
-                      <div className="mt-[12px] flex items-center justify-between">
-                        <Text typo="body-2-medium" color="sub">
-                          1 문제
-                        </Text>
-                        <Text typo="body-2-medium" color="sub">
-                          {document.quizzes.length} 문제
-                        </Text>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <DrawerFooter className="h-[114px]">
-                  <Button
-                    onClick={() => handlePlay(selectedQuizCount)}
-                    className="mt-[14px]"
-                    disabled={isCreatingQuizSet}
-                  >
-                    {isCreatingQuizSet ? <Spinner className="size-6" /> : '퀴즈 시작하기'}
-                  </Button>
-                </DrawerFooter>
-              </DrawerContent>
-            </Drawer>
-            <button className="p-2">
-              <IcReview className="size-6" />
-            </button>
-            <button className="p-2" onClick={() => setContentDrawerOpen(true)}>
-              <IcNote className="size-6" />
-            </button>
-            <DropdownMenu>
-              <DropdownMenuTrigger className="p-2">
-                <IcKebab className="size-6" />
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="-translate-y-2">
-                <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>
-                <DropdownMenuItem className="text-red-500" right={<IcDelete className="text-icon-critical" />}>
-                  문서 전체 삭제
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-
         {/* TODO: Markdown Viewer */}
         {/* 6. 원본 노트 drawer */}
         <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
@@ -506,6 +422,90 @@ const NoteDetailPage = () => {
           </DrawerContent>
         </Drawer>
       </HeaderOffsetLayout>
+
+      {/* 5. 하단 툴바 */}
+      <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-md flex items-center rounded-[16px]">
+        <div className="flex items-center gap-2 shrink-0">
+          <Text typo="body-2-bold" color="sub">
+            정답
+          </Text>
+          <Switch
+            checked={showAnswer}
+            onCheckedChange={(checked) => {
+              setShowAnswer(checked)
+            }}
+          />
+        </div>
+
+        <div className="h-[24px] w-px bg-gray-100 mx-[16px] shrink-0" />
+
+        <div className="flex items-center text-icon-secondary">
+          <Drawer>
+            <DrawerTrigger asChild>
+              <button className="p-2">
+                <IcPlay className="size-6" />
+              </button>
+            </DrawerTrigger>
+            <DrawerContent height="sm">
+              <div className="py-[20px]">
+                <Text typo="body-1-medium" color="sub" className="text-center">
+                  풀 문제 수
+                </Text>
+                <Text typo="h2" color="accent" className="mt-1 text-center">
+                  {selectedQuizCount} 문제
+                </Text>
+                {document && (
+                  <div className="mt-[32px]">
+                    <Slider
+                      min={1}
+                      max={document.quizzes.length}
+                      step={1}
+                      defaultValue={[document.quizzes.length]}
+                      value={[selectedQuizCount]}
+                      onValueChange={(value) => setSelectedQuizCount(value[0])}
+                    />
+                    <div className="mt-[12px] flex items-center justify-between">
+                      <Text typo="body-2-medium" color="sub">
+                        1 문제
+                      </Text>
+                      <Text typo="body-2-medium" color="sub">
+                        {document.quizzes.length} 문제
+                      </Text>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              <DrawerFooter className="h-[114px]">
+                <Button
+                  onClick={() => handlePlay(selectedQuizCount)}
+                  className="mt-[14px]"
+                  disabled={isCreatingQuizSet}
+                >
+                  {isCreatingQuizSet ? <Spinner className="size-6" /> : '퀴즈 시작하기'}
+                </Button>
+              </DrawerFooter>
+            </DrawerContent>
+          </Drawer>
+          <button className="p-2">
+            <IcReview className="size-6" />
+          </button>
+          <button className="p-2" onClick={() => setContentDrawerOpen(true)}>
+            <IcNote className="size-6" />
+          </button>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="p-2">
+              <IcKebab className="size-6" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="-translate-y-2">
+              <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>
+              <DropdownMenuItem className="text-red-500" right={<IcDelete className="text-icon-critical" />}>
+                문서 전체 삭제
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
       {/* <QuizLoadingDrawer /> */}
     </div>
