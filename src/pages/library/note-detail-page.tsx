@@ -7,6 +7,8 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import { calculateStar } from '@/features/note/lib'
+
 import { useGetSingleDocument, useUpdateDocumentEmoji, useUpdateDocumentName } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
@@ -21,12 +23,15 @@ import {
   IcNote,
   IcPlay,
   IcReview,
+  IcSparkle,
   IcUpload,
 } from '@/shared/assets/icon'
+import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
+import { Dialog, DialogCTA, DialogContent, DialogTrigger } from '@/shared/components/ui/dialog'
 import {
   Drawer,
   DrawerContent,
@@ -289,6 +294,66 @@ const NoteDetailPage = () => {
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2">
+          {(hasMixUpQuiz && !hasMultipleChoiceQuiz) ||
+            (!hasMixUpQuiz && hasMultipleChoiceQuiz && (
+              <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
+                <IcSparkle className="text-icon-accent size-4" />
+                <Text typo="body-1-bold">
+                  {quizType === 'MIX_UP' ? (
+                    <span className="text-accent">객관식</span>
+                  ) : (
+                    <span className="text-accent">O/X</span>
+                  )}{' '}
+                  퀴즈도 풀어보고 싶다면?
+                </Text>
+
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button size="xs" variant="secondary1" className="ml-auto">
+                      생성하기
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <div className="flex-center flex-col text-center gap-4 mb-[32px]">
+                      <div className="h-[120px] flex-center">
+                        {quizType === 'MIX_UP' ? (
+                          <ImgMultiple className="w-[99px]" />
+                        ) : (
+                          <ImgOx className="w-[106.6px]" />
+                        )}
+                      </div>
+                      <div className="grid gap-2">
+                        <Text typo="h4" color="primary">
+                          {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
+                        </Text>
+                        <Text typo="subtitle-2-medium" color="sub">
+                          이 유형의 문제를 생성할까요?
+                        </Text>
+                      </div>
+                    </div>
+
+                    <DialogCTA
+                      customButton={
+                        <Button
+                          variant="special"
+                          right={
+                            <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                              <ImgStar className="size-[16px] mr-[4px]" />
+                              <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
+                            </div>
+                          }
+                        >
+                          생성하기
+                        </Button>
+                      }
+                      hasClose
+                      closeLabel="취소"
+                    />
+                  </DialogContent>
+                </Dialog>
+              </div>
+            ))}
+
           <div className="grid gap-2">
             {quizzes?.map((quiz, index) =>
               quiz.quizType === 'MIX_UP' ? (
