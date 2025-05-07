@@ -138,7 +138,7 @@ const ExploreDetailPage = () => {
               <button className="size-[40px] flex-center">
                 <IcUpload className="size-[24px]" />
               </button>
-              {document?.isOwner && (
+              {!document?.isOwner && (
                 <button onClick={handleBookmark} className="size-[40px] flex-center">
                   {document?.isBookmarked ? (
                     <IcBookmarkFilled className="size-[24px]" />
@@ -235,7 +235,6 @@ const ExploreDetailPage = () => {
 
           <Text typo="body-1-medium" color="sub" className="flex items-center">
             {format(new Date(document?.createdAt ?? defaultDateString), 'yyyy.M.d')} 작성
-            {/* {document?.createdAt.split('T')[0].split('-').join('.')}{' '} */}
             <div className="inline-block size-[4px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />{' '}
             {document?.quizzes?.length} 문제
           </Text>
