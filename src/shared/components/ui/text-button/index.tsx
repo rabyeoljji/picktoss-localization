@@ -6,11 +6,11 @@ import { type VariantProps, cva } from 'class-variance-authority'
 import { cn } from '@/shared/lib/utils'
 
 const textButtonVariants = cva(
-  "inline-flex items-center w-fit cursor-pointer justify-center whitespace-nowrap disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
+  "inline-flex items-center w-fit cursor-pointer justify-center whitespace-nowrap disabled:pointer-events-none disabled:text-gray-200 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none",
   {
     variants: {
       variant: {
-        secondary: 'text-gray-700',
+        secondary: 'text-gray-900',
         primary: 'text-orange-500',
         critical: 'text-red-500',
         sub: 'text-gray-300',

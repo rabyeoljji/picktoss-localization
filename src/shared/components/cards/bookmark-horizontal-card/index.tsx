@@ -15,7 +15,7 @@ export const BookmarkHorizontalCard = ({ children, className }: Props) => {
         className,
       )}
     >
-      <div className="relative flex h-full max-w-full items-center rounded-[16px]">{children}</div>
+      <div className="relative flex h-full w-full items-center rounded-[16px]">{children}</div>
     </div>
   )
 }
