@@ -181,7 +181,12 @@ const ExploreDetailPage = () => {
                     </>
                   ) : (
                     <DropdownMenuItem
-                      onClick={() => router.push('/explore/complain/:noteId', { params: [String(noteId)] })}
+                      onClick={() =>
+                        router.push('/explore/complain/:noteId', {
+                          params: [String(noteId)],
+                          search: { name: document?.name },
+                        })
+                      }
                       className="cursor-pointer"
                     >
                       퀴즈 신고

@@ -282,7 +282,7 @@ export const searchPublicDocuments = async (data: SearchRequest): Promise<Search
 // 문서 신고하기
 export interface CreateDocumentComplaintRequest {
   files?: File[]
-  content: string
+  content?: string
   complaintReason: 'OFF_TOPIC' | 'HARMFUL_CONTENT' | 'DEFAMATION_OR_COPYRIGHT' | 'PROFANITY_OR_HATE_SPEECH'
 }
 
@@ -296,7 +296,9 @@ export const createDocumentComplaint = async (
       formData.append('files', file)
     })
   }
-  formData.append('content', data.content)
+  if (data.content) {
+    formData.append('content', data.content)
+  }
   formData.append('complaintReason', data.complaintReason)
 
   const response = await client.post<void>(DOCUMENT_ENDPOINTS.createDocumentComplaint(documentId), formData, {

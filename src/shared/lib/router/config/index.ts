@@ -171,6 +171,9 @@ export const RouteConfig = {
   },
   exploreComplain: {
     pathname: '/explore/complain/:noteId',
+    search: {
+      name: '' as string,
+    },
   },
   exploreSearch: {
     pathname: '/explore/search',
