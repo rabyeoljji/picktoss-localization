@@ -17,13 +17,7 @@ import {
 import { FeedbackCompletePage } from '@/pages/account/feedback-complete-page'
 import FeedbackPage from '@/pages/account/feedback-page'
 import { LoginPage } from '@/pages/auth'
-import {
-  ExploreComplainPage,
-  ExploreDetailPage,
-  ExplorePage,
-  ExploreQuizPage,
-  ExploreSearchPage,
-} from '@/pages/explore'
+import { ExploreComplainPage, ExploreDetailPage, ExplorePage, ExploreSearchPage } from '@/pages/explore'
 import ExploreReleasePage from '@/pages/explore/explore-release-page'
 import HomePage from '@/pages/home-page'
 import { InstallGuidePage } from '@/pages/install-guide-page'
@@ -100,9 +94,8 @@ export const AppRouter = () => {
             {/* Explore */}
             <Route path={RoutePath.explore}>
               <Route index element={<ExplorePage />} />
-              <Route path={RoutePath.exploreQuiz} element={<ExploreQuizPage />} />
-              <Route path={RoutePath.exploreQuizDetail} element={<ExploreDetailPage />} />
-              <Route path={RoutePath.exploreQuizComplain} element={<ExploreComplainPage />} />
+              <Route path={RoutePath.exploreDetail} element={<ExploreDetailPage />} />
+              <Route path={RoutePath.exploreComplain} element={<ExploreComplainPage />} />
               <Route path={RoutePath.exploreRelease} element={<ExploreReleasePage />} />
               <Route path={RoutePath.exploreSearch} element={<ExploreSearchPage />} />
             </Route>

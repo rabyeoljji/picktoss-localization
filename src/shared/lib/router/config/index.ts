@@ -127,7 +127,7 @@ export const RouteConfig = {
       selectedOption: null as string | null,
       hideTimeSpent: true as boolean,
       autoNext: true as boolean,
-      quizSetType: 'TODAY_QUIZ_SET' as QuizSetType,
+      quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType,
     },
   },
   quizResult: {
@@ -163,14 +163,14 @@ export const RouteConfig = {
   exploreRelease: {
     pathname: '/explore/release',
   },
-  exploreQuiz: {
-    pathname: '/explore/quiz/:noteId',
+  exploreDetail: {
+    pathname: '/explore/detail/:noteId',
+    search: {
+      quizType: 'ALL' as 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE',
+    },
   },
-  exploreQuizDetail: {
-    pathname: '/explore/quiz/detail/:noteId',
-  },
-  exploreQuizComplain: {
-    pathname: '/explore/quiz/complain/:noteId',
+  exploreComplain: {
+    pathname: '/explore/complain/:noteId',
   },
   exploreSearch: {
     pathname: '/explore/search',
