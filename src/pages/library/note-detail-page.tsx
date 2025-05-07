@@ -170,7 +170,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)]">
+      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[54px]">
         <div className="px-4 pb-6">
           <div ref={emojiPickerRef} className="relative">
             <button
