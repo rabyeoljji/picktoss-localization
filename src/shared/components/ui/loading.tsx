@@ -1,5 +1,3 @@
-'use client'
-
 import { HTMLAttributes } from 'react'
 import Lottie from 'react-lottie-player'
 

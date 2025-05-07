@@ -2,7 +2,7 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
-import { SelectableNoteCard } from '@/shared/components/cards/selectable-note-card'
+// import { SelectableNoteCard } from '@/shared/components/cards/selectable-note-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
@@ -22,7 +22,7 @@ const ExploreReleasePage = () => {
         </div>
 
         <div className="px-[16px] py-[20px] flex flex-col flex-1 overflow-y-auto gap-[10px]">
-          {Array.from({ length: 10 }, (_, index) => (
+          {/* {Array.from({ length: 10 }, (_, index) => (
             <SelectableNoteCard key={index}>
               <SelectableNoteCard.Left content="🪶" />
               <SelectableNoteCard.Content>
@@ -31,7 +31,7 @@ const ExploreReleasePage = () => {
                 <SelectableNoteCard.Detail quizCount={28} />
               </SelectableNoteCard.Content>
             </SelectableNoteCard>
-          ))}
+          ))} */}
         </div>
 
         <FixedBottom className="bg-surface-2">

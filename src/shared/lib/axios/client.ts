@@ -13,7 +13,6 @@ client.interceptors.request.use(
   (config) => {
     const token = useAuthStore.getState().token
     if (token) {
-      console.log(token)
       config.headers.Authorization = `Bearer ${token}`
     }
     return config
