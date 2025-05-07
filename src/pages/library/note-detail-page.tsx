@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -9,7 +10,18 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { useGetSingleDocument, useUpdateDocumentEmoji, useUpdateDocumentName } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
-import { IcDelete, IcDownload, IcKebab, IcNote, IcPlay, IcReview, IcUpload } from '@/shared/assets/icon'
+import {
+  IcChange,
+  IcChevronDown,
+  IcChevronUp,
+  IcDelete,
+  IcDownload,
+  IcKebab,
+  IcNote,
+  IcPlay,
+  IcReview,
+  IcUpload,
+} from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { Header } from '@/shared/components/header'
@@ -45,6 +57,8 @@ const NoteDetailPage = () => {
   const { data: document } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
+
+  const [detailInfoOpen, setDetailInfoOpen] = useState(false)
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
@@ -152,20 +166,62 @@ const NoteDetailPage = () => {
             )}
           </div>
           {/* 제목 요소에 ref 추가 */}
-          <Text
-            ref={titleRef}
-            typo="h3"
-            className="mt-3 outline-none"
-            contentEditable
-            onBlur={(e) => {
-              updateDocumentName({
-                documentId: Number(noteId),
-                data: { name: (e.target as unknown as HTMLDivElement).innerText.trim() || document?.name || '' },
-              })
-            }}
-          >
-            {document?.name ?? 'Loading...'}
-          </Text>
+          <div className="flex justify-between items-center">
+            <Text
+              ref={titleRef}
+              typo="h3"
+              className="mt-3 outline-none"
+              contentEditable
+              onBlur={(e) => {
+                updateDocumentName({
+                  documentId: Number(noteId),
+                  data: { name: (e.target as unknown as HTMLDivElement).innerText.trim() || document?.name || '' },
+                })
+              }}
+            >
+              {document?.name ?? 'Loading...'}
+            </Text>
+            <button onClick={() => setDetailInfoOpen((prev) => !prev)} className="p-1">
+              {detailInfoOpen ? (
+                <IcChevronDown className="text-icon-secondary" />
+              ) : (
+                <IcChevronUp className="text-icon-secondary" />
+              )}
+            </button>
+          </div>
+          <AnimatePresence>
+            {detailInfoOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+              >
+                <Text typo="body-1-bold" color="sub" className="mt-3">
+                  카테고리
+                </Text>
+                <div className="flex items-center gap-2 mt-2">
+                  <Text typo="subtitle-2-bold" color="secondary">
+                    {document?.category}
+                  </Text>
+                  <button className="p-1">
+                    <IcChange className="size-[12px]" />
+                  </button>
+                </div>
+
+                <Text typo="body-1-bold" color="sub" className="mt-4">
+                  원본문서
+                </Text>
+                <div className="relative">
+                  <Text typo="body-1-regular" color="gray-600" className="mt-2 line-clamp-3">
+                    {document?.content}
+                  </Text>
+                  <button className="typo-body-1-regular w-[120px] bg-base-1 absolute bottom-0 right-0 text-start">
+                    ...<span className="text-blue-500">더보기</span>
+                  </button>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
           <div className="mt-2">
             <Text typo="body-1-medium" color="sub">
               2025.05.28 · {document?.quizzes?.length}문제 · 공개됨
@@ -198,7 +254,7 @@ const NoteDetailPage = () => {
         </div>
 
         {/* 4. 문제 리스트 */}
-        <div className="px-4 pt-4 pb-[113px]">
+        <div className="px-4 pt-4 pb-[113px] bg-base-2">
           {quizType === 'MIX_UP' ? (
             <div className="grid gap-2">
               {document?.quizzes
