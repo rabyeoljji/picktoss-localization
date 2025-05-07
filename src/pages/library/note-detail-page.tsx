@@ -378,7 +378,11 @@ const NoteDetailPage = () => {
                 </div>
 
                 <DrawerFooter className="h-[114px]">
-                  <Button onClick={() => handlePlay(3)} className="mt-[14px]" disabled={isCreatingQuizSet}>
+                  <Button
+                    onClick={() => handlePlay(selectedQuizCount)}
+                    className="mt-[14px]"
+                    disabled={isCreatingQuizSet}
+                  >
                     {isCreatingQuizSet ? <Spinner className="size-6" /> : '퀴즈 시작하기'}
                   </Button>
                 </DrawerFooter>
