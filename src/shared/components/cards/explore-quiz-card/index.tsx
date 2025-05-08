@@ -167,10 +167,18 @@ const ExploreQuizCardQuizzes = ({
   )
 }
 
-const ExploreQuizCardFooter = ({ onClickStartQuiz }: { onClickStartQuiz: () => void }) => {
+const ExploreQuizCardFooter = ({
+  onClickStartQuiz,
+  isLoading,
+}: {
+  onClickStartQuiz: () => void
+  isLoading?: boolean
+}) => {
   return (
     <div className="px-[20px] mt-[25px]">
-      <Button onClick={onClickStartQuiz}>퀴즈 시작하기</Button>
+      <Button onClick={onClickStartQuiz} data-state={isLoading && 'loading'}>
+        퀴즈 시작하기
+      </Button>
     </div>
   )
 }

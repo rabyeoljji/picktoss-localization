@@ -6,7 +6,7 @@ import { type VariantProps, cva } from 'class-variance-authority'
 import { cn } from '@/shared/lib/utils'
 
 const buttonVariants = cva(
-  "relative inline-flex items-center rounded-full cursor-pointer justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200 group data-[state=loading]:cursor-default",
+  "relative inline-flex items-center rounded-full cursor-pointer justify-center whitespace-nowrap transition-[color,box-shadow] disabled:pointer-events-none [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200 group data-[state=loading]:cursor-default data-[state=loading]:pointer-events-none",
   {
     variants: {
       variant: {
@@ -53,12 +53,10 @@ function Button({
         <div className={cn([size === 'sm' && '[&_svg]:size-4!'], [size === 'md' && '[&_svg]:size-5!'])}>{left}</div>
       )}
       <div className={cn('group-data-[state=loading]:hidden px-1')}>{children}</div>
-      <div className="center hidden group-data-[state=loading]:block">
-        <svg width="40" height="8" viewBox="0 0 40 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="4" cy="4" r="4" fill="#FFF7ED" />
-          <circle cx="20" cy="4" r="4" fill="#FFF1D5" />
-          <circle cx="36" cy="4" r="4" fill="#FFDEA9" />
-        </svg>
+      <div className="center hidden group-data-[state=loading]:flex w-fit gap-[8px]">
+        <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s]"></div>
+        <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s] [animation-delay:0.2s] "></div>
+        <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s] [animation-delay:0.4s]"></div>
       </div>
       {right && (
         <div className={cn([size === 'sm' && '[&_svg]:size-3!'], [size === 'md' && '[&_svg]:size-4!'])}>{right}</div>

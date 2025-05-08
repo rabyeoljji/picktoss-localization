@@ -11,6 +11,7 @@ import {
   useDeleteDocumentBookmark,
   useGetPublicDocuments,
 } from '@/entities/document/api/hooks'
+import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 import { IcBookmarkFilled } from '@/shared/assets/icon'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
@@ -182,12 +183,25 @@ const ExploreSwipeCard = ({
   document: GetPublicDocumentsDto
   setDocuments: React.Dispatch<React.SetStateAction<GetPublicDocumentsDto[]>>
 }) => {
-  const { id, creator, isBookmarked, isOwner, name, emoji, category, tryCount, bookmarkCount, quizzes } = document
+  const {
+    id,
+    creator,
+    isBookmarked,
+    isOwner,
+    name,
+    emoji,
+    category,
+    tryCount,
+    bookmarkCount,
+    quizzes,
+    totalQuizCount,
+  } = document
 
   const router = useRouter()
 
   const { mutate: documentBookmark } = useCreateDocumentBookmark(id)
   const { mutate: deleteDocumentBookmark } = useDeleteDocumentBookmark(id)
+  const { mutate: createQuizSet, isPending: isCreatingQuizSet } = useCreateQuizSet(id)
 
   const handleBookmark = () => {
     // 낙관적 UI 업데이트
@@ -224,6 +238,24 @@ const ExploreSwipeCard = ({
     }
   }
 
+  const handleQuizStart = () => {
+    createQuizSet(
+      {
+        quizCount: totalQuizCount,
+      },
+      {
+        onSuccess: (data) => {
+          router.push('/progress-quiz/:quizSetId', {
+            params: [String(data.quizSetId)],
+            search: {
+              documentId: id,
+            },
+          })
+        },
+      },
+    )
+  }
+
   return (
     <ExploreQuizCard
       index={index}
@@ -249,9 +281,13 @@ const ExploreSwipeCard = ({
         />
       }
       quizzes={
-        <ExploreQuizCard.Quizzes quizzes={quizzes} totalQuizCount={quizzes.length} onClickViewAllBtn={() => {}} />
+        <ExploreQuizCard.Quizzes
+          quizzes={quizzes}
+          totalQuizCount={quizzes.length}
+          onClickViewAllBtn={() => router.push('/explore/detail/:noteId', { params: [String(id)] })}
+        />
       }
-      footer={<ExploreQuizCard.Footer onClickStartQuiz={() => {}} />}
+      footer={<ExploreQuizCard.Footer onClickStartQuiz={handleQuizStart} isLoading={isCreatingQuizSet} />}
     />
   )
 }

@@ -300,8 +300,7 @@ const ExploreDetailPage = () => {
                 ))}
             </div>
           ) : (
-            quizType === 'MULTIPLE_CHOICE' ||
-            (quizType === 'ALL' && (
+            (quizType === 'MULTIPLE_CHOICE' || quizType === 'ALL') && (
               <div className="grid gap-2">
                 {document?.quizzes
                   ?.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
@@ -319,7 +318,7 @@ const ExploreDetailPage = () => {
                     </QuestionCard>
                   ))}
               </div>
-            ))
+            )
           )}
         </div>
 
