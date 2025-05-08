@@ -14,6 +14,8 @@ export const StorageKey = {
   integratedRecentSearchKeyword: 'integratedRecentSearchKeyword',
   /** 최근 퀴즈노트 검색 키워드 */
   quizNoteRecentSearchKeyword: 'quizNoteRecentSearchKeyword',
+  /** 북마크 변경 체크 */
+  bookmarkUpdate: 'bookmarkUpdate',
 } as const
 
 /**
@@ -25,4 +27,10 @@ export const StorageKey = {
 export interface StorageSchema {
   [StorageKey.integratedRecentSearchKeyword]: string[]
   [StorageKey.quizNoteRecentSearchKeyword]: string[]
+  [StorageKey.bookmarkUpdate]: {
+    id: number
+    isBookmarked?: boolean
+    bookmarkCount?: number
+    isUpdated?: boolean
+  } | null
 }

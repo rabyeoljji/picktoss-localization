@@ -16,6 +16,7 @@ import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 import { IcBookmarkFilled } from '@/shared/assets/icon'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useSessionStorage } from '@/shared/lib/storage'
 
 const QuizVerticalSwipe = () => {
   const DATA_PER_PAGE = 10
@@ -42,6 +43,39 @@ const QuizVerticalSwipe = () => {
     pageSize: DATA_PER_PAGE,
     enabled: shouldFetch,
   })
+
+  // 디테일 페이지에서 변경된 북마크 정보 카드 리스트에 업데이트
+  const [updatedBookmarkInfo, , removeBookmarkInfo] = useSessionStorage('bookmarkUpdate', null)
+  useEffect(() => {
+    if (!updatedBookmarkInfo || !updatedBookmarkInfo.id || documents.length === 0) return
+
+    const targetIndex = documents.findIndex((doc) => doc.id === updatedBookmarkInfo.id)
+    const root = document.getElementById('root')
+
+    if (targetIndex !== -1 && root) {
+      // 원래 위치로 돌아가기
+      // 1. Swiper 슬라이드 이동
+      swiperRef.current?.slideTo(targetIndex)
+      // 2. 스크롤을 맨 아래로 내리기
+      root.scrollTo({ top: document.body.scrollHeight })
+
+      if (updatedBookmarkInfo.isUpdated) {
+        setDocuments((prevDocs) =>
+          prevDocs.map((doc) =>
+            doc.id === updatedBookmarkInfo.id
+              ? {
+                  ...doc,
+                  isBookmarked: updatedBookmarkInfo.isBookmarked ?? false,
+                  bookmarkCount: updatedBookmarkInfo.bookmarkCount ?? 0,
+                }
+              : doc,
+          ),
+        )
+      }
+
+      removeBookmarkInfo()
+    }
+  }, [updatedBookmarkInfo, removeBookmarkInfo, documents])
 
   // 카테고리 변경 시 데이터 초기화
   useEffect(() => {
@@ -203,20 +237,47 @@ const ExploreSwipeCard = ({
   const { mutate: deleteDocumentBookmark } = useDeleteDocumentBookmark(id)
   const { mutate: createQuizSet, isPending: isCreatingQuizSet } = useCreateQuizSet(id)
 
+  const [isBookmarkPending, setIsBookmarkPending] = useState(false)
+
   const handleBookmark = () => {
+    if (isBookmarkPending) return // 중복 방지
+
+    setIsBookmarkPending(true)
+
     // 낙관적 UI 업데이트
     setDocuments((prev) =>
-      prev.map((doc) => (doc.id === document.id ? { ...doc, isBookmarked: !doc.isBookmarked } : doc)),
+      prev.map((doc) =>
+        doc.id === document.id
+          ? {
+              ...doc,
+              isBookmarked: !doc.isBookmarked,
+              bookmarkCount: doc.isBookmarked ? doc.bookmarkCount - 1 : doc.bookmarkCount + 1,
+            }
+          : doc,
+      ),
     )
 
     const isCurrentlyBookmarked = document.isBookmarked
 
-    const onError = () => {
-      // 실패 시 롤백
+    const rollback = () => {
       setDocuments((prev) =>
-        prev.map((doc) => (doc.id === document.id ? { ...doc, isBookmarked: isCurrentlyBookmarked } : doc)),
+        prev.map((doc) =>
+          doc.id === document.id
+            ? {
+                ...doc,
+                isBookmarked: isCurrentlyBookmarked,
+                bookmarkCount: isCurrentlyBookmarked ? doc.bookmarkCount + 1 : doc.bookmarkCount - 1,
+              }
+            : doc,
+        ),
       )
-      toast.error('북마크에 실패했어요')
+    }
+
+    const finish = () => setIsBookmarkPending(false)
+
+    const onError = () => {
+      rollback()
+      finish()
     }
 
     const onSuccess = () => {
@@ -229,6 +290,7 @@ const ExploreSwipeCard = ({
           },
         })
       }
+      finish()
     }
 
     if (isCurrentlyBookmarked) {

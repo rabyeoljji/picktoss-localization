@@ -32,6 +32,7 @@ import { Slider } from '@/shared/components/ui/slider'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useSessionStorage } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
 
 const ExploreDetailPage = () => {
@@ -45,9 +46,18 @@ const ExploreDetailPage = () => {
   const { mutate: bookmarkDocument } = useCreateDocumentBookmark(Number(noteId))
   const { mutate: deleteBookmark } = useDeleteDocumentBookmark(Number(noteId))
 
-  const { data: document } = useGetPublicSingleDocument(Number(noteId))
+  const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
+
+  const { data: document, refetch } = useGetPublicSingleDocument(Number(noteId))
   const existQuizTypes = Array.from(new Set(document?.quizzes.map((quiz) => quiz.quizType)))
 
+  // 북마크 정보 업데이트를 위한 세션 스토리지 설정
+  const [, setStorageBookmark] = useSessionStorage('bookmarkUpdate', null)
+  useEffect(() => {
+    setStorageBookmark({ id: Number(noteId) })
+  }, [noteId])
+
+  // 풀 문제 수 설정
   const [selectedQuizCount, setSelectedQuizCount] = useState(0)
   useEffect(() => {
     if (!document) return
@@ -98,10 +108,35 @@ const ExploreDetailPage = () => {
   }
 
   const handleBookmark = () => {
-    if (document?.isBookmarked) {
-      deleteBookmark()
+    if (!document || isBookmarkProcessing) return
+
+    setIsBookmarkProcessing(true)
+
+    const updatedBookmarked = !document.isBookmarked
+    const updatedCount = document.bookmarkCount + (updatedBookmarked ? 1 : -1)
+
+    const updated = {
+      id: document.id,
+      isBookmarked: updatedBookmarked,
+      bookmarkCount: updatedCount,
+      isUpdated: true,
+    }
+
+    const onSettled = async () => {
+      await refetch()
+      setIsBookmarkProcessing(false) // refetch 후에 북마크 처리 상태 변경
+    }
+
+    if (updatedBookmarked) {
+      bookmarkDocument(undefined, {
+        onSuccess: () => setStorageBookmark(updated),
+        onSettled,
+      })
     } else {
-      bookmarkDocument()
+      deleteBookmark(undefined, {
+        onSuccess: () => setStorageBookmark(updated),
+        onSettled,
+      })
     }
   }
 
@@ -139,7 +174,11 @@ const ExploreDetailPage = () => {
                 <IcUpload className="size-[24px]" />
               </button>
               {!document?.isOwner && (
-                <button onClick={handleBookmark} className="size-[40px] flex-center">
+                <button
+                  onClick={handleBookmark}
+                  className="size-[40px] flex-center disabled:pointer-events-none"
+                  disabled={isBookmarkProcessing}
+                >
                   {document?.isBookmarked ? (
                     <IcBookmarkFilled className="size-[24px]" />
                   ) : (
