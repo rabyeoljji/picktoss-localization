@@ -15,7 +15,9 @@ export const useRecentSearches = (storageKey: StorageKeyType = StorageKey.integr
    * @param keywordToRemove 삭제할 검색어
    */
   const removeKeyword = (keywordToRemove: string) => {
-    setRecentKeywords(recentKeywords.filter((keyword) => keyword !== keywordToRemove))
+    if (Array.isArray(recentKeywords)) {
+      setRecentKeywords(recentKeywords.filter((keyword) => keyword !== keywordToRemove))
+    }
   }
 
   /**
@@ -33,7 +35,12 @@ export const useRecentSearches = (storageKey: StorageKeyType = StorageKey.integr
   const addKeyword = (newKeyword: string, maxItems: number = 5) => {
     if (!newKeyword.trim()) return
 
-    setRecentKeywords([newKeyword, ...recentKeywords.filter((keyword) => keyword !== newKeyword)].slice(0, maxItems))
+    setRecentKeywords(
+      [
+        newKeyword,
+        ...(Array.isArray(recentKeywords) ? recentKeywords.filter((keyword) => keyword !== newKeyword) : []),
+      ].slice(0, maxItems),
+    )
   }
 
   return {

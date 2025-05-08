@@ -59,7 +59,10 @@ export const useSearch = (storageKey: StorageKeyType) => {
     if (!keyword) return
 
     // 중복 검색어 제거 후 최대 5개만 유지
-    const updatedKeywords = [keyword, ...recentKeywords.filter((k) => k !== keyword)].slice(0, 5)
+    const updatedKeywords = [
+      keyword,
+      ...(Array.isArray(recentKeywords) ? recentKeywords.filter((k) => k !== keyword) : []),
+    ].slice(0, 5)
     setRecentKeywords(updatedKeywords)
   }
 
@@ -130,24 +133,25 @@ export const useSearch = (storageKey: StorageKeyType) => {
           </div>
 
           <div className="flex flex-col">
-            {recentKeywords.map((keyword) => (
-              <div
-                key={keyword}
-                onClick={() => handleSelectRecentKeyword(keyword)}
-                className="flex cursor-pointer items-center justify-between py-[10px]"
-              >
-                <Text typo="body-1-medium">{keyword}</Text>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    removeKeyword(keyword)
-                  }}
-                  className="text-icon-sub"
+            {Array.isArray(recentKeywords) &&
+              recentKeywords.map((keyword) => (
+                <div
+                  key={keyword}
+                  onClick={() => handleSelectRecentKeyword(keyword)}
+                  className="flex cursor-pointer items-center justify-between py-[10px]"
                 >
-                  <IcClose className="size-[20px]" />
-                </button>
-              </div>
-            ))}
+                  <Text typo="body-1-medium">{keyword}</Text>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      removeKeyword(keyword)
+                    }}
+                    className="text-icon-sub"
+                  >
+                    <IcClose className="size-[20px]" />
+                  </button>
+                </div>
+              ))}
           </div>
         </div>
       </div>
