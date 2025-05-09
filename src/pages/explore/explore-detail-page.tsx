@@ -48,7 +48,7 @@ const ExploreDetailPage = () => {
 
   const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
 
-  const { data: document, refetch } = useGetPublicSingleDocument(Number(noteId))
+  const { data: document } = useGetPublicSingleDocument(Number(noteId))
   const existQuizTypes = Array.from(new Set(document?.quizzes.map((quiz) => quiz.quizType)))
 
   // 북마크 정보 업데이트를 위한 세션 스토리지 설정
@@ -107,36 +107,51 @@ const ExploreDetailPage = () => {
     )
   }
 
+  // 북마크 핸들러
   const handleBookmark = () => {
     if (!document || isBookmarkProcessing) return
 
     setIsBookmarkProcessing(true)
 
-    const updatedBookmarked = !document.isBookmarked
-    const updatedCount = document.bookmarkCount + (updatedBookmarked ? 1 : -1)
+    // 낙관적 UI 업데이트를 위한 북마크 상태와 카운트 계산
+    const optimisticIsBookmarked = !document.isBookmarked
+    const optimisticBookmarkCount = document.bookmarkCount + (optimisticIsBookmarked ? 1 : -1)
 
-    const updated = {
-      id: document.id,
-      isBookmarked: updatedBookmarked,
-      bookmarkCount: updatedCount,
-      isUpdated: true,
+    const previousDocument = { ...document }
+
+    // UI 반영
+    document.isBookmarked = optimisticIsBookmarked
+    document.bookmarkCount = optimisticBookmarkCount
+
+    const rollback = () => {
+      // 롤백: 원래 상태 복원
+      document.isBookmarked = previousDocument.isBookmarked
+      document.bookmarkCount = previousDocument.bookmarkCount
     }
 
     const onSettled = async () => {
-      await refetch()
-      setIsBookmarkProcessing(false) // refetch 후에 북마크 처리 상태 변경
+      setIsBookmarkProcessing(false)
     }
 
-    if (updatedBookmarked) {
-      bookmarkDocument(undefined, {
-        onSuccess: () => setStorageBookmark(updated),
-        onSettled,
+    const onSuccess = () => {
+      setStorageBookmark({
+        id: document.id,
+        isBookmarked: optimisticIsBookmarked,
+        bookmarkCount: optimisticBookmarkCount,
+        isUpdated: true,
       })
+    }
+
+    const mutationOptions = {
+      onSuccess,
+      onError: rollback,
+      onSettled,
+    }
+
+    if (optimisticIsBookmarked) {
+      bookmarkDocument(undefined, mutationOptions)
     } else {
-      deleteBookmark(undefined, {
-        onSuccess: () => setStorageBookmark(updated),
-        onSettled,
-      })
+      deleteBookmark(undefined, mutationOptions)
     }
   }
 

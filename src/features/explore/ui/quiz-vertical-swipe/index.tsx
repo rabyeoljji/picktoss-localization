@@ -239,6 +239,7 @@ const ExploreSwipeCard = ({
 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false)
 
+  // 북마크 핸들러
   const handleBookmark = () => {
     if (isBookmarkPending) return // 중복 방지
 
