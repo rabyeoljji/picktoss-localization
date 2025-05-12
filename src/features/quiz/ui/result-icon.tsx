@@ -12,9 +12,8 @@ export const ResultIcon = ({ correct }: { correct: boolean }) => {
       }}
       transition={{
         type: 'spring',
-        stiffness: 200,
         mass: 1,
-        velocity: 2,
+        velocity: 3,
         duration: 0.3,
       }}
       exit={{ opacity: 0, scale: 0.7 }}

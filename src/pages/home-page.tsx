@@ -24,7 +24,6 @@ import { Button } from '@/shared/components/ui/button'
 import Loading from '@/shared/components/ui/loading'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
-import { useMessaging } from '@/shared/hooks/use-messaging'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -196,11 +195,11 @@ const HomePage = () => {
 
   const currQuiz = quizzes?.[0]
 
-  const { setupMessaging, isReadyNotification } = useMessaging()
+  // const { setupMessaging, isReadyNotification } = useMessaging()
 
-  useEffect(() => {
-    console.log('알림 준비: ' + isReadyNotification)
-  }, [isReadyNotification])
+  // useEffect(() => {
+  //   console.log('알림 준비: ' + isReadyNotification)
+  // }, [isReadyNotification])
 
   const consecutiveSolvedDailyQuizDays = dailyQuizRecord?.consecutiveSolvedDailyQuizDays
   const todaySolvedDailyQuizCount = dailyQuizRecord?.todaySolvedDailyQuizCount
@@ -349,12 +348,12 @@ const HomePage = () => {
         </HeaderOffsetLayout>
       )}
 
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(var(--spacing-tab-navigation)+12px+52px)] w-[calc(100%-32px)] flex-center flex-col gap-1">
+      {/* <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(var(--spacing-tab-navigation)+12px+52px)] w-[calc(100%-32px)] flex-center flex-col gap-1">
         <Text typo="button-2">테스트용</Text>
         <Button onClick={async () => await setupMessaging()}>
           알림 권한 요청 <br /> <Text typo="button-4">(재요청은 pwa앱 삭제 후 재설치)</Text>
         </Button>
-      </div>
+      </div> */}
 
       <div className="px-4">
         <button
