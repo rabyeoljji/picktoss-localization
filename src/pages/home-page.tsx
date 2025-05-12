@@ -6,24 +6,24 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
+import { InfoCarousel } from '@/features/quiz/ui/banner'
+import { DailyQuizTooltip } from '@/features/quiz/ui/daliy-quiz-tooltip'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
+import { QuizSettingDrawer } from '@/features/quiz/ui/quiz-setting-drawer'
+import { ResultIcon } from '@/features/quiz/ui/result-icon'
 
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
-import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
-import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundCorrect, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
+import { IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
+import { ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
-import { Label } from '@/shared/components/ui/label'
 import Loading from '@/shared/components/ui/loading'
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -226,37 +226,10 @@ const HomePage = () => {
                 <IcProfile className="size-6 text-icon-secondary" />
               </button>
 
-              <Tooltip
-                open={
-                  // 연속일이 0이상일 때 혹은 보상 횟수를 표시할 때
-                  (consecutiveSolvedDailyQuizDays && consecutiveSolvedDailyQuizDays > 0) ||
-                  !!(
-                    todaySolvedDailyQuizCount &&
-                    10 - todaySolvedDailyQuizCount < 10 &&
-                    10 - todaySolvedDailyQuizCount > 0
-                  )
-                }
-              >
-                <TooltipTrigger>
-                  <div className="p-1.5 flex-center">
-                    <ImgStar className="size-[28px]" />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="right" color="inverse">
-                  {todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount > 0 ? (
-                    <Text typo="body-2-medium">
-                      <span className="text-accent">{10 - todaySolvedDailyQuizCount}문제</span>{' '}
-                      <span>더 풀면 획득!</span>
-                    </Text>
-                  ) : (
-                    <>
-                      {consecutiveSolvedDailyQuizDays && (
-                        <Text typo="body-2-medium">연속 {consecutiveSolvedDailyQuizDays}일 완료!</Text>
-                      )}
-                    </>
-                  )}
-                </TooltipContent>
-              </Tooltip>
+              <DailyQuizTooltip
+                consecutiveSolvedDailyQuizDays={consecutiveSolvedDailyQuizDays ?? 0}
+                todaySolvedDailyQuizCount={todaySolvedDailyQuizCount ?? 0}
+              />
             </div>
             <div className="ml-auto">
               <button className="p-2 flex-center">
@@ -268,7 +241,7 @@ const HomePage = () => {
         className="bg-surface-2"
       />
 
-      {!isLoading && quizzes?.length === 0 && <BannerContent />}
+      {!isLoading && quizzes?.length === 0 && <InfoCarousel />}
 
       {currQuiz && (
         <HeaderOffsetLayout className="px-3">
@@ -351,7 +324,7 @@ const HomePage = () => {
                           option={option}
                           isCorrect={option === currQuiz.answer}
                           selectedOption={quizState.selectedAnswer}
-                          animationDelay={index * 100}
+                          animationDelay={index * 80}
                           onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
                           className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
                         />
@@ -361,7 +334,7 @@ const HomePage = () => {
                 </div>
               </>
             ) : (
-              <WrongAnswerContent
+              <IncorrectAnswerBody
                 currQuiz={currQuiz}
                 moveToNextQuiz={moveToNextQuiz}
                 settingDrawerOpen={settingDrawerOpen}
@@ -370,30 +343,7 @@ const HomePage = () => {
             )}
 
             <AnimatePresence mode="popLayout">
-              {resultIconState.show && (
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.7 }}
-                  animate={{
-                    opacity: 1,
-                    scale: 1,
-                  }}
-                  transition={{
-                    type: 'spring',
-                    stiffness: 200,
-                    mass: 1,
-                    velocity: 2,
-                    duration: 0.3,
-                  }}
-                  exit={{ opacity: 0, scale: 0.7 }}
-                >
-                  {resultIconState.correct && (
-                    <ImgRoundCorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
-                  )}
-                  {!resultIconState.correct && (
-                    <ImgRoundIncorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
-                  )}
-                </motion.div>
-              )}
+              {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
             </AnimatePresence>
           </motion.div>
         </HeaderOffsetLayout>
@@ -459,148 +409,7 @@ const HomePage = () => {
   )
 }
 
-const BannerContent = () => {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(1)
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!api) {
-      return
-    }
-
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
-
-  return (
-    <HeaderOffsetLayout className="px-3">
-      <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1">
-        <Carousel setApi={setApi}>
-          <CarouselContent>
-            <CarouselItem>
-              <ImgDaily1 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">내 퀴즈 생성하기</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  쌓아둔 필기, 메모, 저장한 자료 등<br />
-                  공부한 내용으로 맞춤형 퀴즈를 생성해요
-                </Text>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem>
-              <ImgDaily2 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">관심 퀴즈 저장하기</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  사람들이 만든 다양한 문제를 풀어보고,
-                  <br />
-                  마음에 드는 퀴즈를 북마크해요
-                </Text>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem>
-              <ImgDaily3 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">데일리로 기억하기!</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  내가 생성하거나 북마크한 퀴즈의 문제를
-                  <br />
-                  여기서 랜덤으로 풀어보며 복습해요
-                </Text>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
-
-        <div className="mt-[65px] mx-auto w-fit flex gap-2 items-center">
-          {Array.from({ length: count }).map((_, i) => (
-            <div key={i} className={cn('size-2 rounded-full bg-surface-3', current === i + 1 && 'bg-inverse')} />
-          ))}
-        </div>
-      </div>
-    </HeaderOffsetLayout>
-  )
-}
-
-const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
-  const [displayQuizType, setDisplayQuizType] = useQueryParam('/', 'displayQuizType')
-
-  return (
-    <AlertDrawer
-      open={open}
-      onOpenChange={onOpenChange}
-      trigger={
-        <button className="absolute top-4 right-4 p-1 rounded-[8px] border border-outline">
-          <IcControl className="size-4 text-icon-secondary" />
-        </button>
-      }
-      title="데일리 퀴즈 설정"
-      hasClose
-      height="lg"
-      body={
-        <div className="py-8">
-          <form
-            id="quiz-settings-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              const value = (e.target as HTMLFormElement).quizType.value
-              setDisplayQuizType(value)
-              onOpenChange(false)
-            }}
-          >
-            <div className="grid gap-2">
-              <Text typo="subtitle-2-bold" color="secondary">
-                문제 유형
-              </Text>
-              <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
-                <RadioGroup name="quizType" defaultValue={displayQuizType}>
-                  <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="ALL" />
-                    <Text typo="subtitle-2-medium" color="primary">
-                      전체
-                    </Text>
-                  </Label>
-                  <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MULTIPLE_CHOICE" />
-                    <Text typo="subtitle-2-medium" color="primary">
-                      객관식
-                    </Text>
-                  </Label>
-                  <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MIX_UP" />
-                    <Text typo="subtitle-2-medium" color="primary">
-                      O/X
-                    </Text>
-                  </Label>
-                </RadioGroup>
-              </div>
-            </div>
-          </form>
-        </div>
-      }
-      footer={
-        <div className="h-[114px] pt-[14px]">
-          <Button type="submit" form="quiz-settings-form">
-            적용하기
-          </Button>
-        </div>
-      }
-      contentClassName="bg-surface-2"
-    />
-  )
-}
-
-const WrongAnswerContent = ({
+const IncorrectAnswerBody = ({
   currQuiz,
   moveToNextQuiz,
 }: {
