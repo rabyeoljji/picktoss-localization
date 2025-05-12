@@ -288,7 +288,7 @@ const HomePage = () => {
             {quizState.status !== 'incorrect' ? (
               <>
                 <motion.div
-                  className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
+                  className="h-[152px] w-[80%] mx-auto flex flex-col items-center justify-center"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}

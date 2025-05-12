@@ -1,7 +1,6 @@
 import { HTMLAttributes } from 'react'
 
-import { CheckIcon, XIcon } from 'lucide-react'
-
+import { ImgRoundCorrect, ImgRoundIncorrect } from '@/shared/assets/images'
 import { cn } from '@/shared/lib/utils'
 
 export interface MultipleChoiceOptionProps extends HTMLAttributes<HTMLButtonElement> {
@@ -42,22 +41,22 @@ export const MultipleChoiceOption = ({
         <>
           {isCorrect && (
             <div className="flex items-center justify-center rounded-full bg-green-500 text-white size-[32px]">
-              <CheckIcon className="size-5" />
+              <ImgRoundCorrect className="size-8" />
             </div>
           )}
           {isSelected && !isCorrect && (
             <div className="flex items-center justify-center rounded-full bg-red-500 text-white size-[32px]">
-              <XIcon className="size-5" />
+              <ImgRoundIncorrect className="size-8" />
             </div>
           )}
           {!isCorrect && !isSelected && (
-            <div className="flex items-center justify-center rounded-full bg-gray-100 text-gray-900 size-[32px]">
+            <div className="flex items-center justify-center rounded-full bg-gray-100 text-disabled size-[32px]">
               <span className="typo-button-3">{label}</span>
             </div>
           )}
         </>
       ) : (
-        <div className="flex items-center justify-center rounded-full bg-gray-100 text-gray-900 size-[32px]">
+        <div className="flex items-center justify-center rounded-full bg-gray-100 text-sub size-[32px]">
           <span className="typo-button-3">{label}</span>
         </div>
       )}
