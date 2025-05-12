@@ -243,7 +243,11 @@ const HomePage = () => {
       {currQuiz && (
         <HeaderOffsetLayout className="px-3">
           {!isRefreshing ? (
-            <Text typo="subtitle-1-bold" color="sub" className="absolute right-1/2 translate-x-1/2 pt-[16px] shrink-0">
+            <Text
+              typo="subtitle-1-bold"
+              color="sub"
+              className="absolute right-1/2 translate-x-1/2 pt-[16px] whitespace-nowrap"
+            >
               당겨서 새 문제 가져오기...💡
             </Text>
           ) : (
@@ -417,7 +421,7 @@ const IncorrectAnswerBody = ({
 }) => {
   return (
     <>
-      <div className="flex items-center gap-3 mx-auto w-fit">
+      <div className="flex items-center justify-start gap-3 w-fit">
         <ImgRoundIncorrect className="size-[48px]" />
         <Text typo="h2" color="incorrect">
           오답
@@ -429,13 +433,13 @@ const IncorrectAnswerBody = ({
       </div>
 
       <div className="grid gap-3">
-        <Text typo="subtitle-1-bold" className="text-center">
+        <Text typo="subtitle-1-bold">
           정답: {currQuiz.quizType === 'MULTIPLE_CHOICE' ? currQuiz.answer : currQuiz.answer === 'correct' ? 'O' : 'X'}
         </Text>
-        <Text typo="body-1-medium" as="p" color="secondary" className="text-center">
+        <Text typo="body-1-medium" as="p" color="secondary">
           {currQuiz.explanation}
         </Text>
-        <div className="mt-[24px] flex items-center mx-auto">
+        <div className="mt-[24px] flex items-center">
           <Text typo="body-1-medium" color="sub">
             출처
           </Text>
