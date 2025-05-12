@@ -107,6 +107,24 @@ const ExploreDetailPage = () => {
     )
   }
 
+  // 공유하기 핸들러
+  const handleShare = async () => {
+    if (document && navigator.share) {
+      try {
+        await navigator.share({
+          title: document.name,
+          text: `Q. ${document.quizzes[0].question} 외 ${document.totalQuizCount - 1}문제`,
+          url: `${'https://picktoss.vercel.app'}/explore/detail/${document.id}`, // 추후 picktoss.com으로 변경
+        })
+        console.log('공유 성공')
+      } catch (error) {
+        console.error('공유 실패', error)
+      }
+    } else {
+      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.')
+    }
+  }
+
   // 북마크 핸들러
   const handleBookmark = () => {
     if (!document || isBookmarkProcessing) return
@@ -185,7 +203,7 @@ const ExploreDetailPage = () => {
               </Text>
             )}
             <div className="flex items-center text-icon-secondary">
-              <button className="size-[40px] flex-center">
+              <button onClick={handleShare} className="size-[40px] flex-center">
                 <IcUpload className="size-[24px]" />
               </button>
               {!document?.isOwner && (
