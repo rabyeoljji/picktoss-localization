@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { motion, useAnimation } from 'framer-motion'
+import { AnimatePresence, motion, useAnimation } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -12,7 +12,7 @@ import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
-import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
+import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundCorrect, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
@@ -71,10 +71,16 @@ const HomePage = () => {
   const [settingDrawerOpen, setSettingDrawerOpen] = useState(false)
   const [quizState, setQuizState] = useState<{
     selectedAnswer: string | null
-    status: 'idle' | 'selected' | 'wrong'
+    status: 'idle' | 'selected' | 'incorrect'
   }>({
     selectedAnswer: null,
     status: 'idle',
+  })
+
+  // 결과 아이콘 표시 상태를 관리하는 state
+  const [resultIconState, setResultIconState] = useState({
+    show: false,
+    correct: false,
   })
 
   const [rewardDrawerOpen, setRewardDrawerOpen] = useState(false)
@@ -172,15 +178,21 @@ const HomePage = () => {
 
     setTimeout(() => {
       if (quiz.answer === selectOption) {
-        moveToNextQuiz(quiz)
+        setResultIconState({ show: true, correct: true })
+        setTimeout(() => {
+          moveToNextQuiz(quiz)
+        }, 800)
       } else {
-        setQuizState((prev) => ({
-          ...prev,
-          selectedAnswer: selectOption,
-          status: 'wrong',
-        }))
+        setResultIconState({ show: true, correct: false })
+        setTimeout(() => {
+          setQuizState((prev) => ({
+            ...prev,
+            selectedAnswer: selectOption,
+            status: 'incorrect',
+          }))
+        }, 800)
       }
-    }, 700)
+    }, 400)
   }
 
   const currQuiz = quizzes?.[0]
@@ -193,6 +205,17 @@ const HomePage = () => {
 
   const consecutiveSolvedDailyQuizDays = dailyQuizRecord?.consecutiveSolvedDailyQuizDays
   const todaySolvedDailyQuizCount = dailyQuizRecord?.todaySolvedDailyQuizCount
+
+  // 정답/오답 아이콘 표시 후 ~초 후에 사라지게 하는 효과
+  useEffect(() => {
+    if (resultIconState.show) {
+      const timer = setTimeout(() => {
+        setResultIconState({ show: false, correct: false })
+      }, 900)
+
+      return () => clearTimeout(timer)
+    }
+  }, [resultIconState.show])
 
   return (
     <>
@@ -260,7 +283,7 @@ const HomePage = () => {
             </div>
           )}
 
-          {quizState.status !== 'wrong' && (
+          {quizState.status !== 'incorrect' && (
             <motion.div
               className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden"
               key={currQuiz.id}
@@ -367,9 +390,35 @@ const HomePage = () => {
                   </div>
                 )}
               </div>
+              <AnimatePresence>
+                {resultIconState.show && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.7 }}
+                    animate={{
+                      opacity: 1,
+                      scale: 1,
+                    }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 200,
+                      mass: 1,
+                      velocity: 2,
+                      duration: 0.4,
+                    }}
+                    exit={{ opacity: 0, scale: 0.7 }}
+                  >
+                    {resultIconState.correct && (
+                      <ImgRoundCorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
+                    )}
+                    {!resultIconState.correct && (
+                      <ImgRoundIncorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
-          {quizState.status === 'wrong' && (
+          {quizState.status === 'incorrect' && (
             <WrongAnswerContent
               currQuiz={currQuiz}
               moveToNextQuiz={moveToNextQuiz}
