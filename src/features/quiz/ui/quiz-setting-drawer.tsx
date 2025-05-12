@@ -14,7 +14,7 @@ export const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpe
       open={open}
       onOpenChange={onOpenChange}
       trigger={
-        <button className="absolute top-4 right-4 p-1 rounded-[8px] border border-outline">
+        <button className="absolute top-4 right-4 p-2 rounded-[8px] border border-outline">
           <IcControl className="size-4 text-icon-secondary" />
         </button>
       }

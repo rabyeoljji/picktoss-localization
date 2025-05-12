@@ -424,7 +424,7 @@ const NoteDetailPage = () => {
       </HeaderOffsetLayout>
 
       {/* 5. 하단 툴바 */}
-      <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-md flex items-center rounded-[16px]">
+      <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-[var(--shadow-md)] flex items-center rounded-[16px]">
         <div className="flex items-center gap-2 shrink-0">
           <Text typo="body-2-bold" color="sub">
             정답

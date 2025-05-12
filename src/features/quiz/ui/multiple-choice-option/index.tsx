@@ -33,7 +33,7 @@ export const MultipleChoiceOption = ({
       )}
       style={{
         opacity: 0,
-        animation: 'slide-in 0.3s ease-out forwards',
+        animation: 'slide-in 0.5s cubic-bezier(0.34, 0.56, 0.3, 1) forwards',
         animationDelay: `${animationDelay}ms`,
       }}
       {...props}

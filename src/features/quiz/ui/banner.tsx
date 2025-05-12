@@ -27,7 +27,7 @@ export const InfoCarousel = () => {
 
   return (
     <HeaderOffsetLayout className="px-3">
-      <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1">
+      <div className="mt-1 shadow-[var(--shadow-md)]shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1">
         <Carousel setApi={setApi}>
           <CarouselContent>
             <CarouselItem>

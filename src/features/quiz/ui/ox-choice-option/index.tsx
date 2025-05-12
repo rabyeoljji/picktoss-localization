@@ -1,6 +1,6 @@
 import { HTMLMotionProps, motion } from 'framer-motion'
-import { CircleIcon, XIcon } from 'lucide-react'
 
+import { IcO, IcX } from '@/shared/assets/icon'
 import { cn } from '@/shared/lib/utils'
 
 export interface OXChoiceOptionProps extends Omit<HTMLMotionProps<'button'>, 'onDrag'> {
@@ -51,8 +51,8 @@ export const OXChoiceOption = ({
       transition={{ duration: 0.3, delay: animationDelay }}
       {...props}
     >
-      {O && <CircleIcon className="size-[80px] stroke-[4]" />}
-      {X && <XIcon className="size-[80px] stroke-[3]" />}
+      {O && <IcO className="size-[72px]" />}
+      {X && <IcX className="size-[72px]" />}
     </motion.button>
   )
 }

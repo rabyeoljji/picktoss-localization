@@ -116,7 +116,7 @@ body::-webkit-scrollbar {
 
 @keyframes slide-in {
   0% {
-    transform: translateX(-80%);
+    transform: translateX(-100%);
     opacity: 0;
   }
   100% {

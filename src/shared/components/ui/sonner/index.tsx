@@ -11,7 +11,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
       toastOptions={{
         classNames: {
           toast:
-            'group toast bg-inverse! border-none! text-inverse! shadow-md! py-3! px-4! rounded-[8px]! min-w-[338px]! min-h-[48px]!',
+            'group toast bg-inverse! border-none! text-inverse! shadow-[var(--shadow-md)]! py-3! px-4! rounded-[8px]! min-w-[338px]! min-h-[48px]!',
           title: 'typo-body-1-medium!',
           description: 'group-[.toast]:text-inverse',
           actionButton: 'group-[.toast]:bg-transparent! group-[.toast]:typo-button-4! group-[.toast]:text-orange-500!',

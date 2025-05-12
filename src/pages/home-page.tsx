@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -174,23 +174,21 @@ const HomePage = () => {
       status: 'selected',
     }))
 
-    setTimeout(() => {
-      if (quiz.answer === selectOption) {
-        setResultIconState({ show: true, correct: true })
-        setTimeout(() => {
-          moveToNextQuiz(quiz)
-        }, 1000)
-      } else {
-        setResultIconState({ show: true, correct: false })
-        setTimeout(() => {
-          setQuizState((prev) => ({
-            ...prev,
-            selectedAnswer: selectOption,
-            status: 'incorrect',
-          }))
-        }, 1000)
-      }
-    }, 400)
+    if (quiz.answer === selectOption) {
+      setResultIconState({ show: true, correct: true })
+      setTimeout(() => {
+        moveToNextQuiz(quiz)
+      }, 1000)
+    } else {
+      setResultIconState({ show: true, correct: false })
+      setTimeout(() => {
+        setQuizState((prev) => ({
+          ...prev,
+          selectedAnswer: selectOption,
+          status: 'incorrect',
+        }))
+      }, 1000)
+    }
   }
 
   const currQuiz = quizzes?.[0]
@@ -256,7 +254,7 @@ const HomePage = () => {
 
           <motion.div
             className={cn(
-              'mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden',
+              'mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden z-50',
               quizState.status === 'incorrect' && 'px-[32px] pt-[64px] pb-6',
             )}
             key={currQuiz.id}
@@ -291,8 +289,8 @@ const HomePage = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Tag>{currQuiz.name}</Tag>
-                  <Text typo="question" className="mt-3 text-center">
+                  <Tag size="md">{currQuiz.name}</Tag>
+                  <Text typo="question" className="mt-3 text-center whitespace-pre-wrap break-keep">
                     {currQuiz.question}
                   </Text>
                 </motion.div>
@@ -310,7 +308,10 @@ const HomePage = () => {
                           onClick={() =>
                             handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
                           }
-                          className={cn('flex-1', quizState.status !== 'idle' && 'pointer-events-none')}
+                          className={cn(
+                            'flex-1 aspect-[153.5/126]',
+                            quizState.status !== 'idle' && 'pointer-events-none',
+                          )}
                         />
                       ))}
                     </div>
@@ -323,7 +324,7 @@ const HomePage = () => {
                           option={option}
                           isCorrect={option === currQuiz.answer}
                           selectedOption={quizState.selectedAnswer}
-                          animationDelay={index * 80}
+                          animationDelay={index * 60}
                           onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
                           className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
                         />
@@ -340,10 +341,7 @@ const HomePage = () => {
                 setSettingDrawerOpen={setSettingDrawerOpen}
               />
             )}
-
-            <AnimatePresence mode="popLayout">
-              {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
-            </AnimatePresence>
+            {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
           </motion.div>
         </HeaderOffsetLayout>
       )}
