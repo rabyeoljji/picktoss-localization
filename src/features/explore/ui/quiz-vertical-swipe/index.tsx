@@ -239,6 +239,24 @@ const ExploreSwipeCard = ({
 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false)
 
+  // 공유하기 핸들러
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: name,
+          text: `Q. ${quizzes[0].question} 외 ${totalQuizCount - 1}문제`,
+          url: `${'https://picktoss.vercel.app'}/explore/detail/${id}`, // 추후 picktoss.com으로 변경
+        })
+        console.log('공유 성공')
+      } catch (error) {
+        console.error('공유 실패', error)
+      }
+    } else {
+      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.')
+    }
+  }
+
   // 북마크 핸들러
   const handleBookmark = () => {
     if (isBookmarkPending) return // 중복 방지
@@ -328,9 +346,7 @@ const ExploreSwipeCard = ({
           creator={creator}
           isOwner={isOwner}
           isBookmarked={isBookmarked}
-          onClickShare={() => {
-            alert('공유하기 클릭')
-          }}
+          onClickShare={handleShare}
           onClickBookmark={handleBookmark}
         />
       }
