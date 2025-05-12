@@ -1,9 +1,10 @@
-import { HTMLMotionProps, motion } from 'framer-motion'
+import { HTMLAttributes } from 'react'
+
 import { CheckIcon, XIcon } from 'lucide-react'
 
 import { cn } from '@/shared/lib/utils'
 
-export interface MultipleChoiceOptionProps extends Omit<HTMLMotionProps<'button'>, 'onDrag'> {
+export interface MultipleChoiceOptionProps extends HTMLAttributes<HTMLButtonElement> {
   label?: string
   option: string
   selectedOption: string | null
@@ -16,27 +17,24 @@ export const MultipleChoiceOption = ({
   option,
   selectedOption,
   isCorrect,
-  animationDelay = 0,
   className,
+  animationDelay,
   ...props
 }: MultipleChoiceOptionProps) => {
   const isSelected = selectedOption === option
 
   return (
-    <motion.button
+    <button
       className={cn(
         'w-full transition-all flex items-center gap-3 py-3 px-2.5 rounded-[16px] ring-1',
         isCorrect ? 'bg-correct ring-success text-correct' : 'bg-disabled ring-outline text-disabled',
         selectedOption === null && 'bg-base-1 ring-outline text-secondary',
         className,
       )}
-      initial={{ opacity: 0, x: -10 }}
-      animate={{
-        opacity: 1,
-        x: 0,
-        transition: {
-          delay: animationDelay,
-        },
+      style={{
+        opacity: 0,
+        animation: 'slide-in 0.3s ease-out forwards',
+        animationDelay: `${animationDelay}ms`,
       }}
       {...props}
     >
@@ -65,6 +63,6 @@ export const MultipleChoiceOption = ({
       )}
 
       <span className="typo-body-1-medium text-start flex-1">{option}</span>
-    </motion.button>
+    </button>
   )
 }

@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { AnimatePresence, motion, useAnimation } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 
@@ -50,9 +51,7 @@ const HomePage = () => {
     setQuizzes(quizData?.quizzes.filter((quiz) => quiz.quizType === displayQuizType || displayQuizType === 'ALL') ?? [])
   }, [quizData, displayQuizType])
 
-  const refreshIndicatorControls = useAnimation()
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const [pullDistance, setPullDistance] = useState(0)
+  const { isRefreshing, pullDistance, handleDrag, handleDragEnd } = usePullToRefresh(() => refetch())
 
   // 백그라운드 리페치 상태 관리
   const isBackgroundRefetchingRef = useRef(false)
@@ -181,7 +180,7 @@ const HomePage = () => {
         setResultIconState({ show: true, correct: true })
         setTimeout(() => {
           moveToNextQuiz(quiz)
-        }, 800)
+        }, 1000)
       } else {
         setResultIconState({ show: true, correct: false })
         setTimeout(() => {
@@ -190,7 +189,7 @@ const HomePage = () => {
             selectedAnswer: selectOption,
             status: 'incorrect',
           }))
-        }, 800)
+        }, 1000)
       }
     }, 400)
   }
@@ -211,7 +210,7 @@ const HomePage = () => {
     if (resultIconState.show) {
       const timer = setTimeout(() => {
         setResultIconState({ show: false, correct: false })
-      }, 900)
+      }, 550)
 
       return () => clearTimeout(timer)
     }
@@ -283,149 +282,120 @@ const HomePage = () => {
             </div>
           )}
 
-          {quizState.status !== 'incorrect' && (
-            <motion.div
-              className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden"
-              key={currQuiz.id}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={0.6}
-              initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                y: isRefreshing ? pullDistance : 0,
-              }}
-              transition={{
-                opacity: { duration: 0.3 },
-                x: { duration: 0.3 },
-                y: {
-                  type: 'spring',
-                  stiffness: 400,
-                  damping: 40,
-                },
-              }}
-              onDrag={(_, info) => {
-                if (info.offset.y > 0) {
-                  setPullDistance(Math.min(info.offset.y, 60))
-                  refreshIndicatorControls.start({
-                    opacity: Math.min(info.offset.y / 60, 1),
-                    rotate: Math.min(info.offset.y * 2, 360),
-                    y: Math.min(info.offset.y / 3, 30),
-                  })
-                }
-              }}
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 80) {
-                  setIsRefreshing(true)
-                  refreshIndicatorControls.start({
+          <motion.div
+            className={cn(
+              'mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden',
+              quizState.status === 'incorrect' && 'px-[32px] pt-[64px] pb-6',
+            )}
+            key={currQuiz.id}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.6}
+            initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              y: isRefreshing ? pullDistance : 0,
+            }}
+            transition={{
+              opacity: { duration: 0.3 },
+              x: { duration: 0.3 },
+              y: {
+                type: 'spring',
+                stiffness: 400,
+                damping: 40,
+              },
+            }}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
+          >
+            <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+
+            {quizState.status !== 'incorrect' ? (
+              <>
+                <motion.div
+                  className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Tag>{currQuiz.name}</Tag>
+                  <Text typo="question" className="mt-3 text-center">
+                    {currQuiz.question}
+                  </Text>
+                </motion.div>
+
+                <div className="mt-2">
+                  {currQuiz.quizType === 'MIX_UP' ? (
+                    <div className="flex items-center gap-3 pt-10">
+                      {Array.from({ length: 2 }).map((_, index) => (
+                        <OXChoiceOption
+                          key={index}
+                          O={index === 0}
+                          X={index === 1}
+                          isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
+                          selectedOption={quizState.selectedAnswer}
+                          onClick={() =>
+                            handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
+                          }
+                          className={cn('flex-1', quizState.status !== 'idle' && 'pointer-events-none')}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid gap-2">
+                      {currQuiz.options.map((option, index) => (
+                        <MultipleChoiceOption
+                          key={option}
+                          label={String.fromCharCode(65 + index)}
+                          option={option}
+                          isCorrect={option === currQuiz.answer}
+                          selectedOption={quizState.selectedAnswer}
+                          animationDelay={index * 100}
+                          onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
+                          className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <WrongAnswerContent
+                currQuiz={currQuiz}
+                moveToNextQuiz={moveToNextQuiz}
+                settingDrawerOpen={settingDrawerOpen}
+                setSettingDrawerOpen={setSettingDrawerOpen}
+              />
+            )}
+
+            <AnimatePresence mode="popLayout">
+              {resultIconState.show && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.7 }}
+                  animate={{
                     opacity: 1,
-                    rotate: 360,
-                    transition: { duration: 0.5, repeat: Infinity, ease: 'linear' },
-                  })
-                  refetch().finally(() => {
-                    setIsRefreshing(false)
-                    setPullDistance(0)
-                    refreshIndicatorControls.start({
-                      opacity: 0,
-                      y: 0,
-                      transition: { duration: 0.3 },
-                    })
-                  })
-                } else {
-                  setPullDistance(0)
-                  refreshIndicatorControls.start({
-                    opacity: 0,
-                    y: 0,
-                    transition: { duration: 0.3 },
-                  })
-                }
-              }}
-            >
-              <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
-
-              <motion.div
-                className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Tag>{currQuiz.name}</Tag>
-                <Text typo="question" className="mt-3 text-center">
-                  {currQuiz.question}
-                </Text>
-              </motion.div>
-
-              <div className="mt-2">
-                {currQuiz.quizType === 'MIX_UP' ? (
-                  <div className="flex items-center gap-3 pt-10">
-                    {Array.from({ length: 2 }).map((_, index) => (
-                      <OXChoiceOption
-                        key={index}
-                        O={index === 0}
-                        X={index === 1}
-                        isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
-                        selectedOption={quizState.selectedAnswer}
-                        onClick={() =>
-                          handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
-                        }
-                        className={cn('flex-1', quizState.status !== 'idle' && 'pointer-events-none')}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid gap-2">
-                    {currQuiz.options.map((option, index) => (
-                      <MultipleChoiceOption
-                        key={option}
-                        label={String.fromCharCode(65 + index)}
-                        option={option}
-                        isCorrect={option === currQuiz.answer}
-                        selectedOption={quizState.selectedAnswer}
-                        animationDelay={index * 0.03}
-                        onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
-                        className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-              <AnimatePresence>
-                {resultIconState.show && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 200,
-                      mass: 1,
-                      velocity: 2,
-                      duration: 0.4,
-                    }}
-                    exit={{ opacity: 0, scale: 0.7 }}
-                  >
-                    {resultIconState.correct && (
-                      <ImgRoundCorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
-                    )}
-                    {!resultIconState.correct && (
-                      <ImgRoundIncorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
-          {quizState.status === 'incorrect' && (
-            <WrongAnswerContent
-              currQuiz={currQuiz}
-              moveToNextQuiz={moveToNextQuiz}
-              settingDrawerOpen={settingDrawerOpen}
-              setSettingDrawerOpen={setSettingDrawerOpen}
-            />
-          )}
+                    scale: 1,
+                  }}
+                  transition={{
+                    type: 'spring',
+                    stiffness: 200,
+                    mass: 1,
+                    velocity: 2,
+                    duration: 0.3,
+                  }}
+                  exit={{ opacity: 0, scale: 0.7 }}
+                >
+                  {resultIconState.correct && (
+                    <ImgRoundCorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
+                  )}
+                  {!resultIconState.correct && (
+                    <ImgRoundIncorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
         </HeaderOffsetLayout>
       )}
 
@@ -633,8 +603,6 @@ const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange
 const WrongAnswerContent = ({
   currQuiz,
   moveToNextQuiz,
-  settingDrawerOpen,
-  setSettingDrawerOpen,
 }: {
   currQuiz: Quiz
   moveToNextQuiz: (currQuiz: Quiz) => void
@@ -642,9 +610,7 @@ const WrongAnswerContent = ({
   setSettingDrawerOpen: (open: boolean) => void
 }) => {
   return (
-    <div className="mt-1 shadow-md rounded-[20px] px-[32px] pt-[64px] pb-6 bg-surface-1 min-h-[500px] relative">
-      <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
-
+    <>
       <div className="flex items-center gap-3 mx-auto w-fit">
         <ImgRoundIncorrect className="size-[48px]" />
         <Text typo="h2" color="incorrect">
@@ -690,7 +656,7 @@ const WrongAnswerContent = ({
       >
         문제 전환
       </Button>
-    </div>
+    </>
   )
 }
 
