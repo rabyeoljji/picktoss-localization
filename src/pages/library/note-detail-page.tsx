@@ -24,6 +24,7 @@ import {
   IcChevronUp,
   IcDelete,
   IcDownload,
+  IcEdit,
   IcKebab,
   IcNote,
   IcPlay,
@@ -70,6 +71,9 @@ const NoteDetailPage = () => {
   const { data: document, isLoading: isDocumentLoading } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
+
+  const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
+  const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | null>(null)
 
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
@@ -396,7 +400,26 @@ const NoteDetailPage = () => {
             {quizzes?.map((quiz, index) =>
               quiz.quizType === 'MIX_UP' ? (
                 <QuestionCard key={quiz.id}>
-                  <QuestionCard.Header order={index + 1} right={<div>...</div>} />
+                  <QuestionCard.Header
+                    order={index + 1}
+                    right={
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <IcKebab className="size-5 text-icon-sub" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="-translate-y-2">
+                          <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-500"
+                            right={<IcDelete className="text-icon-critical" />}
+                            onClick={() => setDeleteTargetQuizId(quiz.id)}
+                          >
+                            문제 삭제
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    }
+                  />
                   <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
                   <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
                   <QuestionCard.Explanation
@@ -527,6 +550,34 @@ const NoteDetailPage = () => {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* 단일 문제 삭제 confirm 모달 */}
+      {deleteTargetQuizId !== null && (
+        <Dialog
+          defaultOpen={true}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteTargetQuizId(null)
+            }
+          }}
+        >
+          <DialogContent></DialogContent>
+        </Dialog>
+      )}
+
+      {/* 유형 문제 삭제 confirm 모달 */}
+      {deleteTargetQuizType !== null && (
+        <Dialog
+          defaultOpen={true}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteTargetQuizType(null)
+            }
+          }}
+        >
+          <DialogContent></DialogContent>
+        </Dialog>
+      )}
 
       {/* <QuizLoadingDrawer /> */}
     </div>
