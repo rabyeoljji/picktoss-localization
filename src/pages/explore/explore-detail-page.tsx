@@ -272,7 +272,7 @@ const ExploreDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[var(--header-height-safe)] scrollbar-hide">
+      <HeaderOffsetLayout className="flex-1 pt-[var(--header-height-safe)] scrollbar-hide">
         <div className="px-4 pb-6 flex flex-col gap-[8px]">
           <div className="flex flex-col gap-[12px]">
             <Text typo="h1" className="flex-center size-[48px]">
@@ -313,7 +313,7 @@ const ExploreDetailPage = () => {
         </div>
 
         {/* 3. 탭 바 - sticky로 상단에 고정 */}
-        <div className="sticky top-0 z-40 bg-white flex items-center justify-between border-b border-divider pt-[10px] pb-[6px] px-[20px]">
+        <div className="sticky top-[var(--header-height-safe)] z-40 bg-white flex items-center justify-between border-b border-divider pt-[10px] pb-[6px] px-[20px]">
           <div className="flex items-center gap-[24px]">
             {existQuizTypes.find((type) => type === 'MULTIPLE_CHOICE') &&
               existQuizTypes.find((type) => type === 'MIX_UP') && (
