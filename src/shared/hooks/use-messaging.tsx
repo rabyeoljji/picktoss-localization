@@ -40,6 +40,7 @@ export const useMessaging = () => {
 
       // 로그인 상태(토큰 여부)고, 알림 허용 상태일 때만 진행
       if (!token || !isGranted) {
+        console.log('로그인 상태가 아니거나 알림 권한이 허용되지 않았습니다.')
         return
       }
 
@@ -50,6 +51,7 @@ export const useMessaging = () => {
         return
       }
 
+      console.log(isPWA ? 'PWA mode' : 'Web mode')
       // Get and process FCM token
       if (isPWA) {
         console.log('PWA mode detected, requesting FCM token')
