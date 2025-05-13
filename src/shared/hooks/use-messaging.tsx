@@ -54,7 +54,7 @@ export const useMessaging = () => {
       if (isPWA) {
         const token = await getFCMToken()
         if (token) {
-          saveFcmToken({ data: { fcmToken: token } })
+          saveFcmToken({ data: { fcmToken: token } }, { onSuccess: () => console.log('FCM token saved successfully') })
         }
       }
 
