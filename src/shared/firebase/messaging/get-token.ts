@@ -11,6 +11,7 @@ export const getFCMToken = async (): Promise<string | null> => {
       })
 
       if (token) {
+        console.log(token)
         return token
       } else {
         console.warn('FCM 토큰 없음.')
