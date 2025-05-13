@@ -12,7 +12,7 @@ const tagVariants = cva('inline-flex py-[2px]', {
       ['blue-strong']: 'bg-blue-strong text-inverse',
       orange: 'bg-orange text-inverse',
       ['orange-weak']: 'bg-accent text-accent',
-      gray: 'bg-surface-2 text-secondary',
+      gray: 'bg-surface-2 text-sub',
       green: 'bg-correct text-correct',
       red: 'bg-incorrect text-incorrect',
     },
