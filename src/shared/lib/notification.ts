@@ -1,11 +1,15 @@
 /** 알림 권한 허용 체크 */
-export const checkNotificationPermission = () => {
-  // 이미 권한 선택을 한 경우
-  if (Notification.permission === 'granted' || Notification.permission === 'denied') {
-    return true
-  }
+// export const checkNotificationPermission = () => {
+//   // 이미 권한 선택을 한 경우
+//   if (Notification.permission === 'granted' || Notification.permission === 'denied') {
+//     return true
+//   }
 
-  return false
+//   return false
+// }
+/** 알림 권한이 설정되었는지 확인 (iOS 대응) */
+export const checkNotificationPermission = (): boolean => {
+  return Notification.permission !== 'default'
 }
 
 /** 범용 알림 권한 요청 함수 (iOS 대응 포함) */

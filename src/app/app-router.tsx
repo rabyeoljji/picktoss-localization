@@ -105,10 +105,11 @@ export const AppRouter = () => {
           <Route path={RoutePath.invite} element={<InvitePage />} />
           <Route path={RoutePath.inviteLogin} element={<InviteLoginPage />} />
 
-          {/* Auth */}
-          <Route path={RoutePath.login} element={<LoginPage />} />
           {/* Install Induce */}
           <Route path={RoutePath.installGuide} element={<InstallGuidePage />} />
+
+          {/* Auth */}
+          <Route path={RoutePath.login} element={<LoginPage />} />
         </Route>
       </Routes>
     </BrowserRouter>
