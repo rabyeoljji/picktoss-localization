@@ -163,7 +163,7 @@ export const PeekingDrawer = ({
   return (
     <div
       className={cn(
-        'fixed bottom-0 left-0 right-0 mx-auto max-w-xl z-50 rounded-t-[20px] overflow-hidden shadow-md',
+        'fixed bottom-0 left-0 right-0 mx-auto max-w-xl z-50 rounded-t-[20px] overflow-hidden shadow-[var(--shadow-md)]',
         className,
       )}
     >

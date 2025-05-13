@@ -1,9 +1,9 @@
-import { HTMLMotionProps, motion } from 'framer-motion'
-import { CheckIcon, XIcon } from 'lucide-react'
+import { HTMLAttributes } from 'react'
 
+import { ImgRoundCorrect, ImgRoundIncorrect } from '@/shared/assets/images'
 import { cn } from '@/shared/lib/utils'
 
-export interface MultipleChoiceOptionProps extends Omit<HTMLMotionProps<'button'>, 'onDrag'> {
+export interface MultipleChoiceOptionProps extends HTMLAttributes<HTMLButtonElement> {
   label?: string
   option: string
   selectedOption: string | null
@@ -16,27 +16,24 @@ export const MultipleChoiceOption = ({
   option,
   selectedOption,
   isCorrect,
-  animationDelay = 0,
   className,
+  animationDelay,
   ...props
 }: MultipleChoiceOptionProps) => {
   const isSelected = selectedOption === option
 
   return (
-    <motion.button
+    <button
       className={cn(
         'w-full transition-all flex items-center gap-3 py-3 px-2.5 rounded-[16px] ring-1',
         isCorrect ? 'bg-correct ring-success text-correct' : 'bg-disabled ring-outline text-disabled',
         selectedOption === null && 'bg-base-1 ring-outline text-secondary',
         className,
       )}
-      initial={{ opacity: 0, x: -10 }}
-      animate={{
-        opacity: 1,
-        x: 0,
-        transition: {
-          delay: animationDelay,
-        },
+      style={{
+        opacity: 0,
+        animation: 'slide-in 0.5s cubic-bezier(0.34, 0.56, 0.3, 1) forwards',
+        animationDelay: `${animationDelay}ms`,
       }}
       {...props}
     >
@@ -44,27 +41,27 @@ export const MultipleChoiceOption = ({
         <>
           {isCorrect && (
             <div className="flex items-center justify-center rounded-full bg-green-500 text-white size-[32px]">
-              <CheckIcon className="size-5" />
+              <ImgRoundCorrect className="size-8" />
             </div>
           )}
           {isSelected && !isCorrect && (
             <div className="flex items-center justify-center rounded-full bg-red-500 text-white size-[32px]">
-              <XIcon className="size-5" />
+              <ImgRoundIncorrect className="size-8" />
             </div>
           )}
           {!isCorrect && !isSelected && (
-            <div className="flex items-center justify-center rounded-full bg-gray-100 text-gray-900 size-[32px]">
+            <div className="flex items-center justify-center rounded-full bg-gray-100 text-disabled size-[32px]">
               <span className="typo-button-3">{label}</span>
             </div>
           )}
         </>
       ) : (
-        <div className="flex items-center justify-center rounded-full bg-gray-100 text-gray-900 size-[32px]">
+        <div className="flex items-center justify-center rounded-full bg-gray-100 text-sub size-[32px]">
           <span className="typo-button-3">{label}</span>
         </div>
       )}
 
       <span className="typo-body-1-medium text-start flex-1">{option}</span>
-    </motion.button>
+    </button>
   )
 }

@@ -72,7 +72,7 @@ function TooltipContent({
         <TooltipPrimitive.Arrow
           ref={arrowRef}
           className={cn(
-            'z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45',
+            'z-50 size-2.5 translate-y-[calc(-50%_-_0px)] rotate-45',
             color === 'blue'
               ? 'bg-blue-strong fill-[var(--color-blue-500)]'
               : 'bg-inverse fill-[var(--color-gray-800)]',

@@ -1,5 +1,8 @@
 // This file is auto-generated. Do not edit manually
 
+import IcO from './ic_O.svg?react'
+import IcX from './ic_X.svg?react'
+import IcTalk from './ic__talk.svg?react'
 import IcAdd from './ic_add.svg?react'
 import IcAddSquare from './ic_add_square.svg?react'
 import IcArrange from './ic_arrange.svg?react'
@@ -49,7 +52,6 @@ import IcNew from './ic_new.svg?react'
 import IcNote from './ic_note.svg?react'
 import IcNotification from './ic_notification.svg?react'
 import IcNotion from './ic_notion.svg?react'
-import IcO from './ic_O.svg?react'
 import IcPagelink from './ic_pagelink.svg?react'
 import IcPin from './ic_pin.svg?react'
 import IcPinFilled from './ic_pin_filled.svg?react'
@@ -74,10 +76,11 @@ import IcViewFilled from './ic_view_filled.svg?react'
 import IcWarning from './ic_warning.svg?react'
 import IcWarningFilled from './ic_warning_filled.svg?react'
 import IcWrite from './ic_write.svg?react'
-import IcX from './ic_X.svg?react'
-import IcTalk from './ic__talk.svg?react'
 
 export {
+  IcO,
+  IcX,
+  IcTalk,
   IcAdd,
   IcAddSquare,
   IcArrange,
@@ -127,7 +130,6 @@ export {
   IcNote,
   IcNotification,
   IcNotion,
-  IcO,
   IcPagelink,
   IcPin,
   IcPinFilled,
@@ -152,6 +154,4 @@ export {
   IcWarning,
   IcWarningFilled,
   IcWrite,
-  IcX,
-  IcTalk,
 }

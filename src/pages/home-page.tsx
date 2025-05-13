@@ -1,37 +1,30 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { AnimatePresence, motion, useAnimation } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
+import { InfoCarousel } from '@/features/quiz/ui/banner'
+import { DailyQuizTooltip } from '@/features/quiz/ui/daliy-quiz-tooltip'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
+import { QuizSettingDrawer } from '@/features/quiz/ui/quiz-setting-drawer'
+import { ResultIcon } from '@/features/quiz/ui/result-icon'
 
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
-import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
-import {
-  ImgDaily1,
-  ImgDaily2,
-  ImgDaily3,
-  ImgPush,
-  ImgRoundCorrect,
-  ImgRoundIncorrect,
-  ImgStar,
-} from '@/shared/assets/images'
+import { IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
+import { ImgPush, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/components/ui/drawer'
-import { Label } from '@/shared/components/ui/label'
 import Loading from '@/shared/components/ui/loading'
-import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { checkNotificationPermission } from '@/shared/lib/notification'
@@ -44,7 +37,7 @@ const HomePage = () => {
   const router = useRouter()
 
   // 알림 관련 설정
-  const [openNotification, setOpenNotification] = useState(true)
+  const [openNotification, setOpenNotification] = useState(false)
   const { isPWA } = usePWA()
 
   // 메인 퀴즈 상태 관리
@@ -65,9 +58,7 @@ const HomePage = () => {
     setQuizzes(quizData?.quizzes.filter((quiz) => quiz.quizType === displayQuizType || displayQuizType === 'ALL') ?? [])
   }, [quizData, displayQuizType])
 
-  const refreshIndicatorControls = useAnimation()
-  const [isRefreshing, setIsRefreshing] = useState(false)
-  const [pullDistance, setPullDistance] = useState(0)
+  const { isRefreshing, pullDistance, handleDrag, handleDragEnd } = usePullToRefresh(() => refetch())
 
   // 백그라운드 리페치 상태 관리
   const isBackgroundRefetchingRef = useRef(false)
@@ -195,23 +186,21 @@ const HomePage = () => {
       status: 'selected',
     }))
 
-    setTimeout(() => {
-      if (quiz.answer === selectOption) {
-        setResultIconState({ show: true, correct: true })
-        setTimeout(() => {
-          moveToNextQuiz(quiz)
-        }, 800)
-      } else {
-        setResultIconState({ show: true, correct: false })
-        setTimeout(() => {
-          setQuizState((prev) => ({
-            ...prev,
-            selectedAnswer: selectOption,
-            status: 'incorrect',
-          }))
-        }, 800)
-      }
-    }, 400)
+    if (quiz.answer === selectOption) {
+      setResultIconState({ show: true, correct: true })
+      setTimeout(() => {
+        moveToNextQuiz(quiz)
+      }, 1000)
+    } else {
+      setResultIconState({ show: true, correct: false })
+      setTimeout(() => {
+        setQuizState((prev) => ({
+          ...prev,
+          selectedAnswer: selectOption,
+          status: 'incorrect',
+        }))
+      }, 1000)
+    }
   }
 
   const currQuiz = quizzes?.[0]
@@ -224,7 +213,7 @@ const HomePage = () => {
     if (resultIconState.show) {
       const timer = setTimeout(() => {
         setResultIconState({ show: false, correct: false })
-      }, 900)
+      }, 550)
 
       return () => clearTimeout(timer)
     }
@@ -240,37 +229,10 @@ const HomePage = () => {
                 <IcProfile className="size-6 text-icon-secondary" />
               </button>
 
-              <Tooltip
-                open={
-                  // 연속일이 0이상일 때 혹은 보상 횟수를 표시할 때
-                  (consecutiveSolvedDailyQuizDays && consecutiveSolvedDailyQuizDays > 0) ||
-                  !!(
-                    todaySolvedDailyQuizCount &&
-                    10 - todaySolvedDailyQuizCount < 10 &&
-                    10 - todaySolvedDailyQuizCount > 0
-                  )
-                }
-              >
-                <TooltipTrigger>
-                  <div className="p-1.5 flex-center">
-                    <ImgStar className="size-[28px]" />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent side="right" color="inverse">
-                  {todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount > 0 ? (
-                    <Text typo="body-2-medium">
-                      <span className="text-accent">{10 - todaySolvedDailyQuizCount}문제</span>{' '}
-                      <span>더 풀면 획득!</span>
-                    </Text>
-                  ) : (
-                    <>
-                      {consecutiveSolvedDailyQuizDays && (
-                        <Text typo="body-2-medium">연속 {consecutiveSolvedDailyQuizDays}일 완료!</Text>
-                      )}
-                    </>
-                  )}
-                </TooltipContent>
-              </Tooltip>
+              <DailyQuizTooltip
+                consecutiveSolvedDailyQuizDays={consecutiveSolvedDailyQuizDays ?? 0}
+                todaySolvedDailyQuizCount={todaySolvedDailyQuizCount ?? 0}
+              />
             </div>
             <div className="ml-auto">
               <button className="p-2 flex-center">
@@ -282,12 +244,16 @@ const HomePage = () => {
         className="bg-surface-2"
       />
 
-      {!isLoading && quizzes?.length === 0 && <BannerContent />}
+      {!isLoading && quizzes?.length === 0 && <InfoCarousel />}
 
       {currQuiz && (
         <HeaderOffsetLayout className="px-3">
           {!isRefreshing ? (
-            <Text typo="subtitle-1-bold" color="sub" className="absolute right-1/2 translate-x-1/2 pt-[16px] shrink-0">
+            <Text
+              typo="subtitle-1-bold"
+              color="sub"
+              className="absolute right-1/2 translate-x-1/2 pt-[16px] whitespace-nowrap"
+            >
               당겨서 새 문제 가져오기...💡
             </Text>
           ) : (
@@ -296,152 +262,101 @@ const HomePage = () => {
             </div>
           )}
 
-          {quizState.status !== 'incorrect' && (
-            <motion.div
-              className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden"
-              key={currQuiz.id}
-              drag="y"
-              dragConstraints={{ top: 0, bottom: 0 }}
-              dragElastic={0.6}
-              initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
-              animate={{
-                opacity: 1,
-                x: 0,
-                y: isRefreshing ? pullDistance : 0,
-              }}
-              transition={{
-                opacity: { duration: 0.3 },
-                x: { duration: 0.3 },
-                y: {
-                  type: 'spring',
-                  stiffness: 400,
-                  damping: 40,
-                },
-              }}
-              onDrag={(_, info) => {
-                if (info.offset.y > 0) {
-                  setPullDistance(Math.min(info.offset.y, 60))
-                  refreshIndicatorControls.start({
-                    opacity: Math.min(info.offset.y / 60, 1),
-                    rotate: Math.min(info.offset.y * 2, 360),
-                    y: Math.min(info.offset.y / 3, 30),
-                  })
-                }
-              }}
-              onDragEnd={(_, info) => {
-                if (info.offset.y > 80) {
-                  setIsRefreshing(true)
-                  refreshIndicatorControls.start({
-                    opacity: 1,
-                    rotate: 360,
-                    transition: { duration: 0.5, repeat: Infinity, ease: 'linear' },
-                  })
-                  refetch().finally(() => {
-                    setIsRefreshing(false)
-                    setPullDistance(0)
-                    refreshIndicatorControls.start({
-                      opacity: 0,
-                      y: 0,
-                      transition: { duration: 0.3 },
-                    })
-                  })
-                } else {
-                  setPullDistance(0)
-                  refreshIndicatorControls.start({
-                    opacity: 0,
-                    y: 0,
-                    transition: { duration: 0.3 },
-                  })
-                }
-              }}
-            >
-              <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+          <motion.div
+            className={cn(
+              'mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 min-h-[500px] relative overflow-hidden z-50',
+              quizState.status === 'incorrect' && 'px-[32px] pt-[64px] pb-6',
+            )}
+            key={currQuiz.id}
+            drag="y"
+            dragConstraints={{ top: 0, bottom: 0 }}
+            dragElastic={0.6}
+            initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
+            animate={{
+              opacity: 1,
+              x: 0,
+              y: isRefreshing ? pullDistance : 0,
+            }}
+            transition={{
+              opacity: { duration: 0.3 },
+              x: { duration: 0.3 },
+              y: {
+                type: 'spring',
+                stiffness: 400,
+                damping: 40,
+              },
+            }}
+            onDrag={handleDrag}
+            onDragEnd={handleDragEnd}
+          >
+            <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
-              <motion.div
-                className="h-[152px] w-[80%] mx-auto flex flex-col items-center pt-5 justify-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <Tag>{currQuiz.name}</Tag>
-                <Text typo="question" className="mt-3 text-center">
-                  {currQuiz.question}
-                </Text>
-              </motion.div>
+            {quizState.status !== 'incorrect' ? (
+              <>
+                <motion.div
+                  className="h-[152px] w-[80%] mx-auto flex flex-col items-center justify-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Tag size="md">{currQuiz.name}</Tag>
+                  <Text typo="question" className="mt-3 text-center whitespace-pre-wrap break-keep">
+                    {currQuiz.question}
+                  </Text>
+                </motion.div>
 
-              <div className="mt-2">
-                {currQuiz.quizType === 'MIX_UP' ? (
-                  <div className="flex items-center gap-3 pt-10">
-                    {Array.from({ length: 2 }).map((_, index) => (
-                      <OXChoiceOption
-                        key={index}
-                        O={index === 0}
-                        X={index === 1}
-                        isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
-                        selectedOption={quizState.selectedAnswer}
-                        onClick={() =>
-                          handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
-                        }
-                        className={cn('flex-1', quizState.status !== 'idle' && 'pointer-events-none')}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div className="grid gap-2">
-                    {currQuiz.options.map((option, index) => (
-                      <MultipleChoiceOption
-                        key={option}
-                        label={String.fromCharCode(65 + index)}
-                        option={option}
-                        isCorrect={option === currQuiz.answer}
-                        selectedOption={quizState.selectedAnswer}
-                        animationDelay={index * 0.03}
-                        onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
-                        className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-              <AnimatePresence>
-                {resultIconState.show && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.7 }}
-                    animate={{
-                      opacity: 1,
-                      scale: 1,
-                    }}
-                    transition={{
-                      type: 'spring',
-                      stiffness: 200,
-                      mass: 1,
-                      velocity: 2,
-                      duration: 0.4,
-                    }}
-                    exit={{ opacity: 0, scale: 0.7 }}
-                  >
-                    {resultIconState.correct && (
-                      <ImgRoundCorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
-                    )}
-                    {!resultIconState.correct && (
-                      <ImgRoundIncorrect className="size-[78px] absolute right-1/2 translate-x-1/2 bottom-[100px]" />
-                    )}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          )}
-          {quizState.status === 'incorrect' && (
-            <WrongAnswerContent
-              currQuiz={currQuiz}
-              moveToNextQuiz={moveToNextQuiz}
-              settingDrawerOpen={settingDrawerOpen}
-              setSettingDrawerOpen={setSettingDrawerOpen}
-            />
-          )}
+                <div className="mt-2">
+                  {currQuiz.quizType === 'MIX_UP' ? (
+                    <div className="flex items-center gap-3 pt-10">
+                      {Array.from({ length: 2 }).map((_, index) => (
+                        <OXChoiceOption
+                          key={index}
+                          O={index === 0}
+                          X={index === 1}
+                          isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
+                          selectedOption={quizState.selectedAnswer}
+                          onClick={() =>
+                            handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
+                          }
+                          className={cn(
+                            'flex-1 aspect-[153.5/126]',
+                            quizState.status !== 'idle' && 'pointer-events-none',
+                          )}
+                        />
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="grid gap-2">
+                      {currQuiz.options.map((option, index) => (
+                        <MultipleChoiceOption
+                          key={option}
+                          label={String.fromCharCode(65 + index)}
+                          option={option}
+                          isCorrect={option === currQuiz.answer}
+                          selectedOption={quizState.selectedAnswer}
+                          animationDelay={index * 60}
+                          onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
+                          className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </>
+            ) : (
+              <IncorrectAnswerBody
+                currQuiz={currQuiz}
+                moveToNextQuiz={moveToNextQuiz}
+                settingDrawerOpen={settingDrawerOpen}
+                setSettingDrawerOpen={setSettingDrawerOpen}
+              />
+            )}
+            {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
+          </motion.div>
         </HeaderOffsetLayout>
       )}
 
+      {/* 알림 권한 허용 drawer */}
       <NotificationDrawer open={openNotification} onOpenChange={setOpenNotification} />
 
       <div className="px-4">
@@ -497,152 +412,9 @@ const HomePage = () => {
   )
 }
 
-const BannerContent = () => {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(1)
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!api) {
-      return
-    }
-
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
-
-  return (
-    <HeaderOffsetLayout className="px-3">
-      <div className="mt-1 shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1">
-        <Carousel setApi={setApi}>
-          <CarouselContent>
-            <CarouselItem>
-              <ImgDaily1 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">내 퀴즈 생성하기</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  쌓아둔 필기, 메모, 저장한 자료 등<br />
-                  공부한 내용으로 맞춤형 퀴즈를 생성해요
-                </Text>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem>
-              <ImgDaily2 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">관심 퀴즈 저장하기</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  사람들이 만든 다양한 문제를 풀어보고,
-                  <br />
-                  마음에 드는 퀴즈를 북마크해요
-                </Text>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem>
-              <ImgDaily3 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">데일리로 기억하기!</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  내가 생성하거나 북마크한 퀴즈의 문제를
-                  <br />
-                  여기서 랜덤으로 풀어보며 복습해요
-                </Text>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
-
-        <div className="mt-[65px] mx-auto w-fit flex gap-2 items-center">
-          {Array.from({ length: count }).map((_, i) => (
-            <div key={i} className={cn('size-2 rounded-full bg-surface-3', current === i + 1 && 'bg-inverse')} />
-          ))}
-        </div>
-      </div>
-    </HeaderOffsetLayout>
-  )
-}
-
-const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
-  const [displayQuizType, setDisplayQuizType] = useQueryParam('/', 'displayQuizType')
-
-  return (
-    <AlertDrawer
-      open={open}
-      onOpenChange={onOpenChange}
-      trigger={
-        <button className="absolute top-4 right-4 p-1 rounded-[8px] border border-outline">
-          <IcControl className="size-4 text-icon-secondary" />
-        </button>
-      }
-      title="데일리 퀴즈 설정"
-      hasClose
-      height="lg"
-      body={
-        <div className="py-8">
-          <form
-            id="quiz-settings-form"
-            onSubmit={(e) => {
-              e.preventDefault()
-              const value = (e.target as HTMLFormElement).quizType.value
-              setDisplayQuizType(value)
-              onOpenChange(false)
-            }}
-          >
-            <div className="grid gap-2">
-              <Text typo="subtitle-2-bold" color="secondary">
-                문제 유형
-              </Text>
-              <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
-                <RadioGroup name="quizType" defaultValue={displayQuizType}>
-                  <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="ALL" />
-                    <Text typo="subtitle-2-medium" color="primary">
-                      전체
-                    </Text>
-                  </Label>
-                  <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MULTIPLE_CHOICE" />
-                    <Text typo="subtitle-2-medium" color="primary">
-                      객관식
-                    </Text>
-                  </Label>
-                  <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MIX_UP" />
-                    <Text typo="subtitle-2-medium" color="primary">
-                      O/X
-                    </Text>
-                  </Label>
-                </RadioGroup>
-              </div>
-            </div>
-          </form>
-        </div>
-      }
-      footer={
-        <div className="h-[114px] pt-[14px]">
-          <Button type="submit" form="quiz-settings-form">
-            적용하기
-          </Button>
-        </div>
-      }
-      contentClassName="bg-surface-2"
-    />
-  )
-}
-
-const WrongAnswerContent = ({
+const IncorrectAnswerBody = ({
   currQuiz,
   moveToNextQuiz,
-  settingDrawerOpen,
-  setSettingDrawerOpen,
 }: {
   currQuiz: Quiz
   moveToNextQuiz: (currQuiz: Quiz) => void
@@ -650,10 +422,8 @@ const WrongAnswerContent = ({
   setSettingDrawerOpen: (open: boolean) => void
 }) => {
   return (
-    <div className="mt-1 shadow-md rounded-[20px] px-[32px] pt-[64px] pb-6 bg-surface-1 min-h-[500px] relative">
-      <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
-
-      <div className="flex items-center gap-3 mx-auto w-fit">
+    <>
+      <div className="flex items-center justify-start gap-3 w-fit">
         <ImgRoundIncorrect className="size-[48px]" />
         <Text typo="h2" color="incorrect">
           오답
@@ -665,13 +435,13 @@ const WrongAnswerContent = ({
       </div>
 
       <div className="grid gap-3">
-        <Text typo="subtitle-1-bold" className="text-center">
+        <Text typo="subtitle-1-bold">
           정답: {currQuiz.quizType === 'MULTIPLE_CHOICE' ? currQuiz.answer : currQuiz.answer === 'correct' ? 'O' : 'X'}
         </Text>
-        <Text typo="body-1-medium" as="p" color="secondary" className="text-center">
+        <Text typo="body-1-medium" as="p" color="secondary">
           {currQuiz.explanation}
         </Text>
-        <div className="mt-[24px] flex items-center mx-auto">
+        <div className="mt-[24px] flex items-center">
           <Text typo="body-1-medium" color="sub">
             출처
           </Text>
@@ -698,7 +468,7 @@ const WrongAnswerContent = ({
       >
         문제 전환
       </Button>
-    </div>
+    </>
   )
 }
 

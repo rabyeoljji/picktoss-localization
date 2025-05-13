@@ -30,10 +30,13 @@ export const Header = <T extends React.ElementType = 'div'>({
 
   return (
     <Comp
-      className={cn('w-full max-w-xl header-h-safe flex flex-col justify-end fixed z-50 top-0 bg-base-1', className)}
+      className={cn(
+        'w-full max-w-xl px-2 header-h-safe flex flex-col justify-end fixed z-50 top-0 bg-base-1',
+        className,
+      )}
       {...props}
     >
-      <div className={cn('relative h-[var(--header-height)] flex items-center')}>
+      <div className={cn('relative h-[var(--header-height)] flex items-center [&_svg]:text-icon-primary')}>
         {left && left}
         {title && (
           <div className="center">

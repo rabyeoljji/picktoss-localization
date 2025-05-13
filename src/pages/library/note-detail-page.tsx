@@ -24,6 +24,7 @@ import {
   IcChevronUp,
   IcDelete,
   IcDownload,
+  IcEdit,
   IcKebab,
   IcNote,
   IcPlay,
@@ -52,6 +53,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { Slider } from '@/shared/components/ui/slider'
 import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
@@ -66,10 +68,13 @@ const NoteDetailPage = () => {
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
   const [showAnswer, setShowAnswer] = useQueryParam('/library/:noteId', 'showAnswer')
-  const { data: document } = useGetSingleDocument(Number(noteId))
+  const { data: document, isLoading: isDocumentLoading } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
-  console.log(document)
+
+  const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
+  const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | null>(null)
+
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
 
@@ -173,15 +178,22 @@ const NoteDetailPage = () => {
       <HeaderOffsetLayout className="flex-1 overflow-auto pt-[54px]">
         <div className="px-4 pb-6">
           <div ref={emojiPickerRef} className="relative">
-            <button
-              type="button"
-              // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
-              onMouseDown={(e) => e.preventDefault()}
-              onClick={() => setShowEmojiPicker((prev) => !prev)}
-              className="typo-h1 flex-center size-[48px]"
-            >
-              {document?.emoji}
-            </button>
+            {isDocumentLoading ? (
+              <div className="size-[48px]">
+                <Skeleton className="size-[40px]" />
+              </div>
+            ) : (
+              <button
+                type="button"
+                // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
+                // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
+                onMouseDown={(e) => e.preventDefault()}
+                onClick={() => setShowEmojiPicker((prev) => !prev)}
+                className="typo-h1 flex-center size-[48px] relative"
+              >
+                {document?.emoji}
+              </button>
+            )}
             {showEmojiPicker && (
               <div className="absolute top-full bg-base-1 z-50 left-0 mt-1">
                 <EmojiPicker
@@ -201,21 +213,25 @@ const NoteDetailPage = () => {
           </div>
           {/* 제목 요소에 ref 추가 */}
           <div className="flex justify-between items-center">
-            <Text
-              ref={titleRef}
-              typo="h3"
-              className="mt-3 outline-none"
-              contentEditable
-              suppressContentEditableWarning={true}
-              onBlur={(e) => {
-                updateDocumentName({
-                  documentId: Number(noteId),
-                  data: { name: (e.target as unknown as HTMLDivElement).innerText.trim() || document?.name || '' },
-                })
-              }}
-            >
-              {document?.name ?? 'Loading...'}
-            </Text>
+            {isDocumentLoading ? (
+              <Skeleton className="w-[160px] h-[30px]" />
+            ) : (
+              <Text
+                ref={titleRef}
+                typo="h3"
+                className="mt-3 outline-none"
+                contentEditable
+                suppressContentEditableWarning={true}
+                onBlur={(e) => {
+                  updateDocumentName({
+                    documentId: Number(noteId),
+                    data: { name: (e.target as unknown as HTMLDivElement).innerText.trim() || document?.name || '' },
+                  })
+                }}
+              >
+                {document?.name}
+              </Text>
+            )}
             <button onClick={() => setDetailInfoOpen((prev) => !prev)} className="p-1">
               {detailInfoOpen ? (
                 <IcChevronUp className="text-icon-secondary" />
@@ -261,9 +277,13 @@ const NoteDetailPage = () => {
             )}
           </AnimatePresence>
           <div className="mt-2">
-            <Text typo="body-1-medium" color="sub">
-              {document?.createdAt.split('T')[0].split('-').join('.')} · {document?.quizzes?.length}문제 · 공개됨
-            </Text>
+            {isDocumentLoading ? (
+              <Skeleton className="w-[200px] h-[22px]" />
+            ) : (
+              <Text typo="body-1-medium" color="sub">
+                {document?.createdAt.split('T')[0].split('-').join('.')} · {document?.quizzes?.length}문제 · 공개됨
+              </Text>
+            )}
           </div>
         </div>
 
@@ -301,7 +321,7 @@ const NoteDetailPage = () => {
         </div>
 
         {/* 4. 문제 리스트 */}
-        <div className="px-4 pt-4 pb-[113px] bg-base-2">
+        <div className="px-4 pt-4 pb-[113px] bg-base-2 min-h-[100svh]">
           {!hasMixUpQuiz ||
             (!hasMultipleChoiceQuiz && (
               <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
@@ -372,10 +392,34 @@ const NoteDetailPage = () => {
             ))}
 
           <div className="grid gap-2">
+            {isDocumentLoading &&
+              Array.from({ length: 10 }).map((_, index) => (
+                <Skeleton key={index} className="rounded-[12px] h-[250px]" />
+              ))}
+
             {quizzes?.map((quiz, index) =>
               quiz.quizType === 'MIX_UP' ? (
                 <QuestionCard key={quiz.id}>
-                  <QuestionCard.Header order={index + 1} right={<div>...</div>} />
+                  <QuestionCard.Header
+                    order={index + 1}
+                    right={
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <IcKebab className="size-5 text-icon-sub" />
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="-translate-y-2">
+                          <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-500"
+                            right={<IcDelete className="text-icon-critical" />}
+                            onClick={() => setDeleteTargetQuizId(quiz.id)}
+                          >
+                            문제 삭제
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    }
+                  />
                   <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
                   <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
                   <QuestionCard.Explanation
@@ -424,7 +468,7 @@ const NoteDetailPage = () => {
       </HeaderOffsetLayout>
 
       {/* 5. 하단 툴바 */}
-      <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-md flex items-center rounded-[16px]">
+      <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-[var(--shadow-md)] flex items-center rounded-[16px]">
         <div className="flex items-center gap-2 shrink-0">
           <Text typo="body-2-bold" color="sub">
             정답
@@ -506,6 +550,34 @@ const NoteDetailPage = () => {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* 단일 문제 삭제 confirm 모달 */}
+      {deleteTargetQuizId !== null && (
+        <Dialog
+          defaultOpen={true}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteTargetQuizId(null)
+            }
+          }}
+        >
+          <DialogContent></DialogContent>
+        </Dialog>
+      )}
+
+      {/* 유형 문제 삭제 confirm 모달 */}
+      {deleteTargetQuizType !== null && (
+        <Dialog
+          defaultOpen={true}
+          onOpenChange={(open) => {
+            if (!open) {
+              setDeleteTargetQuizType(null)
+            }
+          }}
+        >
+          <DialogContent></DialogContent>
+        </Dialog>
+      )}
 
       {/* <QuizLoadingDrawer /> */}
     </div>
