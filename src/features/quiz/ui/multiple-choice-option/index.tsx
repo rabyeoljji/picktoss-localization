@@ -51,13 +51,13 @@ export const MultipleChoiceOption = ({
           )}
           {!isCorrect && !isSelected && (
             <div className="flex items-center justify-center rounded-full bg-gray-100 text-disabled size-[32px]">
-              <span className="typo-button-3">{label}</span>
+              <span className="typo-button-3 font-[800]!">{label}</span>
             </div>
           )}
         </>
       ) : (
         <div className="flex items-center justify-center rounded-full bg-gray-100 text-sub size-[32px]">
-          <span className="typo-button-3">{label}</span>
+          <span className="typo-button-3 font-[800]!">{label}</span>
         </div>
       )}
 
