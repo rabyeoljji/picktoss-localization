@@ -19,7 +19,7 @@ export const useMessaging = () => {
 
   useServiceWorker()
 
-  const setupMessaging = async () => {
+  const setupMessaging = async (callback: () => void) => {
     try {
       const isBrowser = typeof window !== 'undefined'
 
@@ -45,11 +45,12 @@ export const useMessaging = () => {
             return
           }
 
-          console.log(isPWA ? 'PWA mode' : 'Web mode')
           // Get and process FCM token
           const token = await getFCMToken()
 
           if (token) {
+            console.log('FCM token:', token)
+
             saveFcmToken(
               { data: { fcmToken: token } },
               { onSuccess: () => console.log('FCM token saved successfully') },
@@ -61,7 +62,7 @@ export const useMessaging = () => {
           console.error('Notification permission request failed:', error)
           return
         } finally {
-          window.location.reload()
+          callback()
         }
       }
     } catch (error) {

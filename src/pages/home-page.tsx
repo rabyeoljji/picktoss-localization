@@ -496,7 +496,7 @@ const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChang
         <ImgPush height={200} width={301.25} />
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
-          <Button onClick={async () => await setupMessaging()}>설정하기</Button>
+          <Button onClick={async () => await setupMessaging(() => onOpenChange(false))}>설정하기</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
