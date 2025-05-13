@@ -12,7 +12,7 @@ import { usePWA } from '@/shared/hooks/use-pwa'
 import { requestNotificationPermission } from '@/shared/lib/notification'
 
 export const useMessaging = () => {
-  const { token } = useAuthStore()
+  const { token: accessToken } = useAuthStore()
   const { mutate: saveFcmToken } = useSaveFcmToken()
   const { isPWA } = usePWA()
   const [isReadyNotification, setIsReadyNotification] = useState(false)
@@ -33,7 +33,7 @@ export const useMessaging = () => {
           const isGranted = Notification.permission === 'granted'
 
           // 로그인 상태(토큰 여부)고, 알림 허용 상태일 때만 진행
-          if (!token || !isGranted) {
+          if (!accessToken || !isGranted) {
             console.log('로그인 상태가 아니거나 알림 권한이 허용되지 않았습니다.')
             return
           }
@@ -47,16 +47,13 @@ export const useMessaging = () => {
 
           console.log(isPWA ? 'PWA mode' : 'Web mode')
           // Get and process FCM token
-          if (isPWA) {
-            console.log('PWA mode detected, requesting FCM token')
+          const token = await getFCMToken()
 
-            const token = await getFCMToken()
-            if (token) {
-              saveFcmToken(
-                { data: { fcmToken: token } },
-                { onSuccess: () => console.log('FCM token saved successfully') },
-              )
-            }
+          if (token) {
+            saveFcmToken(
+              { data: { fcmToken: token } },
+              { onSuccess: () => console.log('FCM token saved successfully') },
+            )
           }
 
           setIsReadyNotification(true)
