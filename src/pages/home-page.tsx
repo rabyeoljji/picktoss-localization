@@ -12,11 +12,20 @@ import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcControl, IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
-import { ImgDaily1, ImgDaily2, ImgDaily3, ImgRoundCorrect, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
+import {
+  ImgDaily1,
+  ImgDaily2,
+  ImgDaily3,
+  ImgPush,
+  ImgRoundCorrect,
+  ImgRoundIncorrect,
+  ImgStar,
+} from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/components/ui/drawer'
 import { Label } from '@/shared/components/ui/label'
 import Loading from '@/shared/components/ui/loading'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
@@ -24,6 +33,8 @@ import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
 import { useMessaging } from '@/shared/hooks/use-messaging'
+import { usePWA } from '@/shared/hooks/use-pwa'
+import { checkNotificationPermission } from '@/shared/lib/notification'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -31,6 +42,10 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 
 const HomePage = () => {
   const router = useRouter()
+
+  // 알림 관련 설정
+  const [openNotification, setOpenNotification] = useState(true)
+  const { isPWA } = usePWA()
 
   // 메인 퀴즈 상태 관리
   const [quizzes, setQuizzes] = useState<Quiz[]>()
@@ -167,6 +182,10 @@ const HomePage = () => {
       },
       {
         onSuccess: (data) => setDailyQuizRecord(data),
+        onSettled: () => {
+          if (checkNotificationPermission() || !isPWA) return // 이미 권한 설정을 한 경우라면 알림 요청하지 않음
+          setOpenNotification(true)
+        },
       },
     )
 
@@ -196,12 +215,6 @@ const HomePage = () => {
   }
 
   const currQuiz = quizzes?.[0]
-
-  const { setupMessaging, isReadyNotification } = useMessaging()
-
-  useEffect(() => {
-    console.log('알림 준비: ' + isReadyNotification)
-  }, [isReadyNotification])
 
   const consecutiveSolvedDailyQuizDays = dailyQuizRecord?.consecutiveSolvedDailyQuizDays
   const todaySolvedDailyQuizCount = dailyQuizRecord?.todaySolvedDailyQuizCount
@@ -429,12 +442,7 @@ const HomePage = () => {
         </HeaderOffsetLayout>
       )}
 
-      <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(var(--spacing-tab-navigation)+12px+52px)] w-[calc(100%-32px)] flex-center flex-col gap-1">
-        <Text typo="button-2">테스트용</Text>
-        <Button onClick={async () => await setupMessaging()}>
-          알림 권한 요청 <br /> <Text typo="button-4">(재요청은 pwa앱 삭제 후 재설치)</Text>
-        </Button>
-      </div>
+      <NotificationDrawer open={openNotification} onOpenChange={setOpenNotification} />
 
       <div className="px-4">
         <button
@@ -691,6 +699,37 @@ const WrongAnswerContent = ({
         문제 전환
       </Button>
     </div>
+  )
+}
+
+const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
+  const { setupMessaging, isReadyNotification } = useMessaging()
+
+  useEffect(() => {
+    console.log('알림 준비: ' + isReadyNotification)
+  }, [isReadyNotification])
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent height="md" hasHandle={false} className="flex flex-col items-center">
+        <DrawerHeader className="w-full flex-center flex-col gap-[8px] py-[10px]">
+          <Text typo="h4" className="text-center">
+            푸시 알림 허용 안내
+          </Text>
+          <Text typo="subtitle-2-medium" color="sub" className="text-center">
+            다음 단계에서 알림을 허용하시면
+            <br />
+            매일 잊지 않고 퀴즈를 풀 수 있어요
+          </Text>
+        </DrawerHeader>
+
+        <ImgPush height={200} width={301.25} />
+
+        <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
+          <Button onClick={async () => await setupMessaging()}>설정하기</Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   )
 }
 
