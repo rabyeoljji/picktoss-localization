@@ -271,8 +271,8 @@ const ExploreDetailPage = () => {
         }
       />
 
-      {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 pt-[var(--header-height-safe)] scrollbar-hide">
+      {/* 2. 스크롤 가능한 메인 영역 */}
+      <HeaderOffsetLayout className="flex-1 scrollbar-hide">
         <div className="px-4 pb-6 flex flex-col gap-[8px]">
           <div className="flex flex-col gap-[12px]">
             <Text typo="h1" className="flex-center size-[48px]">
