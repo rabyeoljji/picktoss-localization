@@ -475,6 +475,13 @@ const IncorrectAnswerBody = ({
 const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
   const { setupMessaging, isReadyNotification } = useMessaging()
 
+  const clickNotification = async () => {
+    const callbackAfterPermission = () => {
+      onOpenChange(false)
+    }
+    await setupMessaging(callbackAfterPermission)
+  }
+
   useEffect(() => {
     console.log('알림 준비: ' + isReadyNotification)
   }, [isReadyNotification])
@@ -496,7 +503,7 @@ const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChang
         <ImgPush height={200} width={301.25} />
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
-          <Button onClick={async () => await setupMessaging(() => onOpenChange(false))}>설정하기</Button>
+          <Button onClick={clickNotification}>설정하기</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

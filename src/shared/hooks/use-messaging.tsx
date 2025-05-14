@@ -19,7 +19,7 @@ export const useMessaging = () => {
 
   useServiceWorker()
 
-  const setupMessaging = async (callback: () => void) => {
+  const setupMessaging = async (callbackAfterPermission: () => void) => {
     try {
       const isBrowser = typeof window !== 'undefined'
 
@@ -29,6 +29,8 @@ export const useMessaging = () => {
       if (isPWA) {
         try {
           await requestNotificationPermission()
+
+          callbackAfterPermission()
 
           const isGranted = Notification.permission === 'granted'
 
@@ -61,8 +63,6 @@ export const useMessaging = () => {
         } catch (error) {
           console.error('Notification permission request failed:', error)
           return
-        } finally {
-          callback()
         }
       }
     } catch (error) {
