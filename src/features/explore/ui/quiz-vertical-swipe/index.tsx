@@ -17,6 +17,7 @@ import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 import { IcBookmarkFilled, IcLibrary } from '@/shared/assets/icon'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
 import { Button } from '@/shared/components/ui/button'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { useSessionStorage } from '@/shared/lib/storage'
@@ -73,9 +74,8 @@ const QuizVerticalSwipe = () => {
     if (!updatedBookmarkInfo || !updatedBookmarkInfo.id || documents.length === 0) return
 
     const targetIndex = documents.findIndex((doc) => doc.id === updatedBookmarkInfo.id)
-    const root = document.getElementById('root')
 
-    if (targetIndex !== -1 && root) {
+    if (targetIndex !== -1) {
       // 원래 위치로 돌아가기
       // 1. Swiper 슬라이드 이동
       swiperRef.current?.slideTo(targetIndex)
@@ -170,6 +170,17 @@ const QuizVerticalSwipe = () => {
     }
   }, [activeIndex, documents.length, isFetching, publicData])
 
+  if (isFetching && documents.length === 0) {
+    return (
+      <div
+        style={{ height: 'calc(100vh - env(safe-area-inset-top) - 184px)' }}
+        className="relative w-full p-[16px] pt-[28px] flex-center overflow-hidden bg-base-2"
+      >
+        <Loading />
+      </div>
+    )
+  }
+
   return (
     <div
       ref={swiperContainerRef}
@@ -202,7 +213,7 @@ const QuizVerticalSwipe = () => {
         {documents.map((document, index) =>
           document.id === 'SHARE' ? (
             <SwiperSlide key={document.id} virtualIndex={index}>
-              <ShareCard index={index} activeIndex={activeIndex} />
+              <ShareCard index={index} activeIndex={activeIndex} notPublicCount={notPublicCount} />
             </SwiperSlide>
           ) : (
             <SwiperSlide key={document.id} virtualIndex={index}>
@@ -387,7 +398,15 @@ const ExploreSwipeCard = ({
 }
 
 // 비공개 문서가 있을 경우 노출 될 공개 권유 카드
-const ShareCard = ({ index, activeIndex }: { index: number; activeIndex: number }) => {
+const ShareCard = ({
+  index,
+  activeIndex,
+  notPublicCount,
+}: {
+  index: number
+  activeIndex: number
+  notPublicCount: number
+}) => {
   const router = useRouter()
 
   return (
@@ -408,7 +427,7 @@ const ShareCard = ({ index, activeIndex }: { index: number; activeIndex: number 
         <Text typo="subtitle-2-medium" color="secondary" className="">
           공개할 수 있는 퀴즈가{' '}
           <Text as={'span'} typo="subtitle-2-medium" color="accent">
-            3개
+            {notPublicCount}개
           </Text>{' '}
           있어요
         </Text>

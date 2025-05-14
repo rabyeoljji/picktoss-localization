@@ -28,6 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
+import { Skeleton } from '@/shared/components/ui/skeleton'
 import { Slider } from '@/shared/components/ui/slider'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
@@ -48,7 +49,7 @@ const ExploreDetailPage = () => {
 
   const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
 
-  const { data: document } = useGetPublicSingleDocument(Number(noteId))
+  const { data: document, isLoading: isDocumentLoading } = useGetPublicSingleDocument(Number(noteId))
   const existQuizTypes = Array.from(new Set(document?.quizzes.map((quiz) => quiz.quizType)))
 
   // 북마크 정보 업데이트를 위한 세션 스토리지 설정
@@ -275,41 +276,59 @@ const ExploreDetailPage = () => {
       <HeaderOffsetLayout className="flex-1 scrollbar-hide">
         <div className="px-4 pb-6 flex flex-col gap-[8px]">
           <div className="flex flex-col gap-[12px]">
-            <Text typo="h1" className="flex-center size-[48px]">
-              {document?.emoji}
-            </Text>
-
-            {/* 제목 요소에 ref 추가 */}
-            <Text ref={titleRef} typo="h3" className="outline-none">
-              {document?.name ?? 'Loading...'}
-            </Text>
-
-            <Text typo="body-1-medium" color="sub" className="flex items-center">
-              <div className="inline-flex justify-start items-center gap-[2px]">
-                <span>{document?.category}</span>
+            {isDocumentLoading ? (
+              <div className="size-[48px]">
+                <Skeleton className="size-[40px]" />
               </div>
+            ) : (
+              <Text typo="h1" className="flex-center size-[48px]">
+                {document?.emoji}
+              </Text>
+            )}
 
-              <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
+            {isDocumentLoading ? (
+              <Skeleton className="w-[160px] h-[30px] rounded-full" />
+            ) : (
+              // 제목 요소에 ref 추가
+              <Text ref={titleRef} typo="h3" className="outline-none">
+                {document?.name ?? 'Loading...'}
+              </Text>
+            )}
 
-              <div className="inline-flex justify-start items-center gap-[2px]">
-                <IcPlayFilled className="size-[12px] text-icon-sub" />
-                <span>{document?.tryCount}</span>
-              </div>
+            {isDocumentLoading ? (
+              <Skeleton className="w-[180px] h-[22px] rounded-full" />
+            ) : (
+              <Text typo="body-1-medium" color="sub" className="flex items-center">
+                <div className="inline-flex justify-start items-center gap-[2px]">
+                  <span>{document?.category}</span>
+                </div>
 
-              <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
+                <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 
-              <div className="inline-flex justify-start items-center gap-[2px]">
-                <IcBookmarkFilled className="size-[12px] text-icon-sub" />
-                <span>{document?.bookmarkCount}</span>
-              </div>
-            </Text>
+                <div className="inline-flex justify-start items-center gap-[2px]">
+                  <IcPlayFilled className="size-[12px] text-icon-sub" />
+                  <span>{document?.tryCount}</span>
+                </div>
+
+                <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
+
+                <div className="inline-flex justify-start items-center gap-[2px]">
+                  <IcBookmarkFilled className="size-[12px] text-icon-sub" />
+                  <span>{document?.bookmarkCount}</span>
+                </div>
+              </Text>
+            )}
           </div>
 
-          <Text typo="body-1-medium" color="sub" className="flex items-center">
-            {format(new Date(document?.createdAt ?? defaultDateString), 'yyyy.M.d')} 작성
-            <div className="inline-block size-[4px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />{' '}
-            {document?.quizzes?.length} 문제
-          </Text>
+          {isDocumentLoading ? (
+            <Skeleton className="w-[200px] h-[22px] rounded-full" />
+          ) : (
+            <Text typo="body-1-medium" color="sub" className="flex items-center">
+              {format(new Date(document?.createdAt ?? defaultDateString), 'yyyy.M.d')} 작성
+              <div className="inline-block size-[4px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />{' '}
+              {document?.quizzes?.length} 문제
+            </Text>
+          )}
         </div>
 
         {/* 3. 탭 바 - sticky로 상단에 고정 */}
@@ -353,6 +372,9 @@ const ExploreDetailPage = () => {
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2 flex flex-col gap-2">
+          {isDocumentLoading &&
+            Array.from({ length: 10 }).map((_, index) => <Skeleton key={index} className="rounded-[12px] h-[250px]" />)}
+
           {quizType === 'MIX_UP' || quizType === 'ALL' ? (
             <div className="grid gap-2">
               {document?.quizzes

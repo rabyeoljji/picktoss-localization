@@ -15,7 +15,7 @@ import { Link, useQueryParam } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const ExplorePage = () => {
-  const { data: categoryData } = useGetCategories()
+  const { data: categoryData, isLoading } = useGetCategories()
 
   const [params, setParams] = useQueryParam('/explore')
   const activeCategory = params.category
@@ -55,28 +55,36 @@ const ExplorePage = () => {
             ref={scrollRef}
             className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
           >
-            {/* 전체 */}
-            <Chip
-              variant={activeCategory === 0 ? 'selected' : 'darken'}
-              left={activeCategory === 0 ? '💫' : undefined}
-              onClick={() => setCategory(0)}
-              className={cn('ml-[16px]')}
-            >
-              전체
-            </Chip>
-
-            {/* Chip 요소들 */}
-            {categoryData &&
-              categoryData.map((category, index) => (
+            {isLoading ? (
+              Array.from({ length: 7 }).map(() => (
+                <div className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
+              ))
+            ) : (
+              <>
+                {/* 전체 */}
                 <Chip
-                  key={index}
-                  variant={category.id === activeCategory ? 'selected' : 'darken'}
-                  left={category.id === activeCategory ? category.emoji : undefined}
-                  onClick={() => setCategory(category.id)}
+                  variant={activeCategory === 0 ? 'selected' : 'darken'}
+                  left={activeCategory === 0 ? '💫' : undefined}
+                  onClick={() => setCategory(0)}
+                  className={cn('ml-[16px]')}
                 >
-                  {category.name}
+                  전체
                 </Chip>
-              ))}
+
+                {/* Chip 요소들 */}
+                {categoryData &&
+                  categoryData.map((category, index) => (
+                    <Chip
+                      key={index}
+                      variant={category.id === activeCategory ? 'selected' : 'darken'}
+                      left={category.id === activeCategory ? category.emoji : undefined}
+                      onClick={() => setCategory(category.id)}
+                    >
+                      {category.name}
+                    </Chip>
+                  ))}
+              </>
+            )}
           </div>
 
           {/* 카드 스와이프 영역 */}
