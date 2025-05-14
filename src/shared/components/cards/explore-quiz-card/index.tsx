@@ -20,9 +20,8 @@ export const ExploreQuizCard = ({ index, activeIndex, header, content, quizzes, 
   return (
     <div
       className={cn(
-        'w-[311px] h-[455px] relative bg-gradient-to-b from-bg-surface-1 to-bg-accent rounded-[20px] shadow-[0px_4px_28px_0px_rgba(0,0,0,0.10)] overflow-hidden transition-transform duration-300 swiper-slide-active:scale-110 bg-[linear-gradient(to_bottom,_var(--color-white)_78%,_var(--color-orange-100)_100%)]',
-        activeIndex === index && 'scale-110',
-        activeIndex !== index && 'pointer-events-none',
+        'w-[343px] h-[500px] relative rounded-[20px] shadow-[0px_4px_28px_0px_rgba(0,0,0,0.10)] overflow-hidden transition-transform duration-300 bg-[linear-gradient(to_bottom,_var(--color-white)_78%,_var(--color-orange-100)_100%)]',
+        activeIndex !== index && 'scale-90 pointer-events-none',
       )}
     >
       <div className={cn('size-full flex flex-col justify-between opacity-10', activeIndex === index && 'opacity-100')}>
@@ -141,7 +140,7 @@ const ExploreQuizCardQuizzes = ({
           </Text>
         </Text>
 
-        <TextButton onClick={onClickViewAllBtn} size={'sm'} color="sub">
+        <TextButton onClick={onClickViewAllBtn} size={'sm'} variant="sub">
           전체보기
         </TextButton>
       </div>

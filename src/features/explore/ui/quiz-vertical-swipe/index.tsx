@@ -9,33 +9,52 @@ import { GetPublicDocumentsDto } from '@/entities/document/api'
 import {
   useCreateDocumentBookmark,
   useDeleteDocumentBookmark,
+  useGetIsNotPublicDocuments,
   useGetPublicDocuments,
 } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
-import { IcBookmarkFilled } from '@/shared/assets/icon'
+import { IcBookmarkFilled, IcLibrary } from '@/shared/assets/icon'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
+import { Button } from '@/shared/components/ui/button'
+import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { useSessionStorage } from '@/shared/lib/storage'
+import { cn } from '@/shared/lib/utils'
+
+type ShareCard = {
+  id: 'SHARE'
+  name: string
+  emoji: string
+  previewContent: string
+  category: string
+  creator: null
+  isBookmarked: false
+  isOwner: false
+  tryCount: 0
+  bookmarkCount: 0
+  quizzes: []
+  totalQuizCount: 0
+}
+
+type PublicDocumentsDto = GetPublicDocumentsDto | ShareCard
 
 const QuizVerticalSwipe = () => {
   const DATA_PER_PAGE = 10
 
   const [categoryId] = useQueryParam('/explore', 'category')
 
+  // 스와이프 관련
+  const [activeIndex, setActiveIndex] = useState(0)
+  const swiperRef = useRef<SwiperCore>(null)
+  const swiperContainerRef = useRef<HTMLDivElement>(null)
+
+  // 데이터 페칭 관련
   const [fetchParams, setFetchParams] = useState({ categoryId, page: 0 })
-  const [documents, setDocuments] = useState<GetPublicDocumentsDto[]>([])
+  const [documents, setDocuments] = useState<PublicDocumentsDto[]>([])
   const [isFetching, setIsFetching] = useState(false)
   const [hasMore, setHasMore] = useState(true)
   const lastRequestedPageRef = useRef<number>(-1)
-
-  const [activeIndex, setActiveIndex] = useState(0)
-
-  const [safeAreaInsetTop, setSafeAreaInsetTop] = useState(0)
-  const [isTopReached, setIsTopReached] = useState(false)
-
-  const swiperRef = useRef<SwiperCore>(null)
-  const swiperContainerRef = useRef<HTMLDivElement>(null)
 
   const shouldFetch = categoryId !== undefined && fetchParams.page >= 0
   const { data: publicData, isFetched } = useGetPublicDocuments({
@@ -43,6 +62,10 @@ const QuizVerticalSwipe = () => {
     pageSize: DATA_PER_PAGE,
     enabled: shouldFetch,
   })
+
+  // 비공개 문서 개수 가져오기
+  const { data: notPublicDocumentsData } = useGetIsNotPublicDocuments()
+  const notPublicCount = notPublicDocumentsData?.documents.length ?? 0
 
   // 디테일 페이지에서 변경된 북마크 정보 카드 리스트에 업데이트
   const [updatedBookmarkInfo, , removeBookmarkInfo] = useSessionStorage('bookmarkUpdate', null)
@@ -56,8 +79,6 @@ const QuizVerticalSwipe = () => {
       // 원래 위치로 돌아가기
       // 1. Swiper 슬라이드 이동
       swiperRef.current?.slideTo(targetIndex)
-      // 2. 스크롤을 맨 아래로 내리기
-      root.scrollTo({ top: document.body.scrollHeight })
 
       if (updatedBookmarkInfo.isUpdated) {
         setDocuments((prevDocs) =>
@@ -86,12 +107,41 @@ const QuizVerticalSwipe = () => {
     lastRequestedPageRef.current = -1
   }, [categoryId])
 
-  // 초기 로딩 또는 page 변경 시 데이터 추가
   useEffect(() => {
     if (!isFetched) return
 
     if (publicData?.documents?.length) {
-      setDocuments((prev) => [...prev, ...publicData.documents.filter((doc) => !prev.find((d) => d.id === doc.id))])
+      const merged = [
+        ...documents,
+        ...publicData.documents.filter((doc) => !documents.find((d) => d.id === doc.id)),
+      ] as PublicDocumentsDto[]
+
+      const shareCardDoc = {
+        id: 'SHARE',
+        name: '',
+        emoji: '',
+        previewContent: '',
+        category: '',
+        creator: null,
+        isBookmarked: false,
+        isOwner: false,
+        tryCount: 0,
+        bookmarkCount: 0,
+        quizzes: [],
+        totalQuizCount: 0,
+      } as ShareCard
+
+      const alreadyHasPlaceholder = merged.find((d) => d.id === 'SHARE')
+      if (!alreadyHasPlaceholder && notPublicCount > 0) {
+        // 비공개 문서가 있을 때 공개 권유 카드 추가
+        if (merged.length < 2) {
+          merged.push(shareCardDoc)
+        } else {
+          merged.splice(2, 0, shareCardDoc)
+        }
+      }
+
+      setDocuments(merged)
 
       if (publicData.documents.length < DATA_PER_PAGE) {
         setHasMore(false)
@@ -120,49 +170,6 @@ const QuizVerticalSwipe = () => {
     }
   }, [activeIndex, documents.length, isFetching, publicData])
 
-  // root요소 스크롤 제어 + HOC에서 safe-area-inset-top을 계산하기 위해서 사용
-  useEffect(() => {
-    const root = document.getElementById('root')
-    const hocElement = document.getElementById('hoc')
-    if (!root || !hocElement) return
-
-    root.classList.add('overscroll-none')
-
-    const computedStyle = window.getComputedStyle(hocElement)
-    const paddingTopValue = computedStyle.getPropertyValue('padding-top')
-
-    const safeAreaInsetTop = parseFloat(paddingTopValue) || 0
-    setSafeAreaInsetTop(safeAreaInsetTop)
-
-    return () => {
-      root.classList.remove('overscroll-none')
-    }
-  }, [])
-
-  // 퀴즈 카드 스와이프 영역 스크롤 제어
-  useEffect(() => {
-    const handleScrollOrResize = () => {
-      if (!swiperContainerRef.current || !swiperRef.current) return
-
-      const topOffset = swiperContainerRef.current.getBoundingClientRect().top
-
-      setIsTopReached(topOffset <= 110 + safeAreaInsetTop)
-    }
-
-    const root = document.getElementById('root')
-
-    if (!root) return
-
-    handleScrollOrResize()
-    root.addEventListener('scroll', handleScrollOrResize)
-    window.addEventListener('resize', handleScrollOrResize)
-
-    return () => {
-      root.removeEventListener('scroll', handleScrollOrResize)
-      window.removeEventListener('resize', handleScrollOrResize)
-    }
-  }, [safeAreaInsetTop])
-
   return (
     <div
       ref={swiperContainerRef}
@@ -172,12 +179,8 @@ const QuizVerticalSwipe = () => {
         overscrollBehaviorY: 'contain',
         WebkitOverflowScrolling: 'touch',
       }}
-      className="relative w-full p-[16px] pt-[48px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2"
+      className="relative w-full p-[16px] pt-[28px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2"
     >
-      {!isTopReached && (
-        <div className="absolute inset-0 z-30" style={{ background: 'transparent', pointerEvents: 'all' }} />
-      )}
-
       <Swiper
         direction="vertical"
         slidesPerView={1}
@@ -196,16 +199,28 @@ const QuizVerticalSwipe = () => {
         }}
         style={{ height: '500px', width: '100%', display: 'flex', justifyContent: 'center' }}
       >
-        {documents.map((document, index) => (
-          <SwiperSlide key={document.id} virtualIndex={index}>
-            <ExploreSwipeCard index={index} activeIndex={activeIndex} document={document} setDocuments={setDocuments} />
-          </SwiperSlide>
-        ))}
+        {documents.map((document, index) =>
+          document.id === 'SHARE' ? (
+            <SwiperSlide key={document.id} virtualIndex={index}>
+              <ShareCard index={index} activeIndex={activeIndex} />
+            </SwiperSlide>
+          ) : (
+            <SwiperSlide key={document.id} virtualIndex={index}>
+              <ExploreSwipeCard
+                index={index}
+                activeIndex={activeIndex}
+                document={document}
+                setDocuments={setDocuments}
+              />
+            </SwiperSlide>
+          ),
+        )}
       </Swiper>
     </div>
   )
 }
 
+// 공개 문서 카드
 const ExploreSwipeCard = ({
   index,
   activeIndex,
@@ -215,7 +230,7 @@ const ExploreSwipeCard = ({
   index: number
   activeIndex: number
   document: GetPublicDocumentsDto
-  setDocuments: React.Dispatch<React.SetStateAction<GetPublicDocumentsDto[]>>
+  setDocuments: React.Dispatch<React.SetStateAction<PublicDocumentsDto[]>>
 }) => {
   const {
     id,
@@ -368,6 +383,46 @@ const ExploreSwipeCard = ({
       }
       footer={<ExploreQuizCard.Footer onClickStartQuiz={handleQuizStart} isLoading={isCreatingQuizSet} />}
     />
+  )
+}
+
+// 비공개 문서가 있을 경우 노출 될 공개 권유 카드
+const ShareCard = ({ index, activeIndex }: { index: number; activeIndex: number }) => {
+  const router = useRouter()
+
+  return (
+    <div
+      className={cn(
+        'w-[343px] h-[500px] relative flex-center flex-col gap-[32px] bg-base-1 rounded-[20px] shadow-[0px_4px_28px_0px_rgba(0,0,0,0.10)] overflow-hidden transition-transform duration-300',
+        activeIndex !== index && 'scale-90 pointer-events-none',
+      )}
+    >
+      <IcLibrary className="size-[96px] text-icon-accent" />
+
+      <div className="flex-center flex-col gap-[12px]">
+        <Text typo="h3" className="text-center">
+          내가 만든 퀴즈도 <br />
+          사람들과 공유해보세요
+        </Text>
+
+        <Text typo="subtitle-2-medium" color="secondary" className="">
+          공개할 수 있는 퀴즈가{' '}
+          <Text as={'span'} typo="subtitle-2-medium" color="accent">
+            3개
+          </Text>{' '}
+          있어요
+        </Text>
+      </div>
+
+      <Button
+        onClick={() => router.push('/explore/release')}
+        size={'md'}
+        variant={'tertiary'}
+        className="size-fit px-[31.5px] py-[15px]"
+      >
+        확인하기
+      </Button>
+    </div>
   )
 }
 

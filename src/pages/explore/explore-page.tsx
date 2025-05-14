@@ -1,34 +1,31 @@
-import Marquee from 'react-fast-marquee'
+import { useRef } from 'react'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import CategoriesHorizontalChips from '@/features/explore/ui/categories-horizontal-chips'
 import QuizVerticalSwipe from '@/features/explore/ui/quiz-vertical-swipe'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
-import { useGetIsNotPublicDocuments } from '@/entities/document/api/hooks'
 
-import { IcChevronRight, IcLibrary, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
+import { IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
-import QuestionBox from '@/shared/components/items/question-box-item'
-import { Text } from '@/shared/components/ui/text'
-import { Link } from '@/shared/lib/router'
+import { Chip } from '@/shared/components/ui/chip'
+import { useHorizontalScrollWheel } from '@/shared/hooks/use-horizontal-scroll-wheel'
+import { Link, useQueryParam } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
-
-const exampleQuestions = [
-  { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
-  { emoji: '👠 ', question: '프로세스는 무엇인가요?' },
-  { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
-  { emoji: '👠 ', question: '프로세스는 무엇인가요?' },
-  { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
-]
 
 const ExplorePage = () => {
   const { data: categoryData } = useGetCategories()
-  const { data: notPublicDocumentsData } = useGetIsNotPublicDocuments()
 
-  const notPublicCount = notPublicDocumentsData?.documents.length ?? 0
+  const [params, setParams] = useQueryParam('/explore')
+  const activeCategory = params.category
+
+  const setCategory = (categoryId: number) => {
+    setParams({ ...params, category: categoryId })
+  }
+
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useHorizontalScrollWheel(scrollRef)
 
   return (
     <>
@@ -52,58 +49,37 @@ const ExplorePage = () => {
       />
 
       <HeaderOffsetLayout>
-        <div
-          className="py-[55px] flex flex-col gap-[10px] bg-[radial-gradient(closest-side,_var(--tw-gradient-stops))]"
-          style={{
-            backgroundImage: 'radial-gradient(circle, var(--color-gray-100) 0%, var(--color-gray-50) 40%)',
-          }}
-        >
-          <Marquee gradient={false} speed={20} direction="left">
-            {exampleQuestions.map((item, index) => (
-              <QuestionBox key={index} emoji={item.emoji} question={item.question} className="mr-[8px]" />
-            ))}
-          </Marquee>
-          <Marquee gradient={false} speed={20} direction="right">
-            {exampleQuestions.map((item, index) => (
-              <QuestionBox key={index} emoji={item.emoji} question={item.question} className="mr-[8px]" />
-            ))}
-          </Marquee>
-          <Marquee gradient={false} speed={20} direction="left">
-            {exampleQuestions.map((item, index) => (
-              <QuestionBox key={index} emoji={item.emoji} question={item.question} className="mr-[8px]" />
-            ))}
-          </Marquee>
-        </div>
-
-        <div className="pt-[56px]">
-          <Text as="h2" typo="h3" className="px-[16px] mb-[12px]">
-            실시간 퀴즈
-          </Text>
-
-          <CategoriesHorizontalChips categories={categoryData} />
-
-          {notPublicCount > 0 && (
-            <Link
-              to={'/explore/release'}
-              type="button"
-              className="self-stretch h-[48px] w-full min-w-28 px-[24px] py-[12px] mt-[8px] bg-transparent inline-flex justify-between items-center"
+        <div className="">
+          {/* 카테고리 선택 탭 */}
+          <div
+            ref={scrollRef}
+            className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
+          >
+            {/* 전체 */}
+            <Chip
+              variant={activeCategory === 0 ? 'selected' : 'darken'}
+              left={activeCategory === 0 ? '💫' : undefined}
+              onClick={() => setCategory(0)}
+              className={cn('ml-[16px]')}
             >
-              <div className="flex-1 flex items-center">
-                <div className="flex items-center gap-2">
-                  <IcLibrary className="size-[20px] text-icon-accent" />
-                  <Text typo="body-1-bold" color="secondary" className="w-fit shrink-0">
-                    공개할 수 있는 퀴즈가{' '}
-                    <Text as="span" typo="body-1-bold" color="accent">
-                      {notPublicCount}개
-                    </Text>{' '}
-                    있어요
-                  </Text>
-                </div>
-              </div>
-              <IcChevronRight className="size-[16px] text-icon-secondary" />
-            </Link>
-          )}
+              전체
+            </Chip>
 
+            {/* Chip 요소들 */}
+            {categoryData &&
+              categoryData.map((category, index) => (
+                <Chip
+                  key={index}
+                  variant={category.id === activeCategory ? 'selected' : 'darken'}
+                  left={category.id === activeCategory ? category.emoji : undefined}
+                  onClick={() => setCategory(category.id)}
+                >
+                  {category.name}
+                </Chip>
+              ))}
+          </div>
+
+          {/* 카드 스와이프 영역 */}
           <QuizVerticalSwipe />
         </div>
       </HeaderOffsetLayout>
