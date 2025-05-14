@@ -32,7 +32,7 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="size-fit py-[10px] pl-[10px] flex-center cursor-pointer">
-            <IcArrange className="size-[20px] text-icon-secondary" />
+            <IcArrange width={20} height={20} className="text-icon-secondary" />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent>

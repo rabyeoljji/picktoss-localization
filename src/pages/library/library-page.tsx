@@ -11,6 +11,7 @@ import MyNotesContent from '@/features/note/ui/my-notes-content'
 
 import { IcAdd, IcBack, IcProfile } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
+import Loading from '@/shared/components/ui/loading'
 import { TextButton } from '@/shared/components/ui/text-button'
 
 const LibraryPage = () => {
@@ -92,7 +93,7 @@ const LibraryPage = () => {
       {/* 로딩과 tab에 따른 메인 영역 컨텐츠 */}
       <HeaderOffsetLayout className="size-full">
         {isLoading ? (
-          <div className="size-full flex-center">is Loading...</div>
+          <Loading center />
         ) : (
           <>
             {activeTab === 'MY' &&
