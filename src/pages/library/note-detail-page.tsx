@@ -97,8 +97,14 @@ const NoteDetailPage = () => {
   useEffect(() => {
     if (!document) return
 
-    setSelectedQuizCount(document.quizzes.length)
-  }, [document])
+    if (quizType === 'ALL') {
+      setSelectedQuizCount(document.quizzes.length)
+    } else if (quizType === 'MIX_UP') {
+      setSelectedQuizCount(document.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length)
+    } else {
+      setSelectedQuizCount(document.quizzes.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE').length)
+    }
+  }, [document, quizType])
 
   const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
 
@@ -168,6 +174,13 @@ const NoteDetailPage = () => {
 
   const quizzes =
     quizType === 'ALL' ? document?.quizzes : document?.quizzes?.filter((quiz) => quiz.quizType === quizType)
+
+  const maxQuizCount =
+    quizType === 'ALL'
+      ? document?.quizzes.length
+      : quizType === 'MIX_UP'
+        ? document?.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length
+        : document?.quizzes.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE').length
 
   return (
     <div className="relative flex flex-col h-screen bg-base-1">
@@ -516,9 +529,9 @@ const NoteDetailPage = () => {
                   <div className="mt-[32px]">
                     <Slider
                       min={1}
-                      max={document.quizzes.length}
+                      max={maxQuizCount}
                       step={1}
-                      defaultValue={[document.quizzes.length]}
+                      defaultValue={[maxQuizCount ?? 0]}
                       value={[selectedQuizCount]}
                       onValueChange={(value) => setSelectedQuizCount(value[0])}
                     />
@@ -527,7 +540,7 @@ const NoteDetailPage = () => {
                         1 문제
                       </Text>
                       <Text typo="body-2-medium" color="sub">
-                        {document.quizzes.length} 문제
+                        {maxQuizCount} 문제
                       </Text>
                     </div>
                   </div>
