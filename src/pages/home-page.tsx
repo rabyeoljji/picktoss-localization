@@ -399,10 +399,24 @@ const HomePage = () => {
             <Text typo="h2" className="mt-4 text-center">
               연속 <span className="text-accent">{dailyQuizRecord?.consecutiveSolvedDailyQuizDays}일</span> 완료
             </Text>
-            <Text typo="body-1-medium" color="sub" className="mt-2 text-center">
-              <span className="text-accent">{dailyQuizRecord?.reward}개</span>의 별을 획득했어요!
-            </Text>
-            <div className="mt-10 px-4">
+            <div className="mt-2 pb-[32px] border-b border-divider">
+              <Text typo="body-1-medium" color="sub" className="text-center">
+                매일 데일리 10문제를 풀면 별 5개를 받아요
+                <br />
+                5일 연속 완료할 때마다 20개!
+              </Text>
+            </div>
+            <div className="mt-[24px] px-[28px] pt-[6px] pb-[9px] flex justify-between">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <div key={index} className="flex flex-col items-center gap-1">
+                  <div className="size-[40px] bg-orange-300 rounded-full" />
+                  <Text typo="body-1-bold" color="caption">
+                    {index === 4 ? 20 : 5}개
+                  </Text>
+                </div>
+              ))}
+            </div>
+            <div className="absolute bottom-0 h-[114px] w-[calc(100%-32px)] pt-[14px]">
               <Button onClick={() => setRewardDrawerOpen(false)}>확인</Button>
             </div>
           </div>

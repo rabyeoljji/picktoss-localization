@@ -77,6 +77,7 @@ const NoteDetailPage = () => {
 
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
+  const [reviewPickOpen, setReviewPickOpen] = useState(false)
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
@@ -449,25 +450,91 @@ const NoteDetailPage = () => {
             )}
           </div>
         </div>
-
-        {/* TODO: Markdown Viewer */}
-        {/* 6. 원본 노트 drawer */}
-        <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
-          <DrawerContent height="full">
-            <DrawerHeader>
-              <DrawerTitle>원본 노트</DrawerTitle>
-              <DrawerDescription>
-                {document?.createdAt.split('T')[0].split('-').join('.')} 등록 / {document?.content?.length}자
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="mt-5 flex-1 overflow-y-scroll pb-10">
-              <p>{document?.content}</p>
-            </div>
-          </DrawerContent>
-        </Drawer>
       </HeaderOffsetLayout>
 
-      {/* 5. 하단 툴바 */}
+      {/* 복습 픽 drawer */}
+      <Drawer open={reviewPickOpen} onOpenChange={setReviewPickOpen}>
+        <DrawerContent height="full">
+          <DrawerHeader>
+            <DrawerTitle>복습 Pick</DrawerTitle>
+            <DrawerDescription>내가 틀렸던 문제들을 확인해보세요</DrawerDescription>
+          </DrawerHeader>
+          <div>
+            {document?.quizzes
+              .filter((quiz) => quiz.reviewNeeded)
+              .map((quiz, index) => (
+                <div key={quiz.id}>
+                  {quiz.quizType === 'MIX_UP' ? (
+                    <QuestionCard key={quiz.id}>
+                      <QuestionCard.Header
+                        order={index + 1}
+                        right={
+                          <DropdownMenu>
+                            <DropdownMenuTrigger>
+                              <IcKebab className="size-5 text-icon-sub" />
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="-translate-y-2">
+                              <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
+                              <DropdownMenuItem
+                                className="text-red-500"
+                                right={<IcDelete className="text-icon-critical" />}
+                                onClick={() => setDeleteTargetQuizId(quiz.id)}
+                              >
+                                문제 삭제
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        }
+                      />
+                      <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                      <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
+                      <QuestionCard.Explanation
+                        open={!!explanationOpenStates[quiz.id]}
+                        onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                      >
+                        {quiz.explanation}
+                      </QuestionCard.Explanation>
+                    </QuestionCard>
+                  ) : (
+                    <QuestionCard key={quiz.id}>
+                      <QuestionCard.Header order={index + 1} right={<div>...</div>} />
+                      <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                      <QuestionCard.Multiple
+                        options={quiz.options}
+                        answerIndex={quiz.options.indexOf(quiz.answer)}
+                        showAnswer={showAnswer}
+                      />
+                      <QuestionCard.Explanation
+                        open={!!explanationOpenStates[quiz.id]}
+                        onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                      >
+                        {quiz.explanation}
+                      </QuestionCard.Explanation>
+                    </QuestionCard>
+                  )}
+                </div>
+              ))}
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* TODO: Markdown Viewer */}
+      {/* 원본 노트 drawer */}
+      <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
+        <DrawerContent height="full">
+          <DrawerHeader>
+            <DrawerTitle>원본 노트</DrawerTitle>
+            <DrawerDescription>
+              {document?.createdAt.split('T')[0].split('-').join('.')} 등록 / {document?.content?.length}자
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="mt-5 flex-1 overflow-y-scroll pb-10">
+            <p>{document?.content}</p>
+          </div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* 하단 툴바 */}
       <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-[var(--shadow-md)] flex items-center rounded-[16px]">
         <div className="flex items-center gap-2 shrink-0">
           <Text typo="body-2-bold" color="sub">
@@ -531,7 +598,7 @@ const NoteDetailPage = () => {
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
-          <button className="p-2">
+          <button className="p-2" onClick={() => setReviewPickOpen(true)}>
             <IcReview className="size-6" />
           </button>
           <button className="p-2" onClick={() => setContentDrawerOpen(true)}>
