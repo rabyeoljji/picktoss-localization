@@ -217,6 +217,7 @@ export const createDailyQuizRecord = async (
 // POST: 퀴즈 시작하기 (퀴즈 세트 생성)
 export interface CreateQuizSetRequest {
   quizCount: number
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL'
 }
 
 export interface CreateQuizSetResponse {

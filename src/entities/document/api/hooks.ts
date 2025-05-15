@@ -3,6 +3,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { DOCUMENT_KEYS } from './config'
 import {
   CreateQuizzesRequest,
+  DeleteDocumentRequest,
   GetSingleDocumentResponse,
   UpdateDocumentContentRequest,
   UpdateDocumentEmojiRequest,
@@ -290,7 +291,7 @@ export const useDeleteDocument = (options?: {
 
   return useMutation({
     mutationKey: DOCUMENT_KEYS.deleteDocument,
-    mutationFn: (data: Parameters<typeof deleteDocument>[0]) => deleteDocument(data),
+    mutationFn: (data: DeleteDocumentRequest) => deleteDocument(data),
     onSettled: () => {
       queryClient.invalidateQueries({
         queryKey: [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],

@@ -26,7 +26,6 @@ const QuizResultPage = () => {
 
   const quizWithResultDataDecoded = decodeURIComponent(escape(atob(params.quizWithResultDataEncoded)))
   const quizWithResultData = JSON.parse(quizWithResultDataDecoded) as QuizItem[]
-  console.log(quizWithResultData)
 
   // 전체 통계 계산
   const totalQuizCount = quizWithResultData.length

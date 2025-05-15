@@ -1,7 +1,11 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { DOCUMENT_KEYS } from '@/entities/document/api/config'
 
 import { QUIZ_KEYS } from './config'
 import {
+  CreateQuizSetRequest,
+  UpdateQuizResultRequest,
   createDailyQuizRecord,
   createQuizSet,
   deleteQuiz,
@@ -115,7 +119,7 @@ export const useCreateDailyQuizRecord = () => {
 export const useCreateQuizSet = (documentId: number) => {
   return useMutation({
     mutationKey: QUIZ_KEYS.createQuizSet(documentId),
-    mutationFn: (data: Parameters<typeof createQuizSet>[1]) => createQuizSet(documentId, data),
+    mutationFn: (data: CreateQuizSetRequest) => createQuizSet(documentId, data),
   })
 }
 
@@ -139,9 +143,16 @@ export const useUpdateQuizInfo = (quizId: number) => {
 
 // 퀴즈 세트 결과 업데이트
 export const useUpdateQuizResult = (documentId: number, quizSetId: number) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: QUIZ_KEYS.updateQuizResult(documentId, quizSetId),
-    mutationFn: (data: Parameters<typeof updateQuizResult>[2]) => updateQuizResult(documentId, quizSetId, data),
+    mutationFn: (data: UpdateQuizResultRequest) => updateQuizResult(documentId, quizSetId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
+      })
+    },
   })
 }
 

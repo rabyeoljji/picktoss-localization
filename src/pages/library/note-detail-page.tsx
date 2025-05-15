@@ -37,7 +37,15 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
-import { Dialog, DialogCTA, DialogContent, DialogTrigger } from '@/shared/components/ui/dialog'
+import {
+  Dialog,
+  DialogCTA,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog'
 import {
   Drawer,
   DrawerContent,
@@ -81,6 +89,9 @@ const NoteDetailPage = () => {
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
+
+  // TODO: 퀴즈 id를 request body로 보내도록 수정 필요
+  // const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
   const [selectedQuizCount, setSelectedQuizCount] = useState(0)
   useEffect(() => {
@@ -137,6 +148,7 @@ const NoteDetailPage = () => {
     createQuizSet(
       {
         quizCount,
+        quizType,
       },
       {
         onSuccess: (data) => {
@@ -398,123 +410,58 @@ const NoteDetailPage = () => {
                 <Skeleton key={index} className="rounded-[12px] h-[250px]" />
               ))}
 
-            {quizzes?.map((quiz, index) =>
-              quiz.quizType === 'MIX_UP' ? (
-                <QuestionCard key={quiz.id}>
-                  <QuestionCard.Header
-                    order={index + 1}
-                    right={
-                      <DropdownMenu>
-                        <DropdownMenuTrigger>
-                          <IcKebab className="size-5 text-icon-sub" />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="-translate-y-2">
-                          <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
-                          <DropdownMenuItem
-                            className="text-red-500"
-                            right={<IcDelete className="text-icon-critical" />}
-                            onClick={() => setDeleteTargetQuizId(quiz.id)}
-                          >
-                            문제 삭제
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    }
-                  />
-                  <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+            {quizzes?.map((quiz, index) => (
+              <QuestionCard key={quiz.id}>
+                <QuestionCard.Header
+                  order={index + 1}
+                  right={
+                    <DropdownMenu>
+                      <DropdownMenuTrigger>
+                        <IcKebab className="size-5 text-icon-sub" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="-translate-y-2">
+                        <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
+                        <DropdownMenuItem
+                          className="text-red-500"
+                          right={<IcDelete className="text-icon-critical" />}
+                          onClick={() => setDeleteTargetQuizId(quiz.id)}
+                        >
+                          문제 삭제
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  }
+                />
+                <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                {quiz.quizType === 'MIX_UP' ? (
                   <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
-                  <QuestionCard.Explanation
-                    open={!!explanationOpenStates[quiz.id]}
-                    onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
-                  >
-                    {quiz.explanation}
-                  </QuestionCard.Explanation>
-                </QuestionCard>
-              ) : (
-                <QuestionCard key={quiz.id}>
-                  <QuestionCard.Header order={index + 1} right={<div>...</div>} />
-                  <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                ) : (
                   <QuestionCard.Multiple
                     options={quiz.options}
                     answerIndex={quiz.options.indexOf(quiz.answer)}
                     showAnswer={showAnswer}
                   />
-                  <QuestionCard.Explanation
-                    open={!!explanationOpenStates[quiz.id]}
-                    onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
-                  >
-                    {quiz.explanation}
-                  </QuestionCard.Explanation>
-                </QuestionCard>
-              ),
-            )}
+                )}
+                <QuestionCard.Explanation
+                  open={!!explanationOpenStates[quiz.id]}
+                  onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                >
+                  {quiz.explanation}
+                </QuestionCard.Explanation>
+              </QuestionCard>
+            ))}
           </div>
         </div>
       </HeaderOffsetLayout>
 
-      {/* 복습 픽 drawer */}
+      {/* TODO: 복습 픽 drawer */}
       <Drawer open={reviewPickOpen} onOpenChange={setReviewPickOpen}>
         <DrawerContent height="full">
           <DrawerHeader>
             <DrawerTitle>복습 Pick</DrawerTitle>
             <DrawerDescription>내가 틀렸던 문제들을 확인해보세요</DrawerDescription>
           </DrawerHeader>
-          <div>
-            {document?.quizzes
-              .filter((quiz) => quiz.reviewNeeded)
-              .map((quiz, index) => (
-                <div key={quiz.id}>
-                  {quiz.quizType === 'MIX_UP' ? (
-                    <QuestionCard key={quiz.id}>
-                      <QuestionCard.Header
-                        order={index + 1}
-                        right={
-                          <DropdownMenu>
-                            <DropdownMenuTrigger>
-                              <IcKebab className="size-5 text-icon-sub" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end" className="-translate-y-2">
-                              <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="text-red-500"
-                                right={<IcDelete className="text-icon-critical" />}
-                                onClick={() => setDeleteTargetQuizId(quiz.id)}
-                              >
-                                문제 삭제
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        }
-                      />
-                      <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                      <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={showAnswer} />
-                      <QuestionCard.Explanation
-                        open={!!explanationOpenStates[quiz.id]}
-                        onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
-                      >
-                        {quiz.explanation}
-                      </QuestionCard.Explanation>
-                    </QuestionCard>
-                  ) : (
-                    <QuestionCard key={quiz.id}>
-                      <QuestionCard.Header order={index + 1} right={<div>...</div>} />
-                      <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
-                      <QuestionCard.Multiple
-                        options={quiz.options}
-                        answerIndex={quiz.options.indexOf(quiz.answer)}
-                        showAnswer={showAnswer}
-                      />
-                      <QuestionCard.Explanation
-                        open={!!explanationOpenStates[quiz.id]}
-                        onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
-                      >
-                        {quiz.explanation}
-                      </QuestionCard.Explanation>
-                    </QuestionCard>
-                  )}
-                </div>
-              ))}
-          </div>
+          <div>{document?.quizzes.filter((quiz) => quiz.reviewNeeded).map((quiz) => <div key={quiz.id}></div>)}</div>
         </DrawerContent>
       </Drawer>
 
@@ -628,7 +575,20 @@ const NoteDetailPage = () => {
             }
           }}
         >
-          <DialogContent></DialogContent>
+          <DialogContent className="pt-[24px] px-[20px] pb-[8px] w-[280px]">
+            <DialogTitle className="typo-subtitle-2-bold text-center">문제를 삭제할까요?</DialogTitle>
+            <DialogDescription className="typo-body-1-medium text-sub text-center mt-1">
+              삭제한 문제는 다시 복구할 수 없어요
+            </DialogDescription>
+            <div className="flex gap-2.5 mt-[20px]">
+              <DialogClose asChild>
+                <button className="h-[48px] flex-1 text-sub">취소</button>
+              </DialogClose>
+              <button className="h-[48px] flex-1 text-red-500" onClick={() => {}}>
+                삭제
+              </button>
+            </div>
+          </DialogContent>
         </Dialog>
       )}
 
@@ -642,7 +602,10 @@ const NoteDetailPage = () => {
             }
           }}
         >
-          <DialogContent></DialogContent>
+          <DialogContent>
+            <DialogTitle>문제를 삭제할까요?</DialogTitle>
+            <DialogDescription>삭제한 문제는 다시 복구할 수 없어요</DialogDescription>
+          </DialogContent>
         </Dialog>
       )}
 
