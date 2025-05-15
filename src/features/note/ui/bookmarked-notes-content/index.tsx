@@ -44,7 +44,7 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
 
       <div className="py-[16px] h-fit w-full flex flex-col gap-[8px]">
         {documents.map((document) => (
-          <Link key={document.id} to={'/library/:noteId'} params={[String(document.id)]}>
+          <Link key={document.id} to={'/explore/detail/:noteId'} params={[String(document.id)]}>
             <BookmarkedCard
               id={document.id}
               emoji={document.emoji}
