@@ -9,7 +9,7 @@ import { extractParamsFromPath } from '../lib'
 import type { QueryParamOptions } from './type'
 
 // 더 명확한 리터럴 타입 추론을 위한 타입 정의
-type RouteNames = keyof typeof SearchConfig
+export type RouteNames = keyof typeof SearchConfig
 
 /**
  * ✅ StrictQueryParamKeys
@@ -22,18 +22,13 @@ type StrictQueryParamKeys<R extends RouteNames> = keyof (typeof SearchConfig)[R]
  * ✅ StrictQueryParamValue
  * 특정 경로와 키에 대한 값 타입을 엄격하게 추출
  */
-type StrictQueryParamValue<
-  R extends RouteNames,
-  K extends StrictQueryParamKeys<R>,
-> = (typeof SearchConfig)[R][K]
+type StrictQueryParamValue<R extends RouteNames, K extends StrictQueryParamKeys<R>> = (typeof SearchConfig)[R][K]
 
 /**
  * ✅ QueryParamObject
  * 특정 경로에 대한 전체 쿼리 파라미터 객체 타입 추출
  */
-type QueryParamObject<R extends string> = R extends RouteNames
-  ? (typeof SearchConfig)[R]
-  : Record<string, unknown>
+type QueryParamObject<R extends string> = R extends RouteNames ? (typeof SearchConfig)[R] : Record<string, unknown>
 
 /**
  * 현재 URL의 쿼리 파라미터를 추출하고 설정하는 훅
@@ -71,7 +66,7 @@ type QueryParamObject<R extends string> = R extends RouteNames
 export function useQueryParam<R extends RouteNames, K extends StrictQueryParamKeys<R>>(
   path: R,
   key: K,
-  options?: QueryParamOptions
+  options?: QueryParamOptions,
 ): [
   StrictQueryParamValue<R, K>,
   (value: StrictQueryParamValue<R, K>, overrideOptions?: QueryParamOptions) => void,
@@ -82,14 +77,12 @@ export function useQueryParam<R extends RouteNames, K extends StrictQueryParamKe
 // 쿼리 중 일부 값만 정의해도 타입 검증에 문제가 없도록 Partial 추가
 export function useQueryParam<R extends RouteNames>(
   path: R,
-  options?: QueryParamOptions
+  options?: QueryParamOptions,
 ): [
   QueryParamObject<R>,
   (
-    value:
-      | Partial<QueryParamObject<R>>
-      | ((prev: QueryParamObject<R>) => Partial<QueryParamObject<R>>),
-    overrideOptions?: QueryParamOptions
+    value: Partial<QueryParamObject<R>> | ((prev: QueryParamObject<R>) => Partial<QueryParamObject<R>>),
+    overrideOptions?: QueryParamOptions,
   ) => void,
   (overrideOptions?: QueryParamOptions) => void,
 ]
@@ -98,7 +91,7 @@ export function useQueryParam<R extends RouteNames>(
 export function useQueryParam(
   path: string,
   key: string,
-  options?: QueryParamOptions
+  options?: QueryParamOptions,
 ): [
   string,
   (value: string | ((prev: string) => string), overrideOptions?: QueryParamOptions) => void,
@@ -121,7 +114,7 @@ export function useQueryParam<
 >(
   path: R,
   keyOrOptions?: K | QueryParamOptions,
-  optionsArg?: QueryParamOptions
+  optionsArg?: QueryParamOptions,
 ): [
   T,
   (value: T | ((prev: T) => T), overrideOptions?: QueryParamOptions) => void,
@@ -222,9 +215,7 @@ export function useQueryParam<
     (newValueOrUpdater: T | ((prev: T) => T), overrideOptions?: QueryParamOptions) => {
       // 함수형 업데이트 처리
       const newValue =
-        typeof newValueOrUpdater === 'function'
-          ? (newValueOrUpdater as (prev: T) => T)(value)
-          : newValueOrUpdater
+        typeof newValueOrUpdater === 'function' ? (newValueOrUpdater as (prev: T) => T)(value) : newValueOrUpdater
 
       // 현재 옵션과 오버라이드 옵션 병합
       const mergedOptions = { ...options, ...(overrideOptions || {}) }
@@ -238,9 +229,7 @@ export function useQueryParam<
         Object.entries(params).forEach(([paramKey, paramValue]) => {
           if (
             paramValue == null ||
-            (typeof paramValue === 'string' &&
-              paramValue === '' &&
-              mergedOptions.emptyHandling === 'remove')
+            (typeof paramValue === 'string' && paramValue === '' && mergedOptions.emptyHandling === 'remove')
           ) {
             newSearchParams.delete(paramKey)
           } else {
@@ -251,9 +240,7 @@ export function useQueryParam<
         // 단일 키 모드: 특정 키에 대해서만 처리
         if (
           newValue == null ||
-          (typeof newValue === 'string' &&
-            newValue === '' &&
-            mergedOptions.emptyHandling === 'remove')
+          (typeof newValue === 'string' && newValue === '' && mergedOptions.emptyHandling === 'remove')
         ) {
           newSearchParams.delete(key)
         } else {
@@ -296,7 +283,7 @@ export function useQueryParam<
         navigate(url, { replace: true })
       }
     },
-    [isObjectMode, key, location, navigate, path, options, value]
+    [isObjectMode, key, location, navigate, path, options, value],
   )
 
   // 현재 경로에서 모든 쿼리 파라미터 삭제 함수
@@ -354,7 +341,7 @@ export function useQueryParam<
         navigate(url, { replace: true })
       }
     },
-    [isObjectMode, key, location, navigate, options, path]
+    [isObjectMode, key, location, navigate, options, path],
   )
 
   return [value, setValue, resetParam]

@@ -1,41 +1,33 @@
-import { IcFolder } from '@/shared/assets/icon'
+import { IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { Link } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
-  documentId: number | null
   documentTitle: React.ReactNode
+  documentEmoji: string
   matchingSentence: React.ReactNode
-  resultType: 'document' | 'quiz'
   quizCount: number
-  charCount: number
-  relativeDirectory: string
-  directoryEmoji: string
+  isPublic: boolean
+  playedCount?: number
+  bookmarkCount?: number
   lastItem?: boolean
 }
 
 const SearchQuizNoteItem = ({
-  documentId,
   documentTitle,
+  documentEmoji,
   matchingSentence,
-  resultType,
   quizCount,
-  charCount,
-  relativeDirectory,
-  directoryEmoji,
+  isPublic,
+  playedCount,
+  bookmarkCount,
   lastItem,
 }: Props) => {
   return (
-    <Link
-      to="/library/:noteId"
-      params={[String(documentId)]}
-      search={resultType === 'quiz' ? { tab: ['QUIZ'] } : {}}
-      className={cn('border-b border-divider py-[24px] flex flex-col', lastItem && 'border-none')}
-    >
+    <div className={cn('border-b border-divider py-[24px] flex flex-col', lastItem && 'border-none')}>
       <div className="mb-[8px] flex items-center">
         <Text typo="subtitle-2-bold">
-          {directoryEmoji} {documentTitle}
+          {documentEmoji} {documentTitle}
         </Text>
       </div>
 
@@ -44,18 +36,38 @@ const SearchQuizNoteItem = ({
       </Text>
 
       <div className="mt-[8px] flex items-center">
-        <Text typo="body-2-medium" color="sub" className="flex w-fit items-center">
-          <span>{quizCount}문제</span>
-          <div className="inline-block size-fit mx-[8px] text-icon-sub">•</div>
-          <span>{charCount}자</span>
-          <div className="inline-block size-fit mx-[8px] text-icon-sub">•</div>
-          <span className="flex items-center">
-            <IcFolder className="size-[12px] mr-[2px] text-icon-tertiary" />
-            {relativeDirectory}
-          </span>
+        <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[4px]">
+          <div className="inline-flex justify-start items-center gap-[2px]">
+            <span>{quizCount} 문제</span>
+          </div>
+
+          {isPublic && (
+            <>
+              <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
+
+              <div className="inline-flex justify-start items-center gap-[2px]">
+                <IcPlayFilled className="size-[12px] text-icon-sub" />
+                <span>{playedCount}</span>
+              </div>
+
+              <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
+
+              <div className="inline-flex justify-start items-center gap-[2px]">
+                <IcBookmarkFilled className="size-[12px] text-icon-sub" />
+                <span>{bookmarkCount}</span>
+              </div>
+            </>
+          )}
+
+          {!isPublic && (
+            <>
+              <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
+              <span>비공개</span>
+            </>
+          )}
         </Text>
       </div>
-    </Link>
+    </div>
   )
 }
 

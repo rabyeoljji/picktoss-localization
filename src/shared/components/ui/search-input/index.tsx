@@ -46,6 +46,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
             internalValue && (
               <IcClear
                 className="size-5 text-icon-sub cursor-pointer"
+                fill="var(--color-gray-300)" // ic_clear 클래스명으로 색상 적용이 안되고 있음
                 onClick={clearKeyword ?? handleClear}
                 role="button"
               />

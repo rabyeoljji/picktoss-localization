@@ -1,10 +1,11 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { UseQueryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
   CreateQuizzesRequest,
   DeleteDocumentRequest,
   GetSingleDocumentResponse,
+  SearchDocumentsResponse,
   UpdateDocumentContentRequest,
   UpdateDocumentEmojiRequest,
   UpdateDocumentNameRequest,
@@ -41,10 +42,14 @@ export const useCreateDocument = () => {
   })
 }
 
-export const useSearchDocument = (params: { keyword: string }) => {
-  return useMutation({
-    mutationKey: [DOCUMENT_KEYS.searchDocument, params],
-    mutationFn: () => searchDocument(params),
+export const useSearchDocument = (
+  params: { keyword: string },
+  options?: Omit<UseQueryOptions<SearchDocumentsResponse, Error>, 'queryKey' | 'queryFn'>,
+) => {
+  return useQuery({
+    queryKey: [DOCUMENT_KEYS.searchDocument, params],
+    queryFn: () => searchDocument(params),
+    ...options,
   })
 }
 
