@@ -3,9 +3,8 @@ import { useSearchParams } from 'react-router'
 
 import { IcClose } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
-import { type Pathname, useRouter } from '@/shared/lib/router'
+import { type Pathname, RouteNames, useQueryParam, useRouter } from '@/shared/lib/router'
 import { type StorageKeyType } from '@/shared/lib/storage/model/type'
-import { useLocalStorage } from '@/shared/lib/storage/model/use-storage'
 
 import { useRecentSearches } from './use-recent-search-keyword'
 
@@ -20,6 +19,10 @@ import { useRecentSearches } from './use-recent-search-keyword'
 export const useSearch = (storageKey: StorageKeyType) => {
   const router = useRouter()
   const [searchParams] = useSearchParams()
+  const [queryParams] = useQueryParam(location.pathname as RouteNames)
+
+  // 스토리지와 연결된 최신 검색어
+  const { recentKeywords, addKeyword, removeKeyword, clearAllKeywords } = useRecentSearches(storageKey)
 
   // URL 쿼리 파라미터에서 검색어 가져오기
   const queryKeyword = searchParams.get('keyword') || ''
@@ -27,7 +30,6 @@ export const useSearch = (storageKey: StorageKeyType) => {
   // 내부 상태 관리
   const [inputValue, setInputValue] = useState(queryKeyword)
   const [showRecentKeywords, setShowRecentKeywords] = useState(false)
-  const [recentKeywords, setRecentKeywords] = useLocalStorage(storageKey, [])
 
   // 참조 객체들
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -56,14 +58,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
    * @param keyword 추가할 키워드
    */
   const updateRecentKeywords = (keyword: string) => {
-    if (!keyword) return
-
-    // 중복 검색어 제거 후 최대 5개만 유지
-    const updatedKeywords = [
-      keyword,
-      ...(Array.isArray(recentKeywords) ? recentKeywords.filter((k) => k !== keyword) : []),
-    ].slice(0, 5)
-    setRecentKeywords(updatedKeywords)
+    addKeyword(keyword)
   }
 
   /**
@@ -73,7 +68,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
    */
   const navigateToSearch = (keyword: string, currentPath: Pathname = location.pathname as Pathname) => {
     router.replace(currentPath, {
-      search: { keyword: keyword ? [keyword] : [] },
+      search: { ...queryParams, keyword: keyword ? [keyword] : [] },
     })
   }
 
@@ -118,42 +113,54 @@ export const useSearch = (storageKey: StorageKeyType) => {
   }
 
   const RecentSearchKeywords = () => {
-    const { recentKeywords, removeKeyword, clearAllKeywords } = useRecentSearches(storageKey)
-
     return (
-      <div ref={recentSearchListRef} className="absolute top-[var(--header-height)] w-full left-0">
-        <div className="flex flex-col bg-surface-1 px-4 py-[20px]">
-          <div className="mb-[14px] flex items-center justify-between">
-            <Text typo="body-1-bold" className="text-secondary">
-              최근 검색어
-            </Text>
-            <button className="typo-button-4 text-sub" onClick={clearAllKeywords}>
-              전체삭제
-            </button>
-          </div>
+      <div
+        ref={recentSearchListRef}
+        className="absolute top-[var(--header-height)] w-screen max-w-xl left-1/2 -translate-x-1/2"
+      >
+        {Array.isArray(recentKeywords) &&
+          (recentKeywords.length > 0 ? (
+            <div className="flex flex-col bg-surface-1 px-4 py-[20px]">
+              <div className="mb-[14px] flex items-center justify-between">
+                <Text typo="body-1-bold" className="text-secondary">
+                  최근 검색어
+                </Text>
+                <button className="typo-button-4 text-caption" onClick={clearAllKeywords}>
+                  전체삭제
+                </button>
+              </div>
 
-          <div className="flex flex-col">
-            {Array.isArray(recentKeywords) &&
-              recentKeywords.map((keyword) => (
-                <div
-                  key={keyword}
-                  onClick={() => handleSelectRecentKeyword(keyword)}
-                  className="flex cursor-pointer items-center justify-between py-[10px]"
-                >
-                  <Text typo="body-1-medium">{keyword}</Text>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation()
-                      removeKeyword(keyword)
-                    }}
-                    className="text-icon-sub"
-                  >
-                    <IcClose className="size-[20px]" />
-                  </button>
-                </div>
-              ))}
-          </div>
-        </div>
+              <div className="flex flex-col">
+                {Array.isArray(recentKeywords) &&
+                  recentKeywords.map((keyword) => (
+                    <div
+                      key={keyword}
+                      onClick={() => handleSelectRecentKeyword(keyword)}
+                      className="flex cursor-pointer items-center justify-between py-[10px]"
+                    >
+                      <Text typo="body-1-medium" color="secondary">
+                        {keyword}
+                      </Text>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          removeKeyword(keyword)
+                        }}
+                        className="text-icon-sub"
+                      >
+                        <IcClose className="size-[20px]" fill="var(--color-gray-300)" />
+                      </button>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          ) : (
+            <div className="h-[96px] bg-surface-1 flex-center">
+              <Text typo="body-1-bold" color="sub">
+                최근 검색 내역이 없어요
+              </Text>
+            </div>
+          ))}
       </div>
     )
   }

@@ -4,6 +4,24 @@ import { extractPlainText } from '@/features/note/lib'
 
 import { Text } from '@/shared/components/ui/text'
 
+type Quiz = {
+  question: string
+  answer: string
+  explanation: string
+}
+
+/** 퀴즈 객체 배열을 받아 문제와 정답, 해설을
+ * 텍스트로 변환해 반환하는 컴포넌트
+ */
+export function formatQAText(quizzes: Quiz[]): string {
+  return quizzes
+    .map(
+      (quiz) =>
+        `Q. ${quiz.question} A. ${quiz.answer === 'correct' ? 'O' : quiz.answer === 'incorrect' ? 'X' : quiz.answer} | 해설: ${quiz.explanation}`,
+    )
+    .join(' ')
+}
+
 /** 마크다운 텍스트를 받아
  * 문법을 제거하고 키워드에 강조를 해서 반환하는 컴포넌트
  */

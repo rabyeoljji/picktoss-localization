@@ -58,6 +58,9 @@ export const RouteConfig = {
   },
   librarySearch: {
     pathname: '/library/search',
+    search: {
+      tab: 'MY' as 'MY' | 'BOOKMARK',
+    },
   },
   libraryNoteDetail: {
     pathname: '/library/:noteId',
