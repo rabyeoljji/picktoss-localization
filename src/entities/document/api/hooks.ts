@@ -6,6 +6,7 @@ import {
   DeleteDocumentRequest,
   GetSingleDocumentResponse,
   SearchDocumentsResponse,
+  SearchPublicDocumentsResponse,
   UpdateDocumentContentRequest,
   UpdateDocumentEmojiRequest,
   UpdateDocumentNameRequest,
@@ -193,10 +194,14 @@ export const useGetPublicSingleDocument = (documentId: number) => {
   })
 }
 
-export const useSearchPublicDocuments = (params: { keyword: string }) => {
-  return useMutation({
-    mutationKey: [DOCUMENT_KEYS.searchPublicDocuments, params],
-    mutationFn: () => searchPublicDocuments(params),
+export const useSearchPublicDocuments = (
+  params: { keyword: string },
+  options?: Omit<UseQueryOptions<SearchPublicDocumentsResponse, Error>, 'queryKey' | 'queryFn'>,
+) => {
+  return useQuery({
+    queryKey: [DOCUMENT_KEYS.searchPublicDocuments, params],
+    queryFn: () => searchPublicDocuments(params),
+    ...options,
   })
 }
 
@@ -217,6 +222,7 @@ export const useCreateDocumentBookmark = (documentId: number) => {
       queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
       queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
       queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] })
     },
   })
 }
@@ -231,6 +237,7 @@ export const useDeleteDocumentBookmark = (documentId: number) => {
       queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
       queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
       queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] })
     },
   })
 }

@@ -3,18 +3,19 @@ import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   className?: HTMLElement['className']
 }
 
-export const BookmarkVerticalCard = ({ children, className }: Props) => {
+export const BookmarkVerticalCard = ({ children, className, ...props }: Props) => {
   return (
     <div
       className={cn(
         `relative flex flex-col h-[206px] w-full max-w-[166px] overflow-hidden rounded-[16px] bg-white px-[12px] py-[16px] cursor-pointer border border-outline`,
         className,
       )}
+      {...props}
     >
       {children}
     </div>
@@ -43,7 +44,7 @@ const BookmarkVerticalCardHeader = ({
   )
 }
 
-const BookmarkVerticalCardContent = ({ title }: { title: string }) => {
+const BookmarkVerticalCardContent = ({ title }: { title: React.ReactNode }) => {
   return (
     <Text typo="subtitle-2-bold" className="line-clamp-2 mb-[4px]">
       {title}
