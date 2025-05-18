@@ -11,9 +11,9 @@
  */
 export const StorageKey = {
   /** 최근 전체 검색 키워드 */
-  integratedRecentSearchKeyword: 'integratedRecentSearchKeyword',
+  exploreRecentSearchKeyword: 'exploreRecentSearchKeyword',
   /** 최근 퀴즈노트 검색 키워드 */
-  quizNoteRecentSearchKeyword: 'quizNoteRecentSearchKeyword',
+  libraryRecentSearchKeyword: 'libraryRecentSearchKeyword',
   /** 북마크 변경 체크 */
   bookmarkUpdate: 'bookmarkUpdate',
 } as const
@@ -25,8 +25,8 @@ export const StorageKey = {
  * 타입 안전성을 보장하기 위해 사용
  */
 export interface StorageSchema {
-  [StorageKey.integratedRecentSearchKeyword]: string[]
-  [StorageKey.quizNoteRecentSearchKeyword]: string[]
+  [StorageKey.exploreRecentSearchKeyword]: string[]
+  [StorageKey.libraryRecentSearchKeyword]: string[]
   [StorageKey.bookmarkUpdate]: {
     id: number
     isBookmarked?: boolean
