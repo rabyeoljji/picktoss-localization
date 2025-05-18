@@ -157,40 +157,38 @@ const MyDocumentQuizSearchResults = ({ tab, documents, keyword }: DocumentQuizSe
   }
 
   return (
-    <div className="h-[calc(100dvh-56px)] px-[16px] overflow-y-auto text-text1-medium">
-      <div className="flex flex-col p-[16px]">
-        <Text typo="body-1-medium">
-          결과 <span className="text-accent">{documents.length}</span>
-        </Text>
+    <div className="h-[calc(100%-48px)] flex flex-col px-[16px] pt-[16px] overflow-hidden">
+      <Text typo="body-1-medium">
+        결과 <span className="text-accent">{documents.length}</span>
+      </Text>
 
-        <div className="flex flex-col">
-          {documents.map((searchItem, idx) => {
-            return (
-              <Link
-                key={idx}
-                to={tab === 'MY' ? '/library/:noteId' : '/explore/detail/:noteId'}
-                params={[String(searchItem.id)]}
-              >
-                <SearchQuizNoteItem
-                  documentTitle={highlightAndTrimText(searchItem.name ?? '', keyword ?? '')}
-                  documentEmoji={searchItem.emoji}
-                  matchingSentence={
-                    isSearchDocumentsDto(searchItem) && searchItem.content.includes(keyword) ? (
-                      <MarkdownProcessor markdownText={searchItem.content} keyword={keyword ?? ''} />
-                    ) : (
-                      highlightAndTrimText(formatQAText(searchItem.quizzes), keyword ?? '')
-                    )
-                  }
-                  quizCount={searchItem.totalQuizCount}
-                  isPublic={isSearchDocumentsDto(searchItem) ? searchItem.isPublic : true}
-                  playedCount={searchItem.tryCount}
-                  bookmarkCount={searchItem.bookmarkCount}
-                  lastItem={idx === documents.length - 1}
-                />
-              </Link>
-            )
-          })}
-        </div>
+      <div className="h-full flex flex-col overflow-y-auto pb-[16px]">
+        {documents.map((searchItem, idx) => {
+          return (
+            <Link
+              key={idx}
+              to={tab === 'MY' ? '/library/:noteId' : '/explore/detail/:noteId'}
+              params={[String(searchItem.id)]}
+            >
+              <SearchQuizNoteItem
+                documentTitle={highlightAndTrimText(searchItem.name ?? '', keyword ?? '')}
+                documentEmoji={searchItem.emoji}
+                matchingSentence={
+                  isSearchDocumentsDto(searchItem) && searchItem.content.includes(keyword) ? (
+                    <MarkdownProcessor markdownText={searchItem.content} keyword={keyword ?? ''} />
+                  ) : (
+                    highlightAndTrimText(formatQAText(searchItem.quizzes), keyword ?? '')
+                  )
+                }
+                quizCount={searchItem.totalQuizCount}
+                isPublic={isSearchDocumentsDto(searchItem) ? searchItem.isPublic : true}
+                playedCount={searchItem.tryCount}
+                bookmarkCount={searchItem.bookmarkCount}
+                lastItem={idx === documents.length - 1}
+              />
+            </Link>
+          )
+        })}
       </div>
     </div>
   )
