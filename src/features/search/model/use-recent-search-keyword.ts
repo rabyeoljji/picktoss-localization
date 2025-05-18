@@ -7,7 +7,7 @@ import { StorageKeyType } from '@/shared/lib/storage/model/type'
  * @param storageKey 최근 검색어를 저장할 스토리지 키
  * @returns 최근 검색어 관련 상태와 핸들러 함수들
  */
-export const useRecentSearches = (storageKey: StorageKeyType = StorageKey.integratedRecentSearchKeyword) => {
+export const useRecentSearches = (storageKey: StorageKeyType = StorageKey.exploreRecentSearchKeyword) => {
   const [recentKeywords, setRecentKeywords] = useLocalStorage(storageKey, [])
 
   /**

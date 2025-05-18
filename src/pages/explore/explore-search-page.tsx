@@ -34,7 +34,7 @@ const ExploreSearchPage = () => {
     handleClearKeyword,
     onSearchSubmit,
     RecentSearchKeywords,
-  } = useSearch(StorageKey.quizNoteRecentSearchKeyword)
+  } = useSearch(StorageKey.exploreRecentSearchKeyword)
 
   // 쿼리를 사용하여 queryKeyword 변경 시 자동으로 검색 실행
   const { data: searchResultsData, isLoading } = useSearchPublicDocuments(
