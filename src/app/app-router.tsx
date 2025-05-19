@@ -16,6 +16,8 @@ import {
 } from '@/pages/account'
 import { FeedbackCompletePage } from '@/pages/account/feedback-complete-page'
 import FeedbackPage from '@/pages/account/feedback-page'
+import MyStarPage from '@/pages/account/my-star-page'
+import StarHistoryPage from '@/pages/account/star-history-page'
 import { LoginPage } from '@/pages/auth'
 import { ExploreComplainPage, ExploreDetailPage, ExplorePage, ExploreSearchPage } from '@/pages/explore'
 import ExploreReleasePage from '@/pages/explore/explore-release-page'
@@ -72,6 +74,8 @@ export const AppRouter = () => {
                 <Route path={RoutePath.accountQuizAnalysis} element={<QuizAnalysisPage />} />
                 <Route path={RoutePath.accountQuizRecord} element={<QuizRecordPage />} />
                 <Route path={RoutePath.accountNotificationConfig} element={<NotificationConfigPage />} />
+                <Route path={RoutePath.accountMyStar} element={<MyStarPage />} />
+                <Route path={RoutePath.accountStarHistory} element={<StarHistoryPage />} />
                 <Route path={RoutePath.accountPaymentHistory} element={<PaymentHistoryPage />} />
                 <Route path={RoutePath.accountNotice} element={<NoticePage />} />
                 <Route path={RoutePath.accountContact} element={<ContactPage />} />

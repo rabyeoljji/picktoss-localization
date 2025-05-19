@@ -166,7 +166,7 @@ const MyDocumentQuizSearchResults = ({ tab, documents, keyword }: DocumentQuizSe
         {documents.map((searchItem, idx) => {
           return (
             <Link
-              key={idx}
+              key={searchItem.id}
               to={tab === 'MY' ? '/library/:noteId' : '/explore/detail/:noteId'}
               params={[String(searchItem.id)]}
             >

@@ -56,8 +56,8 @@ const ExplorePage = () => {
             className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
           >
             {isLoading ? (
-              Array.from({ length: 7 }).map(() => (
-                <div className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
+              Array.from({ length: 7 }).map((_, index) => (
+                <div key={'tab-skeleton-' + index} className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
               ))
             ) : (
               <>
