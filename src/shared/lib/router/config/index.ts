@@ -96,6 +96,12 @@ export const RouteConfig = {
   accountNotificationConfig: {
     pathname: '/account/notification-config',
   },
+  accountMyStar: {
+    pathname: '/account/my-star',
+  },
+  accountStarHistory: {
+    pathname: '/account/star-history',
+  },
   accountPaymentHistory: {
     pathname: '/account/payment-history',
   },
