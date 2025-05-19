@@ -65,7 +65,7 @@ export const RouteConfig = {
   libraryNoteDetail: {
     pathname: '/library/:noteId',
     search: {
-      quizType: '' as 'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL',
+      quizType: 'ALL' as 'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL',
       showAnswer: false as boolean,
       tab: ['QUIZ'] as string[],
     },

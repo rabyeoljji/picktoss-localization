@@ -8,6 +8,7 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { calculateStar } from '@/features/note/lib'
+import { NoteDetailQuizLoadingDrawer } from '@/features/note/ui/note-detail-quiz-loading-drawer'
 
 import {
   useAddQuizzes,
@@ -76,7 +77,11 @@ const NoteDetailPage = () => {
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
   const [showAnswer, setShowAnswer] = useQueryParam('/library/:noteId', 'showAnswer')
-  const { data: document, isLoading: isDocumentLoading } = useGetSingleDocument(Number(noteId))
+  const {
+    data: document,
+    isLoading: isDocumentLoading,
+    refetch: refetchSingleDocument,
+  } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
 
@@ -86,6 +91,8 @@ const NoteDetailPage = () => {
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
   const [reviewPickOpen, setReviewPickOpen] = useState(false)
+  const [createQuizDialogOpen, setCreateQuizDialogOpen] = useState(false)
+  const [isCreatingNewQuizzes, setIsCreatingNewQuizzes] = useState(false)
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
@@ -174,6 +181,8 @@ const NoteDetailPage = () => {
   const quizzes =
     quizType === 'ALL' ? document?.quizzes : document?.quizzes?.filter((quiz) => quiz.quizType === quizType)
 
+  const mixUpQuizCount = document?.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length ?? 0
+
   const maxQuizCount =
     quizType === 'ALL'
       ? document?.quizzes.length
@@ -210,7 +219,6 @@ const NoteDetailPage = () => {
             ) : (
               <button
                 type="button"
-                // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
                 // 모바일에서 키보드가 올라오지 않도록 기본 포커스 동작을 방지
                 onMouseDown={(e) => e.preventDefault()}
                 onClick={() => setShowEmojiPicker((prev) => !prev)}
@@ -347,74 +355,78 @@ const NoteDetailPage = () => {
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2 min-h-[100svh]">
-          {!hasMixUpQuiz ||
-            (!hasMultipleChoiceQuiz && (
-              <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
-                <IcSparkle className="text-icon-accent size-4" />
-                <Text typo="body-1-bold">
-                  {quizType === 'MIX_UP' ? (
-                    <span className="text-accent">객관식</span>
-                  ) : (
-                    <span className="text-accent">O/X</span>
-                  )}{' '}
-                  퀴즈도 풀어보고 싶다면?
-                </Text>
+          {(!hasMixUpQuiz || !hasMultipleChoiceQuiz) && (
+            <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
+              <IcSparkle className="text-icon-accent size-4" />
+              <Text typo="body-1-bold">
+                {quizType === 'MIX_UP' ? (
+                  <span className="text-accent">객관식</span>
+                ) : (
+                  <span className="text-accent">O/X</span>
+                )}{' '}
+                퀴즈도 풀어보고 싶다면?
+              </Text>
 
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button size="xs" variant="secondary1" className="ml-auto">
-                      생성하기
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent>
-                    <div className="flex-center flex-col text-center gap-4 mb-[32px]">
-                      <div className="h-[120px] flex-center">
-                        {quizType === 'MIX_UP' ? (
-                          <ImgMultiple className="w-[99px]" />
-                        ) : (
-                          <ImgOx className="w-[106.6px]" />
-                        )}
-                      </div>
-                      <div className="grid gap-2">
-                        <Text typo="h4" color="primary">
-                          {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
-                        </Text>
-                        <Text typo="subtitle-2-medium" color="sub">
-                          이 유형의 문제를 생성할까요?
-                        </Text>
-                      </div>
+              <Dialog open={createQuizDialogOpen} onOpenChange={setCreateQuizDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button size="xs" variant="secondary1" className="ml-auto">
+                    생성하기
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <div className="flex-center flex-col text-center gap-4 mb-[32px]">
+                    <div className="h-[120px] flex-center">
+                      {quizType === 'MIX_UP' ? <ImgMultiple className="w-[99px]" /> : <ImgOx className="w-[106.6px]" />}
                     </div>
+                    <div className="grid gap-2">
+                      <Text typo="h4" color="primary">
+                        {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
+                      </Text>
+                      <Text typo="subtitle-2-medium" color="sub">
+                        이 유형의 문제를 생성할까요?
+                      </Text>
+                    </div>
+                  </div>
 
-                    <DialogCTA
-                      customButton={
-                        <Button
-                          variant="special"
-                          right={
-                            <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
-                              <ImgStar className="size-[16px] mr-[4px]" />
-                              <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
-                            </div>
-                          }
-                          onClick={() =>
-                            addQuizzes({
+                  <DialogCTA
+                    customButton={
+                      <Button
+                        variant="special"
+                        right={
+                          <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                            <ImgStar className="size-[16px] mr-[4px]" />
+                            <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
+                          </div>
+                        }
+                        onClick={() => {
+                          addQuizzes(
+                            {
                               documentId: Number(noteId),
                               data: {
                                 star: calculateStar(document?.content.length || 0),
-                                quizType: quizType === 'MIX_UP' ? 'MULTIPLE_CHOICE' : 'MIX_UP',
+                                quizType: mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP',
                               },
-                            })
-                          }
-                        >
-                          생성하기
-                        </Button>
-                      }
-                      hasClose
-                      closeLabel="취소"
-                    />
-                  </DialogContent>
-                </Dialog>
-              </div>
-            ))}
+                            },
+                            {
+                              onSuccess: () => {
+                                refetchSingleDocument()
+                                setCreateQuizDialogOpen(false)
+                                setIsCreatingNewQuizzes(true)
+                              },
+                            },
+                          )
+                        }}
+                      >
+                        생성하기
+                      </Button>
+                    }
+                    hasClose
+                    closeLabel="취소"
+                  />
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
 
           <div className="grid gap-2">
             {isDocumentLoading &&
@@ -630,7 +642,15 @@ const NoteDetailPage = () => {
         </Dialog>
       )}
 
-      {/* <QuizLoadingDrawer /> */}
+      {isCreatingNewQuizzes && (
+        <NoteDetailQuizLoadingDrawer
+          documentName={document?.name ?? ''}
+          quizType={mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP'}
+          documentId={document?.id ?? 0}
+          isLoading={isCreatingNewQuizzes}
+          close={() => setIsCreatingNewQuizzes(false)}
+        />
+      )}
     </div>
   )
 }

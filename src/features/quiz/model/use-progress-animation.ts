@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 
 /**
  * 프로그레스 애니메이션 타임라인 구간
@@ -196,14 +196,6 @@ export const useProgressAnimation = (options: ProgressAnimationOptions) => {
       startAnimation()
     }, 0)
   }
-
-  useEffect(() => {
-    startAnimation()
-
-    return () => {
-      stopAnimation()
-    }
-  }, [])
 
   return {
     // 상태

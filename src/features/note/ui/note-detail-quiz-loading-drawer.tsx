@@ -10,19 +10,29 @@ import { Button } from '@/shared/components/ui/button'
 import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
-import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useRouter } from '@/shared/lib/router'
 
-import { QuizType, useCreateNoteContext } from '../model/create-note-context'
+import { QuizType } from '../model/create-note-context'
 
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
-export const QuizLoadingDrawer = () => {
-  const router = useRouter()
-  const { documentName, quizType } = useCreateNoteContext()
+interface NoteDetailQuizLoadingDrawerProps {
+  documentName: string
+  quizType: QuizType
+  documentId: number
+  isLoading: boolean
+  close: () => void
+}
 
-  // 로딩 상태를 queryParam으로 관리
-  const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
+export const NoteDetailQuizLoadingDrawer = ({
+  isLoading,
+  documentId,
+  documentName,
+  quizType,
+  close,
+}: NoteDetailQuizLoadingDrawerProps) => {
+  const router = useRouter()
 
   // 단계적 진행 타임라인 정의
   const progressTimeline = [
@@ -48,15 +58,9 @@ export const QuizLoadingDrawer = () => {
     estimatedLoadingTime: ESTIMATED_LOADING_TIME,
   })
 
-  useEffect(() => {
-    if (isLoading) {
-      startAnimation()
-    }
-  }, [isLoading])
-
   // 문서 퀴즈 상태 폴링 훅 사용 (로딩 중일 때만 활성화)
   const { error, quizSetId, clearError } = useQuizGenerationPolling(
-    { documentId, quizType: quizType as QuizType },
+    { documentId, quizType },
     {
       pollingInterval: 2000,
       maxPollingCount: 60,
@@ -64,10 +68,11 @@ export const QuizLoadingDrawer = () => {
     },
   )
 
-  // 로딩 상태 토글 함수
-  const toggleLoading = (state: boolean) => {
-    setParams((prev) => ({ ...prev, isLoading: state, documentId: state ? documentId : 0 }))
-  }
+  useEffect(() => {
+    if (isLoading) {
+      startAnimation()
+    }
+  }, [startAnimation, isLoading])
 
   const renderQuizLoadingDrawerContent = () => {
     // 에러 발생 시 에러 화면 표시
@@ -100,7 +105,7 @@ export const QuizLoadingDrawer = () => {
 
           <Button
             onClick={() => {
-              toggleLoading(false)
+              close()
               clearError()
               resetProgressAnimation()
             }}
@@ -137,10 +142,7 @@ export const QuizLoadingDrawer = () => {
             >
               시작하기
             </Button>
-            <TextButton
-              onClick={() => router.replace('/library/:noteId', { params: [String(documentId)] })}
-              className="mt-4"
-            >
+            <TextButton onClick={() => close()} className="mt-4">
               다음에
             </TextButton>
           </div>
@@ -171,7 +173,7 @@ export const QuizLoadingDrawer = () => {
   return (
     <AlertDrawer
       open={isLoading}
-      onOpenChange={toggleLoading}
+      onOpenChange={() => close()}
       height="full"
       hasClose={false}
       body={renderQuizLoadingDrawerContent()}
