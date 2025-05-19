@@ -280,6 +280,10 @@ export const updateQuizResult = async (
 
 // DELETE: 퀴즈 삭제
 export const deleteQuiz = async (quizId: number): Promise<void> => {
-  const response = await client.delete<void>(QUIZ_ENDPOINTS.deleteQuiz(quizId), { data: [quizId] })
+  const response = await client.delete<void>(QUIZ_ENDPOINTS.deleteQuiz, {
+    data: {
+      id: quizId,
+    },
+  })
   return response.data
 }

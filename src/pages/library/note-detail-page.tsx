@@ -15,7 +15,7 @@ import {
   useUpdateDocumentEmoji,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
-import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
+import { useCreateQuizSet, useDeleteQuiz } from '@/entities/quiz/api/hooks'
 
 import {
   IcArrange,
@@ -90,8 +90,7 @@ const NoteDetailPage = () => {
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
 
-  // TODO: 퀴즈 id를 request body로 보내도록 수정 필요
-  // const { mutate: deleteSingleQuiz } = useDeleteQuiz()
+  const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
   const [selectedQuizCount, setSelectedQuizCount] = useState(0)
   useEffect(() => {
@@ -597,7 +596,16 @@ const NoteDetailPage = () => {
               <DialogClose asChild>
                 <button className="h-[48px] flex-1 text-sub">취소</button>
               </DialogClose>
-              <button className="h-[48px] flex-1 text-red-500" onClick={() => {}}>
+              <button
+                className="h-[48px] flex-1 text-red-500"
+                onClick={() => {
+                  deleteSingleQuiz({
+                    documentId: Number(noteId),
+                    quizId: deleteTargetQuizId,
+                  })
+                  setDeleteTargetQuizId(null)
+                }}
+              >
                 삭제
               </button>
             </div>
