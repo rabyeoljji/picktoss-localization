@@ -37,7 +37,6 @@ export const Default: Story = {
 
     return (
       <SearchQuizNoteItem
-        documentId={0}
         documentTitle={documentTitle ?? '제무제표 분석하기'}
         documentEmoji={documentEmoji ?? '🎯'}
         matchingSentence={
@@ -63,7 +62,6 @@ export const PublicNote: Story = {
   render: () => {
     return (
       <SearchQuizNoteItem
-        documentId={1}
         documentTitle={'최근 이슈'}
         documentEmoji="🎯"
         matchingSentence={
@@ -89,7 +87,6 @@ export const LastItem: Story = {
   render: () => {
     return (
       <SearchQuizNoteItem
-        documentId={2}
         documentTitle={'최근 이슈'}
         documentEmoji="🎯"
         matchingSentence={

@@ -348,6 +348,7 @@ const ExploreSwipeCard = ({
   const handleQuizStart = () => {
     createQuizSet(
       {
+        quizType: 'ALL',
         quizCount: totalQuizCount,
       },
       {

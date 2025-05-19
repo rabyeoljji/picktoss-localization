@@ -63,12 +63,16 @@ const ExploreDetailPage = () => {
   useEffect(() => {
     if (!document) return
 
-    setSelectedQuizCount(document.quizzes.length)
+    if (quizType === 'ALL') {
+      setSelectedQuizCount(document.quizzes.length)
+    } else {
+      setSelectedQuizCount(document.quizzes.filter((quiz) => quiz.quizType === quizType).length)
+    }
 
     if (existQuizTypes.length === 1) {
       setQuizType(existQuizTypes[0])
     }
-  }, [document])
+  }, [document, quizType])
 
   const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
 
@@ -177,6 +181,7 @@ const ExploreDetailPage = () => {
   const handlePlay = (quizCount: number) => {
     createQuizSet(
       {
+        quizType,
         quizCount,
       },
       {
