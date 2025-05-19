@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { calculateStar } from '@/features/note/lib'
+import { QuizType } from '@/features/note/model/create-note-context'
+
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
@@ -46,12 +49,14 @@ export interface PollingResult {
  * @param options 폴링 옵션
  * @returns 폴링 관련 상태 및 메서드
  */
-export const useQuizGenerationPolling = (documentId: number, options?: PollingOptions) => {
+export const useQuizGenerationPolling = (
+  { documentId, quizType }: { documentId: number; quizType: QuizType | 'ALL' },
+  options?: PollingOptions,
+) => {
   const { pollingInterval = 2000, maxPollingCount = 60, autoCompleteTime = 70000 } = options || {}
   const [quizSetId, setQuizSetId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [pollingCount, setPollingCount] = useState(0)
-
   const pollingTimerRef = useRef<NodeJS.Timeout | null>(null)
   const autoCompleteTimerRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -80,13 +85,14 @@ export const useQuizGenerationPolling = (documentId: number, options?: PollingOp
     // 문서 상태에 따라 처리
     if (document.quizGenerationStatus === 'PROCESSED') {
       createQuizSet(
-        { quizCount: 5 },
+        { quizCount: calculateStar(document.content.length), quizType },
         {
           onSuccess: ({ quizSetId }) => {
             stopPolling()
             setQuizSetId(quizSetId)
           },
           onError: (err) => {
+            console.log(err)
             const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다.'
             setError(errorMessage)
             stopPolling()

@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { GetSingleDocumentResponse } from '@/entities/document/api'
 import { DOCUMENT_KEYS } from '@/entities/document/api/config'
 
 import { QUIZ_KEYS } from './config'
@@ -159,9 +160,20 @@ export const useUpdateQuizResult = (documentId: number, quizSetId: number) => {
 // DELETE 훅
 
 // 퀴즈 삭제
-export const useDeleteQuiz = (quizId: number) => {
+export const useDeleteQuiz = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationKey: QUIZ_KEYS.deleteQuiz(quizId),
-    mutationFn: () => deleteQuiz(quizId),
+    mutationKey: QUIZ_KEYS.deleteQuiz,
+    mutationFn: ({ documentId: _, quizId }: { documentId: number; quizId: number }) => deleteQuiz(quizId),
+    onMutate: async ({ documentId, quizId }) => {
+      await queryClient.setQueryData(
+        DOCUMENT_KEYS.getSingleDocument(documentId),
+        (oldData: GetSingleDocumentResponse) => ({
+          ...oldData,
+          quizzes: oldData.quizzes.filter((quiz) => quiz.id !== quizId),
+        }),
+      )
+    },
   })
 }

@@ -2,6 +2,7 @@ import { UseQueryOptions, useMutation, useQuery, useQueryClient } from '@tanstac
 
 import { DOCUMENT_KEYS } from './config'
 import {
+  CreateDocumentPayload,
   CreateQuizzesRequest,
   DeleteDocumentRequest,
   GetSingleDocumentResponse,
@@ -39,7 +40,7 @@ import {
 export const useCreateDocument = () => {
   return useMutation({
     mutationKey: DOCUMENT_KEYS.createDocument,
-    mutationFn: (data: Parameters<typeof createDocument>[0]) => createDocument(data),
+    mutationFn: (data: CreateDocumentPayload) => createDocument(data),
   })
 }
 
@@ -65,10 +66,16 @@ export const useGetSingleDocument = (documentId: number) => {
 }
 
 export const useAddQuizzes = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DOCUMENT_KEYS.addQuizzes,
     mutationFn: ({ documentId, data }: { documentId: number; data: CreateQuizzesRequest }) =>
       addQuizzes(documentId, data),
+    onSuccess: (_, { documentId }) =>
+      queryClient.invalidateQueries({
+        queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
+      }),
   })
 }
 

@@ -40,7 +40,7 @@ export const QUIZ_ENDPOINTS = {
 
   // DELETE
   // 퀴즈 삭제
-  deleteQuiz: (quizId: number) => `/quizzes/${quizId}/delete`,
+  deleteQuiz: '/quizzes/delete',
 }
 
 export const QUIZ_KEYS = {
@@ -68,5 +68,5 @@ export const QUIZ_KEYS = {
     createKey(QUIZ, QUIZ_ENDPOINTS.updateQuizResult(documentId, quizSetId)),
 
   // DELETE
-  deleteQuiz: (quizId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.deleteQuiz(quizId)),
+  deleteQuiz: createKey(QUIZ, QUIZ_ENDPOINTS.deleteQuiz),
 }
