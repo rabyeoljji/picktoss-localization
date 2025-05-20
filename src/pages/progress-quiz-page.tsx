@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { SetStateAction, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -276,8 +276,9 @@ const QuizSettingDrawer = ({
   setQuizSetting,
 }: {
   quizSetting: { autoNext: boolean; hideTimeSpent: boolean }
-  setQuizSetting: (param: { autoNext: boolean; hideTimeSpent: boolean }) => void
+  setQuizSetting: React.Dispatch<SetStateAction<{ autoNext: boolean; hideTimeSpent: boolean }>>
 }) => {
+  const [params] = useQueryParam('/progress-quiz/:quizSetId')
   const [isOpen, setIsOpen] = useState(false)
 
   const [tempSettings, setTempSettings] = useState({
@@ -295,13 +296,31 @@ const QuizSettingDrawer = ({
     }
   }
 
+  // 해설이 존재하는 상태에서는 바로 autoNext를 on시키지 않는다. 이때는 다음 문제부터 적용된다.
   const applySettings = () => {
-    setQuizSetting({
-      autoNext: tempSettings.autoNext,
-      hideTimeSpent: tempSettings.hideTimeSpent,
-    })
     setIsOpen(false)
+
+    if (params.selectedOption != null) {
+      setQuizSetting((prev) => ({
+        ...prev,
+        hideTimeSpent: tempSettings.hideTimeSpent,
+      }))
+    } else {
+      setQuizSetting({
+        autoNext: tempSettings.autoNext,
+        hideTimeSpent: tempSettings.hideTimeSpent,
+      })
+    }
   }
+  // 해설이 존재하는 상태에서는 바로 autoNext를 on시키지 않는다. 이때는 다음 문제부터 적용된다.
+  useEffect(() => {
+    if (params.selectedOption === null) {
+      setQuizSetting((prev) => ({
+        ...prev,
+        autoNext: tempSettings.autoNext,
+      }))
+    }
+  }, [params.selectedOption])
 
   return (
     <AlertDrawer
