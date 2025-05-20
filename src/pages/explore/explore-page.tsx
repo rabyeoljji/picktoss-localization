@@ -11,10 +11,12 @@ import { IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import { Chip } from '@/shared/components/ui/chip'
 import { useHorizontalScrollWheel } from '@/shared/hooks/use-horizontal-scroll-wheel'
-import { Link, useQueryParam } from '@/shared/lib/router'
+import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const ExplorePage = () => {
+  const router = useRouter()
+
   const { data: categoryData, isLoading } = useGetCategories()
 
   const [params, setParams] = useQueryParam('/explore')
@@ -30,9 +32,9 @@ const ExplorePage = () => {
   return (
     <>
       <Header
-        className={cn('transition-all duration-300 ease-in-out', 'bg-surface-2 py-[9px] px-[8px]')}
+        className={cn('transition-all duration-300 ease-in-out', 'bg-surface-2 px-[8px]')}
         left={
-          <button className="size-[40px] flex-center">
+          <button onClick={() => router.push('/account')} className="size-[40px] flex-center">
             <IcProfile className="size-[24px]" />
           </button>
         }
