@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { IcClear } from '@/shared/assets/icon'
 import { Label } from '@/shared/components/ui/label'
@@ -32,6 +32,7 @@ function Input({
   onChange,
   typo = 'subtitle-2-medium',
   onClearClick,
+  defaultValue,
   ...props
 }: InputProps) {
   // 내부 상태로 value 관리 (비제어 컴포넌트를 위함)
@@ -42,6 +43,12 @@ function Input({
   const id = useId()
   const inputRef = useRef<HTMLInputElement>(null)
   const rightRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (inputRef.current && defaultValue) {
+      inputRef.current.value = String(defaultValue)
+    }
+  }, [defaultValue])
 
   // ref 합치기 위한 함수
   const setInputRef = (node: HTMLInputElement) => {

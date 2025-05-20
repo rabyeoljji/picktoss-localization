@@ -8,22 +8,30 @@ function RadioGroup({ className, ...props }: React.ComponentProps<typeof RadioGr
   return <RadioGroupPrimitive.Root data-slot="radio-group" className={className} {...props} />
 }
 
-function RadioGroupItem({ className, ...props }: React.ComponentProps<typeof RadioGroupPrimitive.Item>) {
+function RadioGroupItem({
+  indicator,
+  className,
+  ...props
+}: React.ComponentProps<typeof RadioGroupPrimitive.Item> & { indicator?: React.ReactNode }) {
   return (
     <RadioGroupPrimitive.Item
       data-slot="radio-group-item"
       className={cn(
-        'text-primary aspect-square size-5 shrink-0 cursor-pointer rounded-full border border-gray-200 transition-[color,box-shadow] outline-none disabled:cursor-default disabled:border-gray-100 disabled:bg-gray-50 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500',
+        'text-primary group aspect-square size-5 shrink-0 cursor-pointer rounded-full border border-gray-200 transition-[color,box-shadow] outline-none disabled:cursor-default disabled:border-gray-100 disabled:bg-gray-50 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500',
         className,
       )}
       {...props}
     >
-      <RadioGroupPrimitive.Indicator
-        data-slot="radio-group-indicator"
-        className="relative flex items-center justify-center"
-      >
-        <div className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
-      </RadioGroupPrimitive.Indicator>
+      {indicator ? (
+        indicator
+      ) : (
+        <RadioGroupPrimitive.Indicator
+          data-slot="radio-group-indicator"
+          className="relative flex items-center justify-center"
+        >
+          <div className="absolute top-1/2 left-1/2 size-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+        </RadioGroupPrimitive.Indicator>
+      )}
     </RadioGroupPrimitive.Item>
   )
 }

@@ -36,6 +36,7 @@ import {
 import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
+import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import {
@@ -62,12 +63,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
+import { Input } from '@/shared/components/ui/input'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { Slider } from '@/shared/components/ui/slider'
 import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
+import { Textarea } from '@/shared/components/ui/textarea'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -86,12 +90,13 @@ const NoteDetailPage = () => {
   const emojiPickerRef = useRef<HTMLDivElement>(null)
 
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
-  const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | null>(null)
+  const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL' | null>(null)
 
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
   const [reviewPickOpen, setReviewPickOpen] = useState(false)
   const [createQuizDialogOpen, setCreateQuizDialogOpen] = useState(false)
+  const [editTargetQuizId, setEditTargetQuizId] = useState<number | null>(null)
   const [isCreatingNewQuizzes, setIsCreatingNewQuizzes] = useState(false)
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
@@ -355,7 +360,7 @@ const NoteDetailPage = () => {
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2 min-h-[100svh]">
-          {(!hasMixUpQuiz || !hasMultipleChoiceQuiz) && (
+          {!isDocumentLoading && (!hasMixUpQuiz || !hasMultipleChoiceQuiz) && (
             <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
               <IcSparkle className="text-icon-accent size-4" />
               <Text typo="body-1-bold">
@@ -444,7 +449,9 @@ const NoteDetailPage = () => {
                         <IcKebab className="size-5 text-icon-sub" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="-translate-y-2">
-                        <DropdownMenuItem right={<IcEdit />}>문제 편집</DropdownMenuItem>
+                        <DropdownMenuItem right={<IcEdit />} onClick={() => setEditTargetQuizId(quiz.id)}>
+                          문제 편집
+                        </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-500"
                           right={<IcDelete className="text-icon-critical" />}
@@ -477,33 +484,6 @@ const NoteDetailPage = () => {
           </div>
         </div>
       </HeaderOffsetLayout>
-
-      {/* TODO: 복습 픽 drawer */}
-      <Drawer open={reviewPickOpen} onOpenChange={setReviewPickOpen}>
-        <DrawerContent height="full">
-          <DrawerHeader>
-            <DrawerTitle>복습 Pick</DrawerTitle>
-            <DrawerDescription>내가 틀렸던 문제들을 확인해보세요</DrawerDescription>
-          </DrawerHeader>
-          <div>{document?.quizzes.filter((quiz) => quiz.reviewNeeded).map((quiz) => <div key={quiz.id}></div>)}</div>
-        </DrawerContent>
-      </Drawer>
-
-      {/* TODO: Markdown Viewer */}
-      {/* 원본 노트 drawer */}
-      <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
-        <DrawerContent height="full">
-          <DrawerHeader>
-            <DrawerTitle>원본 노트</DrawerTitle>
-            <DrawerDescription>
-              {document?.createdAt.split('T')[0].split('-').join('.')} 등록 / {document?.content?.length}자
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="mt-5 flex-1 overflow-y-scroll pb-10">
-            <p>{document?.content}</p>
-          </div>
-        </DrawerContent>
-      </Drawer>
 
       {/* 하단 툴바 */}
       <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-[var(--shadow-md)] flex items-center rounded-[16px]">
@@ -581,13 +561,138 @@ const NoteDetailPage = () => {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="-translate-y-2">
               <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>
-              <DropdownMenuItem className="text-red-500" right={<IcDelete className="text-icon-critical" />}>
-                문서 전체 삭제
+              <DropdownMenuItem
+                className="text-red-500"
+                right={<IcDelete className="text-icon-critical" />}
+                onClick={() => setDeleteTargetQuizType(quizType)}
+              >
+                문제 전체 삭제
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
+
+      {/* 문제 수정 drawer */}
+      <AlertDrawer
+        open={editTargetQuizId !== null}
+        onOpenChange={(open) => {
+          if (!open) {
+            setEditTargetQuizId(null)
+          }
+        }}
+        hasClose={false}
+        title="문제 편집"
+        height="full"
+        body={
+          <div>
+            {/* 완료 버튼 */}
+            <div className="absolute w-[70px] h-[24px] text-end right-[20px] top-[30px]">
+              <TextButton
+                size="lg"
+                variant="primary"
+                className="ml-auto top-[-10px] right-0"
+                onClick={() => setEditTargetQuizId(null)}
+              >
+                완료
+              </TextButton>
+            </div>
+
+            <div className="h-[20px]" />
+
+            {
+              <>
+                {(() => {
+                  const quiz = document?.quizzes.find((quiz) => quiz.id === editTargetQuizId)
+
+                  return (
+                    <form>
+                      <Input label="질문" defaultValue={quiz?.question} className="text-secondary" />
+
+                      {quiz?.quizType === 'MIX_UP' ? (
+                        <RadioGroup className="flex gap-2 mt-4" defaultValue={quiz?.answer}>
+                          <RadioGroupItem
+                            value="correct"
+                            className="flex-1 flex-center size-full rounded-[10px] aspect-[164/48] data-[state=checked]:bg-accent"
+                            indicator={
+                              <div data-slot="radio-group-indicator">
+                                <Text
+                                  typo="body-1-bold"
+                                  color="secondary"
+                                  className="group-data-[state=checked]:text-accent"
+                                >
+                                  O
+                                </Text>
+                              </div>
+                            }
+                          />
+                          <RadioGroupItem
+                            value="incorrect"
+                            className="flex-1 flex-center size-full rounded-[10px] aspect-[164/48] data-[state=checked]:bg-accent"
+                            indicator={
+                              <div data-slot="radio-group-indicator">
+                                <Text
+                                  typo="body-1-bold"
+                                  color="secondary"
+                                  className="group-data-[state=checked]:text-accent"
+                                >
+                                  X
+                                </Text>
+                              </div>
+                            }
+                          />
+                        </RadioGroup>
+                      ) : (
+                        <RadioGroup className="flex flex-col gap-4 mt-4" defaultValue={quiz?.answer}>
+                          {document?.quizzes
+                            .find((quiz) => quiz.id === editTargetQuizId)
+                            ?.options.map((option) => (
+                              <div key={option} className="flex items-center gap-3">
+                                <RadioGroupItem key={option} value={option} />
+                                <Input defaultValue={option} className="text-secondary" />
+                              </div>
+                            ))}
+                        </RadioGroup>
+                      )}
+
+                      <div className="mt-5">
+                        <Textarea label="해설" className="text-secondary" defaultValue={quiz?.explanation} />
+                      </div>
+                    </form>
+                  )
+                })()}
+              </>
+            }
+          </div>
+        }
+      />
+
+      {/* TODO: 복습 픽 drawer */}
+      <Drawer open={reviewPickOpen} onOpenChange={setReviewPickOpen}>
+        <DrawerContent height="full">
+          <DrawerHeader>
+            <DrawerTitle>복습 Pick</DrawerTitle>
+            <DrawerDescription>내가 틀렸던 문제들을 확인해보세요</DrawerDescription>
+          </DrawerHeader>
+          <div>{document?.quizzes.filter((quiz) => quiz.reviewNeeded).map((quiz) => <div key={quiz.id}></div>)}</div>
+        </DrawerContent>
+      </Drawer>
+
+      {/* TODO: Markdown Viewer */}
+      {/* 원본 노트 drawer */}
+      <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
+        <DrawerContent height="full">
+          <DrawerHeader>
+            <DrawerTitle>원본 노트</DrawerTitle>
+            <DrawerDescription>
+              {document?.createdAt.split('T')[0].split('-').join('.')} 등록 / {document?.content?.length}자
+            </DrawerDescription>
+          </DrawerHeader>
+          <div className="mt-5 flex-1 overflow-y-scroll pb-10">
+            <p>{document?.content}</p>
+          </div>
+        </DrawerContent>
+      </Drawer>
 
       {/* 단일 문제 삭제 confirm 모달 */}
       {deleteTargetQuizId !== null && (
@@ -635,9 +740,20 @@ const NoteDetailPage = () => {
             }
           }}
         >
-          <DialogContent>
-            <DialogTitle>문제를 삭제할까요?</DialogTitle>
-            <DialogDescription>삭제한 문제는 다시 복구할 수 없어요</DialogDescription>
+          <DialogContent className="pt-[24px] px-[20px] pb-[8px] w-[280px]">
+            <DialogTitle className="typo-subtitle-2-bold text-center">문제를 삭제할까요?</DialogTitle>
+            <DialogDescription className="typo-body-1-medium text-sub text-center mt-1">
+              삭제한 문제는 다시 복구할 수 없어요
+            </DialogDescription>
+            <div className="flex gap-2.5 mt-[20px]">
+              <DialogClose asChild>
+                <button className="h-[48px] flex-1 text-sub">취소</button>
+              </DialogClose>
+              {/* TODO: 문제 삭제 */}
+              <button className="h-[48px] flex-1 text-red-500" onClick={() => {}}>
+                삭제
+              </button>
+            </div>
           </DialogContent>
         </Dialog>
       )}
