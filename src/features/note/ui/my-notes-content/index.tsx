@@ -177,6 +177,7 @@ const MyNotesContent = ({
                   check(document.id)
                   setOpenDelete(true)
                 }}
+                key={'deleteButton'}
                 className="flex-center w-[72px] flex-col bg-critical p-2 text-inverse"
               >
                 <IcDelete className="size-[20px] mb-[4px]" />
