@@ -96,12 +96,12 @@ const ExploreSearchPage = () => {
         )}
 
         {!showRecentKeywords && !isLoading && hasSearchResults && (
-          <div className="h-full px-[16px] pt-[20px] flex flex-col gap-[10px] overflow-hidden">
+          <div className="h-full px-[16px] pt-[20px] flex flex-col gap-[10px] overflow-y-auto">
             <Text typo="body-1-medium">
               결과 <span className="text-accent">{searchResults.length}</span>
             </Text>
 
-            <div className="size-full overflow-y-auto pb-[59px]">
+            <div className="w-full h-fit pb-[59px]">
               <div className="h-fit w-full max-w-[342px] sm:max-w-full mx-auto grid grid-cols-[repeat(auto-fit,_minmax(166px,_166px))] gap-x-[10px] gap-y-[16px]">
                 {searchResults.map((searchItem) => {
                   return <ExploreSearchResultCard key={searchItem.id} searchItem={searchItem} keyword={queryKeyword} />
