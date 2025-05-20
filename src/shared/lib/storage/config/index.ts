@@ -16,6 +16,7 @@ export const StorageKey = {
   libraryRecentSearchKeyword: 'libraryRecentSearchKeyword',
   /** 북마크 변경 체크 */
   bookmarkUpdate: 'bookmarkUpdate',
+  quizSetting: 'quizSetting',
 } as const
 
 /**
@@ -33,4 +34,8 @@ export interface StorageSchema {
     bookmarkCount?: number
     isUpdated?: boolean
   } | null
+  [StorageKey.quizSetting]: {
+    autoNext: boolean
+    hideTimeSpent: boolean
+  }
 }
