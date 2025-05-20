@@ -240,7 +240,7 @@ export const ProgressQuizPage = () => {
         }
       />
 
-      <HeaderOffsetLayout>
+      <HeaderOffsetLayout className="pt-[var(--header-height-safe)]">
         <div className="px-4">
           <ProgressBar current={params.quizIndex + 1} totalQuizCount={quizSetData.quizzes.length} />
         </div>
