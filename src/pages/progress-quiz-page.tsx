@@ -15,17 +15,11 @@ import { Question } from '@/entities/quiz/ui/question'
 import { IcControl } from '@/shared/assets/icon'
 import { ImgExit, ImgRoundCorrect, ImgRoundIncorrect } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
+import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers/peeking-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
-import {
-  Dialog,
-  DialogCTA,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog'
+import { Dialog, DialogCTA, DialogContent } from '@/shared/components/ui/dialog'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
@@ -90,6 +84,7 @@ export const ProgressQuizPage = () => {
     setLocalStorageItem('quizSetting', quizSetting)
   }, [quizSetting])
 
+  // 새로고침하면 처음으로 돌아감
   useEffect(() => {
     setParams((prev) => ({
       ...prev,
@@ -216,7 +211,7 @@ export const ProgressQuizPage = () => {
                 <StopWatch isRunning={params.selectedOption === null} />
               </div>
             )}
-            <QuizSettingDialog quizSetting={quizSetting} setQuizSetting={setQuizSetting} />
+            <QuizSettingDrawer quizSetting={quizSetting} setQuizSetting={setQuizSetting} />
           </div>
         }
       />
@@ -276,7 +271,7 @@ export const ProgressQuizPage = () => {
   )
 }
 
-const QuizSettingDialog = ({
+const QuizSettingDrawer = ({
   quizSetting,
   setQuizSetting,
 }: {
@@ -309,15 +304,15 @@ const QuizSettingDialog = ({
   }
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <IcControl role="button" className="size-6 ml-auto cursor-pointer" />
-      </DialogTrigger>
-      <DialogContent className="text-center w-[308px]">
-        <DialogTitle>퀴즈 설정</DialogTitle>
-        <DialogDescription>설정은 이번 문제부터 적용돼요</DialogDescription>
-
-        <div className="mt-4 py-5 px-10 grid gap-4">
+    <AlertDrawer
+      open={isOpen}
+      onOpenChange={handleOpenChange}
+      trigger={<IcControl role="button" className="size-6 ml-auto cursor-pointer" />}
+      title="퀴즈 설정"
+      hasClose={false}
+      height="md"
+      body={
+        <div className="py-8 grid gap-5">
           <div className="flex items-center justify-between">
             <Text typo="subtitle-2-medium" color="primary">
               문제 바로 넘기기
@@ -337,10 +332,13 @@ const QuizSettingDialog = ({
             />
           </div>
         </div>
-
-        <DialogCTA label="적용하기" onClick={applySettings} className="mt-[60px]" />
-      </DialogContent>
-    </Dialog>
+      }
+      footer={
+        <div className="h-[114px] pt-[14px]">
+          <Button onClick={applySettings}>적용하기</Button>
+        </div>
+      }
+    />
   )
 }
 
