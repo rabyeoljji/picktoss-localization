@@ -156,7 +156,7 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
     >
       <BookmarkVerticalCard.Header
         emoji={searchItem.emoji}
-        // isOwner={searchItem.isOwner}
+        isOwner={searchItem.isOwner}
         bookmarkBtn={
           <button
             type="button"
