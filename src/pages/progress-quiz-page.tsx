@@ -29,6 +29,7 @@ import {
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { getLocalStorageItem, setLocalStorageItem } from '@/shared/lib/storage/lib'
 import { cn } from '@/shared/lib/utils'
 
 /**
@@ -67,6 +68,36 @@ export const ProgressQuizPage = () => {
 
   const { mutateAsync: updateQuizResult } = useUpdateQuizResult(Number(params.documentId), Number(quizSetId))
 
+  const [quizSetting, setQuizSetting] = useState<{
+    autoNext: boolean
+    hideTimeSpent: boolean
+  }>(() => {
+    const localQuizSetting = getLocalStorageItem('quizSetting')
+    if (localQuizSetting) {
+      return localQuizSetting as {
+        autoNext: boolean
+        hideTimeSpent: boolean
+      }
+    } else {
+      return {
+        autoNext: false,
+        hideTimeSpent: false,
+      }
+    }
+  })
+
+  useEffect(() => {
+    setLocalStorageItem('quizSetting', quizSetting)
+  }, [quizSetting])
+
+  useEffect(() => {
+    setParams((prev) => ({
+      ...prev,
+      quizIndex: 0,
+      selectedOption: null,
+    }))
+  }, [])
+
   // 퀴즈 시작 시 시간 초기화
   useEffect(() => {
     if (params.selectedOption === null) {
@@ -103,7 +134,7 @@ export const ProgressQuizPage = () => {
     // 마지막 문제인 경우 완료 플래그 설정
     if (params.quizIndex === quizSetData.quizzes.length - 1) {
       setIsQuizComplete(true)
-    } else if (params.autoNext) {
+    } else if (quizSetting.autoNext) {
       setTimeout(() => {
         handleNextQuestion()
       }, 400)
@@ -180,12 +211,12 @@ export const ProgressQuizPage = () => {
         left={<BackButton type="close" onClick={() => setExitDialogOpen(true)} />}
         content={
           <div>
-            {!params.hideTimeSpent && (
+            {!quizSetting.hideTimeSpent && (
               <div className="center">
                 <StopWatch isRunning={params.selectedOption === null} />
               </div>
             )}
-            <QuizSettingDialog />
+            <QuizSettingDialog quizSetting={quizSetting} setQuizSetting={setQuizSetting} />
           </div>
         }
       />
@@ -231,7 +262,7 @@ export const ProgressQuizPage = () => {
           </>
         </div>
 
-        {params.selectedOption && !params.autoNext && (
+        {params.selectedOption && !quizSetting.autoNext && (
           <ResultPeekingDrawer
             currentQuiz={currentQuiz}
             handleNextQuestion={handleNextQuestion}
@@ -245,28 +276,32 @@ export const ProgressQuizPage = () => {
   )
 }
 
-const QuizSettingDialog = () => {
-  const [params, setParams] = useQueryParam('/progress-quiz/:quizSetId')
+const QuizSettingDialog = ({
+  quizSetting,
+  setQuizSetting,
+}: {
+  quizSetting: { autoNext: boolean; hideTimeSpent: boolean }
+  setQuizSetting: (param: { autoNext: boolean; hideTimeSpent: boolean }) => void
+}) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const [tempSettings, setTempSettings] = useState({
-    autoNext: params.autoNext,
-    hideTimeSpent: params.hideTimeSpent,
+    autoNext: quizSetting.autoNext,
+    hideTimeSpent: quizSetting.hideTimeSpent,
   })
 
   const handleOpenChange = (open: boolean) => {
     setIsOpen(open)
     if (open) {
       setTempSettings({
-        autoNext: params.autoNext,
-        hideTimeSpent: params.hideTimeSpent,
+        autoNext: quizSetting.autoNext,
+        hideTimeSpent: quizSetting.hideTimeSpent,
       })
     }
   }
 
   const applySettings = () => {
-    setParams({
-      ...params,
+    setQuizSetting({
       autoNext: tempSettings.autoNext,
       hideTimeSpent: tempSettings.hideTimeSpent,
     })

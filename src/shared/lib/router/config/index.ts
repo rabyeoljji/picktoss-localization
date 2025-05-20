@@ -134,8 +134,6 @@ export const RouteConfig = {
       documentId: 0 as number,
       quizIndex: 0 as number,
       selectedOption: null as string | null,
-      hideTimeSpent: true as boolean,
-      autoNext: true as boolean,
       quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType,
     },
   },
