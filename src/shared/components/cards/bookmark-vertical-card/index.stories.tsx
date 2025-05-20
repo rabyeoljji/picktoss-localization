@@ -28,6 +28,7 @@ export const Default: StoryObj<typeof BookmarkVerticalCard> = {
         <BookmarkVerticalCard>
           <BookmarkVerticalCard.Header
             emoji="🔥"
+            isOwner={false}
             bookmarkBtn={
               <button
                 type="button"
@@ -59,6 +60,7 @@ export const Bookmarked: StoryObj<typeof BookmarkVerticalCard> = {
         <BookmarkVerticalCard>
           <BookmarkVerticalCard.Header
             emoji="🔥"
+            isOwner={false}
             bookmarkBtn={
               <button
                 type="button"
@@ -82,23 +84,3 @@ export const Bookmarked: StoryObj<typeof BookmarkVerticalCard> = {
     )
   },
 }
-
-// export const Bookmarked: StoryObj<typeof BookmarkHorizontalCard> = {
-//   render: () => {
-//     return (
-//       <div className="p-10 flex-center">
-//         <BookmarkHorizontalCard>
-//           <BookmarkHorizontalCard.Left content="📄" />
-
-//           <BookmarkHorizontalCard.Content>
-//             <BookmarkHorizontalCard.Header title="금융투자분석사 노트정리" />
-//             <BookmarkHorizontalCard.Preview content="1. 금융투자분석사 개요 금융투자분석사는 투자분석 및 포트폴리오 관리를 수행하는 전문가로서" />
-//             <BookmarkHorizontalCard.Detail quizCount={28} isPublic playedCount={345} bookmarkCount={21} />
-//           </BookmarkHorizontalCard.Content>
-
-//           <BookmarkHorizontalCard.Right content={<IcBookmarkFilled className="size-[20px]" />} />
-//         </BookmarkHorizontalCard>
-//       </div>
-//     )
-//   },
-// }
