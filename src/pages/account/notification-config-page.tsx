@@ -14,7 +14,7 @@ const NotificationConfigPage = () => {
 
   return (
     <>
-      <Header left={<BackButton />} title="알림" />
+      <Header left={<BackButton />} title="알림" className="px-[8px]" />
 
       <HeaderOffsetLayout className="px-[16px] h-full">
         {isLoading && <div className="size-full flex-center">is Loading...</div>}
