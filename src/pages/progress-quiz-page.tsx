@@ -6,6 +6,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/ui/progress-bar'
+import { ResultIcon } from '@/features/quiz/ui/result-icon'
 import { StopWatch } from '@/features/quiz/ui/stop-watch'
 
 import { useGetQuizSet, useUpdateQuizResult } from '@/entities/quiz/api/hooks'
@@ -84,6 +85,11 @@ export const ProgressQuizPage = () => {
     setLocalStorageItem('quizSetting', quizSetting)
   }, [quizSetting])
 
+  const [resultIconState, setResultIconState] = useState({
+    show: false,
+    correct: false,
+  })
+
   // 새로고침하면 처음으로 돌아감
   useEffect(() => {
     setParams((prev) => ({
@@ -113,6 +119,24 @@ export const ProgressQuizPage = () => {
     const currentQuiz = quizSetData.quizzes[params.quizIndex]
     const elapsedTime = Date.now() - startTimeRef.current
     const isCorrect = option === currentQuiz.answer
+
+    if (isCorrect) {
+      setResultIconState({ show: true, correct: true })
+      setTimeout(() => {
+        setResultIconState((prev) => ({
+          ...prev,
+          show: false,
+        }))
+      }, 400)
+    } else {
+      setResultIconState({ show: true, correct: false })
+      setTimeout(() => {
+        setResultIconState((prev) => ({
+          ...prev,
+          show: false,
+        }))
+      }, 400)
+    }
 
     const quizResult: QuizResult = {
       id: currentQuiz.id,
@@ -234,7 +258,9 @@ export const ProgressQuizPage = () => {
                     option={option}
                     isCorrect={option === currentQuiz.answer}
                     selectedOption={params.selectedOption}
+                    animationDelay={index * 60}
                     onClick={() => handleOptionSelect(option)}
+                    className={cn(params.selectedOption !== null && 'pointer-events-none')}
                   />
                 ))}
               </div>
@@ -266,6 +292,8 @@ export const ProgressQuizPage = () => {
         )}
 
         <ExitDialog exitDialogOpen={exitDialogOpen} setExitDialogOpen={setExitDialogOpen} />
+
+        {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
       </HeaderOffsetLayout>
     </div>
   )
