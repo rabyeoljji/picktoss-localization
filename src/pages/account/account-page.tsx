@@ -65,8 +65,12 @@ const AccountPage = () => {
       <HeaderOffsetLayout className="h-full overflow-y-auto scrollbar-hide">
         <div className="px-[16px] pb-[36px] flex flex-col">
           <div className="flex items-center gap-[16px] py-[20px]">
-            <div className="size-[72px] bg-base-3 rounded-full flex-center shrink-0">
-              <IcMy className="size-[42px] text-icon-sub" />
+            <div className="size-[72px] bg-base-3 rounded-full overflow-hidden flex-center shrink-0">
+              {user?.image ? (
+                <img src={user?.image} alt="" className="object-cover" />
+              ) : (
+                <IcMy className="size-[42px] text-icon-sub" />
+              )}
             </div>
 
             <div className="w-[calc(100%-72px-16px)] flex flex-col gap-[4px]">
