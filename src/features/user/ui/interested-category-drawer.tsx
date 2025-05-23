@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -6,6 +6,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
+import { CategoryDto } from '@/entities/member/api'
 import { useUpdateMemberCategory } from '@/entities/member/api/hooks'
 
 import { IcChevronRight, IcClose } from '@/shared/assets/icon'
@@ -30,30 +31,17 @@ const interestedCategorySchema = z.object({
 
 type InterestedCategoryValues = z.infer<typeof interestedCategorySchema>
 
-const InterestedCategoryDrawer = ({
-  interestedCategories,
-}: {
-  interestedCategories?: (number | '관심 분야 없음')[]
-}) => {
+const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?: CategoryDto }) => {
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
   const { data: categories } = useGetCategories()
   const { mutate, isPending } = useUpdateMemberCategory()
 
-  const isExistInterestedCategory = useMemo(
-    () => interestedCategories && interestedCategories.length !== 0 && interestedCategories[0] !== '관심 분야 없음',
-    [interestedCategories],
-  )
-
-  const firstCategoryString = categories?.find((category) => category.id === interestedCategories?.[0])
-  const secondCategoryString = categories?.find((category) => category.id === interestedCategories?.[1])
-  const otherCategories = (interestedCategories?.length ?? 0) > 2 ? `외 ${(interestedCategories?.length ?? 0) - 1}` : ''
-
   const form = useForm<InterestedCategoryValues>({
     resolver: zodResolver(interestedCategorySchema),
     defaultValues: {
-      category: typeof interestedCategories?.[0] === 'number' ? interestedCategories[0] : undefined,
+      category: interestedCategory?.id,
     },
   })
 
@@ -65,7 +53,7 @@ const InterestedCategoryDrawer = ({
           toast('관심 카테고리가 변경되었어요', {
             action: {
               label: '퀴즈 보러가기',
-              onClick: () => router.push('/explore', { search: { category: values.category } }), // TODO: library 해당 카테고리로 이동
+              onClick: () => router.push('/explore', { search: { category: values.category } }),
             },
           })
           setOpen(false)
@@ -92,9 +80,9 @@ const InterestedCategoryDrawer = ({
                 관심분야
               </Text>
 
-              {isExistInterestedCategory ? (
+              {interestedCategory ? (
                 <div className="flex items-center gap-[3px]">
-                  {`${firstCategoryString}, ${secondCategoryString} ${otherCategories}`}
+                  {`${interestedCategory.emoji} ${interestedCategory.name}`}
                 </div>
               ) : (
                 <Text typo="subtitle-2-medium" color="accent">
@@ -137,9 +125,7 @@ const InterestedCategoryDrawer = ({
                         <RadioGroup
                           onValueChange={(value) => field.onChange(Number(value))}
                           value={String(field.value)}
-                          defaultValue={
-                            typeof interestedCategories?.[0] === 'number' ? String(interestedCategories?.[0] ?? 1) : '1'
-                          }
+                          defaultValue={String(interestedCategory?.id)}
                           className="flex flex-col"
                         >
                           {Array.isArray(categories) &&
