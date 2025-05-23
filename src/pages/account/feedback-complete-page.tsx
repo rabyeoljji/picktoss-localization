@@ -1,3 +1,5 @@
+import { withHOC } from '@/app/hoc/with-page-config'
+
 import { ImgConfirm } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
@@ -24,3 +26,5 @@ export const FeedbackCompletePage = () => {
     </div>
   )
 }
+
+export default withHOC(FeedbackCompletePage, {})
