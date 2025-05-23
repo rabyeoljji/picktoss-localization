@@ -24,9 +24,14 @@ export const useUser = () => {
 }
 
 export const useUpdateQuizNotification = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: MEMBER_KEYS.updateQuizNotification,
     mutationFn: (data: UpdateQuizNotificationRequest) => updateQuizNotification(data),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
+    },
   })
 }
 

@@ -1,5 +1,9 @@
+import { useState } from 'react'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
+import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 
 import { IcChevronRight, IcDisclaimer, IcMy, IcNotification, IcRecord } from '@/shared/assets/icon'
 import { ImgGraph, ImgInviteStar, ImgStar } from '@/shared/assets/images'
@@ -15,6 +19,32 @@ import { Link, useRouter } from '@/shared/lib/router'
 const AccountPage = () => {
   const router = useRouter()
 
+  const { data: user } = useUser()
+  const { mutate: updateNotification } = useUpdateQuizNotification()
+
+  const [notificationEnabled, setNotificationEnabled] = useState(user?.quizNotificationEnabled)
+
+  // 낙관적 업데이트 적용
+  const handleNotification = (checked: boolean) => {
+    setNotificationEnabled(checked)
+
+    if (checked) {
+      updateNotification(
+        { quizNotificationEnabled: checked },
+        {
+          onError: () => setNotificationEnabled(false),
+        },
+      )
+    } else {
+      updateNotification(
+        { quizNotificationEnabled: checked },
+        {
+          onError: () => setNotificationEnabled(true),
+        },
+      )
+    }
+  }
+
   return (
     <>
       <Header
@@ -22,12 +52,12 @@ const AccountPage = () => {
         title={'MY'}
         right={
           <div className="flex items-center">
-            <button type="button" className="size-[40px] flex-center">
+            <Link to="/account/quiz-record" type="button" className="size-[40px] flex-center">
               <IcRecord className="size-[24px]" />
-            </button>
-            <button type="button" className="size-[40px] flex-center">
+            </Link>
+            <Link to="/account/notification-config" type="button" className="size-[40px] flex-center">
               <IcNotification className="size-[24px]" />
-            </button>
+            </Link>
           </div>
         }
       />
@@ -42,13 +72,15 @@ const AccountPage = () => {
             <div className="w-[calc(100%-72px-16px)] flex flex-col gap-[4px]">
               <div className="w-full flex items-center gap-[8px]">
                 <Text typo="subtitle-1-bold" className="min-w-[47px] max-w-[70%] truncate">
-                  {'픽토스'}
+                  {user?.name}
                 </Text>
-                <Tag className="shrink-0">{'🎓  학문·전공'}</Tag>
+                <Tag className="shrink-0">
+                  {user?.category.emoji} {user?.category.name}
+                </Tag>
               </div>
 
               <Text typo="body-1-medium" color="sub">
-                picktoss@gmail.com
+                {user?.email}
               </Text>
             </div>
           </div>
@@ -60,7 +92,7 @@ const AccountPage = () => {
                   내 퀴즈
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
-                  {13}
+                  {user?.totalQuizCount}
                 </Text>
               </div>
               <div className="flex-1/2 h-full px-[16px] flex-center gap-[8px]">
@@ -68,7 +100,7 @@ const AccountPage = () => {
                   북마크
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
-                  {23}
+                  {user?.bookmarkCount}
                 </Text>
               </div>
             </div>
@@ -82,7 +114,7 @@ const AccountPage = () => {
                     <Text typo="body-2-medium" color="sub">
                       이번 달 푼 퀴즈
                     </Text>
-                    <Text typo="subtitle-1-bold">{135} 문제</Text>
+                    <Text typo="subtitle-1-bold">{user?.monthlySolvedQuizCount} 문제</Text>
                   </div>
                 </div>
 
@@ -108,7 +140,7 @@ const AccountPage = () => {
                   </div>
 
                   <Link to="/account/my-star" type="button" className="flex items-center gap-[4px]">
-                    <Text typo="subtitle-2-bold">{130}개</Text>
+                    <Text typo="subtitle-2-bold">{user?.star}개</Text>
                     <IcChevronRight className="size-[16px] text-icon-sub" />
                   </Link>
                 </div>
@@ -148,7 +180,7 @@ const AccountPage = () => {
 
               <div className="flex items-center justify-between">
                 <Text typo="subtitle-2-medium">푸시 알림</Text>
-                <Switch size="md" />
+                <Switch size="md" checked={notificationEnabled} onCheckedChange={handleNotification} />
               </div>
             </div>
           </div>
