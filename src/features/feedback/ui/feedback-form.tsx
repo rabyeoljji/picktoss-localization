@@ -140,15 +140,13 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
                         </FormControl>
                         <label
                           htmlFor={`type-${label}`}
-                          className={`rounded-full px-[13.5px] cursor-pointer py-2 ${
+                          className={`h-[32px] rounded-full px-[13.5px] cursor-pointer typo-button-4 py-2 ${
                             field.value === value
                               ? 'bg-inverse text-inverse'
                               : 'bg-base-1 ring ring-divider text-secondary'
                           }`}
                         >
-                          <Text as={'span'} typo="button-4" className="px-1">
-                            {label}
-                          </Text>
+                          <span className="px-1">{label}</span>
                         </label>
                       </FormItem>
                     ))}
