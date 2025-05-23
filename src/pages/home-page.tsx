@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+import OnBoarding from '@/app/on-boarding'
 
 import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
 import { InfoCarousel } from '@/features/quiz/ui/banner'
@@ -13,6 +14,7 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { QuizSettingDrawer } from '@/features/quiz/ui/quiz-setting-drawer'
 import { ResultIcon } from '@/features/quiz/ui/result-icon'
 
+import { useUser } from '@/entities/member/api/hooks'
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
@@ -35,6 +37,8 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 
 const HomePage = () => {
   const router = useRouter()
+
+  const { data: user } = useUser()
 
   // 알림 관련 설정
   const [openNotification, setOpenNotification] = useState(false)
@@ -218,6 +222,11 @@ const HomePage = () => {
       return () => clearTimeout(timer)
     }
   }, [resultIconState.show])
+
+  // 설정한 카테고리가 없을 경우 온보딩 화면 노출
+  if (user && !user.category) {
+    return <OnBoarding />
+  }
 
   return (
     <>

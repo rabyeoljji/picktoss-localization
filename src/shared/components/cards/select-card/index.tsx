@@ -1,21 +1,25 @@
 import * as React from 'react'
 
-import * as CheckboxPrimitive from '@radix-ui/react-checkbox'
-
 import { cn } from '@/shared/lib/utils'
 
-function SelectCard({ className, children, ...props }: React.ComponentProps<typeof CheckboxPrimitive.Root>) {
+interface SelectCardProps extends React.LabelHTMLAttributes<HTMLLabelElement> {
+  selected?: boolean
+  disabled?: boolean
+}
+
+function SelectCard({ className, children, selected, disabled, ...props }: SelectCardProps) {
   return (
-    <CheckboxPrimitive.Root
-      data-slot="checkbox"
+    <label
+      {...props}
       className={cn(
-        'peer flex-center px-[20px] pt-[20px] pb-[12px] shrink-0 m-0 cursor-pointer rounded-[20px] border border-outline bg-white text-secondary outline-none disabled:cursor-default disabled:border-gray-100 disabled:bg-gray-50 disabled:text-disabled data-[state=checked]:border-accent data-[state=checked]:bg-accent data-[state=checked]:text-accent',
+        'peer flex-center px-[20px] pt-[20px] pb-[12px] shrink-0 m-0 cursor-pointer rounded-[16px] border border-outline bg-white text-secondary outline-none ',
+        selected && 'border-accent bg-accent text-accent',
+        disabled && 'cursor-default border-gray-100 bg-gray-50 text-disabled',
         className,
       )}
-      {...props}
     >
       {children}
-    </CheckboxPrimitive.Root>
+    </label>
   )
 }
 

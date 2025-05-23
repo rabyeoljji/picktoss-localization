@@ -21,8 +21,8 @@ export const AllCases: StoryObj<typeof SelectCard> = {
           </SelectCard>
         </div>
         <div className="flex flex-col items-center gap-2.5">
-          <span>Checked</span>
-          <SelectCard className="size-[100px] flex-col gap-[4px]" defaultChecked>
+          <span>Selected</span>
+          <SelectCard className="size-[100px] flex-col gap-[4px]" selected>
             <Text typo="h2">{'🤖'}</Text>
             <Text typo="body-1-bold">{'IT·공학'}</Text>
           </SelectCard>

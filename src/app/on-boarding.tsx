@@ -1,51 +1,66 @@
+import { useForm } from 'react-hook-form'
+
+import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
+import { z } from 'zod'
 
 import { withHOC } from '@/app/hoc/with-page-config'
+
+import { useGetCategories } from '@/entities/category/api/hooks'
+import { useUpdateMemberCategory, useUser } from '@/entities/member/api/hooks'
 
 import { SelectCard } from '@/shared/components/cards/select-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
 import { Button } from '@/shared/components/ui/button'
+import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
+import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
-import { CATEGORIES } from '@/shared/config'
+import { useRouter } from '@/shared/lib/router'
 
-const OnBoarding = () => {
+const categorySchema = z.object({
+  categoryId: z.string().nonempty('카테고리를 선택해주세요.'),
+})
+
+type CategoryForm = z.infer<typeof categorySchema>
+
+const OnBoardingPage = () => {
+  const router = useRouter()
+
+  const { data: user } = useUser()
+  const { data: categories } = useGetCategories()
+  const { mutate: updateCategory } = useUpdateMemberCategory()
+
+  const form = useForm<CategoryForm>({
+    resolver: zodResolver(categorySchema),
+    mode: 'onChange',
+  })
+
+  const {
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { isValid },
+  } = form
+
+  const selectedCategoryId = watch('categoryId')
+
+  const onSubmit = (data: CategoryForm) => {
+    updateCategory(
+      { categoryId: Number(data.categoryId) },
+      {
+        onSuccess: () => {
+          router.replace('/')
+        },
+      },
+    )
+  }
+
   return (
-    <div className="size-full overflow-hidden bg-surface-2">
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{
-          delay: 0.8,
-          type: 'spring',
-          mass: 1,
-          stiffness: 80,
-          damping: 20,
-        }}
-        className="flex items-center flex-col gap-[48px] pt-[66px] px-[16px]"
-      >
-        <div className="w-full max-w-[324px] inline-flex flex-col justify-start items-start gap-3">
-          <div className="flex flex-col justify-start items-start gap-1">
-            <Text typo="h2" color="sub" className="flex-center text-center justify-start leading-9">
-              <div className="inline-block w-[160px] truncate">{'메리크리스마스'}</div>
-              님,
-            </Text>
-            <Text typo="h2" className="text-center justify-start leading-9">
-              현재 어떤 분야를
-            </Text>
-            <Text typo="h2" className="text-center justify-start leading-9">
-              공부 중이세요?
-            </Text>
-          </div>
-          <div className="self-stretch flex flex-col justify-start items-start gap-2">
-            <Text typo="subtitle-2-medium" color="sub" className="self-stretch justify-start leading-normal">
-              선택하신 분야들의 퀴즈를 모아 볼 수 있어요
-            </Text>
-          </div>
-        </div>
-
+    <Form {...form}>
+      <form onSubmit={handleSubmit(onSubmit)} className="size-full overflow-hidden bg-surface-2">
         <motion.div
-          initial={{ opacity: 0, y: 70 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{
             delay: 0.8,
             type: 'spring',
@@ -53,26 +68,85 @@ const OnBoarding = () => {
             stiffness: 80,
             damping: 20,
           }}
-          className="w-fit grid grid-cols-3 grid-rows-3 gap-[12px]"
+          className="flex flex-col gap-[48px] pt-[66px] px-[16px]"
         >
-          {CATEGORIES.map((category) => (
-            <SelectCard className="size-[100px] flex-col gap-[4px]">
-              <Text typo="h2">{category.emoji}</Text>
-              <Text typo="body-1-bold">{category.name}</Text>
-            </SelectCard>
-          ))}
-        </motion.div>
-
-        <FixedBottom className="bg-surface-2">
-          <div className="pb-[24px]">
-            <Button>선택 완료</Button>
+          <div className="w-full max-w-[324px] inline-flex flex-col justify-start items-start gap-3">
+            <div className="flex flex-col justify-start items-start gap-1">
+              <Text typo="h2" color="caption" className="flex-center text-center justify-start leading-9">
+                <div className="inline-block max-w-[160px] truncate">{user?.name}</div>
+                님,
+              </Text>
+              <Text typo="h2" className="text-center justify-start leading-9">
+                현재 어떤 분야의 퀴즈에
+              </Text>
+              <Text typo="h2" className="text-center justify-start leading-9">
+                관심이 있으세요?
+              </Text>
+            </div>
+            <div className="self-stretch flex flex-col justify-start items-start gap-2">
+              <Text typo="subtitle-2-medium" color="sub" className="self-stretch justify-start leading-normal">
+                가장 자주 풀고 싶은 분야를 선택해주세요
+              </Text>
+            </div>
           </div>
-        </FixedBottom>
-      </motion.div>
-    </div>
+
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem>
+                <RadioGroup value={field.value} onValueChange={field.onChange} className="flex flex-wrap gap-2">
+                  <motion.div
+                    initial={{ opacity: 0, y: 70 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{
+                      delay: 0.8,
+                      type: 'spring',
+                      mass: 1,
+                      stiffness: 80,
+                      damping: 20,
+                    }}
+                    className="w-full grid grid-cols-2 grid-rows-3 gap-[8px]"
+                  >
+                    {categories?.map((category) => (
+                      <FormItem key={category.id}>
+                        <FormControl>
+                          <RadioGroupItem
+                            value={String(category.id)}
+                            id={`category-${category.id}`}
+                            className="peer sr-only"
+                          />
+                        </FormControl>
+                        <SelectCard
+                          htmlFor={`category-${category.id}`}
+                          onClick={() => setValue('categoryId', String(category.id), { shouldValidate: true })}
+                          selected={selectedCategoryId === String(category.id)}
+                          className="h-[110px] w-full flex-col gap-[4px]"
+                        >
+                          <Text typo="h2">{category.emoji}</Text>
+                          <Text typo="body-1-bold">{category.name}</Text>
+                        </SelectCard>
+                      </FormItem>
+                    ))}
+                  </motion.div>
+                </RadioGroup>
+              </FormItem>
+            )}
+          />
+
+          <FixedBottom className="bg-surface-2">
+            <div className="pb-[24px]">
+              <Button type="submit" disabled={!isValid}>
+                완료
+              </Button>
+            </div>
+          </FixedBottom>
+        </motion.div>
+      </form>
+    </Form>
   )
 }
 
-export default withHOC(OnBoarding, {
+export default withHOC(OnBoardingPage, {
   backgroundClassName: 'bg-surface-2',
 })
