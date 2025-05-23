@@ -70,7 +70,11 @@ const ExploreQuizCardHeader = ({
         </ButtonSolidIcon>
         {!isOwner && (
           <ButtonSolidIcon onClick={onClickBookmark} variant={'tertiary'} size={'md'}>
-            {isBookmarked ? <IcBookmarkFilled className="size-[20px]" /> : <IcBookmark className="size-[20px]" />}
+            {isBookmarked ? (
+              <IcBookmarkFilled className="size-[20px] text-icon-primary" />
+            ) : (
+              <IcBookmark className="size-[20px]" />
+            )}
           </ButtonSolidIcon>
         )}
       </div>

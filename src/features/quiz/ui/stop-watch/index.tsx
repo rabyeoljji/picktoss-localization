@@ -62,8 +62,8 @@ export const StopWatch = ({ isRunning = false, elapsedTime }: StopWatchProps) =>
       className={cn(
         'rounded-full py-1 px-3 flex items-center gap-2',
         isRunning
-          ? '[&_svg]:text-icon-accent text-accent bg-accent'
-          : '[&_svg]:text-icon-disabled text-disabled bg-surface-1',
+          ? '[&_svg]:text-icon-accent! text-accent bg-accent'
+          : '[&_svg]:text-icon-disabled! text-disabled bg-surface-1',
       )}
     >
       <IcStopwatch className="size-4" />

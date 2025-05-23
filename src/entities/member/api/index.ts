@@ -59,7 +59,7 @@ export const updateMemberCategory = async (data: UpdateMemberCategoryRequest): P
 
 // DELETE: 회원 탈퇴
 export interface DeleteMemberRequest {
-  reason?: 'UNSATISFACTORY_RESULT' | 'INCONVENIENT_SERVICE' | 'SYSTEM_ISSUE' | 'SECURITY_CONCERNS'
+  reason?: 'UNSATISFACTORY_RESULT' | 'INCONVENIENT_SERVICE' | 'SYSTEM_ISSUE' | 'OTHER_PROBLEM'
   detail?: string
 }
 

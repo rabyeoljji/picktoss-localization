@@ -26,7 +26,7 @@ export default defineConfig({
         icons: [],
       },
       workbox: {
-        maximumFileSizeToCacheInBytes: 3 * 1024 * 1024, // 3MB limit instead of default 2MB
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB limit instead of default 2MB
       },
     }),
     svgr(),

@@ -24,10 +24,12 @@ export const BookmarkVerticalCard = ({ children, className, ...props }: Props) =
 
 const BookmarkVerticalCardHeader = ({
   emoji,
+  isOwner,
   bookmarkBtn,
   category,
 }: {
   emoji: string
+  isOwner: boolean
   bookmarkBtn: React.ReactNode
   category: string
 }) => {
@@ -36,7 +38,7 @@ const BookmarkVerticalCardHeader = ({
       <div className="flex w-full h-[47px] justify-between">
         <Text typo="h1">{emoji}</Text>
 
-        <div>{bookmarkBtn}</div>
+        {!isOwner && <div>{bookmarkBtn}</div>}
       </div>
 
       <Tag className="w-fit">{category}</Tag>

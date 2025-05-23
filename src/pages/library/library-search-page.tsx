@@ -83,7 +83,7 @@ const NoteSearchPage = () => {
         }
       />
 
-      <HeaderOffsetLayout className="flex-1 overflow-auto">
+      <HeaderOffsetLayout className="relative h-full">
         {/* 탭 */}
         <Tabs value={activeTab} onValueChange={(tab) => setTab(tab as Tab)}>
           <TabsList className="bg-surface-1 rounded-none h-fit p-0">
@@ -157,12 +157,12 @@ const MyDocumentQuizSearchResults = ({ tab, documents, keyword }: DocumentQuizSe
   }
 
   return (
-    <div className="h-[calc(100%-48px)] flex flex-col px-[16px] pt-[16px] overflow-hidden">
+    <div className="h-[calc(100%-48px)] flex flex-col px-[16px] pt-[16px] overflow-y-auto">
       <Text typo="body-1-medium">
         결과 <span className="text-accent">{documents.length}</span>
       </Text>
 
-      <div className="h-full flex flex-col overflow-y-auto pb-[16px]">
+      <div className="h-fit flex flex-col pb-[16px]">
         {documents.map((searchItem, idx) => {
           return (
             <Link

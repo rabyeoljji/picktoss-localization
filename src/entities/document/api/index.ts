@@ -264,6 +264,7 @@ export interface SearchPublicDocumentsDto {
   emoji: string
   category: string
   creatorName: string
+  isOwner: boolean
   isBookmarked: boolean
   tryCount: number
   bookmarkCount: number

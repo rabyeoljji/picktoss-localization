@@ -13,8 +13,11 @@ import { IcAdd, IcBack, IcProfile } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import Loading from '@/shared/components/ui/loading'
 import { TextButton } from '@/shared/components/ui/text-button'
+import { useRouter } from '@/shared/lib/router'
 
 const LibraryPage = () => {
+  const router = useRouter()
+
   const {
     activeTab,
     setTab,
@@ -56,14 +59,14 @@ const LibraryPage = () => {
         />
       ) : (
         <Header
-          className="bg-surface-2 py-[9px] px-2"
+          className="bg-surface-2 px-2"
           left={
-            <button className="size-[40px] flex-center">
+            <button onClick={() => router.push('/account')} className="size-[40px] flex-center">
               <IcProfile className="size-[24px] text-icon-secondary" />
             </button>
           }
           right={
-            <button className="size-[40px] flex-center">
+            <button onClick={() => router.push('/note/create')} className="size-[40px] flex-center">
               <IcAdd className="size-[24px] text-icon-secondary" />
             </button>
           }

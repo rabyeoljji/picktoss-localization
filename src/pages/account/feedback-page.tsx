@@ -3,7 +3,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { FeedbackForm } from '@/features/feedback/ui/feedback-form'
 
-import { BackButton } from '@/shared/components/buttons/back-button'
+import { IcBack } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import { SystemDialog } from '@/shared/components/system-dialog'
 import { useRouter } from '@/shared/lib/router'
@@ -12,11 +12,15 @@ const FeedbackPage = () => {
   const router = useRouter()
 
   return (
-    <div className="min-h-screen bg-base-1 flex flex-col pb-[40px]">
+    <>
       <Header
         left={
           <SystemDialog
-            trigger={<BackButton onClick={() => {}} />}
+            trigger={
+              <button className="p-2">
+                <IcBack />
+              </button>
+            }
             title="문의에서 나가시겠어요?"
             content="지금까지 작성한 내용은 저장되지 않습니다."
             cancelLabel="취소"
@@ -30,7 +34,7 @@ const FeedbackPage = () => {
       <HeaderOffsetLayout>
         <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
       </HeaderOffsetLayout>
-    </div>
+    </>
   )
 }
 

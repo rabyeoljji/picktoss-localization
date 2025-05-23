@@ -140,13 +140,13 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
                         </FormControl>
                         <label
                           htmlFor={`type-${label}`}
-                          className={`rounded-full px-3 cursor-pointer py-2 typo-button-4 ${
+                          className={`h-[32px] rounded-full px-[13.5px] cursor-pointer typo-button-4 py-2 ${
                             field.value === value
                               ? 'bg-inverse text-inverse'
                               : 'bg-base-1 ring ring-divider text-secondary'
                           }`}
                         >
-                          {label}
+                          <span className="px-1">{label}</span>
                         </label>
                       </FormItem>
                     ))}
@@ -214,7 +214,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
                         onClick={() => handleRemoveImage(index)}
                         className="size-5 bg-base-2 p-1 rounded-full flex-center absolute top-[10px] right-[8px]"
                       >
-                        <IcClose className="size-2" />
+                        <IcClose className="size-3 text-icon-secondary" />
                       </button>
                     </div>
                   ))}
@@ -226,7 +226,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
 
         <div className="h-2 w-full bg-base-2" />
 
-        <div className="px-4 pt-5">
+        <div className="px-4 pt-5 pb-10">
           {/* 답변받을 이메일 */}
           <div className="grid gap-2">
             <FormField
@@ -265,6 +265,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
                       hasClose
                       open={openPrivacyDrawer}
                       onOpenChange={setOpenPrivacyDrawer}
+                      height="md"
                       title="개인정보 수집 및 이용동의"
                       trigger={
                         <button
@@ -321,9 +322,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
               )}
             />
           </div>
-        </div>
 
-        <div className="px-4">
           <Button type="submit" disabled={isPending || !form.getValues().privacy}>
             {isPending ? '제출 중...' : '문의 보내기'}
           </Button>

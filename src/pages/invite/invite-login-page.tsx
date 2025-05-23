@@ -31,8 +31,8 @@ const InviteLoginPage = () => {
       ) : (
         <>
           <Header
-            className="bg-gray-900 pl-[16px] pr-[8px]"
-            left={<BackButton type="close" className="text-inverse-dim" />}
+            className="bg-gray-900 px-[8px]"
+            left={<BackButton type="close" className="text-icon-inverse-dim" />}
           />
 
           <HeaderOffsetLayout className="size-full flex-center flex-col gap-[71.52px]">
@@ -67,13 +67,13 @@ const InviteLoginPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-col gap-[16px]">
-              <div className="flex flex-col gap-2">
+            <div className="w-full flex-center flex-col gap-[16px]">
+              <div className="w-full flex flex-col gap-2 px-[32px]">
                 <KakaoLoginButton />
                 <GoogleLoginButton onClick={() => googleLogin()} />
               </div>
 
-              <div>
+              <div className="text-center">
                 <Text typo="caption-medium" color="caption">
                   로그인 시{' '}
                   <ReactRouterLink
@@ -93,7 +93,7 @@ const InviteLoginPage = () => {
                   >
                     서비스 이용약관
                   </ReactRouterLink>
-                  에 동의하는 것으로 간주하며, 서비스 이용을 위해 이메일과 이름을 수집합니다.
+                  에 동의하는 것으로 <br /> 간주하며, 서비스 이용을 위해 이메일과 이름을 수집합니다.
                 </Text>
               </div>
             </div>

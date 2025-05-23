@@ -225,7 +225,7 @@ const HomePage = () => {
         content={
           <div className="flex items-center">
             <div className="flex items-center">
-              <button className="p-2 flex-center">
+              <button onClick={() => router.push('/account')} className="p-2 flex-center">
                 <IcProfile className="size-6 text-icon-secondary" />
               </button>
 
@@ -235,7 +235,7 @@ const HomePage = () => {
               />
             </div>
             <div className="ml-auto">
-              <button className="p-2 flex-center">
+              <button onClick={() => router.push('/library/search')} className="p-2 flex-center">
                 <IcSearch className="size-6 text-icon-secondary" />
               </button>
             </div>
