@@ -4,11 +4,13 @@ import { MEMBER_KEYS } from './config'
 import {
   DeleteMemberRequest,
   UpdateMemberCategoryRequest,
+  UpdateMemberImageRequest,
   UpdateMemberNameRequest,
   UpdateQuizNotificationRequest,
   deleteMember,
   getMemberInfo,
   updateMemberCategory,
+  updateMemberImage,
   updateMemberName,
   updateQuizNotification,
 } from './index'
@@ -53,6 +55,18 @@ export const useUpdateMemberCategory = () => {
   return useMutation({
     mutationKey: MEMBER_KEYS.updateMemberCategory,
     mutationFn: (data: UpdateMemberCategoryRequest) => updateMemberCategory(data),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
+    },
+  })
+}
+
+export const useUpdateMemberImage = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationKey: MEMBER_KEYS.updateMemberImage,
+    mutationFn: (data: UpdateMemberImageRequest) => updateMemberImage(data),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
     },

@@ -10,6 +10,7 @@ export const MEMBER_ENDPOINTS = {
   updateQuizNotification: '/members/update-quiz-notification',
   updateMemberName: '/members/update-name',
   updateMemberCategory: '/members/update-category',
+  updateMemberImage: '/members/update-image',
 
   // DELETE
   deleteMember: '/members/withdrawal',
@@ -23,6 +24,7 @@ export const MEMBER_KEYS = {
   updateQuizNotification: createKey(MEMBER, MEMBER_ENDPOINTS.updateQuizNotification),
   updateMemberName: createKey(MEMBER, MEMBER_ENDPOINTS.updateMemberName),
   updateMemberCategory: createKey(MEMBER, MEMBER_ENDPOINTS.updateMemberCategory),
+  updateMemberImage: createKey(MEMBER, MEMBER_ENDPOINTS.updateMemberImage),
 
   // DELETE
   deleteMember: createKey(MEMBER, MEMBER_ENDPOINTS.deleteMember),

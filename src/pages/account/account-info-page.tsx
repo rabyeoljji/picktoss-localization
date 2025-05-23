@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { toast } from 'sonner'
 
@@ -7,7 +7,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { useAuthStore } from '@/features/auth'
 import InterestedCategoryDrawer from '@/features/user/ui/interested-category-drawer'
 
-import { useUpdateMemberName, useUser } from '@/entities/member/api/hooks'
+import { useUpdateMemberImage, useUpdateMemberName, useUser } from '@/entities/member/api/hooks'
 
 import { IcCamera, IcChevronRight, IcMy } from '@/shared/assets/icon'
 import { ImgRoundGoogle, ImgRoundKakao } from '@/shared/assets/images'
@@ -28,16 +28,16 @@ const AccountInfoPage = () => {
   const [nameDialogOpen, setNameDialogOpen] = useState<boolean>(false)
   const [logoutDialogOpen, setLogoutDialogOpen] = useState<boolean>(false)
   const [newName, setNewName] = useState<string>('')
-  const [imageUrl, setImageUrl] = useState<string | null>(null)
+  const [imageUrl, setImageUrl] = useState<string | undefined>(undefined)
 
   const { mutate: updateMemberName, isPending } = useUpdateMemberName()
+  const { mutate: updateMemberImage } = useUpdateMemberImage()
 
-  const interestCategories = useMemo(() => user && (user.category ? [user.category.id] : ['관심 분야 없음']), [user])
-
-  // user name이 변경될 경우 dialog input 기본 값도 변경
+  // 초기 설정
   useEffect(() => {
     if (user) {
       setNewName(user.name)
+      setImageUrl(user.image)
     }
   }, [user])
 
@@ -81,23 +81,29 @@ const AccountInfoPage = () => {
 
   // 파일 선택 핸들러
   const handleChangeImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const prevState = user?.image
+
     const file = e.target.files?.[0]
     if (file) {
-      try {
-        // File을 string(Base64)으로 변환
-        const imageString = await convertFileToString(file)
+      const imageString = await convertFileToString(file)
+      setImageUrl(imageString)
 
-        // TODO: 이미지 설정 논의
-        // 여기서 서버에 이미지 업로드 로직을 구현 (서버에서 받는 형식에 따라 수정)
-        // uploadImageToServer(file);
-
-        // 성공 시
-        setImageUrl(imageString)
-        toast('프로필 사진이 변경되었어요')
-      } catch (error) {
-        console.error('이미지 변환 실패:', error)
-        toast('이미지 처리 중 오류가 발생했습니다')
-      }
+      updateMemberImage(
+        { image: file },
+        {
+          onSuccess: () => {
+            if (!prevState) {
+              toast('프로필 사진이 등록되었어요')
+            } else {
+              toast('프로필 사진이 변경되었어요')
+            }
+          },
+          onError: (error) => {
+            console.error('이미지 변환 실패:', error)
+            setImageUrl(user?.image) // 기존 이미지로 되돌림
+          },
+        },
+      )
     }
   }
 
@@ -176,7 +182,7 @@ const AccountInfoPage = () => {
               disabledConfirm={newName.length === 0}
             />
 
-            <InterestedCategoryDrawer interestedCategories={interestCategories as (number | '관심 분야 없음')[]} />
+            <InterestedCategoryDrawer interestedCategory={user?.category} />
 
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-col items-start gap-[4px]">
@@ -246,9 +252,3 @@ const AccountInfoPage = () => {
 }
 
 export default AccountInfoPage
-
-// const AccountInfoPage = () => {
-//   return null
-// }
-
-// export default AccountInfoPage

@@ -13,6 +13,7 @@ export interface GetMemberInfoResponse {
   id: number
   name: string
   email: string
+  image: string
   category: CategoryDto
   socialPlatform: 'KAKAO' | 'GOOGLE'
   star: number
@@ -54,6 +55,21 @@ export interface UpdateMemberCategoryRequest {
 
 export const updateMemberCategory = async (data: UpdateMemberCategoryRequest): Promise<void> => {
   const response = await client.patch<void>(MEMBER_ENDPOINTS.updateMemberCategory, data)
+  return response.data
+}
+
+// PATCH: 사용자 프로필 이미지 변경
+export interface UpdateMemberImageRequest {
+  image: File
+}
+
+export const updateMemberImage = async (data: UpdateMemberImageRequest): Promise<void> => {
+  const formData = new FormData()
+  formData.append('file', data.image)
+
+  const response = await client.patch<void>(MEMBER_ENDPOINTS.updateMemberImage, formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
   return response.data
 }
 
