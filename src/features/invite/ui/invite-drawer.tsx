@@ -116,7 +116,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
       </DrawerTrigger>
 
       <DrawerContent height="lg" className="flex flex-col">
-        <div className="my-[20px] flex h-[calc(80dvh-12px)] w-full flex-col gap-[24px] overflow-y-auto px-[45px]">
+        <div className="my-[20px] flex items-center h-[calc(80dvh-12px)] w-full flex-col gap-[24px] overflow-y-auto">
           <DrawerHeader className="flex h-fit w-full flex-col items-center gap-[24px] px-0">
             <ImgTreasurebox width={140} height={140} />
 
@@ -134,8 +134,8 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
             </div>
           </DrawerHeader>
 
-          <div className="flex flex-col gap-[24px]">
-            <div className="relative">
+          <div className="w-full max-w-[300px] flex-center flex-col gap-[24px]">
+            <div className="relative max-w-[260px]">
               <Input
                 label="내 링크"
                 value={inviteLink}
@@ -144,7 +144,6 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                     복사
                   </SquareButton>
                 }
-                className="mx-[8px]"
                 disabled
               />
 
@@ -157,7 +156,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
               )}
             </div>
 
-            <div className="flex flex-col gap-[8px]">
+            <div className="w-full flex flex-col gap-[8px]">
               <Button
                 onClick={async () => await handleKakaoShare()}
                 variant={'secondary1'}
