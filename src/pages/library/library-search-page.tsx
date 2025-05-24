@@ -12,6 +12,7 @@ import { Header } from '@/shared/components/header'
 import SearchQuizNoteItem from '@/shared/components/items/search-quiz-note-item'
 import Loading from '@/shared/components/ui/loading'
 import { SearchInput } from '@/shared/components/ui/search-input'
+import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
 import { Link, useQueryParam } from '@/shared/lib/router'
 import { StorageKey } from '@/shared/lib/storage'
@@ -19,7 +20,7 @@ import { StorageKey } from '@/shared/lib/storage'
 type Tab = 'MY' | 'BOOKMARK'
 
 const LibrarySearchPage = () => {
-  const [activeTab] = useQueryParam('/library/search', 'tab')
+  const [activeTab, setTab] = useQueryParam('/library/search', 'tab')
   const {
     inputValue,
     setInputValue,
@@ -55,8 +56,14 @@ const LibrarySearchPage = () => {
     setInputValue(e.target.value)
   }
 
-  const hasSearchResultsMyDocs = searchResultsMyDocs && searchResultsMyDocs.length > 0
-  const hasSearchResultsBookmarks = searchResultsBookmarks && searchResultsBookmarks.length > 0
+  // 탭에 따라 결과 컨텐츠 설정
+  const tabConfig: Record<Tab, { documents: SearchDocumentsDto[] | SearchBookmarkDocumentsDto[] }> = {
+    MY: { documents: searchResultsMyDocs },
+    BOOKMARK: { documents: searchResultsBookmarks },
+  }
+
+  const activeDocuments = tabConfig[activeTab].documents
+  const hasResults = activeDocuments.length > 0
 
   return (
     <div className="h-screen bg-base-1 flex flex-col">
@@ -85,44 +92,52 @@ const LibrarySearchPage = () => {
       <HeaderOffsetLayout className="relative h-full">
         {isFetching && <Loading center />}
 
-        {/* 내 퀴즈 탭일 때 */}
-        {activeTab === 'MY' && (
+        {!isFetching && !showRecentKeywords && queryKeyword && (
           <>
-            {!showRecentKeywords && !isFetching && !hasSearchResultsMyDocs && !!queryKeyword && (
-              <div className="size-full flex-center flex-col gap-[8px] pb-[108px]">
-                <Text typo="subtitle-1-bold">검색 결과가 없어요</Text>
-                <Text typo="body-1-medium" color="sub">
-                  다른 키워드를 입력해보세요
-                </Text>
-              </div>
-            )}
-
-            {!showRecentKeywords && !isFetching && hasSearchResultsMyDocs && (
-              <MyDocumentQuizSearchResults tab={activeTab} documents={searchResultsMyDocs} keyword={queryKeyword} />
-            )}
-          </>
-        )}
-
-        {/* 북마크 탭일 때 */}
-        {activeTab === 'BOOKMARK' && (
-          <>
-            {!showRecentKeywords && !isFetching && !hasSearchResultsBookmarks && !!queryKeyword && (
-              <div className="size-full flex-center flex-col gap-[8px] pb-[108px]">
-                <Text typo="subtitle-1-bold">검색 결과가 없어요</Text>
-                <Text typo="body-1-medium" color="sub">
-                  다른 키워드를 입력해보세요
-                </Text>
-              </div>
-            )}
-
-            {!showRecentKeywords && !isFetching && hasSearchResultsBookmarks && (
-              <MyDocumentQuizSearchResults tab={activeTab} documents={searchResultsBookmarks} keyword={queryKeyword} />
-            )}
+            <Tabs value={activeTab} onValueChange={(tab) => setTab(tab as Tab)}>
+              <TabsList className="bg-surface-1 rounded-none h-fit p-0">
+                <TabsTrigger
+                  className="typo-button-2 bg-surface-1 border-b border-divider data-[state=active]:border-b-2 data-[state=active]:border-black text-sub data-[state=active]:text-primary h-[48px] w-1/2 rounded-none"
+                  value={'MY' as Tab}
+                >
+                  내 퀴즈
+                </TabsTrigger>
+                <TabsTrigger
+                  className="typo-button-2 bg-surface-1 border-b border-divider data-[state=active]:border-b-2 data-[state=active]:border-black text-sub data-[state=active]:text-primary h-[48px] w-1/2 rounded-none"
+                  value={'BOOKMARK' as Tab}
+                >
+                  북마크
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <TabContent tab={activeTab} documents={activeDocuments} keyword={queryKeyword} hasResults={hasResults} />
           </>
         )}
       </HeaderOffsetLayout>
     </div>
   )
+}
+
+interface TabContentProps {
+  tab: Tab
+  documents: SearchDocumentsDto[] | SearchBookmarkDocumentsDto[]
+  keyword: string
+  hasResults: boolean
+}
+
+const TabContent = ({ tab, documents, keyword, hasResults }: TabContentProps) => {
+  if (!hasResults && keyword) {
+    return (
+      <div className="size-full flex-center flex-col gap-[8px] pb-[108px]">
+        <Text typo="subtitle-1-bold">검색 결과가 없어요</Text>
+        <Text typo="body-1-medium" color="sub">
+          다른 키워드를 입력해보세요
+        </Text>
+      </div>
+    )
+  }
+
+  return <MyDocumentQuizSearchResults tab={tab} documents={documents} keyword={keyword} />
 }
 
 interface DocumentQuizSearchResultsProps {
