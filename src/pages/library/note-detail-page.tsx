@@ -3,6 +3,7 @@ import { useParams } from 'react-router'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { toast } from 'sonner'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -183,8 +184,9 @@ const NoteDetailPage = () => {
   const hasMultipleChoiceQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
   const hasMixUpQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MIX_UP')
 
-  const quizzes =
+  const quizzes = (
     quizType === 'ALL' ? document?.quizzes : document?.quizzes?.filter((quiz) => quiz.quizType === quizType)
+  )?.sort((a, b) => b.id - a.id)
 
   const mixUpQuizCount = document?.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length ?? 0
 
@@ -588,22 +590,25 @@ const NoteDetailPage = () => {
           <div>
             {(() => {
               const quiz = document?.quizzes.find((quiz) => quiz.id === editTargetQuizId)
-              const { mutate: updateQuiz, isPending: isUpdating } = useUpdateQuizInfo(editTargetQuizId || 0)
-              
+              const { mutate: updateQuiz, isPending: isUpdating } = useUpdateQuizInfo(
+                editTargetQuizId || 0,
+                Number(noteId),
+              )
+
               // 폼 상태 관리
               const [question, setQuestion] = useState(quiz?.question || '')
               const [answer, setAnswer] = useState(quiz?.answer || '')
               const [explanation, setExplanation] = useState(quiz?.explanation || '')
               const [options, setOptions] = useState<string[]>(quiz?.options || [])
-              
+
               // 유효성 검사 상태
               const [errors, setErrors] = useState({
                 question: false,
                 answer: false,
                 explanation: false,
-                options: [] as boolean[]
+                options: [] as boolean[],
               })
-              
+
               // 초기값 설정 (quiz가 변경될 때마다 업데이트)
               useEffect(() => {
                 if (quiz) {
@@ -613,43 +618,43 @@ const NoteDetailPage = () => {
                   setOptions([...quiz.options])
                 }
               }, [quiz])
-              
+
               // 옵션 업데이트 핸들러 (객관식 문제용)
               const handleOptionChange = (index: number, value: string) => {
                 const newOptions = [...options]
                 newOptions[index] = value
                 setOptions(newOptions)
               }
-              
+
               // 유효성 검사 함수
               const validateForm = () => {
                 const newErrors = {
                   question: question.trim() === '',
                   answer: answer.trim() === '',
                   explanation: explanation.trim() === '',
-                  options: options.map(option => option.trim() === '')
+                  options: options.map((option) => option.trim() === ''),
                 }
-                
+
                 setErrors(newErrors)
-                
+
                 // 객관식 문제의 경우 최소 하나의 옵션이 있어야 함
                 if (quiz?.quizType === 'MULTIPLE_CHOICE') {
-                  return !newErrors.question && !newErrors.explanation && !newErrors.options.some(error => error)
+                  return !newErrors.question && !newErrors.explanation && !newErrors.options.some((error) => error)
                 }
-                
+
                 // OX 문제의 경우
                 return !newErrors.question && !newErrors.explanation
               }
-              
+
               // 폼 제출 핸들러
               const handleSubmit = () => {
                 if (!editTargetQuizId) return
-                
+
                 // 유효성 검사 실행
                 if (!validateForm()) {
                   return
                 }
-                
+
                 updateQuiz(
                   {
                     question,
@@ -658,16 +663,17 @@ const NoteDetailPage = () => {
                     options,
                   },
                   {
-                    onSuccess: () => {
-                      // 수정 성공 시 문서 데이터 다시 불러오기
-                      refetchSingleDocument()
+                    onError: () => {
+                      toast('퀴즈 편집에 실패했습니다.')
+                    },
+                    onSettled: () => {
                       // 드로어 닫기
                       setEditTargetQuizId(null)
                     },
-                  }
+                  },
                 )
               }
-              
+
               return (
                 <>
                   {/* 완료 버튼 */}
@@ -684,17 +690,22 @@ const NoteDetailPage = () => {
                   </div>
 
                   <div className="h-[20px]" />
-                  
+
                   {quiz && (
-                    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
-                      <Input 
-                        label="질문" 
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault()
+                        handleSubmit()
+                      }}
+                    >
+                      <Input
+                        label="질문"
                         value={question}
                         onChange={(e) => {
                           setQuestion(e.target.value)
                           // 입력 시 오류 상태 초기화
                           if (e.target.value.trim() !== '') {
-                            setErrors(prev => ({ ...prev, question: false }))
+                            setErrors((prev) => ({ ...prev, question: false }))
                           }
                         }}
                         className="text-secondary"
@@ -703,11 +714,7 @@ const NoteDetailPage = () => {
                       />
 
                       {quiz.quizType === 'MIX_UP' ? (
-                        <RadioGroup 
-                          className="flex gap-2 mt-4" 
-                          value={answer}
-                          onValueChange={setAnswer}
-                        >
+                        <RadioGroup className="flex gap-2 mt-4" value={answer} onValueChange={setAnswer}>
                           <RadioGroupItem
                             value="correct"
                             className="flex-1 flex-center size-full rounded-[10px] aspect-[164/48] data-[state=checked]:bg-accent"
@@ -741,23 +748,19 @@ const NoteDetailPage = () => {
                         </RadioGroup>
                       ) : (
                         <div className="mt-4">
-                          <RadioGroup 
-                            className="flex flex-col gap-4" 
-                            value={answer}
-                            onValueChange={setAnswer}
-                          >
+                          <RadioGroup className="flex flex-col gap-4" value={answer} onValueChange={setAnswer}>
                             {options.map((option, index) => (
                               <div key={index} className="flex items-center gap-3">
                                 <RadioGroupItem value={option} />
-                                <Input 
-                                  value={option} 
+                                <Input
+                                  value={option}
                                   onChange={(e) => {
                                     handleOptionChange(index, e.target.value)
                                     // 입력 시 오류 상태 초기화
                                     if (e.target.value.trim() !== '') {
                                       const newOptionErrors = [...errors.options]
                                       newOptionErrors[index] = false
-                                      setErrors(prev => ({ ...prev, options: newOptionErrors }))
+                                      setErrors((prev) => ({ ...prev, options: newOptionErrors }))
                                     }
                                   }}
                                   className="text-secondary"
@@ -771,14 +774,14 @@ const NoteDetailPage = () => {
                       )}
 
                       <div className="mt-5">
-                        <Textarea 
-                          label="해설" 
+                        <Textarea
+                          label="해설"
                           value={explanation}
                           onChange={(e) => {
                             setExplanation(e.target.value)
                             // 입력 시 오류 상태 초기화
                             if (e.target.value.trim() !== '') {
-                              setErrors(prev => ({ ...prev, explanation: false }))
+                              setErrors((prev) => ({ ...prev, explanation: false }))
                             }
                           }}
                           className="text-secondary"

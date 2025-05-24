@@ -6,6 +6,7 @@ import { DOCUMENT_KEYS } from '@/entities/document/api/config'
 import { QUIZ_KEYS } from './config'
 import {
   CreateQuizSetRequest,
+  UpdateQuizInfoRequest,
   UpdateQuizResultRequest,
   createDailyQuizRecord,
   createQuizSet,
@@ -135,10 +136,21 @@ export const useUpdateWrongAnswerConfirm = (quizId: number) => {
 }
 
 // 퀴즈 정보 변경
-export const useUpdateQuizInfo = (quizId: number) => {
+export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: QUIZ_KEYS.updateQuizInfo(quizId),
-    mutationFn: (data: Parameters<typeof updateQuizInfo>[1]) => updateQuizInfo(quizId, data),
+    mutationFn: (data: UpdateQuizInfoRequest) => updateQuizInfo(quizId, data),
+    onMutate: async (data: UpdateQuizInfoRequest) => {
+      await queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), (oldData: GetSingleDocumentResponse) => ({
+        ...oldData,
+        quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, ...data } : quiz)),
+      }))
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(noteId) })
+    },
   })
 }
 
