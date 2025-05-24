@@ -101,6 +101,9 @@ export const RouteConfig = {
   },
   accountStarHistory: {
     pathname: '/account/star-history',
+    search: {
+      sort: 'ALL' as 'ALL' | 'DEPOSIT' | 'WITHDRAWAL',
+    },
   },
   accountPaymentHistory: {
     pathname: '/account/payment-history',
