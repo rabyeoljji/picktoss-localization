@@ -38,7 +38,9 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 const HomePage = () => {
   const router = useRouter()
 
-  const { data: user } = useUser()
+  // 온보딩 관련
+  const [userLoaded, setUserLoaded] = useState(false)
+  const { data: user, refetch: refetchUser } = useUser()
 
   // 알림 관련 설정
   const [openNotification, setOpenNotification] = useState(false)
@@ -223,8 +225,15 @@ const HomePage = () => {
     }
   }, [resultIconState.show])
 
+  useEffect(() => {
+    if (!userLoaded) {
+      refetchUser()
+      setUserLoaded(true)
+    }
+  }, [userLoaded, refetchUser])
+
   // 설정한 카테고리가 없을 경우 온보딩 화면 노출
-  if (user && !user.category) {
+  if (user && !user.category.id) {
     return <OnBoarding />
   }
 
