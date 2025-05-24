@@ -28,7 +28,6 @@ import InvitePage from '@/pages/invite/invite-page'
 import { LibraryPage, LibrarySearchPage, NoteDetailPage, NoteEditPage, NoteQuizPage } from '@/pages/library'
 import { NoteCreatePage } from '@/pages/note-create'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
-import QuizResultPage from '@/pages/quiz-result-page'
 import SearchPage from '@/pages/search-page'
 import { BombQuizPage, RandomQuizPage } from '@/pages/theme-quiz'
 
@@ -91,7 +90,6 @@ export const AppRouter = () => {
                 <Route path={RoutePath.progressQuiz} element={<ProgressQuizPage />} />
                 <Route path={RoutePath.randomQuiz} element={<RandomQuizPage />} />
                 <Route path={RoutePath.bombQuiz} element={<BombQuizPage />} />
-                <Route path={RoutePath.quizResult} element={<QuizResultPage />} />
               </Route>
             </Route>
 

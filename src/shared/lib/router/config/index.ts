@@ -141,15 +141,6 @@ export const RouteConfig = {
       quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType,
     },
   },
-  quizResult: {
-    pathname: '/quiz-result',
-    search: {
-      quizSetId: 0 as number,
-      quizSetType: '' as QuizSetType,
-      totalElapsedTime: 0 as number,
-      quizWithResultDataEncoded: '' as string,
-    },
-  },
   randomQuiz: {
     pathname: '/random-quiz',
     search: {

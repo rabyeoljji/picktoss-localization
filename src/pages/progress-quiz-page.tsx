@@ -6,6 +6,7 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { ProgressBar } from '@/features/quiz/ui/progress-bar'
+import { QuizResultView } from '@/features/quiz/ui/quiz-result-view'
 import { ResultIcon } from '@/features/quiz/ui/result-icon'
 import { StopWatch } from '@/features/quiz/ui/stop-watch'
 
@@ -32,6 +33,18 @@ import { cn } from '@/shared/lib/utils'
  */
 export type QuizSetType = 'DOCUMENT_QUIZ_SET' | 'EXPLORE_QUIZ_SET' | 'FIRST_QUIZ_SET'
 
+export type QuizResultCardData = {
+  id: number
+  question: string
+  answer: string
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  explanation?: string
+  options?: string[]
+  userAnswer: string
+  elapsedTime: number
+  isCorrect: boolean
+}
+
 // 각 퀴즈 결과 저장을 위한 타입
 type QuizResult = {
   id: number
@@ -42,7 +55,6 @@ type QuizResult = {
 
 export const ProgressQuizPage = () => {
   const { quizSetId } = useParams()
-  const router = useRouter()
 
   const [params, setParams] = useQueryParam('/progress-quiz/:quizSetId')
   const [exitDialogOpen, setExitDialogOpen] = useState(false)
@@ -50,8 +62,10 @@ export const ProgressQuizPage = () => {
   // 퀴즈 결과 저장
   const [quizResults, setQuizResults] = useState<QuizResult[]>([])
 
-  // 마지막 문제 선택 완료 여부 플래그
-  const [isQuizComplete, setIsQuizComplete] = useState(false)
+  // 총 소요 시간
+  const [totalElapsedTime, setTotalElapsedTime] = useState<number>(0)
+
+  const [quizResultCardDatas, setQuizResultCardDatas] = useState<QuizResultCardData[] | null>(null)
 
   // 현재 퀴즈 시작 시간
   const startTimeRef = useRef<number>(Date.now())
@@ -106,13 +120,6 @@ export const ProgressQuizPage = () => {
     }
   }, [params.quizIndex, params.selectedOption])
 
-  // 마지막 문제 결과가 모두 채워졌을 때 제출 처리
-  useEffect(() => {
-    if (isQuizComplete && quizSetData?.quizzes && quizResults.length === quizSetData.quizzes.length && !isSubmitting) {
-      submitQuizResults()
-    }
-  }, [isQuizComplete, quizResults, quizSetData, isSubmitting])
-
   const handleOptionSelect = (option: string) => {
     if (params.selectedOption !== null || !quizSetData?.quizzes) return
 
@@ -146,14 +153,24 @@ export const ProgressQuizPage = () => {
     }
 
     // 결과 상태 업데이트
-    setQuizResults((prev) => [...prev, quizResult])
+    setQuizResults((prev) => {
+      const newResults = [...prev, quizResult]
+
+      // 마지막 문제이고 자동 넘김이 활성화된 경우
+      if (params.quizIndex === quizSetData.quizzes.length - 1 && quizSetting.autoNext) {
+        // 약간의 디레이 후 결과 제출 (상태 업데이트가 완료된 후)
+        setTimeout(() => {
+          submitQuizResults()
+        }, 500)
+      }
+
+      return newResults
+    })
+
     // 선택 결과 반영
     setParams({ ...params, selectedOption: option })
 
-    // 마지막 문제인 경우 완료 플래그 설정
-    if (params.quizIndex === quizSetData.quizzes.length - 1) {
-      setIsQuizComplete(true)
-    } else if (quizSetting.autoNext) {
+    if (quizSetting.autoNext) {
       setTimeout(() => {
         handleNextQuestion()
       }, 400)
@@ -163,18 +180,27 @@ export const ProgressQuizPage = () => {
   const handleNextQuestion = () => {
     if (!quizSetData?.quizzes) return
 
-    // 마지막 문제라면 제출 플래그를 설정 (useEffect에서 제출)
+    // 마지막 문제라면 결과를 제출하고 보여줌
     if (params.quizIndex === quizSetData.quizzes.length - 1) {
-      setIsQuizComplete(true)
+      // 이미 선택한 문제의 결과가 quizResults에 있는지 확인
+      // 마지막 문제의 결과가 이미 추가되었는지 확인
+      const lastQuizResult = quizResults.find((result) => result.id === quizSetData.quizzes[params.quizIndex].id)
+
+      if (lastQuizResult) {
+        submitQuizResults()
+      } else {
+        // 마지막 문제의 결과가 없는 경우 - 이 경우는 발생하지 않아야 함
+        console.warn('마지막 문제의 결과가 없습니다')
+      }
       return
     }
 
     setParams({ ...params, quizIndex: params.quizIndex + 1, selectedOption: null })
   }
 
-  // 퀴즈 결과 제출 (quizResults 상태를 그대로 사용)
+  // 퀴즈 결과 제출
   const submitQuizResults = async () => {
-    if (isSubmitting || !quizSetData?.quizzes || quizResults.length === 0) return
+    if (isSubmitting || !quizSetData?.quizzes) return
 
     try {
       setIsSubmitting(true)
@@ -187,29 +213,32 @@ export const ProgressQuizPage = () => {
 
       const result = await updateQuizResult(requestData)
 
-      const quizWithResults = quizSetData.quizzes.map((quiz) => {
+      // 총 소요 시간 저장
+      setTotalElapsedTime(result.totalElapsedTime)
+
+      // 퀴즈 결과 데이터 생성
+      const quizResultCardDatas = quizSetData.quizzes.map((quiz) => {
         const userResult = quizResults.find((qr) => qr.id === quiz.id)
         if (!userResult) {
-          throw new Error('User result not found')
+          console.error(`퀴즈 ID ${quiz.id}에 대한 결과가 없습니다`)
+          // 오류 대신 기본값 사용
+          return {
+            ...quiz,
+            userAnswer: '',
+            elapsedTime: 0,
+            isCorrect: false,
+          }
         }
         return {
           ...quiz,
-          totalElapsedTime: result.totalElapsedTime,
           userAnswer: userResult.choseAnswer,
+          elapsedTime: userResult.elapsedTime,
           isCorrect: userResult.answer,
         }
       })
 
-      const quizWithResultDataEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(quizWithResults))))
-
-      router.replace('/quiz-result', {
-        search: {
-          quizSetId: Number(quizSetId ?? 0),
-          quizSetType: params.quizSetType,
-          totalElapsedTime: result.totalElapsedTime,
-          quizWithResultDataEncoded: quizWithResultDataEncoded,
-        },
-      })
+      // 결과 데이터 설정
+      setQuizResultCardDatas(quizResultCardDatas)
     } catch (error) {
       console.error('퀴즈 결과 제출 실패:', error)
       alert('퀴즈 결과 제출에 실패했습니다.')
@@ -224,7 +253,9 @@ export const ProgressQuizPage = () => {
 
   const currentQuiz = quizSetData.quizzes[params.quizIndex]
 
-  return (
+  return !!quizResultCardDatas ? (
+    <QuizResultView totalElapsedTime={totalElapsedTime} quizWithResultData={quizResultCardDatas} />
+  ) : (
     <div className="min-h-screen bg-surface-1">
       <Header
         left={<BackButton type="close" onClick={() => setExitDialogOpen(true)} />}

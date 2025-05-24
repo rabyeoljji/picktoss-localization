@@ -1,41 +1,28 @@
+import { QuizResultCardData } from '@/pages/progress-quiz-page'
+
 import { ImgCheckbadge, ImgMedal, ImgSpeechbubble, ImgStopwatch } from '@/shared/assets/images'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
 import { Button } from '@/shared/components/ui/button'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
-import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useRouter } from '@/shared/lib/router'
 
-// 퀴즈 결과 아이템 타입 정의
-interface QuizItem {
-  id: number
-  question: string
-  answer: string
-  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
-  explanation?: string
-  options?: string[]
-  userAnswer: string
-  elapsedTime: number
-  isCorrect: boolean
-}
-
-const QuizResultPage = () => {
+export const QuizResultView = ({
+  totalElapsedTime,
+  quizWithResultData,
+}: {
+  totalElapsedTime: number
+  quizWithResultData: QuizResultCardData[]
+}) => {
   const router = useRouter()
-
-  const [params] = useQueryParam('/quiz-result')
-
-  const quizWithResultDataDecoded = decodeURIComponent(escape(atob(params.quizWithResultDataEncoded)))
-  const quizWithResultData = JSON.parse(quizWithResultDataDecoded) as QuizItem[]
 
   // 전체 통계 계산
   const totalQuizCount = quizWithResultData.length
 
   // 정답률 계산
-  const correctAnswers = quizWithResultData.filter((quiz: QuizItem) => quiz.isCorrect).length
+  const correctAnswers = quizWithResultData.filter((quiz: QuizResultCardData) => quiz.isCorrect).length
   const correctAnswerRate = totalQuizCount > 0 ? Math.round((correctAnswers / totalQuizCount) * 100) : 0
-
-  // 총 소요 시간 계산 (밀리초 단위)
-  const totalElapsedTime = (params.totalElapsedTime / 60000).toFixed(1)
 
   return (
     <div className="min-h-screen bg-surface-2">
@@ -148,5 +135,3 @@ const QuizResultPage = () => {
     </div>
   )
 }
-
-export default QuizResultPage
