@@ -32,9 +32,9 @@ export const useRewardForInviteCode = () => {
 }
 
 export const useCreateInviteLink = () => {
-  return useQuery({
-    queryKey: AUTH_KEYS.getAuthInvite,
-    queryFn: () => createInviteLink(),
+  return useMutation({
+    mutationKey: AUTH_KEYS.getAuthInvite,
+    mutationFn: () => createInviteLink(),
   })
 }
 

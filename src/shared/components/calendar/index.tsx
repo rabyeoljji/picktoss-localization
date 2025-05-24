@@ -1,20 +1,22 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 
 import { ShadcnCalendar } from '@/shared/components/ui/calendar'
-import { Pathname, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
-  path: Pathname
-  selectedDate: Date
+  selectedDate?: Date
+  setSelectedDate?: (date?: Date) => void
+  currentMonth: Date
+  setCurrentMonth: (date: Date) => void
   dates?: {
     date: string
-    isSolved: boolean
+    isDailyQuizComplete: boolean
   }[]
   isLoading?: boolean
   className?: HTMLElement['className']
+  noSelectMode?: boolean
 }
 
 /**
@@ -23,23 +25,35 @@ interface Props {
  * 선택된 날짜는 URL 쿼리 파라미터로 관리되며, 날짜 선택 시 라우터를 통해 URL이 업데이트됩니다.
  * 연속된 날짜 기록은 범위로 시각화되며, 단일 날짜 기록은 개별적으로 표시됩니다.
  *
- * @param path 현재 경로
  * @param selectedDate 현재 선택된 날짜
+ * @param setSelectedDate 날짜 선택 함수
+ * @param currentMonth 현재 월
+ * @param setCurrentMonth 현재 월 선택 함수
  * @param dates 날짜 객체의 배열 (날짜와 해당 날짜의 완료 상태)
  * @param isLoading 로딩 상태 표시 여부
  * @param className 추가 CSS 클래스명
+ * @param noSelectMode 보여주기 모드 (선택 불가)
  */
-export const Calendar = ({ path, selectedDate, dates, isLoading, className }: Props) => {
+export const Calendar = ({
+  selectedDate,
+  setSelectedDate,
+  dates,
+  isLoading,
+  className,
+  currentMonth,
+  setCurrentMonth,
+  noSelectMode,
+}: Props) => {
   const today = useMemo(() => new Date(), [])
-  const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
+  // const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
 
-  const router = useRouter()
-  const [showLoading, setShowLoading] = useState(false)
-  const [currentMonth, setCurrentMonth] = useState(selectedDate)
+  // const router = useRouter()
+  // const [showLoading, setShowLoading] = useState(false)
+  // const [currentMonth, setCurrentMonth] = useState(selectedDate)
 
-  useEffect(() => {
-    setShowLoading(false)
-  }, [selectedDate])
+  // useEffect(() => {
+  //   setShowLoading(false)
+  // }, [selectedDate])
 
   /**
    * 날짜 선택 시 URL 쿼리 파라미터를 업데이트하는 핸들러
@@ -48,20 +62,20 @@ export const Calendar = ({ path, selectedDate, dates, isLoading, className }: Pr
    *
    * @param selected 사용자가 선택한 날짜 (undefined일 수 있음)
    */
-  const handleSelect = (selected?: Date) => {
-    setShowLoading(true)
+  // const handleSelect = (selected?: Date) => {
+  //   setShowLoading(true)
 
-    if (selected) {
-      const formattedDate = format(selected, 'yyyy-MM-dd')
+  //   if (selected) {
+  //     const formattedDate = format(selected, 'yyyy-MM-dd')
 
-      if (selectedDateString === formattedDate) {
-        setShowLoading(false)
-        return
-      }
+  //     if (selectedDateString === formattedDate) {
+  //       setShowLoading(false)
+  //       return
+  //     }
 
-      router.replace(path, { search: { selectedDate: formattedDate } })
-    }
-  }
+  //     router.replace(path, { search: { selectedDate: formattedDate } })
+  //   }
+  // }
 
   /**
    * 캘린더에 날짜 범위 및 단일 날짜 표시를 위한 수정자 생성
@@ -75,7 +89,9 @@ export const Calendar = ({ path, selectedDate, dates, isLoading, className }: Pr
     const defaultDate = today
 
     if (dates) {
-      const solvedDates = dates.filter((record) => record.isSolved).map((record) => startOfDay(parseISO(record.date)))
+      const solvedDates = dates
+        .filter((record) => record.isDailyQuizComplete)
+        .map((record) => startOfDay(parseISO(record.date)))
 
       const ranges: { start: Date; end: Date }[] = []
       let start: Date | null = null
@@ -123,8 +139,8 @@ export const Calendar = ({ path, selectedDate, dates, isLoading, className }: Pr
   }, [today, dates])
 
   return (
-    <div className="relative w-full">
-      {(showLoading || isLoading) && (
+    <div className="relative w-fit">
+      {isLoading && (
         <div className="absolute right-1/2 top-0 z-50 h-[316px] w-[398px] translate-x-1/2">
           <div className="size-full bg-white opacity-50" />
           {/* TODO: loading lottie 컴포넌트 넣기 */}
@@ -143,12 +159,13 @@ export const Calendar = ({ path, selectedDate, dates, isLoading, className }: Pr
             return weekdays[Date.getDay()]
           },
         }}
-        className={cn('w-full', className)}
+        className={cn('w-fit', className)}
         selected={selectedDate}
-        onSelect={(date?: Date) => handleSelect(date)}
+        onSelect={(date?: Date) => setSelectedDate && setSelectedDate(date)}
         selectedMonth={currentMonth}
         onMonthChange={(month) => setCurrentMonth(month)}
         modifiers={modifiers}
+        noSelectMode={noSelectMode}
       />
     </div>
   )

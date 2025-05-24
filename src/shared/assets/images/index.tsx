@@ -50,6 +50,9 @@ import imgStar from "./img_star.png"
 import imgStarEmpty from "./img_star_empty.png"
 import imgStopwatch from "./img_stopwatch.png"
 import imgStopwatchMono from "./img_stopwatch_mono.png"
+import imgStreakChecked from "./img_streak_checked.png"
+import imgStreakMono1 from "./img_streak_mono1.png"
+import imgStreakMono2 from "./img_streak_mono2.png"
 import imgSymbol from "./img_symbol.png"
 import imgTodayquiz from "./img_todayquiz.png"
 import imgTreasure from "./img_treasure.png"
@@ -252,6 +255,18 @@ export const ImgStopwatch: React.FC<ImageComponentProps> = ({ ...props }) => {
 
 export const ImgStopwatchMono: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgStopwatchMono} alt="stopwatch_mono" {...props} />;
+};
+
+export const ImgStreakChecked: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgStreakChecked} alt="streak_checked" {...props} />;
+};
+
+export const ImgStreakMono1: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgStreakMono1} alt="streak_mono1" {...props} />;
+};
+
+export const ImgStreakMono2: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgStreakMono2} alt="streak_mono2" {...props} />;
 };
 
 export const ImgSymbol: React.FC<ImageComponentProps> = ({ ...props }) => {
