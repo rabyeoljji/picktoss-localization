@@ -137,17 +137,17 @@ const TabContent = ({ tab, documents, keyword, hasResults }: TabContentProps) =>
     )
   }
 
-  return <MyDocumentQuizSearchResults tab={tab} documents={documents} keyword={keyword} />
+  return <LibrarySearchResults tab={tab} documents={documents} keyword={keyword} />
 }
 
-interface DocumentQuizSearchResultsProps {
+interface LibrarySearchResultsProps {
   tab: Tab
   documents: SearchDocumentsDto[] | SearchBookmarkDocumentsDto[]
   keyword: string
 }
 
 /** 내 문서에서 검색 결과가 있을 때 결과들을 보여주는 컴포넌트 */
-const MyDocumentQuizSearchResults = ({ tab, documents, keyword }: DocumentQuizSearchResultsProps) => {
+const LibrarySearchResults = ({ tab, documents, keyword }: LibrarySearchResultsProps) => {
   function isSearchDocumentsDto(item: SearchDocumentsDto | SearchBookmarkDocumentsDto): item is SearchDocumentsDto {
     return 'content' in item && typeof item.content === 'string'
   }
