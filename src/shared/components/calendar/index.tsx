@@ -141,7 +141,7 @@ export const Calendar = ({
   return (
     <div className="relative w-fit">
       {isLoading && (
-        <div className="absolute right-1/2 top-0 z-50 h-[316px] w-[398px] translate-x-1/2">
+        <div className="absolute right-1/2 top-0 z-50 h-[331px] w-[344px] rounded-[16px] translate-x-1/2">
           <div className="size-full bg-white opacity-50" />
           {/* TODO: loading lottie 컴포넌트 넣기 */}
           {/* <Loading center /> */}

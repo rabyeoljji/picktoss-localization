@@ -16,6 +16,7 @@ import { ImgInviteStar, ImgStar, ImgStreakChecked, ImgStreakMono1 } from '@/shar
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Calendar } from '@/shared/components/calendar'
 import { Header } from '@/shared/components/header'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { Link } from '@/shared/lib/router'
 
@@ -24,8 +25,8 @@ const MyStarPage = () => {
 
   const [currentMonth, setCurrentMonth] = useState(today)
 
-  const { data: user } = useUser()
-  const { data: consecutiveDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
+  const { data: user, isLoading: userIsLoading } = useUser()
+  const { data: consecutiveDailyQuiz, isLoading: consecutiveLoading } = useGetConsecutiveSolvedDailyQuiz()
   const { data: consecutiveArrayData, isLoading } = useGetConsecutiveSolvedQuizSetDates(
     format(currentMonth, 'yyyy-MM-dd'),
   )
@@ -35,6 +36,10 @@ const MyStarPage = () => {
     : consecutiveDailyQuiz % 5 === 0
       ? 5
       : consecutiveDailyQuiz % 5
+
+  if (userIsLoading || consecutiveLoading) {
+    return <Loading center />
+  }
 
   return (
     <>
