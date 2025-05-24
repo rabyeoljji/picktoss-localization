@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { toast } from 'sonner'
 
+import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useAuthStore } from '@/features/auth'
@@ -108,10 +109,10 @@ const AccountInfoPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-base-1 flex flex-col">
+    <>
       <Header left={<BackButton />} title="계정 정보" />
 
-      <HeaderOffsetLayout className="w-full grow flex flex-col overflow-x-hidden px-[16px] justify-between">
+      <HeaderOffsetLayout className="h-full flex flex-col overflow-x-hidden px-[16px] justify-between">
         <div className="w-full flex flex-col">
           <div className="flex-center w-full pb-[44px] pt-[24px]">
             <div className="relative">
@@ -247,8 +248,8 @@ const AccountInfoPage = () => {
           </TextButton>
         </div>
       </HeaderOffsetLayout>
-    </div>
+    </>
   )
 }
 
-export default AccountInfoPage
+export default withHOC(AccountInfoPage, {})
