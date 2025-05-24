@@ -596,6 +596,14 @@ const NoteDetailPage = () => {
               const [explanation, setExplanation] = useState(quiz?.explanation || '')
               const [options, setOptions] = useState<string[]>(quiz?.options || [])
               
+              // 유효성 검사 상태
+              const [errors, setErrors] = useState({
+                question: false,
+                answer: false,
+                explanation: false,
+                options: [] as boolean[]
+              })
+              
               // 초기값 설정 (quiz가 변경될 때마다 업데이트)
               useEffect(() => {
                 if (quiz) {
@@ -613,9 +621,34 @@ const NoteDetailPage = () => {
                 setOptions(newOptions)
               }
               
+              // 유효성 검사 함수
+              const validateForm = () => {
+                const newErrors = {
+                  question: question.trim() === '',
+                  answer: answer.trim() === '',
+                  explanation: explanation.trim() === '',
+                  options: options.map(option => option.trim() === '')
+                }
+                
+                setErrors(newErrors)
+                
+                // 객관식 문제의 경우 최소 하나의 옵션이 있어야 함
+                if (quiz?.quizType === 'MULTIPLE_CHOICE') {
+                  return !newErrors.question && !newErrors.explanation && !newErrors.options.some(error => error)
+                }
+                
+                // OX 문제의 경우
+                return !newErrors.question && !newErrors.explanation
+              }
+              
               // 폼 제출 핸들러
               const handleSubmit = () => {
                 if (!editTargetQuizId) return
+                
+                // 유효성 검사 실행
+                if (!validateForm()) {
+                  return
+                }
                 
                 updateQuiz(
                   {
@@ -657,8 +690,16 @@ const NoteDetailPage = () => {
                       <Input 
                         label="질문" 
                         value={question}
-                        onChange={(e) => setQuestion(e.target.value)}
-                        className="text-secondary" 
+                        onChange={(e) => {
+                          setQuestion(e.target.value)
+                          // 입력 시 오류 상태 초기화
+                          if (e.target.value.trim() !== '') {
+                            setErrors(prev => ({ ...prev, question: false }))
+                          }
+                        }}
+                        className="text-secondary"
+                        hasError={errors.question}
+                        helperText={errors.question ? '질문을 입력해주세요' : ''}
                       />
 
                       {quiz.quizType === 'MIX_UP' ? (
@@ -710,8 +751,18 @@ const NoteDetailPage = () => {
                                 <RadioGroupItem value={option} />
                                 <Input 
                                   value={option} 
-                                  onChange={(e) => handleOptionChange(index, e.target.value)}
-                                  className="text-secondary" 
+                                  onChange={(e) => {
+                                    handleOptionChange(index, e.target.value)
+                                    // 입력 시 오류 상태 초기화
+                                    if (e.target.value.trim() !== '') {
+                                      const newOptionErrors = [...errors.options]
+                                      newOptionErrors[index] = false
+                                      setErrors(prev => ({ ...prev, options: newOptionErrors }))
+                                    }
+                                  }}
+                                  className="text-secondary"
+                                  hasError={errors.options[index]}
+                                  helperText={errors.options[index] ? '옵션을 입력해주세요' : ''}
                                 />
                               </div>
                             ))}
@@ -723,8 +774,16 @@ const NoteDetailPage = () => {
                         <Textarea 
                           label="해설" 
                           value={explanation}
-                          onChange={(e) => setExplanation(e.target.value)}
-                          className="text-secondary" 
+                          onChange={(e) => {
+                            setExplanation(e.target.value)
+                            // 입력 시 오류 상태 초기화
+                            if (e.target.value.trim() !== '') {
+                              setErrors(prev => ({ ...prev, explanation: false }))
+                            }
+                          }}
+                          className="text-secondary"
+                          hasError={errors.explanation}
+                          helperText={errors.explanation ? '해설을 입력해주세요' : ''}
                         />
                       </div>
                     </form>
