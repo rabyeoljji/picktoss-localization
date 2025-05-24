@@ -75,7 +75,7 @@
   --text-color-icon-accent: var(--color-orange-500);
   --text-color-icon-info: var(--color-blue-500);
   --text-color-icon-critical: var(--color-red-500);
-  --text-color-icon-disabled: var(--color-gray-200);
+  --text-color-icon-disabled: var(--color-gray-100);
   --text-color-icon-correct: var(--color-green-500);
   --text-color-icon-incorrect: var(--color-red-500);
 }

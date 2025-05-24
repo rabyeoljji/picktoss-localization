@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 
 import { Meta, StoryObj } from '@storybook/react'
@@ -15,6 +15,13 @@ const meta: Meta<typeof Calendar> = {
       page: null,
     },
   },
+  decorators: [
+    (Story) => (
+      <div className="w-full flex-center">
+        <Story />
+      </div>
+    ),
+  ],
 }
 export default meta
 
@@ -25,6 +32,8 @@ export const DefaultCalendar: StoryObj<typeof Calendar> = {
     const querySelectedDate = searchParams.get('selectedDate') ?? format(today, 'yyyy-MM-dd')
 
     const selectedDate = new Date(querySelectedDate)
+
+    const [currentMonth, setCurrentMonth] = useState(selectedDate)
 
     /**
      * 날짜 선택 및 기록 표시가 가능한 캘린더 컴포넌트
@@ -38,7 +47,15 @@ export const DefaultCalendar: StoryObj<typeof Calendar> = {
      * @param isLoading 로딩 상태 표시 여부
      * @param className 추가 CSS 클래스명
      */
-    return <Calendar path="/" selectedDate={selectedDate} isLoading={false} />
+    return (
+      <Calendar
+        path="/"
+        selectedDate={selectedDate}
+        currentMonth={currentMonth}
+        setCurrentMonth={setCurrentMonth}
+        isLoading={false}
+      />
+    )
   },
 }
 
@@ -50,27 +67,38 @@ export const RangeCalendar: StoryObj<typeof Calendar> = {
 
     const selectedDate = new Date(querySelectedDate)
 
+    const [currentMonth, setCurrentMonth] = useState(selectedDate)
+
     // 스토리북 화면에서 항상 ranged가 보이도록 하기 위해 이렇게 작성했습니다.
     // date는 YYYY-MM-DD 형식의 string타입입니다.
     const dates = [
       {
         date: format(subDays(today, 6), 'yyyy-MM-dd'),
-        isSolved: true,
+        isDailyQuizComplete: true,
       },
       {
         date: format(subDays(today, 4), 'yyyy-MM-dd'),
-        isSolved: true,
+        isDailyQuizComplete: true,
       },
       {
         date: format(subDays(today, 3), 'yyyy-MM-dd'),
-        isSolved: true,
+        isDailyQuizComplete: true,
       },
       {
         date: format(subDays(today, 2), 'yyyy-MM-dd'),
-        isSolved: true,
+        isDailyQuizComplete: true,
       },
     ]
 
-    return <Calendar path="/" selectedDate={selectedDate} isLoading={false} dates={dates} />
+    return (
+      <Calendar
+        path="/"
+        selectedDate={selectedDate}
+        currentMonth={currentMonth}
+        setCurrentMonth={setCurrentMonth}
+        isLoading={false}
+        dates={dates}
+      />
+    )
   },
 }

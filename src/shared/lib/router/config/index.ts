@@ -1,4 +1,5 @@
 import { QuizSetType } from '@/pages/progress-quiz-page'
+import { format } from 'date-fns'
 
 import { BookmarkedSortOption, SortOption } from '@/entities/document/api'
 
@@ -98,6 +99,9 @@ export const RouteConfig = {
   },
   accountMyStar: {
     pathname: '/account/my-star',
+    search: {
+      selectedDate: format(new Date(), 'yyyy-MM-dd') as string,
+    },
   },
   accountStarHistory: {
     pathname: '/account/star-history',

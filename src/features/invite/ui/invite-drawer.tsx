@@ -1,0 +1,187 @@
+import { useEffect, useState } from 'react'
+
+import { toast } from 'sonner'
+
+import { useKakaoSDK } from '@/features/invite/hooks/use-kakao-sdk'
+import { shareToKakao } from '@/features/invite/utils/kakao'
+import { nativeShare } from '@/features/invite/utils/share'
+
+import { useCreateInviteLink } from '@/entities/auth/api/hooks'
+
+import { IcUpload } from '@/shared/assets/icon'
+import { ImgRoundKakao, ImgTreasurebox } from '@/shared/assets/images'
+import { Button } from '@/shared/components/ui/button'
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
+import { Input } from '@/shared/components/ui/input'
+import { SquareButton } from '@/shared/components/ui/square-button'
+import { Text } from '@/shared/components/ui/text'
+
+// TODO: 내용 수정
+const inviteText = {
+  title: '지금 가입하고 별 50개 더 받으세요!',
+  description:
+    '픽토스에서는 AI퀴즈로 매일 간단하게 내가 배운 걸 기억할 수 있어요. 이 초대권을 통해 픽토스에 가입하실 경우 두 분 모두에게 퀴즈를 만들 수 있는 별 50를 추가로 드려요!',
+}
+
+interface Props {
+  triggerComponent: React.ReactNode
+  open?: boolean
+  onOpenChange?: (value: boolean) => void
+}
+
+const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
+  // 외부 제어 여부 확인 (controlled vs uncontrolled)
+  const isControlled = open !== undefined
+  const [internalOpen, setInternalOpen] = useState(false) // 내부 상태는 uncontrolled 모드에서만 사용
+  const isOpen = isControlled ? open : internalOpen
+
+  const { mutate: inviteLinkMutate } = useCreateInviteLink()
+
+  const [inviteLink, setInviteLink] = useState('')
+  const { isLoaded: isKakaoSDKLoaded, error: kakaoSDKError } = useKakaoSDK()
+
+  const handleOpenChange = (value: boolean) => {
+    // uncontrolled 모드일 때만 내부 상태 업데이트
+    if (!isControlled) {
+      setInternalOpen(value)
+    }
+
+    // 외부 제어일 경우, 부모에게 상태 변경 알림
+    if (onOpenChange) {
+      onOpenChange(value)
+    }
+  }
+
+  // 카카오톡에 공유
+  const handleKakaoShare = async () => {
+    if (!isKakaoSDKLoaded || kakaoSDKError) {
+      console.error('Kakao SDK 로드 실패:', kakaoSDKError)
+      return
+    }
+
+    try {
+      // todo: 배포 후 url 경로 수정
+      const imageUrl = `${'https://picktoss.vercel.app'}/images/kakao-share-thumbnail.png`
+
+      await shareToKakao({
+        title: inviteText.title,
+        description: inviteText.description,
+        imageUrl: imageUrl,
+        inviteLinkUrl: inviteLink,
+      })
+    } catch (error) {
+      console.error('공유하기 실패:', error)
+    }
+  }
+
+  // 기본 공유하기
+  const handleNativeShare = async () => {
+    const content = {
+      title: inviteText.title,
+      text: inviteText.description,
+      url: inviteLink,
+    }
+
+    // fallback: 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
+    await nativeShare(content, handleCopy)
+  }
+
+  const handleCopy = async () => {
+    if (!inviteLink) return
+
+    try {
+      await navigator.clipboard.writeText(inviteLink)
+
+      toast('링크가 복사되었어요')
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  // Drawer가 열릴 때마다 링크 발급
+  useEffect(() => {
+    if (isOpen) {
+      inviteLinkMutate(undefined, {
+        onSuccess: (data) => {
+          setInviteLink(data.inviteLink)
+        },
+      })
+    }
+  }, [isOpen])
+
+  return (
+    <Drawer open={isOpen} onOpenChange={handleOpenChange}>
+      <DrawerTrigger asChild className="cursor-pointer">
+        {triggerComponent}
+      </DrawerTrigger>
+
+      <DrawerContent height="lg" className="flex flex-col">
+        <div className="my-[20px] flex h-[calc(80dvh-12px)] w-full flex-col gap-[24px] overflow-y-auto px-[45px]">
+          <DrawerHeader className="flex h-fit w-full flex-col items-center gap-[24px] px-0">
+            <ImgTreasurebox width={140} height={140} />
+
+            <div className="flex flex-col items-center gap-[8px]">
+              <div className="relative">
+                <DrawerTitle>
+                  <Text typo="h3">초대할 때마다 별 50개!</Text>
+                </DrawerTitle>
+              </div>
+
+              <Text typo="body-1-medium" color="sub" className="text-center">
+                친구, 가족, 지인들에게 픽토스를 공유해주세요 <br />
+                그분이 해당 링크를 통해 픽토스에 가입하실 경우 <br />두 분 모두에게 별 50개를 드려요!
+              </Text>
+            </div>
+          </DrawerHeader>
+
+          <div className="flex flex-col gap-[24px]">
+            <div className="relative">
+              <Input
+                label="내 링크"
+                value={inviteLink}
+                right={
+                  <SquareButton size={'sm'} variant={'tertiary'} onClick={handleCopy}>
+                    복사
+                  </SquareButton>
+                }
+                className="mx-[8px]"
+                disabled
+              />
+
+              {!inviteLink && (
+                <div className="center flex w-fit gap-[8px]">
+                  <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s]"></div>
+                  <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s] [animation-delay:0.2s] "></div>
+                  <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s] [animation-delay:0.4s]"></div>
+                </div>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-[8px]">
+              <Button
+                onClick={async () => await handleKakaoShare()}
+                variant={'secondary1'}
+                size={'md'}
+                className="w-full bg-[var(--color-yellow)] text-primary hover:bg-[var(--color-yellow)]"
+                left={<ImgRoundKakao width={32} height={32} />}
+              >
+                카카오톡에 공유하기
+              </Button>
+
+              <Button
+                onClick={handleNativeShare}
+                size={'md'}
+                className="w-full"
+                left={<IcUpload className="size-[20px]" />}
+              >
+                링크 공유하기
+              </Button>
+            </div>
+          </div>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  )
+}
+
+export default InviteDrawer

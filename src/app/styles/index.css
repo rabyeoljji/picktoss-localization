@@ -46,6 +46,8 @@
   --color-red-200: #fde7dd;
   --color-red-500: #f4502c;
 
+  --color-yellow: #ffe45f;
+
   --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 
   --safe-area-inset-top: env(safe-area-inset-top);

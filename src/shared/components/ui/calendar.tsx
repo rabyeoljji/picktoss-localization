@@ -40,7 +40,7 @@ function Calendar({
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
           // buttonVariants({ variant: 'mediumIcon' }),
-          'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 disabled:opacity-20 disabled:cursor-not-allowed',
+          'h-7 w-7 bg-transparent p-0 disabled:text-icon-disabled disabled:cursor-not-allowed',
         ),
         nav_button_previous: 'center !translate-x-[calc(50%-65px)] !translate-y-[-12px]',
         nav_button_next: cn(
@@ -52,13 +52,13 @@ function Calendar({
         table: 'flex-center flex-col border-collapse space-y-1',
         head_row: 'flex text-caption',
         head_cell: 'text-muted-foreground rounded-md w-11 font-normal text-[0.8rem]',
-        row: 'flex w-full mt-2',
+        row: 'flex w-full mt-3',
         cell: cn(
-          'cell h-9 w-11 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-full first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-md [&:has(.day-range-middle)]:bg-accent [&:has(.day-range-start)]:bg-accent [&:has(.day-range-start)]:rounded-l-full [&:has(.day-range-end)]:bg-accent [&:has(.day-range-end)]:rounded-r-full focus-within:relative focus-within:z-20',
+          'cell h-8 w-11 text-center text-sm p-0 relative [&:has([aria-selected].day-range-end)]:rounded-r-full first:[&:has([aria-selected])]:rounded-l-full last:[&:has([aria-selected])]:rounded-r-md [&:has(.day-range-middle)]:bg-accent [&:has(.day-range-start)]:bg-accent [&:has(.day-range-start)]:rounded-l-full [&:has(.day-range-end)]:bg-accent [&:has(.day-range-end)]:rounded-r-full focus-within:relative focus-within:z-20',
         ),
         day: cn(
           // buttonVariants({ variant: 'mediumIcon' }),
-          'h-9 w-9 p-0 font-normal aria-selected:bg-orange-strong rounded-full hover:bg-orange-strong hover:rounded-full hover:text-white focus:bg-orange-strong focus:text-white focus:rounded-full',
+          'h-8 w-8 p-0 font-normal aria-selected:bg-orange-strong rounded-full hover:bg-orange-strong hover:rounded-full hover:text-white focus:bg-orange-strong focus:text-white focus:rounded-full',
         ),
         day_range_start: 'day-range-start rounded-l-full bg-accent hover:bg-orange-strong',
         day_range_middle: 'bg-accent aria-selected:bg-accent aria-selected:text-inverse hover:bg-orange-strong',
