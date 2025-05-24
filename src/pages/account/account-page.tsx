@@ -78,7 +78,7 @@ const AccountPage = () => {
                 <Text typo="subtitle-1-bold" className="min-w-[47px] max-w-[70%] truncate">
                   {user?.name}
                 </Text>
-                <Tag className="shrink-0">
+                <Tag className="shrink-0" size={'md'}>
                   {user?.category.emoji} {user?.category.name}
                 </Tag>
               </div>
@@ -133,7 +133,7 @@ const AccountPage = () => {
                     <ImgStar width={24} height={24} />
                     <Text typo="subtitle-2-bold">나의 별</Text>
                     <Disclaimer>
-                      <DisclaimerTrigger asChild>
+                      <DisclaimerTrigger asChild className="cursor-pointer">
                         <IcDisclaimer className="size-[16px] text-icon-sub" />
                       </DisclaimerTrigger>
                       <DisclaimerContent side="bottom" sideOffset={7} align="start" alignOffset={-7}>

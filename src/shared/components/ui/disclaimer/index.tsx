@@ -1,46 +1,44 @@
 import * as React from 'react'
 
-import * as TooltipPrimitive from '@radix-ui/react-tooltip'
+import * as PopoverPrimitive from '@radix-ui/react-popover'
 
 import { cn } from '@/shared/lib/utils'
 
-function DisclaimerProvider({ delayDuration = 0, ...props }: React.ComponentProps<typeof TooltipPrimitive.Provider>) {
-  return <TooltipPrimitive.Provider data-slot="tooltip-provider" delayDuration={delayDuration} {...props} />
+function Disclaimer({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Root>) {
+  return <PopoverPrimitive.Root data-slot="popover" {...props} />
 }
 
-function Disclaimer({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Root>) {
-  return (
-    <DisclaimerProvider>
-      <TooltipPrimitive.Root data-slot="tooltip" {...props} />
-    </DisclaimerProvider>
-  )
-}
-
-function DisclaimerTrigger({ ...props }: React.ComponentProps<typeof TooltipPrimitive.Trigger>) {
-  return <TooltipPrimitive.Trigger data-slot="tooltip-trigger" {...props} />
+function DisclaimerTrigger({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Trigger>) {
+  return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />
 }
 
 function DisclaimerContent({
   className,
+  align = 'center',
   sideOffset = 0,
   children,
   ...props
-}: React.ComponentProps<typeof TooltipPrimitive.Content>) {
+}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
   return (
-    <TooltipPrimitive.Portal>
-      <TooltipPrimitive.Content
-        data-slot="tooltip-content"
+    <PopoverPrimitive.Portal>
+      <PopoverPrimitive.Content
+        data-slot="popover-content"
+        align={align}
         sideOffset={sideOffset}
         className={cn(
-          'animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 origin-(--radix-tooltip-content-transform-origin) bg-surface-1 typo-body-2-medium text-wrap text-secondary size-fit max-w-[231px] px-[16px] py-[12px] relative rounded-[10px] border border-outline shadow-[var(--shadow-md)] inline-flex justify-center items-center gap-2.5 leading-none',
+          'bg-popover text-popover-foreground data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 origin-(--radix-popover-content-transform-origin) outline-hidden bg-surface-1 typo-body-2-medium text-wrap text-secondary size-fit max-w-[231px] px-[16px] py-[12px] relative rounded-[10px] border border-outline shadow-[var(--shadow-md)] inline-flex justify-center items-center gap-2.5 leading-none',
           className,
         )}
         {...props}
       >
         {children}
-      </TooltipPrimitive.Content>
-    </TooltipPrimitive.Portal>
+      </PopoverPrimitive.Content>
+    </PopoverPrimitive.Portal>
   )
 }
 
-export { Disclaimer, DisclaimerTrigger, DisclaimerContent, DisclaimerProvider }
+function DisclaimerAnchor({ ...props }: React.ComponentProps<typeof PopoverPrimitive.Anchor>) {
+  return <PopoverPrimitive.Anchor data-slot="popover-anchor" {...props} />
+}
+
+export { Disclaimer, DisclaimerTrigger, DisclaimerContent, DisclaimerAnchor }
