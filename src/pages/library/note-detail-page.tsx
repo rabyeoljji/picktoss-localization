@@ -647,7 +647,7 @@ const NoteDetailPage = () => {
               }
 
               // 폼 제출 핸들러
-              const handleSubmit = () => {
+              const handleUpdateQuizSubmit = () => {
                 if (!editTargetQuizId) return
 
                 // 유효성 검사 실행
@@ -682,7 +682,7 @@ const NoteDetailPage = () => {
                       size="lg"
                       variant="primary"
                       className="ml-auto top-[-10px] right-0"
-                      onClick={handleSubmit}
+                      onClick={handleUpdateQuizSubmit}
                       disabled={isUpdating}
                     >
                       {isUpdating ? '저장중' : '완료'}
@@ -695,7 +695,7 @@ const NoteDetailPage = () => {
                     <form
                       onSubmit={(e) => {
                         e.preventDefault()
-                        handleSubmit()
+                        handleUpdateQuizSubmit()
                       }}
                     >
                       <Input
@@ -748,28 +748,40 @@ const NoteDetailPage = () => {
                         </RadioGroup>
                       ) : (
                         <div className="mt-4">
-                          <RadioGroup className="flex flex-col gap-4" value={answer} onValueChange={setAnswer}>
+                          <div className="flex flex-col gap-4">
                             {options.map((option, index) => (
                               <div key={index} className="flex items-center gap-3">
-                                <RadioGroupItem value={option} />
+                                <div
+                                  className="text-primary flex-center group aspect-square size-5 shrink-0 cursor-pointer rounded-full border border-gray-200 transition-[color,box-shadow] outline-none disabled:cursor-default disabled:border-gray-100 disabled:bg-gray-50 data-[state=checked]:border-orange-500 data-[state=checked]:bg-orange-500"
+                                  onClick={() => setAnswer(option)}
+                                >
+                                  {answer === option && <div className="size-3 rounded-full bg-orange-500" />}
+                                </div>
                                 <Input
                                   value={option}
                                   onChange={(e) => {
-                                    handleOptionChange(index, e.target.value)
+                                    const newValue = e.target.value
+                                    handleOptionChange(index, newValue)
+
+                                    // 현재 선택된 값이 변경되는 옵션이면 answer도 업데이트
+                                    if (answer === option) {
+                                      setAnswer(newValue)
+                                    }
+
                                     // 입력 시 오류 상태 초기화
-                                    if (e.target.value.trim() !== '') {
+                                    if (newValue.trim() !== '') {
                                       const newOptionErrors = [...errors.options]
                                       newOptionErrors[index] = false
                                       setErrors((prev) => ({ ...prev, options: newOptionErrors }))
                                     }
                                   }}
-                                  className="text-secondary"
+                                  className="text-secondary flex-1"
                                   hasError={errors.options[index]}
-                                  helperText={errors.options[index] ? '옵션을 입력해주세요' : ''}
+                                  helperText={errors.options[index] ? '내용을 입력해주세요' : ''}
                                 />
                               </div>
                             ))}
-                          </RadioGroup>
+                          </div>
                         </div>
                       )}
 
