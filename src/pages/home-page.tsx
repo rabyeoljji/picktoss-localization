@@ -235,7 +235,7 @@ const HomePage = () => {
           <div className="flex items-center">
             <div className="flex items-center">
               <button onClick={() => router.push('/account')} className="p-2 flex-center">
-                <IcProfile className="size-6 text-icon-secondary" />
+                <IcProfile className="size-6" />
               </button>
 
               <DailyQuizTooltip
@@ -245,7 +245,7 @@ const HomePage = () => {
             </div>
             <div className="ml-auto">
               <button onClick={() => router.push('/library/search')} className="p-2 flex-center">
-                <IcSearch className="size-6 text-icon-secondary" />
+                <IcSearch className="size-6" />
               </button>
             </div>
           </div>

@@ -62,12 +62,12 @@ const LibraryPage = () => {
           className="bg-surface-2 px-2"
           left={
             <button onClick={() => router.push('/account')} className="size-[40px] flex-center">
-              <IcProfile className="size-[24px] text-icon-secondary" />
+              <IcProfile className="size-[24px]" />
             </button>
           }
           right={
             <button onClick={() => router.push('/note/create')} className="size-[40px] flex-center">
-              <IcAdd className="size-[24px] text-icon-secondary" />
+              <IcAdd className="size-[24px]" />
             </button>
           }
           content={

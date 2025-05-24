@@ -31,7 +31,7 @@ export const Header = <T extends React.ElementType = 'div'>({
   return (
     <Comp
       className={cn(
-        'w-full max-w-xl px-2 header-h-safe flex flex-col justify-end fixed z-50 top-0 bg-base-1',
+        'w-full max-w-xl px-2 header-h-safe flex flex-col justify-end fixed z-50 top-0 bg-base-1 text-primary',
         className,
       )}
       {...props}
