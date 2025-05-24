@@ -9,6 +9,7 @@ import { cn } from '@/shared/lib/utils'
 export type CalendarProps = React.ComponentProps<typeof DayPicker> & {
   today: Date
   selectedMonth: Date
+  noSelectMode?: boolean
 }
 
 function Calendar({
@@ -18,6 +19,7 @@ function Calendar({
   selectedMonth,
   onMonthChange,
   today,
+  noSelectMode,
   ...props
 }: CalendarProps) {
   const isCurrentMonth = (month: Date) => isSameMonth(month, today)
@@ -58,7 +60,9 @@ function Calendar({
         ),
         day: cn(
           // buttonVariants({ variant: 'mediumIcon' }),
-          'h-8 w-8 p-0 font-normal aria-selected:bg-orange-strong rounded-full hover:bg-orange-strong hover:rounded-full hover:text-white focus:bg-orange-strong focus:text-white focus:rounded-full',
+          'h-8 w-8 p-0 font-normal aria-selected:bg-orange-strong rounded-full cursor-default',
+          !noSelectMode &&
+            'hover:bg-orange-strong hover:rounded-full hover:text-white focus:bg-orange-strong focus:text-white focus:rounded-full cursor-pointer',
         ),
         day_range_start: 'day-range-start rounded-l-full bg-accent hover:bg-orange-strong',
         day_range_middle: 'bg-accent aria-selected:bg-accent aria-selected:text-inverse hover:bg-orange-strong',

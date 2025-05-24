@@ -1,15 +1,13 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 
 import { ShadcnCalendar } from '@/shared/components/ui/calendar'
-import { Pathname } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
-  path: Pathname
-  selectedDate: Date
-  setSelectedDate: (date?: Date) => void
+  selectedDate?: Date
+  setSelectedDate?: (date?: Date) => void
   currentMonth: Date
   setCurrentMonth: (date: Date) => void
   dates?: {
@@ -18,6 +16,7 @@ interface Props {
   }[]
   isLoading?: boolean
   className?: HTMLElement['className']
+  noSelectMode?: boolean
 }
 
 /**
@@ -33,6 +32,7 @@ interface Props {
  * @param dates 날짜 객체의 배열 (날짜와 해당 날짜의 완료 상태)
  * @param isLoading 로딩 상태 표시 여부
  * @param className 추가 CSS 클래스명
+ * @param noSelectMode 보여주기 모드 (선택 불가)
  */
 export const Calendar = ({
   selectedDate,
@@ -42,17 +42,18 @@ export const Calendar = ({
   className,
   currentMonth,
   setCurrentMonth,
+  noSelectMode,
 }: Props) => {
   const today = useMemo(() => new Date(), [])
   // const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
 
   // const router = useRouter()
-  const [showLoading, setShowLoading] = useState(false)
+  // const [showLoading, setShowLoading] = useState(false)
   // const [currentMonth, setCurrentMonth] = useState(selectedDate)
 
-  useEffect(() => {
-    setShowLoading(false)
-  }, [selectedDate])
+  // useEffect(() => {
+  //   setShowLoading(false)
+  // }, [selectedDate])
 
   /**
    * 날짜 선택 시 URL 쿼리 파라미터를 업데이트하는 핸들러
@@ -139,7 +140,7 @@ export const Calendar = ({
 
   return (
     <div className="relative w-fit">
-      {(showLoading || isLoading) && (
+      {isLoading && (
         <div className="absolute right-1/2 top-0 z-50 h-[316px] w-[398px] translate-x-1/2">
           <div className="size-full bg-white opacity-50" />
           {/* TODO: loading lottie 컴포넌트 넣기 */}
@@ -160,10 +161,11 @@ export const Calendar = ({
         }}
         className={cn('w-fit', className)}
         selected={selectedDate}
-        onSelect={(date?: Date) => setSelectedDate(date)}
+        onSelect={(date?: Date) => setSelectedDate && setSelectedDate(date)}
         selectedMonth={currentMonth}
         onMonthChange={(month) => setCurrentMonth(month)}
         modifiers={modifiers}
+        noSelectMode={noSelectMode}
       />
     </div>
   )

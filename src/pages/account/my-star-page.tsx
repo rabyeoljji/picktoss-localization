@@ -17,22 +17,18 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { Calendar } from '@/shared/components/calendar'
 import { Header } from '@/shared/components/header'
 import { Text } from '@/shared/components/ui/text'
-import { Link, useQueryParam } from '@/shared/lib/router'
+import { Link } from '@/shared/lib/router'
 
 const MyStarPage = () => {
   const today = useMemo(() => new Date(), [])
-  const [querySelectedDate, setQuerySelectedDate] = useQueryParam('/account/my-star', 'selectedDate')
-  const selectedDate = new Date(querySelectedDate)
 
-  const [currentMonth, setCurrentMonth] = useState(selectedDate)
-
-  const handleSelectDate = (date?: Date) => {
-    setQuerySelectedDate(format(date ?? today, 'yyyy-MM-dd'))
-  }
+  const [currentMonth, setCurrentMonth] = useState(today)
 
   const { data: user } = useUser()
   const { data: consecutiveDailyQuiz } = useGetConsecutiveSolvedDailyQuiz()
-  const { data: consecutiveArrayData } = useGetConsecutiveSolvedQuizSetDates(format(currentMonth, 'yyyy-MM-dd'))
+  const { data: consecutiveArrayData, isLoading } = useGetConsecutiveSolvedQuizSetDates(
+    format(currentMonth, 'yyyy-MM-dd'),
+  )
 
   const checkRewardConsecutive = !consecutiveDailyQuiz
     ? 0
@@ -78,13 +74,12 @@ const MyStarPage = () => {
               <div className="flex-center flex-col gap-[24px]">
                 {/* 달력 */}
                 <Calendar
-                  path="/account/my-star"
-                  selectedDate={selectedDate}
-                  setSelectedDate={handleSelectDate}
                   currentMonth={currentMonth}
                   setCurrentMonth={setCurrentMonth}
                   dates={consecutiveArrayData?.solvedDailyQuizDateRecords}
+                  isLoading={isLoading}
                   className="bg-surface-1 rounded-[16px] pb-[24px] pt-[20px] px-[18px]"
+                  noSelectMode
                 />
 
                 <div className="w-full bg-surface-1 rounded-[16px] py-[16px] flex-center flex-col gap-[16px]">
