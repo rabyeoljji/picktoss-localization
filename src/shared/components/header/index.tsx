@@ -36,7 +36,7 @@ export const Header = <T extends React.ElementType = 'div'>({
       )}
       {...props}
     >
-      <div className={cn('relative h-[var(--header-height)] flex items-center [&_svg]:text-icon-primary')}>
+      <div className={cn('relative h-[var(--header-height)] flex items-center')}>
         {left && left}
         {title && (
           <div className="center">
