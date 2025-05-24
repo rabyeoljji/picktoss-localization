@@ -46,7 +46,7 @@ const MyStarPage = () => {
       <Header left={<BackButton />} title={'나의 별'} className="bg-surface-2" />
 
       <HeaderOffsetLayout className="h-full overflow-y-auto pb-[100px]">
-        <div className="px-[16px]">
+        <div className="pt-[20px] px-[16px]">
           <div className="flex flex-col gap-[32px]">
             <div className="flex flex-col gap-[16px]">
               <div className="flex items-center justify-between">

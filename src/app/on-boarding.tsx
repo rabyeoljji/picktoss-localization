@@ -57,7 +57,7 @@ const OnBoardingPage = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="size-full overflow-hidden bg-surface-2">
+      <form onSubmit={handleSubmit(onSubmit)} className="relative size-full overflow-hidden bg-surface-2 z-[9999]">
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
