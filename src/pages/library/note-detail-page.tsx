@@ -649,20 +649,38 @@ const NoteDetailPage = () => {
 
               // 폼 제출 핸들러
               const handleUpdateQuizSubmit = () => {
-                if (!editTargetQuizId) return
+                if (!editTargetQuizId || !quiz) return
 
                 // 유효성 검사 실행
                 if (!validateForm()) {
                   return
                 }
-
+                
+                // 변경사항 여부 확인
+                const originalData = {
+                  question: quiz.question,
+                  answer: quiz.answer,
+                  explanation: quiz.explanation,
+                  options: quiz.options,
+                }
+                
+                const newData = {
+                  question,
+                  answer,
+                  explanation,
+                  options,
+                }
+                
+                // JSON.stringify를 통해 두 객체를 비교
+                if (JSON.stringify(originalData) === JSON.stringify(newData)) {
+                  // 변경사항이 없으면 API 호출 없이 드로어만 닫기
+                  setEditTargetQuizId(null)
+                  return
+                }
+                
+                // 변경사항이 있을 경우 API 호출
                 updateQuiz(
-                  {
-                    question,
-                    answer,
-                    explanation,
-                    options,
-                  },
+                  newData,
                   {
                     onError: () => {
                       toast('퀴즈 편집에 실패했습니다.')
