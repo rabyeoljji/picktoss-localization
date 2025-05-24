@@ -16,7 +16,7 @@ import {
   useUpdateDocumentEmoji,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
-import { useCreateQuizSet, useDeleteQuiz } from '@/entities/quiz/api/hooks'
+import { useCreateQuizSet, useDeleteQuiz, useUpdateQuizInfo } from '@/entities/quiz/api/hooks'
 
 import {
   IcArrange,
@@ -586,31 +586,87 @@ const NoteDetailPage = () => {
         height="full"
         body={
           <div>
-            {/* 완료 버튼 */}
-            <div className="absolute w-[70px] h-[24px] text-end right-[20px] top-[30px]">
-              <TextButton
-                size="lg"
-                variant="primary"
-                className="ml-auto top-[-10px] right-0"
-                onClick={() => setEditTargetQuizId(null)}
-              >
-                완료
-              </TextButton>
-            </div>
+            {(() => {
+              const quiz = document?.quizzes.find((quiz) => quiz.id === editTargetQuizId)
+              const { mutate: updateQuiz, isPending: isUpdating } = useUpdateQuizInfo(editTargetQuizId || 0)
+              
+              // 폼 상태 관리
+              const [question, setQuestion] = useState(quiz?.question || '')
+              const [answer, setAnswer] = useState(quiz?.answer || '')
+              const [explanation, setExplanation] = useState(quiz?.explanation || '')
+              const [options, setOptions] = useState<string[]>(quiz?.options || [])
+              
+              // 초기값 설정 (quiz가 변경될 때마다 업데이트)
+              useEffect(() => {
+                if (quiz) {
+                  setQuestion(quiz.question)
+                  setAnswer(quiz.answer)
+                  setExplanation(quiz.explanation)
+                  setOptions([...quiz.options])
+                }
+              }, [quiz])
+              
+              // 옵션 업데이트 핸들러 (객관식 문제용)
+              const handleOptionChange = (index: number, value: string) => {
+                const newOptions = [...options]
+                newOptions[index] = value
+                setOptions(newOptions)
+              }
+              
+              // 폼 제출 핸들러
+              const handleSubmit = () => {
+                if (!editTargetQuizId) return
+                
+                updateQuiz(
+                  {
+                    question,
+                    answer,
+                    explanation,
+                    options,
+                  },
+                  {
+                    onSuccess: () => {
+                      // 수정 성공 시 문서 데이터 다시 불러오기
+                      refetchSingleDocument()
+                      // 드로어 닫기
+                      setEditTargetQuizId(null)
+                    },
+                  }
+                )
+              }
+              
+              return (
+                <>
+                  {/* 완료 버튼 */}
+                  <div className="absolute w-[70px] h-[24px] text-end right-[20px] top-[30px]">
+                    <TextButton
+                      size="lg"
+                      variant="primary"
+                      className="ml-auto top-[-10px] right-0"
+                      onClick={handleSubmit}
+                      disabled={isUpdating}
+                    >
+                      {isUpdating ? '저장중' : '완료'}
+                    </TextButton>
+                  </div>
 
-            <div className="h-[20px]" />
+                  <div className="h-[20px]" />
+                  
+                  {quiz && (
+                    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+                      <Input 
+                        label="질문" 
+                        value={question}
+                        onChange={(e) => setQuestion(e.target.value)}
+                        className="text-secondary" 
+                      />
 
-            {
-              <>
-                {(() => {
-                  const quiz = document?.quizzes.find((quiz) => quiz.id === editTargetQuizId)
-
-                  return (
-                    <form>
-                      <Input label="질문" defaultValue={quiz?.question} className="text-secondary" />
-
-                      {quiz?.quizType === 'MIX_UP' ? (
-                        <RadioGroup className="flex gap-2 mt-4" defaultValue={quiz?.answer}>
+                      {quiz.quizType === 'MIX_UP' ? (
+                        <RadioGroup 
+                          className="flex gap-2 mt-4" 
+                          value={answer}
+                          onValueChange={setAnswer}
+                        >
                           <RadioGroupItem
                             value="correct"
                             className="flex-1 flex-center size-full rounded-[10px] aspect-[164/48] data-[state=checked]:bg-accent"
@@ -643,26 +699,39 @@ const NoteDetailPage = () => {
                           />
                         </RadioGroup>
                       ) : (
-                        <RadioGroup className="flex flex-col gap-4 mt-4" defaultValue={quiz?.answer}>
-                          {document?.quizzes
-                            .find((quiz) => quiz.id === editTargetQuizId)
-                            ?.options.map((option) => (
-                              <div key={option} className="flex items-center gap-3">
-                                <RadioGroupItem key={option} value={option} />
-                                <Input defaultValue={option} className="text-secondary" />
+                        <div className="mt-4">
+                          <RadioGroup 
+                            className="flex flex-col gap-4" 
+                            value={answer}
+                            onValueChange={setAnswer}
+                          >
+                            {options.map((option, index) => (
+                              <div key={index} className="flex items-center gap-3">
+                                <RadioGroupItem value={option} />
+                                <Input 
+                                  value={option} 
+                                  onChange={(e) => handleOptionChange(index, e.target.value)}
+                                  className="text-secondary" 
+                                />
                               </div>
                             ))}
-                        </RadioGroup>
+                          </RadioGroup>
+                        </div>
                       )}
 
                       <div className="mt-5">
-                        <Textarea label="해설" className="text-secondary" defaultValue={quiz?.explanation} />
+                        <Textarea 
+                          label="해설" 
+                          value={explanation}
+                          onChange={(e) => setExplanation(e.target.value)}
+                          className="text-secondary" 
+                        />
                       </div>
                     </form>
-                  )
-                })()}
-              </>
-            }
+                  )}
+                </>
+              )
+            })()}
           </div>
         }
       />
