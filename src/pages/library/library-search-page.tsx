@@ -12,15 +12,14 @@ import { Header } from '@/shared/components/header'
 import SearchQuizNoteItem from '@/shared/components/items/search-quiz-note-item'
 import Loading from '@/shared/components/ui/loading'
 import { SearchInput } from '@/shared/components/ui/search-input'
-import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
 import { Link, useQueryParam } from '@/shared/lib/router'
 import { StorageKey } from '@/shared/lib/storage'
 
 type Tab = 'MY' | 'BOOKMARK'
 
-const NoteSearchPage = () => {
-  const [activeTab, setTab] = useQueryParam('/library/search', 'tab')
+const LibrarySearchPage = () => {
+  const [activeTab] = useQueryParam('/library/search', 'tab')
   const {
     inputValue,
     setInputValue,
@@ -84,24 +83,6 @@ const NoteSearchPage = () => {
       />
 
       <HeaderOffsetLayout className="relative h-full">
-        {/* 탭 */}
-        <Tabs value={activeTab} onValueChange={(tab) => setTab(tab as Tab)}>
-          <TabsList className="bg-surface-1 rounded-none h-fit p-0">
-            <TabsTrigger
-              className="typo-button-2 bg-surface-1 border-b border-divider data-[state=active]:border-b-2 data-[state=active]:border-black text-sub data-[state=active]:text-primary h-[48px] w-1/2 rounded-none"
-              value={'MY' as Tab}
-            >
-              내 퀴즈
-            </TabsTrigger>
-            <TabsTrigger
-              className="typo-button-2 bg-surface-1 border-b border-divider data-[state=active]:border-b-2 data-[state=active]:border-black text-sub data-[state=active]:text-primary h-[48px] w-1/2 rounded-none"
-              value={'BOOKMARK' as Tab}
-            >
-              북마크
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-
         {isFetching && <Loading center />}
 
         {/* 내 퀴즈 탭일 때 */}
@@ -194,4 +175,4 @@ const MyDocumentQuizSearchResults = ({ tab, documents, keyword }: DocumentQuizSe
   )
 }
 
-export default withHOC(NoteSearchPage, {})
+export default withHOC(LibrarySearchPage, {})
