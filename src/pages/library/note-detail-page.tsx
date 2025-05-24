@@ -73,6 +73,7 @@ import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { Textarea } from '@/shared/components/ui/textarea'
+import { useOnceEffect } from '@/shared/hooks'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -147,7 +148,7 @@ const NoteDetailPage = () => {
     }
   }, [])
 
-  useEffect(() => {
+  useOnceEffect(() => {
     if (!document) return
 
     const hasMultipleChoiceQuiz = document.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')

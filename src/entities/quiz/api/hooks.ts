@@ -143,13 +143,35 @@ export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
     mutationKey: QUIZ_KEYS.updateQuizInfo(quizId),
     mutationFn: (data: UpdateQuizInfoRequest) => updateQuizInfo(quizId, data),
     onMutate: async (data: UpdateQuizInfoRequest) => {
-      await queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), (oldData: GetSingleDocumentResponse) => ({
-        ...oldData,
-        quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, ...data } : quiz)),
-      }))
+      // 이전 쿼리 데이터를 캐시에서 가져옴
+      const previousData = queryClient.getQueryData<GetSingleDocumentResponse>(
+        DOCUMENT_KEYS.getSingleDocument(noteId)
+      )
+
+      // 낙관적 업데이트 실행
+      await queryClient.setQueryData(
+        DOCUMENT_KEYS.getSingleDocument(noteId), 
+        (oldData: GetSingleDocumentResponse) => ({
+          ...oldData,
+          quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, ...data } : quiz)),
+        })
+      )
+
+      // 이전 데이터 반환하여 오류 발생 시 복원할 수 있도록 함
+      return { previousData }
     },
     onSuccess: () => {
+      // 성공 시 서버에서 최신 데이터 가져오기
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(noteId) })
+    },
+    onError: (_, __, context) => {
+      // 실패 시 이전 상태로 복원
+      if (context?.previousData) {
+        queryClient.setQueryData(
+          DOCUMENT_KEYS.getSingleDocument(noteId),
+          context.previousData
+        )
+      }
     },
   })
 }
