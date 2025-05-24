@@ -44,8 +44,8 @@ const NoteCreateHeader = () => {
         <div className="center">
           <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
             <TabsList className="w-[210px]">
-              <TabsTrigger value="FILE">파일 첨부</TabsTrigger>
-              <TabsTrigger value="TEXT">텍스트 작성</TabsTrigger>
+              <TabsTrigger value="FILE">파일</TabsTrigger>
+              <TabsTrigger value="TEXT">텍스트</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -92,22 +92,28 @@ const NoteCreateContent = () => {
             <>
               <div className="flex items-center gap-1">
                 <IcInfo className="size-4 text-icon-sub" />
-                <Text typo="body-1-regular" color="caption">
-                  최소 {DOCUMENT_CONSTRAINTS.CONTENT.MIN}자 이상 입력해주세요
-                </Text>
+                {content.length < DOCUMENT_CONSTRAINTS.CONTENT.MIN ? (
+                  <Text typo="body-1-medium" color="caption">
+                    최소 {DOCUMENT_CONSTRAINTS.CONTENT.MIN}자 이상 입력해주세요
+                  </Text>
+                ) : (
+                  <Text typo="body-1-medium" color="caption">
+                    퀴즈를 만들 수 있어요
+                  </Text>
+                )}
               </div>
-              <Text typo="body-1-medium" color="secondary">
+              <Text typo="body-1-medium" color="sub">
                 <span
                   className={cn(
                     content.length < DOCUMENT_CONSTRAINTS.CONTENT.MIN ||
                       content.length > DOCUMENT_CONSTRAINTS.CONTENT.MAX
                       ? 'text-critical'
-                      : 'text-success',
+                      : 'text-secondary',
                   )}
                 >
-                  {content.length}
+                  {content.length.toLocaleString('ko-kr')}
                 </span>{' '}
-                / {DOCUMENT_CONSTRAINTS.CONTENT.MAX}
+                / {DOCUMENT_CONSTRAINTS.CONTENT.MAX.toLocaleString('ko-kr')}
               </Text>
             </>
           )}

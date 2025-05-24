@@ -60,11 +60,11 @@ export const NoteCreateWrite = () => {
         <div className="flex justify-between bg-base-1 items-center px-4 h-[40px] border-t border-divider absolute bottom-0 w-full max-w-xl">
           <div className="flex items-center gap-1">
             <IcInfo className="size-4 text-icon-sub" />
-            <Text typo="body-1-regular" color="caption">
+            <Text typo="body-1-medium" color="caption">
               최소 {DOCUMENT_CONSTRAINTS.CONTENT.MIN}자 이상 입력해주세요
             </Text>
           </div>
-          <Text typo="body-1-medium" color="secondary">
+          <Text typo="body-1-medium" color="sub">
             <span
               className={cn(
                 content.length < DOCUMENT_CONSTRAINTS.CONTENT.MIN || content.length > DOCUMENT_CONSTRAINTS.CONTENT.MAX

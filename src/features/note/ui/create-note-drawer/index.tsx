@@ -55,7 +55,7 @@ export const CreateNoteDrawer = () => {
         </Button>
       </DrawerTrigger>
       <DrawerContent height="md">
-        <div className={cn('overflow-y-scroll p-4', checkCreateActivate() && 'pb-[114px]')}>
+        <div className={cn('overflow-y-scroll', checkCreateActivate() && 'pb-[114px]')}>
           <div className="grid gap-2">
             {/* 카테고리 선택 섹션 */}
             <div className="border rounded-[12px] bg-surface-1 border-outline">
@@ -77,7 +77,7 @@ export const CreateNoteDrawer = () => {
                         setCategoryId(category.id)
                         setIsCategoryExpanded(false)
                       }}
-                      className="w-full px-4 py-[14px] hover:bg-gray-100 focus:outline-none text-left flex items-center justify-between"
+                      className="w-full px-4 py-[14px] border-t border-outline hover:bg-gray-100 focus:outline-none text-left flex items-center justify-between"
                     >
                       <span>{`${category.emoji}\u00A0\u00A0${category.name}`}</span>
                       {category.id === categoryId && <IcCheck className="size-6 text-icon-accent" />}
@@ -97,8 +97,8 @@ export const CreateNoteDrawer = () => {
               <CollapsibleSection isOpen={isQuizTypeExpanded}>
                 <div className="flex flex-col">
                   {[
-                    { value: 'MIX_UP', label: 'O/X' },
                     { value: 'MULTIPLE_CHOICE', label: '객관식' },
+                    { value: 'MIX_UP', label: 'O/X' },
                   ].map((qt) => (
                     <button
                       key={qt.value}
@@ -106,7 +106,7 @@ export const CreateNoteDrawer = () => {
                         setQuizType(qt.value as QuizType)
                         setIsQuizTypeExpanded(false)
                       }}
-                      className="w-full px-4 py-[14px] hover:bg-gray-100 focus:outline-none text-left flex items-center justify-between"
+                      className="w-full px-4 py-[14px] border-t border-outline hover:bg-gray-100 focus:outline-none text-left flex items-center justify-between"
                     >
                       <span>{qt.label}</span>
                       {qt.value === quizType && <IcCheck className="size-6 text-icon-accent" />}

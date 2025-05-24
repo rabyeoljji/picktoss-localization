@@ -119,7 +119,7 @@ export const QuizLoadingDrawer = () => {
             <Text typo="h4" color="primary" className="mt-4">
               퀴즈 생성 완료!
             </Text>
-            <Text typo="subtitle-2-medium" color="sub">
+            <Text typo="subtitle-2-medium" color="sub" className="mt-2">
               새로 생긴 문제를 지금 확인해보세요
             </Text>
           </div>
@@ -139,7 +139,8 @@ export const QuizLoadingDrawer = () => {
             </Button>
             <TextButton
               onClick={() => router.replace('/library/:noteId', { params: [String(documentId)] })}
-              className="mt-4"
+              size="lg"
+              className="text-secondary mt-[24px]"
             >
               다음에
             </TextButton>
@@ -160,7 +161,16 @@ export const QuizLoadingDrawer = () => {
             </Text>
           </div>
 
-          <QuizLoadingProgressBar progressOverride={progress} text="내용을 읽고 있어요" />
+          <QuizLoadingProgressBar
+            progressOverride={progress}
+            text={
+              progress < 20
+                ? '내용을 읽고 있어요'
+                : progress < 60
+                  ? '퀴즈로 만들 내용을 고르고 있어요'
+                  : '질문을 만들고 있어요'
+            }
+          />
         </div>
 
         <Loading size="small" className="center" />
