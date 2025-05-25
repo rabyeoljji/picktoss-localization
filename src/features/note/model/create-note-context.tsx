@@ -243,7 +243,6 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
 
     createDocument(createDocumentData, {
       onSuccess: ({ id }) => {
-        toast.success('문서가 생성되었습니다.')
         setParams({ isLoading: true, documentId: id })
         onSuccess()
       },

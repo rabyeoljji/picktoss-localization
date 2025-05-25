@@ -42,10 +42,10 @@ function TooltipContent({
       const containerSpan = arrowRef.current.parentElement
       if (containerSpan) {
         if (arrowPosition === 'left') {
-          containerSpan.style.left = '36px'
+          containerSpan.style.left = '0px'
           containerSpan.style.right = ''
         } else if (arrowPosition === 'right') {
-          containerSpan.style.right = '36px'
+          containerSpan.style.right = '0px'
           containerSpan.style.left = ''
         }
       }
