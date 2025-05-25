@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 
+import { toast } from 'sonner'
+
 import { useProgressAnimation } from '@/features/quiz/model/use-progress-animation'
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import QuizLoadingProgressBar from '@/features/quiz/ui/quiz-loading-progress-bar'
@@ -10,6 +12,7 @@ import { Button } from '@/shared/components/ui/button'
 import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
+import { useOnceEffect } from '@/shared/hooks'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 import { QuizType, useCreateNoteContext } from '../model/create-note-context'
@@ -68,6 +71,12 @@ export const QuizLoadingDrawer = () => {
   const toggleLoading = (state: boolean) => {
     setParams((prev) => ({ ...prev, isLoading: state, documentId: state ? documentId : 0 }))
   }
+
+  useOnceEffect(() => {
+    if (quizSetId != null) {
+      toast.success('문서가 생성되었습니다.')
+    }
+  }, [quizSetId])
 
   const renderQuizLoadingDrawerContent = () => {
     // 에러 발생 시 에러 화면 표시
@@ -131,6 +140,9 @@ export const QuizLoadingDrawer = () => {
                 setTimeout(() => {
                   router.replace('/progress-quiz/:quizSetId', {
                     params: [String(quizSetId)],
+                    search: {
+                      documentId,
+                    },
                   })
                 }, 500)
               }}
