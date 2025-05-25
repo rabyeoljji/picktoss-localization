@@ -1,4 +1,5 @@
 import { QuizSetType } from '@/pages/progress-quiz-page'
+import { format } from 'date-fns'
 
 import { BookmarkedSortOption, SortOption } from '@/entities/document/api'
 
@@ -89,6 +90,9 @@ export const RouteConfig = {
   },
   accountQuizAnalysis: {
     pathname: '/account/quiz-analysis',
+    search: {
+      month: format(new Date(), 'yyyy-MM') as string,
+    },
   },
   accountQuizRecord: {
     pathname: '/account/quiz-record',

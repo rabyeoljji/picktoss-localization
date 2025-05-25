@@ -80,6 +80,13 @@ const textColorStyles = {
   error: 'text-error',
   correct: 'text-correct',
   incorrect: 'text-incorrect',
+
+  it: 'text-it',
+  test: 'text-test',
+  study: 'text-study',
+  issue: 'text-issue',
+  language: 'text-language',
+  knowledge: 'text-knowledge',
 }
 
 export type Typo = keyof typeof typographyStyles

@@ -48,6 +48,13 @@
 
   --color-yellow: #ffe45f;
 
+  --color-category-it: #7994ff;
+  --color-category-test: #f8623f;
+  --color-category-study: #4d4b45;
+  --color-category-issue: #cec3b3;
+  --color-category-language: #a6e175;
+  --color-category-knowledge: #f4a6dd;
+
   --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 
   --safe-area-inset-top: env(safe-area-inset-top);

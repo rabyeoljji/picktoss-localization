@@ -25,6 +25,13 @@
   --background-color-correct: var(--color-green-200);
   --background-color-incorrect: var(--color-red-200);
   --background-color-critical: var(--color-red-500);
+
+  --background-color-it: var(--color-category-it);
+  --background-color-test: var(--color-category-test);
+  --background-color-study: var(--color-category-study);
+  --background-color-issue: var(--color-category-issue);
+  --background-color-language: var(--color-category-language);
+  --background-color-knowledge: var(--color-category-knowledge);
 }
 
 @theme border-color {
@@ -78,4 +85,11 @@
   --text-color-icon-disabled: var(--color-gray-100);
   --text-color-icon-correct: var(--color-green-500);
   --text-color-icon-incorrect: var(--color-red-500);
+
+  --text-color-it: var(--color-category-it);
+  --text-color-test: var(--color-category-test);
+  --text-color-study: var(--color-category-study);
+  --text-color-issue: var(--color-category-issue);
+  --text-color-language: var(--color-category-language);
+  --text-color-knowledge: var(--color-category-knowledge);
 }

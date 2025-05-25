@@ -59,7 +59,7 @@ export const useGetQuizWeeklyAnalysis = (startDate?: string, endDate?: string) =
 // 퀴즈 월단위 분석
 export const useGetQuizMonthlyAnalysis = (month?: string) => {
   return useQuery({
-    queryKey: QUIZ_KEYS.getQuizMonthlyAnalysis,
+    queryKey: [QUIZ_KEYS.getQuizMonthlyAnalysis, month],
     queryFn: () => getQuizMonthlyAnalysis(month),
   })
 }
@@ -144,18 +144,13 @@ export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
     mutationFn: (data: UpdateQuizInfoRequest) => updateQuizInfo(quizId, data),
     onMutate: async (data: UpdateQuizInfoRequest) => {
       // 이전 쿼리 데이터를 캐시에서 가져옴
-      const previousData = queryClient.getQueryData<GetSingleDocumentResponse>(
-        DOCUMENT_KEYS.getSingleDocument(noteId)
-      )
+      const previousData = queryClient.getQueryData<GetSingleDocumentResponse>(DOCUMENT_KEYS.getSingleDocument(noteId))
 
       // 낙관적 업데이트 실행
-      await queryClient.setQueryData(
-        DOCUMENT_KEYS.getSingleDocument(noteId), 
-        (oldData: GetSingleDocumentResponse) => ({
-          ...oldData,
-          quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, ...data } : quiz)),
-        })
-      )
+      await queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), (oldData: GetSingleDocumentResponse) => ({
+        ...oldData,
+        quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, ...data } : quiz)),
+      }))
 
       // 이전 데이터 반환하여 오류 발생 시 복원할 수 있도록 함
       return { previousData }
@@ -167,10 +162,7 @@ export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
     onError: (_, __, context) => {
       // 실패 시 이전 상태로 복원
       if (context?.previousData) {
-        queryClient.setQueryData(
-          DOCUMENT_KEYS.getSingleDocument(noteId),
-          context.previousData
-        )
+        queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), context.previousData)
       }
     },
   })

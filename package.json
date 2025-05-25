@@ -63,6 +63,7 @@
     "react-hook-form": "^7.54.2",
     "react-lottie-player": "^2.1.0",
     "react-router": "^7.2.0",
+    "recharts": "^2.15.3",
     "remeda": "^2.21.2",
     "sonner": "^2.0.1",
     "styled-components": "^6.1.16",
