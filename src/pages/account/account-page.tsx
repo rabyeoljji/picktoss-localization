@@ -3,6 +3,8 @@ import { useState } from 'react'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import InviteDrawer from '@/features/invite/ui/invite-drawer'
+
 import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 
 import { IcChevronRight, IcDisclaimer, IcMy, IcNotification, IcRecord } from '@/shared/assets/icon'
@@ -149,21 +151,25 @@ const AccountPage = () => {
                   </Link>
                 </div>
 
-                <div className="bg-accent rounded-[8px] py-[16px] px-[24px] flex items-center gap-[16px]">
-                  <div className="flex-1 flex flex-col gap-[4px]">
-                    <Text typo="body-1-medium" color="secondary">
-                      픽토스 초대장 보내기
-                    </Text>
-                    <Text typo="subtitle-1-bold">
-                      초대할 때마다{' '}
-                      <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                        별 50개!
-                      </Text>
-                    </Text>
-                  </div>
+                <InviteDrawer
+                  triggerComponent={
+                    <div className="bg-accent rounded-[8px] py-[16px] px-[24px] flex items-center gap-[16px]">
+                      <div className="flex-1 flex flex-col gap-[4px]">
+                        <Text typo="body-1-medium" color="secondary">
+                          픽토스 초대장 보내기
+                        </Text>
+                        <Text typo="subtitle-1-bold">
+                          초대할 때마다{' '}
+                          <Text as={'span'} typo="subtitle-1-bold" color="accent">
+                            별 50개!
+                          </Text>
+                        </Text>
+                      </div>
 
-                  <ImgInviteStar width={56} height={56} />
-                </div>
+                      <ImgInviteStar width={56} height={56} />
+                    </div>
+                  }
+                />
               </div>
             </div>
           </div>

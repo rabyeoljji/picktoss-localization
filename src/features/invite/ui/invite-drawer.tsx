@@ -145,13 +145,14 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                   </SquareButton>
                 }
                 disabled
+                className="disabled:text-sub truncate"
               />
 
               {!inviteLink && (
                 <div className="center flex w-fit gap-[8px]">
-                  <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s]"></div>
-                  <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s] [animation-delay:0.2s] "></div>
-                  <div className="size-[8px] rounded-full bg-white animate-pulse [animation-duration:1s] [animation-delay:0.4s]"></div>
+                  <div className="size-[8px] rounded-full bg-[var(--color-gray-500)] animate-pulse [animation-duration:1s]"></div>
+                  <div className="size-[8px] rounded-full bg-[var(--color-gray-500)] animate-pulse [animation-duration:1s] [animation-delay:0.2s] "></div>
+                  <div className="size-[8px] rounded-full bg-[var(--color-gray-500)] animate-pulse [animation-duration:1s] [animation-delay:0.4s]"></div>
                 </div>
               )}
             </div>
