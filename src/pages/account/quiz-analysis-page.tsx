@@ -183,7 +183,7 @@ const QuizAnalysisPage = () => {
                   </Text>
                 ) : (
                   <Text typo="h4">
-                    <Text as={'span'} typo="h4" color="it">
+                    <Text as={'span'} typo="h4" style={{ color: '#' + (maxCategory && maxCategory.categoryColor) }}>
                       {maxCategory && maxCategory.categoryName}
                     </Text>
                     에 가장 {isPrevMonth ? '집중했어요' : '집중하고 있어요'}
@@ -209,7 +209,7 @@ const QuizAnalysisPage = () => {
                               'h-full border-r-[2px] border-white',
                               index === monthlyAnalysisData?.categories.length - 1 && 'border-none',
                             )}
-                            style={{ width: `${width}%`, backgroundColor: categoryColor ?? '#7994ff' }}
+                            style={{ width: `${width}%`, backgroundColor: '#' + categoryColor }}
                           />
                         )
                       },
@@ -226,7 +226,7 @@ const QuizAnalysisPage = () => {
                             <div className="flex items-center">
                               <div
                                 className="mr-[8px] size-[12px] rounded-[4px]"
-                                style={{ backgroundColor: categoryColor ?? '#7994ff' }}
+                                style={{ backgroundColor: '#' + categoryColor }}
                               />
                               <Text typo="body-1-bold" className="w-[72px]">
                                 {categoryName}
