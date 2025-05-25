@@ -11,7 +11,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     <QueryClientProvider client={queryClient}>
       <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
         {children}
-        <Toaster expand position="bottom-center" duration={3000} />
+        <Toaster expand position="bottom-center" duration={3000} style={{ marginBottom: '40px' }} />
       </GoogleOAuthProvider>
     </QueryClientProvider>
   )
