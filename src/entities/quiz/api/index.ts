@@ -60,10 +60,23 @@ export interface QuizAnswerRateAnalysisDto {
   correctAnswerCount: number
 }
 
+export interface QuizCategoryRateAnalysisDto {
+  categoryName: string
+  categoryColor: string
+  totalQuizCount: number
+}
+
+export interface QuizTypesAnalysisDto {
+  multipleChoiceQuizCount: number
+  mixUpQuizCount: number
+}
+
 export interface GetQuizWeeklyAnalysisResponse {
   quizzes: QuizAnswerRateAnalysisDto[]
-  averageDailyQuizCount: number
+  categories: QuizCategoryRateAnalysisDto[]
+  quizTypeDto: QuizTypesAnalysisDto
   averageCorrectRate: number
+  averageDailyQuizCount: number
   weeklyTotalQuizCount: number
 }
 
@@ -82,10 +95,12 @@ export const getQuizWeeklyAnalysis = async (
 // GET: 퀴즈 월단위 분석
 export interface GetQuizMonthlyAnalysisResponse {
   quizzes: QuizAnswerRateAnalysisDto[]
-  monthlyTotalQuizCount: number
-  monthlyTotalCorrectQuizCount: number
+  categories: QuizCategoryRateAnalysisDto[]
+  quizTypes: QuizTypesAnalysisDto
   averageCorrectAnswerRate: number
-  quizCountDifferenceFromLastMonth: number
+  averageDailyQuizCount: number
+  maxSolvedQuizCount: number
+  monthlyTotalQuizCount: number
 }
 
 export const getQuizMonthlyAnalysis = async (month?: string): Promise<GetQuizMonthlyAnalysisResponse> => {
