@@ -149,7 +149,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
               />
 
               {!inviteLink && (
-                <div className="center flex w-fit gap-[8px]">
+                <div className="absolute top-[50px] left-1/2 -translate-x-1/2 flex w-fit gap-[8px]">
                   <div className="size-[8px] rounded-full bg-[var(--color-gray-500)] animate-pulse [animation-duration:1s]"></div>
                   <div className="size-[8px] rounded-full bg-[var(--color-gray-500)] animate-pulse [animation-duration:1s] [animation-delay:0.2s] "></div>
                   <div className="size-[8px] rounded-full bg-[var(--color-gray-500)] animate-pulse [animation-duration:1s] [animation-delay:0.4s]"></div>
