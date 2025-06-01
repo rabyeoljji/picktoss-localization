@@ -101,6 +101,8 @@ const QuizVerticalSwipe = () => {
 
   // 카테고리 변경 시 데이터 초기화
   useEffect(() => {
+    setActiveIndex(0)
+    swiperRef.current?.slideTo(0)
     setFetchParams({ categoryId, page: 0 })
     setDocuments([])
     setHasMore(true)
