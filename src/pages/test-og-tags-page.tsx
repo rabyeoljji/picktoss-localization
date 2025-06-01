@@ -12,6 +12,7 @@ import { Text } from '@/shared/components/ui/text'
  */
 const TestOgTagsPage = () => {
   const [title, setTitle] = useState('PickToss - 잠깐의 퀴즈로 만드는 시험 합격 루틴')
+  const [description, setDescription] = useState('Description')
   const [url, setUrl] = useState(`${window.location.origin}`)
   const [image, setImage] = useState(`${window.location.origin}/images/share-thumbnail.png`)
 
@@ -20,6 +21,7 @@ const TestOgTagsPage = () => {
       try {
         await navigator.share({
           title,
+          text: description,
           url,
         })
         console.log('공유 성공')
@@ -54,6 +56,13 @@ const TestOgTagsPage = () => {
 
         <div>
           <Text typo="body-2-medium" className="mb-1">
+            설명
+          </Text>
+          <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+        </div>
+
+        <div>
+          <Text typo="body-2-medium" className="mb-1">
             이미지 URL
           </Text>
           <Input value={image} onChange={(e) => setImage(e.target.value)} />
@@ -74,6 +83,9 @@ const TestOgTagsPage = () => {
           </div>
           <Text typo="subtitle-2-medium" className="line-clamp-1">
             {title}
+          </Text>
+          <Text typo="body-2-medium" className="text-gray-400 mt-1 text-xs">
+            {description}
           </Text>
           <Text typo="body-2-medium" className="text-gray-400 mt-1 text-xs">
             {url}
