@@ -62,7 +62,7 @@ export const QUIZ_KEYS = {
   createQuizSet: (documentId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.createQuizSet(documentId)),
 
   // PATCH
-  updateWrongAnswerConfirm: (quizId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.updateWrongAnswerConfirm(quizId)),
+  updateWrongAnswerConfirm: createKey(QUIZ, QUIZ_ENDPOINTS.updateWrongAnswerConfirm),
   updateQuizInfo: (quizId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.updateQuizInfo(quizId)),
   updateQuizResult: (documentId: number, quizSetId: number) =>
     createKey(QUIZ, QUIZ_ENDPOINTS.updateQuizResult(documentId, quizSetId)),

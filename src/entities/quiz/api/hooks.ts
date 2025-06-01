@@ -128,10 +128,21 @@ export const useCreateQuizSet = (documentId: number) => {
 // PATCH 훅
 
 // 퀴즈 오답 확인(이해했습니다)
-export const useUpdateWrongAnswerConfirm = (quizId: number) => {
+export const useUpdateWrongAnswerConfirm = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationKey: QUIZ_KEYS.updateWrongAnswerConfirm(quizId),
-    mutationFn: () => updateWrongAnswerConfirm(quizId),
+    mutationKey: QUIZ_KEYS.updateWrongAnswerConfirm,
+    mutationFn: ({ noteId: _, quizId }: { noteId: number; quizId: number }) => updateWrongAnswerConfirm(quizId),
+    onMutate: async ({ noteId, quizId }) => {
+      await queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), (oldData: GetSingleDocumentResponse) => ({
+        ...oldData,
+        quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, reviewNeeded: false } : quiz)),
+      }))
+    },
+    onSuccess: (_, { noteId }) => {
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(noteId) })
+    },
   })
 }
 

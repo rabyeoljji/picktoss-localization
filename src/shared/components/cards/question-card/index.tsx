@@ -19,19 +19,27 @@ const QuestionCardContext = createContext<{
 const useQuestionCardContext = () => useContext(QuestionCardContext)
 
 // 2. QuestionCard 컴포넌트 (Provider 적용)
-export const QuestionCard = ({ children }: { children: React.ReactNode }) => {
+export const QuestionCard = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   const [isExplanationOpen, setExplanationOpen] = useState(false)
   return (
     <QuestionCardContext.Provider value={{ isExplanationOpen, setExplanationOpen }}>
-      <div className="pt-5 rounded-[12px] bg-surface-1 border border-outline">{children}</div>
+      <div className={cn('pt-5 rounded-[12px] bg-surface-1 border border-outline', className)}>{children}</div>
     </QuestionCardContext.Provider>
   )
 }
 
 // 서브컴포넌트: Header, Question 등은 그대로 둡니다.
-const QuestionCardHeader = ({ order, right }: { order: number; right?: React.ReactNode }) => {
+const QuestionCardHeader = ({
+  order,
+  right,
+  className,
+}: {
+  order: number
+  right?: React.ReactNode
+  className?: string
+}) => {
   return (
-    <div className="h-6 flex items-center justify-between px-4">
+    <div className={cn('h-6 flex items-center justify-between px-4', className)}>
       <Text typo="subtitle-1-bold" color="accent">
         Q{order}.
       </Text>
@@ -40,9 +48,9 @@ const QuestionCardHeader = ({ order, right }: { order: number; right?: React.Rea
   )
 }
 
-const QuestionCardQuestion = ({ children }: { children: React.ReactNode }) => {
+const QuestionCardQuestion = ({ children, className }: { children: React.ReactNode; className?: string }) => {
   return (
-    <div className="mt-2 px-4">
+    <div className={cn('mt-2 px-4', className)}>
       <Text typo="subtitle-2-bold" color="primary">
         {children}
       </Text>
@@ -56,17 +64,19 @@ const QuestionCardMultiple = ({
   answerIndex,
   showIndexs,
   showAnswer,
+  className,
 }: {
   options: string[]
   answerIndex: number
   showIndexs?: number[]
   showAnswer?: boolean
+  className?: string
 }) => {
   const { isExplanationOpen } = useQuestionCardContext()
   // 해설이 열려있거나, showAnswer prop이 true이면 정답 인덱스를 자동으로 표시
   const finalShowIndexs = isExplanationOpen || showAnswer ? [...(showIndexs || []), answerIndex] : showIndexs || []
   return (
-    <div className="px-4 mt-4 mb-3">
+    <div className={cn('px-4 mt-4 mb-3', className)}>
       <div className="flex flex-col gap-2">
         {options.map((option, index) => (
           <div key={index} className="flex gap-2 items-start">
@@ -103,16 +113,18 @@ const QuestionCardOX = ({
   showIndexs,
   disabledIndexs,
   showAnswer,
+  className,
 }: {
   answerIndex: number
   showIndexs?: number[]
   disabledIndexs?: number[]
   showAnswer?: boolean
+  className?: string
 }) => {
   const { isExplanationOpen } = useQuestionCardContext()
   const finalShowIndexs = isExplanationOpen || showAnswer ? [...(showIndexs || []), answerIndex] : showIndexs || []
   return (
-    <div className="px-4 mt-4 mb-3">
+    <div className={cn('px-4 mt-4 mb-3', className)}>
       <div className="px-[11.5px] flex items-center gap-2 w-full">
         <div
           className={cn(
@@ -143,11 +155,15 @@ const QuestionCardOX = ({
 const QuestionCardExplanation = ({
   children,
   open,
+  hideToggle,
   onOpenChange,
+  className,
 }: {
   children: string
   open?: boolean
+  hideToggle?: boolean
   onOpenChange?: (open: boolean) => void
+  className?: string
 }) => {
   const { isExplanationOpen, setExplanationOpen } = useQuestionCardContext()
 
@@ -184,7 +200,7 @@ const QuestionCardExplanation = ({
       <motion.div
         initial={false}
         layout
-        className={cn('px-4 overflow-hidden', effectiveOpen && 'mt-6 mb-3')}
+        className={cn('px-4 overflow-hidden', effectiveOpen && 'mt-6 mb-3', className)}
         animate={{ height: effectiveOpen && contentHeight ? contentHeight : 0 }}
         transition={{ duration: 0.3, ease: 'easeOut' }}
       >
@@ -194,18 +210,20 @@ const QuestionCardExplanation = ({
           </Text>
         </div>
       </motion.div>
-      <button className="w-full flex-center border-t border-divider" onClick={handleToggle}>
-        <div className="self-stretch h-11 flex-center gap-[4px]">
-          <Text typo="body-2-medium" color="sub">
-            {effectiveOpen ? '닫기' : '해설 보기'}
-          </Text>
-          {effectiveOpen ? (
-            <IcChevronUp className="size-[12px] text-icon-sub" />
-          ) : (
-            <IcChevronDown className="size-[12px] text-icon-sub" />
-          )}
-        </div>
-      </button>
+      {hideToggle ? null : (
+        <button className="w-full flex-center border-t border-divider" onClick={handleToggle}>
+          <div className="self-stretch h-11 flex-center gap-[4px]">
+            <Text typo="body-2-medium" color="sub">
+              {effectiveOpen ? '닫기' : '해설 보기'}
+            </Text>
+            {effectiveOpen ? (
+              <IcChevronUp className="size-[12px] text-icon-sub" />
+            ) : (
+              <IcChevronDown className="size-[12px] text-icon-sub" />
+            )}
+          </div>
+        </button>
+      )}
     </div>
   )
 }

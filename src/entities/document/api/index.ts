@@ -93,6 +93,7 @@ export interface GetSingleDocumentResponse {
     | 'PARTIAL_SUCCESS'
     | 'QUIZ_GENERATION_ERROR'
   quizzes: GetSingleDocumentQuizDto[]
+  reviewNeeded: boolean
 }
 
 export const getSingleDocument = async (documentId: number): Promise<GetSingleDocumentResponse> => {

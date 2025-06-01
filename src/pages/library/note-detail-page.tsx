@@ -19,7 +19,12 @@ import {
   useUpdateDocumentEmoji,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
-import { useCreateQuizSet, useDeleteQuiz, useUpdateQuizInfo } from '@/entities/quiz/api/hooks'
+import {
+  useCreateQuizSet,
+  useDeleteQuiz,
+  useUpdateQuizInfo,
+  useUpdateWrongAnswerConfirm,
+} from '@/entities/quiz/api/hooks'
 
 import {
   IcArrange,
@@ -116,6 +121,8 @@ const NoteDetailPage = () => {
   const { mutate: updateDocumentCategory, isPending: isUpdatingDocumentCategory } = useUpdateDocumentCategory(
     Number(noteId),
   )
+
+  const { mutate: updateWrongAnswerConfirm } = useUpdateWrongAnswerConfirm()
 
   const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
@@ -945,12 +952,52 @@ const NoteDetailPage = () => {
 
       {/* TODO: 복습 픽 drawer */}
       <Drawer open={reviewPickOpen} onOpenChange={setReviewPickOpen}>
-        <DrawerContent height="full">
+        <DrawerContent height="full" className="pb-[40px]">
           <DrawerHeader>
             <DrawerTitle>복습 Pick</DrawerTitle>
             <DrawerDescription>내가 틀렸던 문제들을 확인해보세요</DrawerDescription>
           </DrawerHeader>
-          <div>{document?.quizzes.filter((quiz) => quiz.reviewNeeded).map((quiz) => <div key={quiz.id}></div>)}</div>
+          <div className="overflow-y-scroll">
+            {document?.quizzes
+              .filter((quiz) => quiz.reviewNeeded)
+              .map((quiz, index) => (
+                <div key={quiz.id}>
+                  <QuestionCard key={quiz.id} className="border-none">
+                    <QuestionCard.Header order={index + 1} className="px-0" />
+                    <QuestionCard.Question className="px-0">{quiz.question}</QuestionCard.Question>
+                    {quiz.quizType === 'MIX_UP' ? (
+                      <QuestionCard.OX
+                        answerIndex={quiz.answer === 'correct' ? 0 : 1}
+                        showAnswer={true}
+                        className="px-0"
+                      />
+                    ) : (
+                      <QuestionCard.Multiple
+                        options={quiz.options}
+                        answerIndex={quiz.options.indexOf(quiz.answer)}
+                        showAnswer={true}
+                        className="px-0"
+                      />
+                    )}
+                    <QuestionCard.Explanation hideToggle open={true} className="px-0">
+                      {quiz.explanation}
+                    </QuestionCard.Explanation>
+                  </QuestionCard>
+                  <SquareButton
+                    variant="secondary"
+                    className="w-full mt-4"
+                    onClick={() =>
+                      updateWrongAnswerConfirm({
+                        noteId: Number(noteId),
+                        quizId: quiz.id,
+                      })
+                    }
+                  >
+                    이해했어요
+                  </SquareButton>
+                </div>
+              ))}
+          </div>
         </DrawerContent>
       </Drawer>
 
