@@ -86,6 +86,7 @@ const QuizVerticalSwipe = () => {
             doc.id === updatedBookmarkInfo.id
               ? {
                   ...doc,
+                  quizzes: doc.quizzes,
                   isBookmarked: updatedBookmarkInfo.isBookmarked ?? false,
                   bookmarkCount: updatedBookmarkInfo.bookmarkCount ?? 0,
                 }

@@ -307,7 +307,7 @@ const HomePage = () => {
             onDrag={handleDrag}
             onDragEnd={handleDragEnd}
           >
-            <QuizSettingDrawer open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+            <QuizSettingDrawer quizzes={quizzes} open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
             {quizState.status !== 'incorrect' ? (
               <>

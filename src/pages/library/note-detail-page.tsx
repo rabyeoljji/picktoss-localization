@@ -185,9 +185,8 @@ const NoteDetailPage = () => {
   const hasMultipleChoiceQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
   const hasMixUpQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MIX_UP')
 
-  const quizzes = (
+  const quizzes =
     quizType === 'ALL' ? document?.quizzes : document?.quizzes?.filter((quiz) => quiz.quizType === quizType)
-  )?.sort((a, b) => b.id - a.id)
 
   const mixUpQuizCount = document?.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length ?? 0
 
@@ -655,7 +654,7 @@ const NoteDetailPage = () => {
                 if (!validateForm()) {
                   return
                 }
-                
+
                 // 변경사항 여부 확인
                 const originalData = {
                   question: quiz.question,
@@ -663,34 +662,31 @@ const NoteDetailPage = () => {
                   explanation: quiz.explanation,
                   options: quiz.options,
                 }
-                
+
                 const newData = {
                   question,
                   answer,
                   explanation,
                   options,
                 }
-                
+
                 // JSON.stringify를 통해 두 객체를 비교
                 if (JSON.stringify(originalData) === JSON.stringify(newData)) {
                   // 변경사항이 없으면 API 호출 없이 드로어만 닫기
                   setEditTargetQuizId(null)
                   return
                 }
-                
+
                 // 변경사항이 있을 경우 API 호출
-                updateQuiz(
-                  newData,
-                  {
-                    onError: () => {
-                      toast('퀴즈 편집에 실패했습니다.')
-                    },
-                    onSettled: () => {
-                      // 드로어 닫기
-                      setEditTargetQuizId(null)
-                    },
+                updateQuiz(newData, {
+                  onError: () => {
+                    toast('퀴즈 편집에 실패했습니다.')
                   },
-                )
+                  onSettled: () => {
+                    // 드로어 닫기
+                    setEditTargetQuizId(null)
+                  },
+                })
               }
 
               return (

@@ -1,3 +1,5 @@
+import { GetAllQuizzesDto } from '@/entities/quiz/api'
+
 import { IcControl } from '@/shared/assets/icon'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Button } from '@/shared/components/ui/button'
@@ -6,7 +8,15 @@ import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam } from '@/shared/lib/router'
 
-export const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+export const QuizSettingDrawer = ({
+  quizzes,
+  open,
+  onOpenChange,
+}: {
+  quizzes: GetAllQuizzesDto[]
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) => {
   const [displayQuizType, setDisplayQuizType] = useQueryParam('/', 'displayQuizType')
 
   return (
@@ -45,15 +55,47 @@ export const QuizSettingDrawer = ({ open, onOpenChange }: { open: boolean; onOpe
                     </Text>
                   </Label>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MULTIPLE_CHOICE" />
+                    <RadioGroupItem
+                      value="MULTIPLE_CHOICE"
+                      disabled={quizzes?.every((quiz) => quiz.quizType !== 'MULTIPLE_CHOICE')}
+                    />
                     <Text typo="subtitle-2-medium" color="primary">
                       객관식
                     </Text>
                   </Label>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MIX_UP" />
+                    <RadioGroupItem value="MIX_UP" disabled={quizzes?.every((quiz) => quiz.quizType !== 'MIX_UP')} />
                     <Text typo="subtitle-2-medium" color="primary">
                       O/X
+                    </Text>
+                  </Label>
+                </RadioGroup>
+              </div>
+            </div>
+            <div className="grid gap-2 mt-[40px]">
+              <Text typo="subtitle-2-bold" color="secondary">
+                문제 범위
+              </Text>
+              <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
+                <RadioGroup name="quizType" defaultValue={displayQuizType}>
+                  <Label className="flex items-center gap-3 w-full py-[10px]">
+                    <RadioGroupItem value="ALL" />
+                    <Text typo="subtitle-2-medium" color="primary">
+                      전체
+                    </Text>
+                  </Label>
+                  {/* TODO: 백엔드에 flag 요청해둠 */}
+                  <Label className="flex items-center gap-3 w-full py-[10px]">
+                    <RadioGroupItem value="MULTIPLE_CHOICE" />
+                    <Text typo="subtitle-2-medium" color="primary">
+                      내가 생성한 퀴즈만
+                    </Text>
+                  </Label>
+
+                  <Label className="flex items-center gap-3 w-full py-[10px]">
+                    <RadioGroupItem value="MIX_UP" />
+                    <Text typo="subtitle-2-medium" color="primary">
+                      북마크한 퀴즈만
                     </Text>
                   </Label>
                 </RadioGroup>

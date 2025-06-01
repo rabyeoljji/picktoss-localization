@@ -62,6 +62,10 @@ export const useGetSingleDocument = (documentId: number) => {
     retry: false,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
+    select: (data) => ({
+      ...data,
+      quizzes: data.quizzes.sort((a, b) => b.id - a.id),
+    }),
   })
 }
 
@@ -89,7 +93,7 @@ export const useGetDocumentQuizzes = ({
   return useQuery({
     queryKey: [...DOCUMENT_KEYS.getDocumentQuizzes(documentId), quizType],
     queryFn: () => getDocumentQuizzes(documentId, quizType),
-    select: (data) => data.quizzes,
+    select: (data) => data.quizzes.sort((a, b) => b.id - a.id),
   })
 }
 
@@ -190,6 +194,13 @@ export const useGetPublicDocuments = ({
     queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId, page],
     queryFn: () => getPublicDocuments({ categoryId, page, pageSize }),
     enabled: enabled ?? true,
+    select: (data) => ({
+      ...data,
+      documents: data.documents.map((doc) => ({
+        ...doc,
+        quizzes: doc.quizzes.sort((a, b) => b.id - a.id),
+      })),
+    }),
   })
 }
 
@@ -198,6 +209,10 @@ export const useGetPublicSingleDocument = (documentId: number) => {
     queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId),
     queryFn: () => getPublicSingleDocument(documentId),
     enabled: !!documentId,
+    select: (data) => ({
+      ...data,
+      quizzes: data.quizzes.sort((a, b) => b.id - a.id),
+    }),
   })
 }
 
