@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router'
+import { useLocation, useParams } from 'react-router'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { Square } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { withHOC } from '@/app/hoc/with-page-config'
@@ -46,6 +47,7 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
+  DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
@@ -69,6 +71,7 @@ import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Skeleton } from '@/shared/components/ui/skeleton'
 import { Slider } from '@/shared/components/ui/slider'
 import { Spinner } from '@/shared/components/ui/spinner'
+import { SquareButton } from '@/shared/components/ui/square-button'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
@@ -79,6 +82,7 @@ import { cn } from '@/shared/lib/utils'
 
 const NoteDetailPage = () => {
   const router = useRouter()
+  const { pathname } = useLocation()
 
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
@@ -208,9 +212,33 @@ const NoteDetailPage = () => {
                 {document?.name}
               </Text>
             )}
-            <Button size="sm" left={<IcUpload />}>
-              공유하기
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button size="sm" left={<IcUpload />}>
+                  공유하기
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader className="typo-h4">전공 필기 요약</DialogHeader>
+                <div className="mt-[20px] mb-[32px]">
+                  <div className="relative bg-disabled rounded-[8px]">
+                    <Input
+                      disabled={true}
+                      value={`${window.location.origin}/${pathname}`}
+                      className="w-[calc(100%-70px)] truncate"
+                    />
+                    <SquareButton
+                      variant="tertiary"
+                      size="sm"
+                      className="absolute right-[12px] bottom-1/2 translate-y-1/2"
+                    >
+                      복사
+                    </SquareButton>
+                  </div>
+                </div>
+                <DialogCTA label="링크 공유하기" onClick={() => {}} hasClose />
+              </DialogContent>
+            </Dialog>
           </div>
         }
       />
