@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
 import { Text } from '@/shared/components/ui/text'
-import { Link } from '@/shared/lib/router'
+import { Link, useRouter } from '@/shared/lib/router'
 
 const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumentsDto[] }) => {
   return (
@@ -44,17 +44,16 @@ const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumen
 
       <div className="py-[16px] h-fit w-full flex flex-col gap-[8px]">
         {documents.map((document) => (
-          <Link key={document.id} to={'/explore/detail/:noteId'} params={[String(document.id)]}>
-            <BookmarkedCard
-              id={document.id}
-              emoji={document.emoji}
-              name={document.name}
-              previewContent={document.previewContent}
-              totalQuizCount={document.totalQuizCount}
-              playedCount={document.tryCount}
-              bookmarkCount={document.bookmarkCount}
-            />
-          </Link>
+          <BookmarkedCard
+            key={document.id}
+            id={document.id}
+            emoji={document.emoji}
+            name={document.name}
+            previewContent={document.previewContent}
+            totalQuizCount={document.totalQuizCount}
+            playedCount={document.tryCount}
+            bookmarkCount={document.bookmarkCount}
+          />
         ))}
       </div>
     </div>
@@ -82,6 +81,8 @@ const BookmarkedCard = ({
   playedCount,
   bookmarkCount,
 }: BookmarkedCardProps) => {
+  const router = useRouter()
+
   const { mutate: deleteBookmark } = useDeleteDocumentBookmark(id)
   const { mutate: createBookmark } = useCreateDocumentBookmark(id)
 
@@ -99,7 +100,12 @@ const BookmarkedCard = ({
   }
 
   return (
-    <BookmarkHorizontalCard>
+    <BookmarkHorizontalCard
+      onClick={() => {
+        router.push('/explore/detail/:noteId', { params: [String(id)] })
+      }}
+      className="cursor-pointer"
+    >
       <BookmarkHorizontalCard.Left content={emoji} />
 
       <BookmarkHorizontalCard.Content>
@@ -114,7 +120,15 @@ const BookmarkedCard = ({
       </BookmarkHorizontalCard.Content>
 
       <BookmarkHorizontalCard.Right
-        content={<IcBookmarkFilled className="size-[20px]" onClick={handleDeleteBookmark} />}
+        content={
+          <IcBookmarkFilled
+            className="size-[20px]"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleDeleteBookmark()
+            }}
+          />
+        }
       />
     </BookmarkHorizontalCard>
   )

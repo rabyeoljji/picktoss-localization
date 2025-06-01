@@ -2,18 +2,19 @@ import { IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
-interface Props {
+interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   className?: HTMLElement['className']
 }
 
-export const BookmarkHorizontalCard = ({ children, className }: Props) => {
+export const BookmarkHorizontalCard = ({ children, className, ...props }: Props) => {
   return (
     <div
       className={cn(
         `relative flex h-[104px] max-w-full items-center overflow-hidden rounded-[16px] bg-white pl-[12px] pr-[16px] py-[19px] shrink-0 cursor-pointer`,
         className,
       )}
+      {...props}
     >
       <div className="relative flex h-full w-full items-center rounded-[16px]">{children}</div>
     </div>
