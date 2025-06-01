@@ -202,12 +202,10 @@ const ExploreDetailPage = () => {
       <Header
         left={<BackButton />}
         content={
-          <div className={cn('flex items-center w-full', showTitleInHeader ? 'justify-between' : 'justify-end')}>
-            {showTitleInHeader && (
-              <Text typo="subtitle-2-medium" className="text-ellipsis overflow-hidden whitespace-nowrap">
-                {document?.name}
-              </Text>
-            )}
+          <div className={cn('flex items-center w-full justify-between')}>
+            <Text typo="subtitle-2-medium" className="text-ellipsis overflow-hidden whitespace-nowrap">
+              {document?.name}
+            </Text>
             <div className="flex items-center text-icon-secondary">
               <button onClick={handleShare} className="size-[40px] flex-center">
                 <IcUpload className="size-[24px]" />

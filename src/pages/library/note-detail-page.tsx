@@ -205,12 +205,10 @@ const NoteDetailPage = () => {
       <Header
         left={<BackButton />}
         content={
-          <div className={cn('flex items-center w-full pr-4', showTitleInHeader ? 'justify-between' : 'justify-end')}>
-            {showTitleInHeader && (
-              <Text typo="subtitle-2-medium" className="ml-2 text-ellipsis overflow-hidden whitespace-nowrap">
-                {document?.name}
-              </Text>
-            )}
+          <div className={cn('flex items-center w-full pr-4 justify-between')}>
+            <Text typo="subtitle-2-medium" className="ml-2 text-ellipsis overflow-hidden whitespace-nowrap">
+              {document?.name}
+            </Text>
             <Dialog>
               <DialogTrigger asChild>
                 <Button size="sm" left={<IcUpload />}>
