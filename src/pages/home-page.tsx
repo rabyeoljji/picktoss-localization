@@ -276,9 +276,9 @@ const HomePage = () => {
         className="bg-surface-2"
       />
 
-      {!isLoading && quizzes?.length === 0 && <InfoCarousel />}
+      {!isLoading && quizzes?.length === 0 && quizData?.quizzes.length === 0 && <InfoCarousel />}
 
-      {currQuiz && (
+      {(quizData?.quizzes.length ?? 0) > 0 && (
         <HeaderOffsetLayout className="px-3">
           {!isRefreshing ? (
             <Text
@@ -294,97 +294,115 @@ const HomePage = () => {
             </div>
           )}
 
-          <motion.div
-            className={cn(
-              'mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 relative overflow-hidden z-50 h-[62svh]',
-              quizState.status === 'incorrect' && 'px-[32px] pt-[64px] pb-6',
-            )}
-            key={currQuiz.id}
-            drag="y"
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.6}
-            initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
-            animate={{
-              opacity: 1,
-              x: 0,
-              y: isRefreshing ? pullDistance : 0,
-            }}
-            transition={{
-              opacity: { duration: 0.3 },
-              x: { duration: 0.3 },
-              y: {
-                type: 'spring',
-                stiffness: 400,
-                damping: 40,
-              },
-            }}
-            onDrag={handleDrag}
-            onDragEnd={handleDragEnd}
-          >
-            <QuizSettingDrawer quizzes={quizzes} open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
+          {currQuiz ? (
+            <motion.div
+              className={cn(
+                'relative mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 relative overflow-hidden z-50 h-[62svh]',
+                quizState.status === 'incorrect' && 'px-[32px] pt-[64px] pb-6',
+              )}
+              key={currQuiz.id}
+              drag="y"
+              dragConstraints={{ top: 0, bottom: 0 }}
+              dragElastic={0.6}
+              initial={{ opacity: isTransitioning ? 0 : 1, x: isTransitioning ? 100 : 0 }}
+              animate={{
+                opacity: 1,
+                x: 0,
+                y: isRefreshing ? pullDistance : 0,
+              }}
+              transition={{
+                opacity: { duration: 0.3 },
+                x: { duration: 0.3 },
+                y: {
+                  type: 'spring',
+                  stiffness: 400,
+                  damping: 40,
+                },
+              }}
+              onDrag={handleDrag}
+              onDragEnd={handleDragEnd}
+            >
+              <QuizSettingDrawer quizzes={quizzes} open={settingDrawerOpen} onOpenChange={setSettingDrawerOpen} />
 
-            {quizState.status !== 'incorrect' ? (
-              <>
-                <motion.div
-                  className="h-[152px] w-[80%] mx-auto flex flex-col items-center justify-center"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Tag size="md">{currQuiz.name}</Tag>
-                  <Text typo="question" className="mt-3 text-center whitespace-pre-wrap break-keep">
-                    {currQuiz.question}
-                  </Text>
-                </motion.div>
+              {quizState.status !== 'incorrect' ? (
+                <>
+                  <motion.div
+                    className="h-[152px] w-[80%] mx-auto flex flex-col items-center justify-center"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Tag size="md">{currQuiz.name}</Tag>
+                    <Text typo="question" className="mt-3 text-center whitespace-pre-wrap break-keep">
+                      {currQuiz.question}
+                    </Text>
+                  </motion.div>
 
-                <div className="mt-2">
-                  {currQuiz.quizType === 'MIX_UP' ? (
-                    <div className="flex items-center gap-3 pt-10">
-                      {Array.from({ length: 2 }).map((_, index) => (
-                        <OXChoiceOption
-                          key={index}
-                          O={index === 0}
-                          X={index === 1}
-                          isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
-                          selectedOption={quizState.selectedAnswer}
-                          onClick={() =>
-                            handleClickOption({ quiz: currQuiz, selectOption: index === 0 ? 'correct' : 'incorrect' })
-                          }
-                          className={cn(
-                            'flex-1 aspect-[153.5/126]',
-                            quizState.status !== 'idle' && 'pointer-events-none',
-                          )}
-                        />
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="grid gap-2">
-                      {currQuiz.options.map((option, index) => (
-                        <MultipleChoiceOption
-                          key={option}
-                          label={String.fromCharCode(65 + index)}
-                          option={option}
-                          isCorrect={option === currQuiz.answer}
-                          selectedOption={quizState.selectedAnswer}
-                          animationDelay={index * 60}
-                          onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
-                          className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </>
-            ) : (
-              <IncorrectAnswerBody
-                currQuiz={currQuiz}
-                moveToNextQuiz={moveToNextQuiz}
-                settingDrawerOpen={settingDrawerOpen}
-                setSettingDrawerOpen={setSettingDrawerOpen}
+                  <div className="mt-2">
+                    {currQuiz.quizType === 'MIX_UP' ? (
+                      <div className="flex items-center gap-3 pt-10">
+                        {Array.from({ length: 2 }).map((_, index) => (
+                          <OXChoiceOption
+                            key={index}
+                            O={index === 0}
+                            X={index === 1}
+                            isCorrect={currQuiz.answer === (index === 0 ? 'correct' : 'incorrect')}
+                            selectedOption={quizState.selectedAnswer}
+                            onClick={() =>
+                              handleClickOption({
+                                quiz: currQuiz,
+                                selectOption: index === 0 ? 'correct' : 'incorrect',
+                              })
+                            }
+                            className={cn(
+                              'flex-1 aspect-[153.5/126]',
+                              quizState.status !== 'idle' && 'pointer-events-none',
+                            )}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="grid gap-2">
+                        {currQuiz.options.map((option, index) => (
+                          <MultipleChoiceOption
+                            key={option}
+                            label={String.fromCharCode(65 + index)}
+                            option={option}
+                            isCorrect={option === currQuiz.answer}
+                            selectedOption={quizState.selectedAnswer}
+                            animationDelay={index * 60}
+                            onClick={() => handleClickOption({ quiz: currQuiz, selectOption: option })}
+                            className={cn(quizState.status !== 'idle' && 'pointer-events-none')}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              ) : (
+                <IncorrectAnswerBody
+                  currQuiz={currQuiz}
+                  moveToNextQuiz={moveToNextQuiz}
+                  settingDrawerOpen={settingDrawerOpen}
+                  setSettingDrawerOpen={setSettingDrawerOpen}
+                />
+              )}
+              {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
+            </motion.div>
+          ) : (
+            <div className="flex-center mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 relative overflow-hidden z-50 h-[62svh]">
+              <QuizSettingDrawer
+                quizzes={quizData?.quizzes ?? []}
+                open={settingDrawerOpen}
+                onOpenChange={setSettingDrawerOpen}
               />
-            )}
-            {resultIconState.show && <ResultIcon correct={resultIconState.correct} />}
-          </motion.div>
+              <Text typo="h4" color="sub" className="flex-center">
+                조건을 만족하는 퀴즈가 없습니다.
+                <br />
+                다른 조건으로 다시 시도해보세요.
+              </Text>
+            </div>
+          )}
         </HeaderOffsetLayout>
       )}
 
