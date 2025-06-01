@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router'
 
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google'
 
@@ -11,6 +12,7 @@ import { useAuthStore } from './auth-store'
 export const useGLogin = () => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const location = useLocation()
   const setToken = useAuthStore((state) => state.setToken)
 
   const { mutateAsync: loginMutation } = useLogin()
@@ -26,7 +28,11 @@ export const useGLogin = () => {
           },
         })
         setToken(result.accessToken)
-        router.replace('/')
+
+        // 이전 페이지가 있으면 해당 페이지로 리다이렉트, 없으면 홈으로 리다이렉트
+        const from = location.state?.from || '/'
+
+        router.replace(from as any, {})
       } catch (error) {
         console.error('Google 로그인 실패:', error)
         setIsLoading(false)
