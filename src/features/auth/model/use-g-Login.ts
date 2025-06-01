@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { isMobile } from 'react-device-detect'
 import { useLocation } from 'react-router'
 
 import { TokenResponse, useGoogleLogin } from '@react-oauth/google'
 
 import { useLogin } from '@/entities/auth/api/hooks'
 
+import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
 
 import { useAuthStore } from './auth-store'
@@ -14,6 +16,7 @@ export const useGLogin = () => {
   const router = useRouter()
   const location = useLocation()
   const setToken = useAuthStore((state) => state.setToken)
+  const { isPWA } = usePWA()
 
   const { mutateAsync: loginMutation } = useLogin()
 
@@ -29,8 +32,10 @@ export const useGLogin = () => {
         })
         setToken(result.accessToken)
 
+        const defaultPath = !isPWA && isMobile ? '/explore' : '/'
+
         // 이전 페이지가 있으면 해당 페이지로 리다이렉트, 없으면 홈으로 리다이렉트
-        const from = location.state?.from || '/'
+        const from = location.state?.from || defaultPath
 
         router.replace(from as any, {})
       } catch (error) {
