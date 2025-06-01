@@ -60,8 +60,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
     }
 
     try {
-      // todo: 배포 후 url 경로 수정
-      const imageUrl = `${'https://picktoss.vercel.app'}/images/kakao-share-thumbnail.png`
+      const imageUrl = `${window.location.origin}/images/kakao-share-thumbnail.png`
 
       await shareToKakao({
         title: inviteText.title,

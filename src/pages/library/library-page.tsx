@@ -66,7 +66,10 @@ const LibraryPage = () => {
             </button>
           }
           right={
-            <button onClick={() => router.push('/note/create')} className="size-[40px] flex-center">
+            <button
+              onClick={() => router.push('/note/create', { search: { documentType: 'FILE' } })}
+              className="size-[40px] flex-center"
+            >
               <IcAdd className="size-[24px]" />
             </button>
           }
