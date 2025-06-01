@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
 import { format } from 'date-fns'
+import { toast } from 'sonner'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import {
-  useCreateDocumentBookmark,
-  useDeleteDocumentBookmark,
+  useDocumentBookmarkMutation,
   useGetPublicSingleDocument,
   useUpdateDocumentIsPublic,
 } from '@/entities/document/api/hooks'
@@ -44,12 +44,21 @@ const ExploreDetailPage = () => {
   const [quizType, setQuizType] = useQueryParam('/explore/detail/:noteId', 'quizType')
 
   const { mutate: updatePublic } = useUpdateDocumentIsPublic(Number(noteId))
-  const { mutate: bookmarkDocument } = useCreateDocumentBookmark(Number(noteId))
-  const { mutate: deleteBookmark } = useDeleteDocumentBookmark(Number(noteId))
-
-  const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
+  const { mutate: bookmark } = useDocumentBookmarkMutation(Number(noteId))
 
   const { data: document, isLoading: isDocumentLoading } = useGetPublicSingleDocument(Number(noteId))
+
+  // 북마크 상태와 카운트 관리
+  const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
+  const [isBookmarked, setIsBookmarked] = useState(document?.isBookmarked)
+  const [bookmarkCount, setBookmarkCount] = useState(document?.bookmarkCount)
+  useEffect(() => {
+    if (!document) return
+
+    setIsBookmarked(document.isBookmarked)
+    setBookmarkCount(document.bookmarkCount)
+  }, [document])
+
   const existQuizTypes = Array.from(new Set(document?.quizzes.map((quiz) => quiz.quizType)))
 
   // 북마크 정보 업데이트를 위한 세션 스토리지 설정
@@ -119,7 +128,7 @@ const ExploreDetailPage = () => {
         await navigator.share({
           title: document.name,
           text: `Q. ${document.quizzes[0].question} 외 ${document.totalQuizCount - 1}문제`,
-          url: `${window.location.origin}explore/detail/${document.id}`, // 추후 picktoss.com으로 변경
+          url: `${window.location.origin}explore/detail/${document.id}`,
         })
         console.log('공유 성공')
       } catch (error) {
@@ -136,46 +145,48 @@ const ExploreDetailPage = () => {
 
     setIsBookmarkProcessing(true)
 
-    // 낙관적 UI 업데이트를 위한 북마크 상태와 카운트 계산
     const optimisticIsBookmarked = !document.isBookmarked
     const optimisticBookmarkCount = document.bookmarkCount + (optimisticIsBookmarked ? 1 : -1)
 
-    const previousDocument = { ...document }
+    // 즉시 UI 업데이트
+    setIsBookmarked(optimisticIsBookmarked)
+    setBookmarkCount(optimisticBookmarkCount)
 
-    // UI 반영
-    document.isBookmarked = optimisticIsBookmarked
-    document.bookmarkCount = optimisticBookmarkCount
+    bookmark(
+      {
+        documentId: Number(noteId),
+        isBookmarked: document?.isBookmarked || false,
+      },
+      {
+        onSuccess: () => {
+          // 뒤로가기 시 탐험 카드에서의 북마크 업데이트를 위한 상태 스토리지 저장
+          setStorageBookmark({
+            id: document.id,
+            isBookmarked: optimisticIsBookmarked,
+            bookmarkCount: optimisticBookmarkCount,
+            isUpdated: true,
+          })
 
-    const rollback = () => {
-      // 롤백: 원래 상태 복원
-      document.isBookmarked = previousDocument.isBookmarked
-      document.bookmarkCount = previousDocument.bookmarkCount
-    }
-
-    const onSettled = async () => {
-      setIsBookmarkProcessing(false)
-    }
-
-    const onSuccess = () => {
-      setStorageBookmark({
-        id: document.id,
-        isBookmarked: optimisticIsBookmarked,
-        bookmarkCount: optimisticBookmarkCount,
-        isUpdated: true,
-      })
-    }
-
-    const mutationOptions = {
-      onSuccess,
-      onError: rollback,
-      onSettled,
-    }
-
-    if (optimisticIsBookmarked) {
-      bookmarkDocument(undefined, mutationOptions)
-    } else {
-      deleteBookmark(undefined, mutationOptions)
-    }
+          if (optimisticIsBookmarked) {
+            toast('퀴즈가 도서관에 저장되었어요', {
+              icon: <IcBookmarkFilled className="size-4" />,
+              action: {
+                label: '보러가기',
+                onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
+              },
+            })
+          } else {
+            toast('북마크가 해제되었어요')
+          }
+        },
+        onError: () => {
+          // 실패시 ui 롤백
+          setIsBookmarked(document?.isBookmarked)
+          setBookmarkCount(document?.bookmarkCount)
+        },
+        onSettled: () => setIsBookmarkProcessing(false),
+      },
+    )
   }
 
   const handlePlay = (quizCount: number) => {
@@ -216,11 +227,7 @@ const ExploreDetailPage = () => {
                   className="size-[40px] flex-center disabled:pointer-events-none"
                   disabled={isBookmarkProcessing}
                 >
-                  {document?.isBookmarked ? (
-                    <IcBookmarkFilled className="size-[24px]" />
-                  ) : (
-                    <IcBookmark className="size-[24px]" />
-                  )}
+                  {isBookmarked ? <IcBookmarkFilled className="size-[24px]" /> : <IcBookmark className="size-[24px]" />}
                 </button>
               )}
               <DropdownMenu>
@@ -317,7 +324,7 @@ const ExploreDetailPage = () => {
 
                 <div className="inline-flex justify-start items-center gap-[2px]">
                   <IcBookmarkFilled className="size-[12px] text-icon-sub" />
-                  <span>{document?.bookmarkCount}</span>
+                  <span>{bookmarkCount}</span>
                 </div>
               </Text>
             )}

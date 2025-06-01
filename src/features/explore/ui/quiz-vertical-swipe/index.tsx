@@ -335,6 +335,8 @@ const ExploreSwipeCard = ({
             onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
           },
         })
+      } else {
+        toast('북마크가 해제되었어요')
       }
       finish()
     }
