@@ -135,7 +135,7 @@ const NoteDetailPage = () => {
   const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
 
   // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
-  const [showTitleInHeader, setShowTitleInHeader] = useState(false)
+  const [_, setShowTitleInHeader] = useState(false)
   const titleRef = useRef(null)
 
   const { mutate: createQuizSet, isPending: isCreatingQuizSet } = useCreateQuizSet(Number(noteId))
