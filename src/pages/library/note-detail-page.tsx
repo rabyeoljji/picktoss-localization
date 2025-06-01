@@ -3,7 +3,6 @@ import { useLocation, useParams } from 'react-router'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Square } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { withHOC } from '@/app/hoc/with-page-config'
