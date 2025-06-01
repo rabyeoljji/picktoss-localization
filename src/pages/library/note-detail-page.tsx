@@ -231,7 +231,7 @@ const NoteDetailPage = () => {
                   <div className="relative bg-disabled rounded-[8px]">
                     <Input
                       disabled={true}
-                      value={`${window.location.origin}/${pathname}`}
+                      value={`${window.location.origin}${pathname}`}
                       className="w-[calc(100%-70px)] truncate"
                     />
                     <SquareButton
@@ -239,7 +239,7 @@ const NoteDetailPage = () => {
                       size="sm"
                       className="absolute right-[12px] bottom-1/2 translate-y-1/2"
                       onClick={() => {
-                        navigator.clipboard.writeText(`${window.location.origin}/${pathname}`)
+                        navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
                         toast('링크가 복사되었어요.')
                       }}
                     >
@@ -255,7 +255,7 @@ const NoteDetailPage = () => {
                         .share({
                           title: document?.name || '전공 필기 요약',
                           text: '전공 필기 요약을 확인해보세요!',
-                          url: `${window.location.origin}/${pathname}`,
+                          url: `${window.location.origin}${pathname}`,
                         })
                         .catch((error) => {
                           if (error.name !== 'AbortError') {
@@ -264,7 +264,7 @@ const NoteDetailPage = () => {
                         })
                     } else {
                       // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
-                      navigator.clipboard.writeText(`${window.location.origin}/${pathname}`)
+                      navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
                       toast('링크가 복사되었어요')
                     }
                   }}

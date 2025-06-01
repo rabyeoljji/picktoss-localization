@@ -13,8 +13,8 @@ import { Text } from '@/shared/components/ui/text'
 const TestOgTagsPage = () => {
   const [title, setTitle] = useState('PickToss - 잠깐의 퀴즈로 만드는 시험 합격 루틴')
   const [description, setDescription] = useState('Description')
-  const [url, setUrl] = useState(`${window.location.origin}`)
-  const [image, setImage] = useState(`${window.location.origin}/images/share-thumbnail.png`)
+  const [url, setUrl] = useState(`${window.location.origin.slice(0, -1)}`)
+  const [image, setImage] = useState(`${window.location.origin}images/share-thumbnail.png`)
 
   const handleShare = async () => {
     if (navigator.share) {

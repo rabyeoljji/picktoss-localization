@@ -60,7 +60,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
     }
 
     try {
-      const imageUrl = `${window.location.origin}/images/kakao-share-thumbnail.png`
+      const imageUrl = `${window.location.origin}images/kakao-share-thumbnail.png`
 
       await shareToKakao({
         title: inviteText.title,

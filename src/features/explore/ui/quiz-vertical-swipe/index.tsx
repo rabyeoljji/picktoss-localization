@@ -273,7 +273,7 @@ const ExploreSwipeCard = ({
         await navigator.share({
           title: name,
           text: `Q. ${quizzes[0].question} 외 ${totalQuizCount - 1}문제`,
-          url: `${'https://picktoss.vercel.app'}/explore/detail/${id}`, // 추후 picktoss.com으로 변경
+          url: `${window.location.origin}explore/detail/${id}`, // 추후 picktoss.com으로 변경
         })
         console.log('공유 성공')
       } catch (error) {

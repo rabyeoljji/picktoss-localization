@@ -58,7 +58,7 @@ const MyNotesContent = ({
         await navigator.share({
           title: getCheckedList()[0].name,
           text: `${getCheckedList()[0].totalQuizCount - 1}문제`,
-          url: `${'https://picktoss.vercel.app'}/explore/detail/${getCheckedList()[0].id}`, // 추후 picktoss.com으로 변경
+          url: `${window.location.origin}explore/detail/${getCheckedList()[0].id}`, // 추후 picktoss.com으로 변경
         })
         console.log('공유 성공')
       } catch (error) {
