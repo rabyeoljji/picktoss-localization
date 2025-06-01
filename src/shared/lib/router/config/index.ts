@@ -20,6 +20,7 @@ export const RouteConfig = {
     pathname: '/',
     search: {
       displayQuizType: 'ALL' as 'ALL' | 'MULTIPLE_CHOICE' | 'MIX_UP',
+      displayQuizScope: 'ALL' as 'ALL' | 'MY' | 'BOOKMARK',
     },
   },
 

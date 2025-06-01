@@ -11,6 +11,7 @@ export interface GetAllQuizzesDto {
   explanation: string
   options: string[]
   quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+  isBookmarked: boolean
 }
 
 export interface GetAllQuizzesResponse {

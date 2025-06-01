@@ -17,7 +17,7 @@ export const QuizSettingDrawer = ({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) => {
-  const [displayQuizType, setDisplayQuizType] = useQueryParam('/', 'displayQuizType')
+  const [param, setParam] = useQueryParam('/')
 
   return (
     <AlertDrawer
@@ -37,8 +37,9 @@ export const QuizSettingDrawer = ({
             id="quiz-settings-form"
             onSubmit={(e) => {
               e.preventDefault()
-              const value = (e.target as HTMLFormElement).quizType.value
-              setDisplayQuizType(value)
+              const quizType = (e.target as HTMLFormElement).quizType.value
+              const quizScope = (e.target as HTMLFormElement).quizScope.value
+              setParam({ displayQuizType: quizType, displayQuizScope: quizScope })
               onOpenChange(false)
             }}
           >
@@ -47,7 +48,7 @@ export const QuizSettingDrawer = ({
                 문제 유형
               </Text>
               <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
-                <RadioGroup name="quizType" defaultValue={displayQuizType}>
+                <RadioGroup name="quizType" defaultValue={param.displayQuizType}>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
                     <RadioGroupItem value="ALL" />
                     <Text typo="subtitle-2-medium" color="primary">
@@ -77,23 +78,22 @@ export const QuizSettingDrawer = ({
                 문제 범위
               </Text>
               <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
-                <RadioGroup name="quizType" defaultValue={displayQuizType}>
+                <RadioGroup name="quizScope" defaultValue={param.displayQuizScope}>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
                     <RadioGroupItem value="ALL" />
                     <Text typo="subtitle-2-medium" color="primary">
                       전체
                     </Text>
                   </Label>
-                  {/* TODO: 백엔드에 flag 요청해둠 */}
                   <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MULTIPLE_CHOICE" />
+                    <RadioGroupItem value="MY" disabled={quizzes?.every((quiz) => quiz.isBookmarked)} />
                     <Text typo="subtitle-2-medium" color="primary">
                       내가 생성한 퀴즈만
                     </Text>
                   </Label>
 
                   <Label className="flex items-center gap-3 w-full py-[10px]">
-                    <RadioGroupItem value="MIX_UP" />
+                    <RadioGroupItem value="BOOKMARK" disabled={quizzes?.every((quiz) => !quiz.isBookmarked)} />
                     <Text typo="subtitle-2-medium" color="primary">
                       북마크한 퀴즈만
                     </Text>

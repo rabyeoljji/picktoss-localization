@@ -52,6 +52,7 @@ const HomePage = () => {
   const backgroundQuizzesRef = useRef<Quiz[]>([])
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
+  const [displayQuizScope] = useQueryParam('/', 'displayQuizScope')
 
   const { data: quizData, isLoading, refetch } = useGetQuizzes()
 
@@ -61,8 +62,21 @@ const HomePage = () => {
       status: 'idle',
       selectedAnswer: null,
     }))
-    setQuizzes(quizData?.quizzes.filter((quiz) => quiz.quizType === displayQuizType || displayQuizType === 'ALL') ?? [])
-  }, [quizData, displayQuizType])
+    setQuizzes(() => {
+      return (
+        quizData?.quizzes.filter((quiz) => {
+          if (displayQuizScope === 'ALL') {
+            return quiz.quizType === displayQuizType || displayQuizType === 'ALL'
+          } else if (displayQuizScope === 'MY') {
+            return quiz.isBookmarked && (quiz.quizType === displayQuizType || displayQuizType === 'ALL')
+          } else if (displayQuizScope === 'BOOKMARK') {
+            return !quiz.isBookmarked && (quiz.quizType === displayQuizType || displayQuizType === 'ALL')
+          }
+          return false
+        }) ?? []
+      )
+    })
+  }, [quizData, displayQuizType, displayQuizScope])
 
   const { isRefreshing, pullDistance, handleDrag, handleDragEnd } = usePullToRefresh(() => refetch())
 
@@ -453,8 +467,6 @@ const IncorrectAnswerBody = ({
   settingDrawerOpen: boolean
   setSettingDrawerOpen: (open: boolean) => void
 }) => {
-  const router = useRouter()
-
   return (
     <>
       <div className="flex items-center justify-start gap-3 w-fit">
