@@ -197,4 +197,7 @@ export const RouteConfig = {
       inviteCode: '' as string,
     },
   },
+  testOgTags: {
+    pathname: '/test-og-tags',
+  },
 } as const
