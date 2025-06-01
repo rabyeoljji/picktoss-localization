@@ -485,6 +485,8 @@ const IncorrectAnswerBody = ({
   settingDrawerOpen: boolean
   setSettingDrawerOpen: (open: boolean) => void
 }) => {
+  const router = useRouter()
+
   return (
     <>
       <div className="flex items-center justify-start gap-3 w-fit">
@@ -514,7 +516,7 @@ const IncorrectAnswerBody = ({
 
           <button
             className="flex items-center gap-1"
-            // onClick={() => router.push(`/library/:noteId`, { params: [noteId] })}
+            onClick={() => router.push(`/library/:noteId`, { params: [String(currQuiz.documentId)] })}
           >
             <Text typo="body-1-medium" color="sub">
               {currQuiz.name}
