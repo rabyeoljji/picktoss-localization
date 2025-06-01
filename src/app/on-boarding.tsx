@@ -90,49 +90,51 @@ const OnBoardingPage = () => {
             </div>
           </div>
 
-          <FormField
-            control={form.control}
-            name="categoryId"
-            render={({ field }) => (
-              <FormItem>
-                <RadioGroup value={field.value} onValueChange={field.onChange} className="flex flex-wrap gap-2">
-                  <motion.div
-                    initial={{ opacity: 0, y: 70 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      delay: 0.8,
-                      type: 'spring',
-                      mass: 1,
-                      stiffness: 80,
-                      damping: 20,
-                    }}
-                    className="w-full grid grid-cols-2 grid-rows-3 gap-[8px]"
-                  >
-                    {categories?.map((category) => (
-                      <FormItem key={category.id}>
-                        <FormControl>
-                          <RadioGroupItem
-                            value={String(category.id)}
-                            id={`category-${category.id}`}
-                            className="peer sr-only"
-                          />
-                        </FormControl>
-                        <SelectCard
-                          htmlFor={`category-${category.id}`}
-                          onClick={() => setValue('categoryId', String(category.id), { shouldValidate: true })}
-                          selected={selectedCategoryId === String(category.id)}
-                          className="h-[110px] w-full flex-col gap-[4px]"
-                        >
-                          <Text typo="h2">{category.emoji}</Text>
-                          <Text typo="body-1-bold">{category.name}</Text>
-                        </SelectCard>
-                      </FormItem>
-                    ))}
-                  </motion.div>
-                </RadioGroup>
-              </FormItem>
-            )}
-          />
+          <div className="h-[calc(100svh-152px-66px-48px-114px)] overflow-y-scroll">
+            <FormField
+              control={form.control}
+              name="categoryId"
+              render={({ field }) => (
+                <FormItem>
+                  <RadioGroup value={field.value} onValueChange={field.onChange} className="flex flex-wrap gap-2">
+                    <motion.div
+                      initial={{ opacity: 0, y: 70 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{
+                        delay: 0.8,
+                        type: 'spring',
+                        mass: 1,
+                        stiffness: 80,
+                        damping: 20,
+                      }}
+                      className="w-full grid grid-cols-2 grid-rows-3 gap-[8px]"
+                    >
+                      {categories?.map((category) => (
+                        <FormItem key={category.id}>
+                          <FormControl>
+                            <RadioGroupItem
+                              value={String(category.id)}
+                              id={`category-${category.id}`}
+                              className="peer sr-only"
+                            />
+                          </FormControl>
+                          <SelectCard
+                            htmlFor={`category-${category.id}`}
+                            onClick={() => setValue('categoryId', String(category.id), { shouldValidate: true })}
+                            selected={selectedCategoryId === String(category.id)}
+                            className="h-[110px] w-full flex-col gap-[4px]"
+                          >
+                            <Text typo="h2">{category.emoji}</Text>
+                            <Text typo="body-1-bold">{category.name}</Text>
+                          </SelectCard>
+                        </FormItem>
+                      ))}
+                    </motion.div>
+                  </RadioGroup>
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FixedBottom className="bg-surface-2">
             <div className="pb-[24px]">
