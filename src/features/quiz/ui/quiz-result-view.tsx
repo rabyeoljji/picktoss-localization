@@ -48,7 +48,7 @@ export const QuizResultView = ({
             <div className="px-[20px] flex flex-col items-center">
               <ImgStopwatch className="w-[32px]" />
               <Text typo="subtitle-2-bold" className="mt-1">
-                {totalElapsedTime}분
+                {Math.ceil(totalElapsedTime / 1000 / 60)}분
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
                 소요시간
