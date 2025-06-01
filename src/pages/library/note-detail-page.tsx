@@ -231,12 +231,38 @@ const NoteDetailPage = () => {
                       variant="tertiary"
                       size="sm"
                       className="absolute right-[12px] bottom-1/2 translate-y-1/2"
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}/${pathname}`)
+                        toast('링크가 복사되었어요.')
+                      }}
                     >
                       복사
                     </SquareButton>
                   </div>
                 </div>
-                <DialogCTA label="링크 공유하기" onClick={() => {}} hasClose />
+                <DialogCTA
+                  label="링크 공유하기"
+                  onClick={() => {
+                    if (navigator.share) {
+                      navigator
+                        .share({
+                          title: document?.name || '전공 필기 요약',
+                          text: '전공 필기 요약을 확인해보세요!',
+                          url: `${window.location.origin}/${pathname}`,
+                        })
+                        .catch((error) => {
+                          if (error.name !== 'AbortError') {
+                            console.error('공유하기 실패:', error)
+                          }
+                        })
+                    } else {
+                      // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
+                      navigator.clipboard.writeText(`${window.location.origin}/${pathname}`)
+                      toast('링크가 복사되었어요')
+                    }
+                  }}
+                  hasClose
+                />
               </DialogContent>
             </Dialog>
           </div>
