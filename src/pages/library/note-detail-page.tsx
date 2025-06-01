@@ -11,9 +11,11 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import { calculateStar } from '@/features/note/lib'
 import { NoteDetailQuizLoadingDrawer } from '@/features/note/ui/note-detail-quiz-loading-drawer'
 
+import { useGetCategories } from '@/entities/category/api/hooks'
 import {
   useAddQuizzes,
   useGetSingleDocument,
+  useUpdateDocumentCategory,
   useUpdateDocumentEmoji,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
@@ -94,6 +96,9 @@ const NoteDetailPage = () => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
 
+  const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false)
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
+
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
   const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL' | null>(null)
 
@@ -104,8 +109,13 @@ const NoteDetailPage = () => {
   const [editTargetQuizId, setEditTargetQuizId] = useState<number | null>(null)
   const [isCreatingNewQuizzes, setIsCreatingNewQuizzes] = useState(false)
 
+  const { data: categories } = useGetCategories()
+
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
+  const { mutate: updateDocumentCategory, isPending: isUpdatingDocumentCategory } = useUpdateDocumentCategory(
+    Number(noteId),
+  )
 
   const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
@@ -345,9 +355,66 @@ const NoteDetailPage = () => {
                   <Text typo="subtitle-2-bold" color="secondary">
                     {document?.category}
                   </Text>
-                  <button className="p-1">
-                    <IcChange className="size-[12px]" />
-                  </button>
+                  <AlertDrawer
+                    trigger={
+                      <button className="p-1">
+                        <IcChange className="size-[12px]" />
+                      </button>
+                    }
+                    open={categoryDrawerOpen}
+                    onOpenChange={setCategoryDrawerOpen}
+                    hasClose
+                    title="카테고리 변경"
+                    body={
+                      <div className="py-[32px]">
+                        <RadioGroup
+                          onValueChange={(value) => setSelectedCategoryId(Number(value))}
+                          value={selectedCategoryId ? String(selectedCategoryId) : undefined}
+                          defaultValue={
+                            document?.category
+                              ? String(categories?.find((cat) => cat.name === document.category)?.id)
+                              : undefined
+                          }
+                          className="flex flex-col"
+                        >
+                          {Array.isArray(categories) &&
+                            categories.map((category) => (
+                              <label
+                                key={category.id}
+                                className="flex items-center gap-[12px] py-[10px] cursor-pointer"
+                              >
+                                <RadioGroupItem value={String(category.id)} />
+                                <Text typo="subtitle-2-medium">
+                                  {category.emoji} {category.name}
+                                </Text>
+                              </label>
+                            ))}
+                        </RadioGroup>
+                      </div>
+                    }
+                    footer={
+                      <div className="h-[114px] pt-[14px]">
+                        <Button
+                          onClick={() => {
+                            if (selectedCategoryId) {
+                              updateDocumentCategory(
+                                { categoryId: selectedCategoryId },
+                                {
+                                  onSuccess: () => {
+                                    setCategoryDrawerOpen(false)
+                                    refetchSingleDocument()
+                                  },
+                                },
+                              )
+                            }
+                          }}
+                          disabled={!selectedCategoryId || isUpdatingDocumentCategory}
+                        >
+                          {isUpdatingDocumentCategory ? '저장 중...' : '저장'}
+                        </Button>
+                      </div>
+                    }
+                  />
                 </div>
 
                 <Text typo="body-1-bold" color="sub" className="mt-4">
