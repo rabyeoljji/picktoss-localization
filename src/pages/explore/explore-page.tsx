@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { isMobile } from 'react-device-detect'
 
 import { withHOC } from '@/app/hoc/with-page-config'
@@ -33,6 +33,13 @@ const ExplorePage = () => {
 
   const scrollRef = useRef<HTMLDivElement>(null)
   useHorizontalScrollWheel(scrollRef)
+
+  useEffect(() => {
+    if (!isPWA && isMobile) {
+      // PWA가 아니고 모바일인 경우 앱 다운로드 배너를 열도록 설정
+      setIsAppDownloadBannerOpen(true)
+    }
+  }, [isPWA, isMobile])
 
   return (
     <>
