@@ -420,7 +420,7 @@ const HomePage = () => {
                 documentType: 'TEXT',
               },
             })
-            trackEvent('daily_complete_click', { format: '텍스트 버튼' })
+            trackEvent('daily_quiz_add_click', { format: '텍스트 버튼' })
           }}
         >
           <Text typo="subtitle-2-medium" color="sub" className="center">
@@ -434,7 +434,7 @@ const HomePage = () => {
                   documentType: 'FILE',
                 },
               })
-              trackEvent('daily_complete_click', { format: '파일 버튼' })
+              trackEvent('daily_quiz_add_click', { format: '파일 버튼' })
             }}
             className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
           >
