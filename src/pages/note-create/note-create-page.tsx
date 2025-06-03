@@ -46,12 +46,8 @@ const NoteCreateHeader = () => {
         <div className="center">
           <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
             <TabsList className="w-[210px]">
-              <TabsTrigger value="FILE" onClick={() => trackEvent('generate_tab_click', { tab: '파일' })}>
-                파일
-              </TabsTrigger>
-              <TabsTrigger value="TEXT" onClick={() => trackEvent('generate_tab_click', { tab: '텍스트' })}>
-                텍스트
-              </TabsTrigger>
+              <TabsTrigger value="FILE">파일</TabsTrigger>
+              <TabsTrigger value="TEXT">텍스트</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>

@@ -26,7 +26,7 @@ export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
   const { pathname } = useLocation()
   const router = useRouter()
-  const { documentName, quizType } = useCreateNoteContext()
+  const { documentName, quizType, documentType } = useCreateNoteContext()
 
   // 로딩 상태를 queryParam으로 관리
   const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
@@ -142,6 +142,8 @@ export const QuizLoadingDrawer = () => {
               onClick={() => {
                 trackEvent('generate_confirm_click', {
                   location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                  format: documentType === 'TEXT' ? '텍스트' : '파일',
+                  type: quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X',
                 })
                 completeAnimation()
                 setTimeout(() => {
