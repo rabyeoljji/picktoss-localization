@@ -52,23 +52,23 @@ export interface LibraryQuizAddClickProps {}
 /** [도서관] library_quiz_edit_click - 노트 상세-퀴즈 수정 버튼 클릭 */
 export interface LibraryQuizEditClickProps {}
 
-/** [도서관] library_toolbar_share_click - 노트 상세 공유하기 버튼 클릭 */
-export interface LibraryToolbarShareClickProps {}
+/** [도서관] library_detail_share_click - 노트 상세 공유하기 버튼 클릭 */
+export interface LibraryDetailShareClickProps {}
 
-/** [도서관] library_toolbar_play_click - 노트 상세 툴바- 플레이 버튼 클릭 */
-export interface LibraryToolbarPlayClickProps {}
+/** [도서관] library_detail_play_click - 노트 상세 툴바- 플레이 버튼 클릭 */
+export interface LibraryDetailPlayClickProps {}
 
-/** [도서관] library_toolbar_review_click - 노트 상세 툴바- 복습 pick 버튼 클릭 */
-export interface LibraryToolbarReviewClickProps {}
+/** [도서관] library_detail_review_click - 노트 상세 툴바- 복습 pick 버튼 클릭 */
+export interface LibraryDetailReviewClickProps {}
 
-/** [도서관] library_toolbar_note_click - 노트 상세 툴바- 원본 노트 버튼 클릭 */
-export interface LibraryToolbarNoteClickProps {}
+/** [도서관] library_detail_note_click - 노트 상세 툴바- 원본 노트 버튼 클릭 */
+export interface LibraryDetailNoteClickProps {}
 
-/** [도서관] library_toolbar_more_click - 노트 상세 툴바- 더보기 버튼 클릭 */
-export interface LibraryToolbarMoreClickProps {}
+/** [도서관] library_detail_more_click - 노트 상세 툴바- 더보기 버튼 클릭 */
+export interface LibraryDetailMoreClickProps {}
 
-/** [도서관] library_toolbar_answer_click - 노트 상세 툴바- 정답 표시 스위치 클릭 */
-export interface LibraryToolbarAnswerClickProps {
+/** [도서관] library_detail_answer_click - 노트 상세 툴바- 정답 표시 스위치 클릭 */
+export interface LibraryDetailAnswerClickProps {
   value: boolean
 }
 
@@ -194,12 +194,12 @@ export type EventName =
   | 'library_bookmark_click'
   | 'library_quiz_add_click'
   | 'library_quiz_edit_click'
-  | 'library_toolbar_share_click'
-  | 'library_toolbar_play_click'
-  | 'library_toolbar_review_click'
-  | 'library_toolbar_note_click'
-  | 'library_toolbar_more_click'
-  | 'library_toolbar_answer_click'
+  | 'library_detail_share_click'
+  | 'library_detail_play_click'
+  | 'library_detail_review_click'
+  | 'library_detail_note_click'
+  | 'library_detail_more_click'
+  | 'library_detail_answer_click'
   // 탐험
   | 'explore_tab_click'
   | 'explore_bookmark_click'
@@ -248,12 +248,12 @@ export type EventPropsMap = {
   library_bookmark_click: LibraryBookmarkClickProps
   library_quiz_add_click: LibraryQuizAddClickProps
   library_quiz_edit_click: LibraryQuizEditClickProps
-  library_toolbar_share_click: LibraryToolbarShareClickProps
-  library_toolbar_play_click: LibraryToolbarPlayClickProps
-  library_toolbar_review_click: LibraryToolbarReviewClickProps
-  library_toolbar_note_click: LibraryToolbarNoteClickProps
-  library_toolbar_more_click: LibraryToolbarMoreClickProps
-  library_toolbar_answer_click: LibraryToolbarAnswerClickProps
+  library_detail_share_click: LibraryDetailShareClickProps
+  library_detail_play_click: LibraryDetailPlayClickProps
+  library_detail_review_click: LibraryDetailReviewClickProps
+  library_detail_note_click: LibraryDetailNoteClickProps
+  library_detail_more_click: LibraryDetailMoreClickProps
+  library_detail_answer_click: LibraryDetailAnswerClickProps
   // 탐험
   explore_tab_click: ExploreTabClickProps
   explore_bookmark_click: ExploreBookmarkClickProps

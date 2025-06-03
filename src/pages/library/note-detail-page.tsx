@@ -235,7 +235,7 @@ const NoteDetailPage = () => {
                   size="sm"
                   left={<IcUpload />}
                   onClick={() => {
-                    trackEvent('library_toolbar_play_click')
+                    trackEvent('library_detail_play_click')
                   }}
                 >
                   공유하기
@@ -637,7 +637,7 @@ const NoteDetailPage = () => {
             checked={showAnswer}
             onCheckedChange={(checked) => {
               setShowAnswer(checked)
-              trackEvent('library_toolbar_answer_click', { value: checked })
+              trackEvent('library_detail_answer_click', { value: checked })
             }}
           />
         </div>
@@ -650,7 +650,7 @@ const NoteDetailPage = () => {
               <button
                 className="p-2"
                 onClick={() => {
-                  trackEvent('library_toolbar_play_click')
+                  trackEvent('library_detail_play_click')
                 }}
               >
                 <IcPlay className="size-6" />
@@ -701,7 +701,7 @@ const NoteDetailPage = () => {
             className="p-2"
             onClick={() => {
               setReviewPickOpen(true)
-              trackEvent('library_toolbar_review_click')
+              trackEvent('library_detail_review_click')
             }}
           >
             <IcReview className="size-6" />
@@ -710,7 +710,7 @@ const NoteDetailPage = () => {
             className="p-2"
             onClick={() => {
               setContentDrawerOpen(true)
-              trackEvent('library_toolbar_note_click')
+              trackEvent('library_detail_note_click')
             }}
           >
             <IcNote className="size-6" />
@@ -720,7 +720,7 @@ const NoteDetailPage = () => {
               <IcKebab
                 className="size-6"
                 onClick={() => {
-                  trackEvent('library_toolbar_more_click')
+                  trackEvent('library_detail_more_click')
                 }}
               />
             </DropdownMenuTrigger>
