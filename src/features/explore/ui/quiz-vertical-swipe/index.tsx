@@ -361,7 +361,6 @@ const ExploreSwipeCard = ({
   }
 
   const handleQuizStart = () => {
-    trackEvent('explore_quizstart_click', { location: '상세 페이지' })
     createQuizSet(
       {
         quizType: 'ALL',
@@ -369,6 +368,7 @@ const ExploreSwipeCard = ({
       },
       {
         onSuccess: (data) => {
+          trackEvent('quiz_start_click', { location: '탐험 메인' })
           router.push('/progress-quiz/:quizSetId', {
             params: [String(data.quizSetId)],
             search: {

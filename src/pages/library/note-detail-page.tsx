@@ -193,6 +193,7 @@ const NoteDetailPage = () => {
       },
       {
         onSuccess: (data) => {
+          trackEvent('quiz_start_click', { location: '내 퀴즈 상세' })
           router.push('/progress-quiz/:quizSetId', {
             params: [String(data.quizSetId)],
             search: {

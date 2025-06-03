@@ -199,7 +199,6 @@ const ExploreDetailPage = () => {
   }
 
   const handlePlay = (quizCount: number) => {
-    trackEvent('explore_quizstart_click', { location: '상세 페이지' })
     createQuizSet(
       {
         quizType,
@@ -207,6 +206,7 @@ const ExploreDetailPage = () => {
       },
       {
         onSuccess: (data) => {
+          trackEvent('quiz_start_click', { location: '공개 퀴즈 상세' })
           router.push('/progress-quiz/:quizSetId', {
             params: [String(data.quizSetId)],
             search: {

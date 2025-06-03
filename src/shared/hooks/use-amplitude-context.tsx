@@ -72,12 +72,6 @@ export interface LibraryToolbarAnswerClickProps {
   value: boolean
 }
 
-// 탐험 이벤트
-/** [탐험] explore_quizstart_click - 탐험에서 '퀴즈 시작하기'버튼 클릭 */
-export interface ExploreQuizstartClickProps {
-  location: '미리보기 페이지' | '상세 페이지'
-}
-
 /** [탐험] explore_tab_click - 분야 tab 클릭 */
 export interface ExploreTabClickProps {
   category: '전체' | '자격증·수험' | '학문·전공' | 'IT·개발' | '재테크·시사' | '언어' | '상식·교양'
@@ -119,6 +113,11 @@ export interface GenerateQuizLaterClickProps {}
 // 퀴즈 이벤트
 /** [퀴즈] quiz_complete_view - 퀴즈 결과 페이지 조회 */
 export interface QuizCompleteViewProps {}
+
+/** [퀴즈] quiz_start_click - 퀴즈 시작 버튼 클릭 */
+export interface QuizStartClickProps {
+  location: '탐험 메인' | '공개 퀴즈 상세' | '내 퀴즈 상세'
+}
 
 /** [퀴즈] quiz_setting_time_click - 퀴즈 설정 drawer 시간 숨기기 switch 클릭 */
 export interface QuizSettingTimeClickProps {
@@ -165,26 +164,9 @@ export interface InviteShareClickProps {
   method: '복사' | '카카오톡' | '일반 공유'
 }
 
-/** [퀴즈] quiz_start, quiz_complete, quiz_exit */
-export interface QuizStartClickProps {
-  type: '오늘의 퀴즈' | '퀴즈노트' | '컬렉션'
-  /** 1~24 (오늘의 퀴즈 시작 시간대) */
-  time?: number
-}
-
 /** [마이] quickmenu_click */
 export interface QuickmenuClickProps {
   option: '내 컬렉션' | '퀴즈 분석' | '퀴즈 기록'
-}
-
-/** [PRO 구독] purchase_click, purchase_complete */
-export interface PurchaseClickProps {
-  /** 결제 금액 */
-  price: number
-}
-export interface PurchaseCompleteProps {
-  /** 결제 금액 */
-  price: number
 }
 
 /** [친구 초대] share_click */
@@ -219,7 +201,6 @@ export type EventName =
   | 'library_toolbar_more_click'
   | 'library_toolbar_answer_click'
   // 탐험
-  | 'explore_quizstart_click'
   | 'explore_tab_click'
   | 'explore_bookmark_click'
   | 'explore_share_click'
@@ -231,6 +212,7 @@ export type EventName =
   | 'generate_quiz_later_click'
   // 퀴즈
   | 'quiz_complete_view'
+  | 'quiz_start_click'
   | 'quiz_setting_time_click'
   | 'quiz_setting_skip_click'
   | 'quiz_setting_save_click'
@@ -247,9 +229,6 @@ export type EventName =
   | 'quiz_start'
   // 마이 퀴마뉴
   | 'quickmenu_click'
-  // PRO 구독
-  | 'purchase_click'
-  | 'purchase_complete'
   // 공유
   | 'share_click'
 
@@ -276,7 +255,6 @@ export type EventPropsMap = {
   library_toolbar_more_click: LibraryToolbarMoreClickProps
   library_toolbar_answer_click: LibraryToolbarAnswerClickProps
   // 탐험
-  explore_quizstart_click: ExploreQuizstartClickProps
   explore_tab_click: ExploreTabClickProps
   explore_bookmark_click: ExploreBookmarkClickProps
   explore_share_click: ExploreShareClickProps
@@ -288,6 +266,7 @@ export type EventPropsMap = {
   generate_quiz_later_click: GenerateQuizLaterClickProps
   // 퀴즈
   quiz_complete_view: QuizCompleteViewProps
+  quiz_start_click: QuizStartClickProps
   quiz_setting_time_click: QuizSettingTimeClickProps
   quiz_setting_skip_click: QuizSettingSkipClickProps
   quiz_setting_save_click: QuizSettingSaveClickProps
@@ -304,9 +283,6 @@ export type EventPropsMap = {
   quiz_start: QuizStartClickProps
   // 마이 퀴마뉴
   quickmenu_click: QuickmenuClickProps
-  // PRO 구독
-  purchase_click: PurchaseClickProps
-  purchase_complete: PurchaseCompleteProps
   // 공유
   share_click: ShareClickProps
 }
