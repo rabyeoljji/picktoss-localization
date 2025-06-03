@@ -86,6 +86,7 @@ export interface ExploreTabClickProps {
 /** [탐험] explore_bookmark_click - 북마크 버튼 클릭 */
 export interface ExploreBookmarkClickProps {
   location: '미리보기 페이지' | '상세 페이지'
+  state: '추가' | '해제'
 }
 
 /** [탐험] explore_share_click - 공유 버튼 클릭 */
@@ -103,7 +104,14 @@ export interface GenerateTabClickProps {
 }
 
 /** [퀴즈 생성] generate_quiz_click - 퀴즈 생성하기' 버튼 클릭 */
-export interface GenerateQuizClickProps {}
+export interface GenerateQuizClickProps {
+  location: '생성 페이지' | '상세 페이지'
+}
+
+/** [퀴즈 생성] generate_confirm_click - 완료' 버튼 클릭 */
+export interface GenerateConfirmClickProps {
+  location: '생성 페이지' | '상세 페이지'
+}
 
 /** [퀴즈 생성] generate_quiz_start_click - 퀴즈 로딩 완료 후 '퀴즈 시작' 버튼 클릭 */
 export interface GenerateQuizStartClickProps {}
@@ -215,6 +223,7 @@ export type EventName =
   // 퀴즈 생성
   | 'generate_tab_click'
   | 'generate_quiz_click'
+  | 'generate_confirm_click'
   | 'generate_quiz_start_click'
   | 'generate_quiz_later_click'
   // 퀴즈
@@ -271,6 +280,7 @@ export type EventPropsMap = {
   // 퀴즈 생성
   generate_tab_click: GenerateTabClickProps
   generate_quiz_click: GenerateQuizClickProps
+  generate_confirm_click: GenerateConfirmClickProps
   generate_quiz_start_click: GenerateQuizStartClickProps
   generate_quiz_later_click: GenerateQuizLaterClickProps
   // 퀴즈

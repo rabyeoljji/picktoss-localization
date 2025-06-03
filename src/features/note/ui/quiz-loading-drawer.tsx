@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { useLocation } from 'react-router'
 
 import { toast } from 'sonner'
 
@@ -23,6 +24,7 @@ const ESTIMATED_LOADING_TIME = 40000 // 40초
 
 export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
+  const { pathname } = useLocation()
   const router = useRouter()
   const { documentName, quizType } = useCreateNoteContext()
 
@@ -138,7 +140,9 @@ export const QuizLoadingDrawer = () => {
           <div className="mt-10 w-full flex flex-col items-center">
             <Button
               onClick={() => {
-                trackEvent('generate_quiz_click')
+                trackEvent('generate_confirm_click', {
+                  location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                })
                 completeAnimation()
                 setTimeout(() => {
                   router.replace('/progress-quiz/:quizSetId', {

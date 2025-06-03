@@ -334,7 +334,10 @@ const ExploreSwipeCard = ({
     }
 
     const onSuccess = () => {
-      trackEvent('explore_bookmark_click', { location: '미리보기 페이지' })
+      trackEvent('explore_bookmark_click', {
+        location: '미리보기 페이지',
+        state: isCurrentlyBookmarked ? '추가' : '해제',
+      })
 
       if (!isCurrentlyBookmarked) {
         toast('퀴즈가 도서관에 저장되었어요', {

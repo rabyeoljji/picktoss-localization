@@ -163,7 +163,10 @@ const ExploreDetailPage = () => {
       },
       {
         onSuccess: () => {
-          trackEvent('explore_bookmark_click', { location: '상세 페이지' })
+          trackEvent('explore_bookmark_click', {
+            location: '상세 페이지',
+            state: optimisticIsBookmarked ? '추가' : '해제',
+          })
 
           // 뒤로가기 시 탐험 카드에서의 북마크 업데이트를 위한 상태 스토리지 저장
           setStorageBookmark({

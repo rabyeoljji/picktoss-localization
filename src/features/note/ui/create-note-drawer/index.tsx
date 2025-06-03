@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useLocation } from 'react-router'
 
 import { AnimatePresence, motion } from 'framer-motion'
 
@@ -18,6 +19,7 @@ import { cn } from '@/shared/lib/utils'
 
 export const CreateNoteDrawer = () => {
   const { trackEvent } = useAmplitude()
+  const { pathname } = useLocation()
   const { data: categories } = useGetCategories()
   const {
     categoryId,
@@ -52,7 +54,11 @@ export const CreateNoteDrawer = () => {
               <Text typo="body-1-medium">{star}</Text>
             </div>
           }
-          onClick={() => trackEvent('generate_quiz_click')}
+          onClick={() =>
+            trackEvent('generate_quiz_click', {
+              location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+            })
+          }
         >
           생성하기
         </Button>
