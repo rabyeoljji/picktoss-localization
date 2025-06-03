@@ -128,7 +128,10 @@ export interface QuizSettingSkipClickProps {
 }
 
 /** [퀴즈] quiz_setting_save_click - 퀴즈 설정 drawer에서 '저장'버튼 클릭 */
-export interface QuizSettingSaveClickProps {}
+export interface QuizSettingSaveClickProps {
+  time: boolean
+  skip: boolean
+}
 
 /** [퀴즈] quiz_exit_click - 퀴즈 나가기' 버튼 클릭 */
 export interface QuizExitClickProps {}

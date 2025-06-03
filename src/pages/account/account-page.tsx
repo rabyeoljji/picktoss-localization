@@ -16,9 +16,11 @@ import { Disclaimer, DisclaimerContent, DisclaimerTrigger } from '@/shared/compo
 import { Switch } from '@/shared/components/ui/switch'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { Link, useRouter } from '@/shared/lib/router'
 
 const AccountPage = () => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
 
   const { data: user } = useUser()
@@ -124,7 +126,14 @@ const AccountPage = () => {
                   </div>
                 </div>
 
-                <Button onClick={() => router.push('/account/quiz-analysis')} size={'sm'} variant={'tertiary'}>
+                <Button
+                  onClick={() => {
+                    trackEvent('my_analysis_click')
+                    router.push('/account/quiz-analysis')
+                  }}
+                  size={'sm'}
+                  variant={'tertiary'}
+                >
                   분석 보기
                 </Button>
               </div>
@@ -145,7 +154,14 @@ const AccountPage = () => {
                     </Disclaimer>
                   </div>
 
-                  <Link to="/account/my-star" type="button" className="flex items-center gap-[4px]">
+                  <Link
+                    to="/account/my-star"
+                    type="button"
+                    className="flex items-center gap-[4px]"
+                    onClick={() => {
+                      trackEvent('my_star_click')
+                    }}
+                  >
                     <Text typo="subtitle-2-bold">{user?.star}개</Text>
                     <IcChevronRight className="size-[16px] text-icon-sub" />
                   </Link>

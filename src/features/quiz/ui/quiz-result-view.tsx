@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import { QuizResultCardData } from '@/pages/progress-quiz-page'
 
 import { ImgCheckbadge, ImgMedal, ImgSpeechbubble, ImgStopwatch } from '@/shared/assets/images'
@@ -6,6 +8,7 @@ import FixedBottom from '@/shared/components/fixed-bottom'
 import { Button } from '@/shared/components/ui/button'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
 
 export const QuizResultView = ({
@@ -15,6 +18,11 @@ export const QuizResultView = ({
   totalElapsedTime: number
   quizWithResultData: QuizResultCardData[]
 }) => {
+  const { trackEvent } = useAmplitude()
+  useEffect(() => {
+    trackEvent('quiz_complete_view')
+  }, [])
+
   const router = useRouter()
 
   // 전체 통계 계산

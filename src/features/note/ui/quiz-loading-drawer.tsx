@@ -13,6 +13,7 @@ import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useOnceEffect } from '@/shared/hooks'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 import { QuizType, useCreateNoteContext } from '../model/create-note-context'
@@ -21,6 +22,7 @@ import { QuizType, useCreateNoteContext } from '../model/create-note-context'
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
 export const QuizLoadingDrawer = () => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
   const { documentName, quizType } = useCreateNoteContext()
 
@@ -136,6 +138,7 @@ export const QuizLoadingDrawer = () => {
           <div className="mt-10 w-full flex flex-col items-center">
             <Button
               onClick={() => {
+                trackEvent('generate_quiz_click')
                 completeAnimation()
                 setTimeout(() => {
                   router.replace('/progress-quiz/:quizSetId', {
@@ -150,7 +153,10 @@ export const QuizLoadingDrawer = () => {
               시작하기
             </Button>
             <TextButton
-              onClick={() => router.replace('/library/:noteId', { params: [String(documentId)] })}
+              onClick={() => {
+                trackEvent('generate_quiz_later_click')
+                router.replace('/library/:noteId', { params: [String(documentId)] })
+              }}
               size="lg"
               className="text-secondary mt-[24px]"
             >
