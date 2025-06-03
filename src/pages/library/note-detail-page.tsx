@@ -83,10 +83,12 @@ import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { useOnceEffect } from '@/shared/hooks'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const NoteDetailPage = () => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
   const { pathname } = useLocation()
 
@@ -228,7 +230,13 @@ const NoteDetailPage = () => {
             </Text>
             <Dialog>
               <DialogTrigger asChild>
-                <Button size="sm" left={<IcUpload />}>
+                <Button
+                  size="sm"
+                  left={<IcUpload />}
+                  onClick={() => {
+                    trackEvent('library_toolbar_play_click')
+                  }}
+                >
                   공유하기
                 </Button>
               </DialogTrigger>
@@ -576,7 +584,13 @@ const NoteDetailPage = () => {
                         <IcKebab className="size-5 text-icon-sub" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="-translate-y-2">
-                        <DropdownMenuItem right={<IcEdit />} onClick={() => setEditTargetQuizId(quiz.id)}>
+                        <DropdownMenuItem
+                          right={<IcEdit />}
+                          onClick={() => {
+                            setEditTargetQuizId(quiz.id)
+                            trackEvent('library_quiz_edit_click')
+                          }}
+                        >
                           문제 편집
                         </DropdownMenuItem>
                         <DropdownMenuItem
@@ -622,6 +636,7 @@ const NoteDetailPage = () => {
             checked={showAnswer}
             onCheckedChange={(checked) => {
               setShowAnswer(checked)
+              trackEvent('library_toolbar_answer_click', { value: checked })
             }}
           />
         </div>
@@ -631,7 +646,12 @@ const NoteDetailPage = () => {
         <div className="flex items-center text-icon-secondary">
           <Drawer>
             <DrawerTrigger asChild>
-              <button className="p-2">
+              <button
+                className="p-2"
+                onClick={() => {
+                  trackEvent('library_toolbar_play_click')
+                }}
+              >
                 <IcPlay className="size-6" />
               </button>
             </DrawerTrigger>
@@ -676,15 +696,32 @@ const NoteDetailPage = () => {
               </DrawerFooter>
             </DrawerContent>
           </Drawer>
-          <button className="p-2" onClick={() => setReviewPickOpen(true)}>
+          <button
+            className="p-2"
+            onClick={() => {
+              setReviewPickOpen(true)
+              trackEvent('library_toolbar_review_click')
+            }}
+          >
             <IcReview className="size-6" />
           </button>
-          <button className="p-2" onClick={() => setContentDrawerOpen(true)}>
+          <button
+            className="p-2"
+            onClick={() => {
+              setContentDrawerOpen(true)
+              trackEvent('library_toolbar_note_click')
+            }}
+          >
             <IcNote className="size-6" />
           </button>
           <DropdownMenu>
             <DropdownMenuTrigger className="p-2">
-              <IcKebab className="size-6" />
+              <IcKebab
+                className="size-6"
+                onClick={() => {
+                  trackEvent('library_toolbar_more_click')
+                }}
+              />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="-translate-y-2">
               <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>

@@ -21,6 +21,7 @@ import {
 } from '@/shared/components/ui/dropdown-menu'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { UseCheckListReturn } from '@/shared/hooks/use-check-list'
 import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -36,6 +37,7 @@ const MyNotesContent = ({
   checkList: UseCheckListReturn<GetAllDocumentsDocumentDto>
   changeSelectMode: (selectMode: boolean) => void
 }) => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
   const [sortOption, setSortOption] = useQueryParam('/library', 'sortOption')
   const activeSortOption = sortOption ?? 'CREATED_AT'
@@ -152,7 +154,10 @@ const MyNotesContent = ({
             id={document.id}
             selectMode={selectMode}
             changeSelectMode={changeSelectMode}
-            onClick={() => router.push('/library/:noteId', { params: [String(document.id)] })}
+            onClick={() => {
+              router.push('/library/:noteId', { params: [String(document.id)] })
+              trackEvent('library_myquiz_click')
+            }}
             swipeOptions={[
               <button
                 onClick={() => {

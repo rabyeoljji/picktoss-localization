@@ -1,6 +1,7 @@
 import { ImgStar } from '@/shared/assets/images'
 import { Text } from '@/shared/components/ui/text'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 
 interface DailyQuizTooltipProps {
   todaySolvedDailyQuizCount: number
@@ -11,6 +12,7 @@ export const DailyQuizTooltip = ({
   todaySolvedDailyQuizCount,
   consecutiveSolvedDailyQuizDays,
 }: DailyQuizTooltipProps) => {
+  const { trackEvent } = useAmplitude()
   return (
     <Tooltip
       open={
@@ -20,7 +22,7 @@ export const DailyQuizTooltip = ({
       }
     >
       <TooltipTrigger>
-        <div className="p-1.5 flex-center">
+        <div className="p-1.5 flex-center" onClick={() => trackEvent('daily_star_click')}>
           <ImgStar className="size-[28px]" />
         </div>
       </TooltipTrigger>

@@ -27,6 +27,7 @@ import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/comp
 import Loading from '@/shared/components/ui/loading'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { checkNotificationPermission } from '@/shared/lib/notification'
@@ -37,6 +38,7 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 
 const HomePage = () => {
   const router = useRouter()
+  const { trackEvent } = useAmplitude()
 
   // 온보딩 관련
   const [userLoaded, setUserLoaded] = useState(false)
@@ -412,13 +414,14 @@ const HomePage = () => {
       <div className="px-4">
         <button
           className="absolute bg-base-3 rounded-full bottom-[calc(var(--spacing-tab-navigation)+12px)] h-[48px] w-[calc(100%-32px)]"
-          onClick={() =>
+          onClick={() => {
             router.push('/note/create', {
               search: {
                 documentType: 'TEXT',
               },
             })
-          }
+            trackEvent('daily_complete_click', { format: '텍스트 버튼' })
+          }}
         >
           <Text typo="subtitle-2-medium" color="sub" className="center">
             새로운 퀴즈 만들기...
@@ -431,6 +434,7 @@ const HomePage = () => {
                   documentType: 'FILE',
                 },
               })
+              trackEvent('daily_complete_click', { format: '파일 버튼' })
             }}
             className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
           >
@@ -467,7 +471,14 @@ const HomePage = () => {
               ))}
             </div>
             <div className="absolute bottom-0 h-[114px] w-[calc(100%-32px)] pt-[14px]">
-              <Button onClick={() => setRewardDrawerOpen(false)}>확인</Button>
+              <Button
+                onClick={() => {
+                  setRewardDrawerOpen(false)
+                  trackEvent('daily_complete_click')
+                }}
+              >
+                확인
+              </Button>
             </div>
           </div>
         }

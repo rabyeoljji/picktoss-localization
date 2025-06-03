@@ -32,11 +32,13 @@ import { Skeleton } from '@/shared/components/ui/skeleton'
 import { Slider } from '@/shared/components/ui/slider'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { useSessionStorage } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
 
 const ExploreDetailPage = () => {
+  const { trackEvent } = useAmplitude()
   const defaultDateString = new Date().toISOString()
   const router = useRouter()
 
@@ -123,6 +125,8 @@ const ExploreDetailPage = () => {
 
   // 공유하기 핸들러
   const handleShare = async () => {
+    trackEvent('explore_share_click', { location: '상세 페이지' })
+
     if (document && navigator.share) {
       try {
         await navigator.share({
@@ -159,6 +163,8 @@ const ExploreDetailPage = () => {
       },
       {
         onSuccess: () => {
+          trackEvent('explore_bookmark_click', { location: '상세 페이지' })
+
           // 뒤로가기 시 탐험 카드에서의 북마크 업데이트를 위한 상태 스토리지 저장
           setStorageBookmark({
             id: document.id,
@@ -190,6 +196,7 @@ const ExploreDetailPage = () => {
   }
 
   const handlePlay = (quizCount: number) => {
+    trackEvent('explore_quizstart_click', { location: '상세 페이지' })
     createQuizSet(
       {
         quizType,
