@@ -1,6 +1,7 @@
 import { ImgStar } from '@/shared/assets/images'
 import { Text } from '@/shared/components/ui/text'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
+import { useRouter } from '@/shared/lib/router'
 
 interface DailyQuizTooltipProps {
   todaySolvedDailyQuizCount: number
@@ -11,6 +12,8 @@ export const DailyQuizTooltip = ({
   todaySolvedDailyQuizCount,
   consecutiveSolvedDailyQuizDays,
 }: DailyQuizTooltipProps) => {
+  const router = useRouter()
+
   return (
     <Tooltip
       open={
@@ -20,7 +23,7 @@ export const DailyQuizTooltip = ({
       }
     >
       <TooltipTrigger>
-        <div className="p-1.5 flex-center">
+        <div onClick={() => router.push('/account/my-star')} className="p-1.5 flex-center">
           <ImgStar className="size-[28px]" />
         </div>
       </TooltipTrigger>
