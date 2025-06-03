@@ -5,7 +5,6 @@ import { Button } from '@/shared/components/ui/button'
 import { ButtonSolidIcon } from '@/shared/components/ui/button-solid-icon'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
-import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { cn } from '@/shared/lib/utils'
 
 interface Props {
