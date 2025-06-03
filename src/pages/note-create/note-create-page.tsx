@@ -35,7 +35,6 @@ const NoteCreatePage = () => {
 }
 
 const NoteCreateHeader = () => {
-  const { trackEvent } = useAmplitude()
   const { documentType, setDocumentType } = useCreateNoteContext()
 
   return (
