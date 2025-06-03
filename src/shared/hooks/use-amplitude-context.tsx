@@ -146,6 +146,11 @@ export interface MyAnalysisClickProps {}
 /** [마이] my_star_click - 나의 별 메뉴 클릭 */
 export interface MyStarClickProps {}
 
+/** [마이] my_setting_push_click - 나의 별 메뉴 클릭 */
+export interface MySettingPushClickProps {
+  value: boolean
+}
+
 /** [마이] my_history_click - 퀴즈 기록 메뉴 클릭 */
 export interface MyHistoryClickProps {}
 
@@ -233,6 +238,7 @@ export type EventName =
   // 마이
   | 'my_analysis_click'
   | 'my_star_click'
+  | 'my_setting_push_click'
   | 'my_history_click'
   // 친구 초대
   | 'invite_view'
@@ -289,6 +295,7 @@ export type EventPropsMap = {
   // 마이
   my_analysis_click: MyAnalysisClickProps
   my_star_click: MyStarClickProps
+  my_setting_push_click: MySettingPushClickProps
   my_history_click: MyHistoryClickProps
   // 친구 초대
   invite_view: InviteViewProps

@@ -30,6 +30,7 @@ const AccountPage = () => {
 
   // 낙관적 업데이트 적용
   const handleNotification = (checked: boolean) => {
+    trackEvent('my_setting_push_click', { value: checked })
     setNotificationEnabled(checked)
 
     if (checked) {
