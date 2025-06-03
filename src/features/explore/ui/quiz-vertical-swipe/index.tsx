@@ -404,9 +404,7 @@ const ExploreSwipeCard = ({
           quizzes={quizzes}
           totalQuizCount={quizzes.length}
           onClickViewAllBtn={() => {
-            trackEvent('explore_detail_click', {
-              type: isBookmarked ? '보관한 컬렉션' : isOwner ? '만든 컬렉션' : '탐색',
-            })
+            trackEvent('explore_detail_click')
             router.push('/explore/detail/:noteId', { params: [String(id)] })
           }}
         />

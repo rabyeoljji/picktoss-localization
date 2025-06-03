@@ -94,9 +94,7 @@ export interface ExploreShareClickProps {
 }
 
 /** [탐험] explore_detail_click - 퀴즈 질문 미리보기에서 '전체보기'버튼 클릭 */
-export interface ExploreDetailClickProps {
-  type: '만든 컬렉션' | '보관한 컬렉션' | '탐색'
-}
+export interface ExploreDetailClickProps {}
 
 // 퀴즈 생성 이벤트
 /** [퀴즈 생성] generate_tab_click - 상단 tab 클릭 */
