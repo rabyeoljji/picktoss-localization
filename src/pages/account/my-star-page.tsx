@@ -18,9 +18,11 @@ import { Calendar } from '@/shared/components/calendar'
 import { Header } from '@/shared/components/header'
 import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { Link } from '@/shared/lib/router'
 
 const MyStarPage = () => {
+  const { trackEvent } = useAmplitude()
   const today = useMemo(() => new Date(), [])
 
   const [currentMonth, setCurrentMonth] = useState(today)
@@ -114,7 +116,12 @@ const MyStarPage = () => {
 
               <InviteDrawer
                 triggerComponent={
-                  <div className="bg-accent rounded-[12px] py-[16px] px-[24px] flex items-center justify-between">
+                  <div
+                    className="bg-accent rounded-[12px] py-[16px] px-[24px] flex items-center justify-between"
+                    onClick={() => {
+                      trackEvent('invite_view', { location: '마이 페이지' })
+                    }}
+                  >
                     <div className="flex flex-col gap-[4px]">
                       <Text typo="body-1-medium" color="secondary">
                         픽토스 초대장 보내기

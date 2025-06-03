@@ -151,7 +151,9 @@ export interface MyHistoryClickProps {}
 
 // 친구 초대 이벤트
 /** [친구 초대] invite_view - 친구 초대하기 시트 조회 */
-export interface InviteViewProps {}
+export interface InviteViewProps {
+  location: '마이 페이지' | '나의 별 페이지' | '별 부족 drawer'
+}
 
 /** [친구 초대] invite_share_click - 친구 초대하기 시트에서 버튼 클릭 */
 export interface InviteShareClickProps {
