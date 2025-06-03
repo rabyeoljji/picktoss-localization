@@ -40,6 +40,8 @@ const ExplorePage = () => {
     if (!isPWA && isMobile) {
       // PWA가 아니고 모바일인 경우 앱 다운로드 배너를 열도록 설정
       setIsAppDownloadBannerOpen(true)
+    } else {
+      setIsAppDownloadBannerOpen(false)
     }
   }, [isPWA, isMobile])
 
