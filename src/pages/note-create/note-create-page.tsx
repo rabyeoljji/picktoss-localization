@@ -17,6 +17,7 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { cn } from '@/shared/lib/utils'
 
 const NoteCreatePage = () => {
@@ -34,6 +35,7 @@ const NoteCreatePage = () => {
 }
 
 const NoteCreateHeader = () => {
+  const { trackEvent } = useAmplitude()
   const { documentType, setDocumentType } = useCreateNoteContext()
 
   return (
@@ -44,8 +46,12 @@ const NoteCreateHeader = () => {
         <div className="center">
           <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
             <TabsList className="w-[210px]">
-              <TabsTrigger value="FILE">파일</TabsTrigger>
-              <TabsTrigger value="TEXT">텍스트</TabsTrigger>
+              <TabsTrigger value="FILE" onClick={() => trackEvent('generate_tab_click', { tab: '파일' })}>
+                파일
+              </TabsTrigger>
+              <TabsTrigger value="TEXT" onClick={() => trackEvent('generate_tab_click', { tab: '텍스트' })}>
+                텍스트
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>

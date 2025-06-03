@@ -12,12 +12,14 @@ import { IcClose, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import { Chip } from '@/shared/components/ui/chip'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useHorizontalScrollWheel } from '@/shared/hooks/use-horizontal-scroll-wheel'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const ExplorePage = () => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
   const { isPWA } = usePWA()
   const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState(!isPWA && isMobile)
@@ -144,7 +146,19 @@ const ExplorePage = () => {
                       key={index}
                       variant={category.id === activeCategory ? 'selected' : 'darken'}
                       left={category.id === activeCategory ? category.emoji : undefined}
-                      onClick={() => setCategory(category.id)}
+                      onClick={() => {
+                        setCategory(category.id)
+                        trackEvent('explore_tab_click', {
+                          category: category.name as
+                            | '전체'
+                            | '자격증·수험'
+                            | '학문·전공'
+                            | 'IT·개발'
+                            | '재테크·시사'
+                            | '언어'
+                            | '상식·교양',
+                        })
+                      }}
                     >
                       {category.name}
                     </Chip>

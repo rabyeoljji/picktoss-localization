@@ -13,9 +13,11 @@ import { Drawer, DrawerContent, DrawerTrigger } from '@/shared/components/ui/dra
 import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { cn } from '@/shared/lib/utils'
 
 export const CreateNoteDrawer = () => {
+  const { trackEvent } = useAmplitude()
   const { data: categories } = useGetCategories()
   const {
     categoryId,
@@ -50,6 +52,7 @@ export const CreateNoteDrawer = () => {
               <Text typo="body-1-medium">{star}</Text>
             </div>
           }
+          onClick={() => trackEvent('generate_quiz_click')}
         >
           생성하기
         </Button>

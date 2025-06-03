@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { Link, useRouter } from '@/shared/lib/router'
 
 const BookmarkedNotesContent = ({ documents }: { documents: GetBookmarkedDocumentsDto[] }) => {
@@ -81,6 +82,7 @@ const BookmarkedCard = ({
   playedCount,
   bookmarkCount,
 }: BookmarkedCardProps) => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
 
   const { mutate: deleteBookmark } = useDeleteDocumentBookmark(id)
@@ -103,6 +105,7 @@ const BookmarkedCard = ({
     <BookmarkHorizontalCard
       onClick={() => {
         router.push('/explore/detail/:noteId', { params: [String(id)] })
+        trackEvent('library_bookmark_click')
       }}
       className="cursor-pointer"
     >

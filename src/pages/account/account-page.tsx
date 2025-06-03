@@ -16,9 +16,11 @@ import { Disclaimer, DisclaimerContent, DisclaimerTrigger } from '@/shared/compo
 import { Switch } from '@/shared/components/ui/switch'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { Link, useRouter } from '@/shared/lib/router'
 
 const AccountPage = () => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
 
   const { data: user } = useUser()
@@ -54,7 +56,14 @@ const AccountPage = () => {
         title={'MY'}
         right={
           <div className="flex items-center">
-            <Link to="/account/quiz-record" type="button" className="size-[40px] flex-center">
+            <Link
+              to="/account/quiz-record"
+              type="button"
+              className="size-[40px] flex-center"
+              onClick={() => {
+                trackEvent('my_history_click')
+              }}
+            >
               <IcRecord className="size-[24px]" />
             </Link>
             <Link to="/account/notification-config" type="button" className="size-[40px] flex-center">
@@ -124,7 +133,14 @@ const AccountPage = () => {
                   </div>
                 </div>
 
-                <Button onClick={() => router.push('/account/quiz-analysis')} size={'sm'} variant={'tertiary'}>
+                <Button
+                  onClick={() => {
+                    trackEvent('my_analysis_click')
+                    router.push('/account/quiz-analysis')
+                  }}
+                  size={'sm'}
+                  variant={'tertiary'}
+                >
                   분석 보기
                 </Button>
               </div>
@@ -145,7 +161,14 @@ const AccountPage = () => {
                     </Disclaimer>
                   </div>
 
-                  <Link to="/account/my-star" type="button" className="flex items-center gap-[4px]">
+                  <Link
+                    to="/account/my-star"
+                    type="button"
+                    className="flex items-center gap-[4px]"
+                    onClick={() => {
+                      trackEvent('my_star_click')
+                    }}
+                  >
                     <Text typo="subtitle-2-bold">{user?.star}개</Text>
                     <IcChevronRight className="size-[16px] text-icon-sub" />
                   </Link>
@@ -153,7 +176,12 @@ const AccountPage = () => {
 
                 <InviteDrawer
                   triggerComponent={
-                    <div className="bg-accent rounded-[8px] py-[16px] px-[24px] flex items-center gap-[16px]">
+                    <div
+                      className="bg-accent rounded-[8px] py-[16px] px-[24px] flex items-center gap-[16px]"
+                      onClick={() => {
+                        trackEvent('invite_view')
+                      }}
+                    >
                       <div className="flex-1 flex flex-col gap-[4px]">
                         <Text typo="body-1-medium" color="secondary">
                           픽토스 초대장 보내기

@@ -29,7 +29,10 @@ export interface DailySettingRangeClickProps {
 }
 
 /** [데일리] daily_setting_save_click - 퀴즈 설정 drawer에서 '저장'버튼 클릭 */
-export interface DailySettingSaveClickProps {}
+export interface DailySettingSaveClickProps {
+  type: '전체' | '객관식' | 'O/X'
+  range: '전체' | '내가 만든 퀴즈만' | '북마크한 퀴즈만'
+}
 
 /** [데일리] daily_quiz_add_click - 퀴즈 만들기 버튼 클릭 */
 export interface DailyQuizAddClickProps {
@@ -125,7 +128,10 @@ export interface QuizSettingSkipClickProps {
 }
 
 /** [퀴즈] quiz_setting_save_click - 퀴즈 설정 drawer에서 '저장'버튼 클릭 */
-export interface QuizSettingSaveClickProps {}
+export interface QuizSettingSaveClickProps {
+  time: boolean
+  skip: boolean
+}
 
 /** [퀴즈] quiz_exit_click - 퀴즈 나가기' 버튼 클릭 */
 export interface QuizExitClickProps {}

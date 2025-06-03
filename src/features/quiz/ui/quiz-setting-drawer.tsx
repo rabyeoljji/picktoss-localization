@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Label } from '@/shared/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam } from '@/shared/lib/router'
 
 export const QuizSettingDrawer = ({
@@ -17,6 +18,7 @@ export const QuizSettingDrawer = ({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) => {
+  const { trackEvent } = useAmplitude()
   const [param, setParam] = useQueryParam('/')
 
   return (
@@ -40,6 +42,10 @@ export const QuizSettingDrawer = ({
               const quizType = (e.target as HTMLFormElement).quizType.value
               const quizScope = (e.target as HTMLFormElement).quizScope.value
               setParam({ displayQuizType: quizType, displayQuizScope: quizScope })
+              trackEvent('daily_setting_save_click', {
+                type: quizType === 'ALL' ? '전체' : quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X',
+                range: quizScope === 'ALL' ? '전체' : quizScope === 'MY' ? '내가 만든 퀴즈만' : '북마크한 퀴즈만',
+              })
               onOpenChange(false)
             }}
           >

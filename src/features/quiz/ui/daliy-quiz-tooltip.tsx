@@ -1,6 +1,7 @@
 import { ImgStar } from '@/shared/assets/images'
 import { Text } from '@/shared/components/ui/text'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
 
 interface DailyQuizTooltipProps {
@@ -12,6 +13,7 @@ export const DailyQuizTooltip = ({
   todaySolvedDailyQuizCount,
   consecutiveSolvedDailyQuizDays,
 }: DailyQuizTooltipProps) => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
 
   return (
@@ -23,7 +25,13 @@ export const DailyQuizTooltip = ({
       }
     >
       <TooltipTrigger>
-        <div onClick={() => router.push('/account/my-star')} className="p-1.5 flex-center">
+        <div
+          onClick={() => {
+            trackEvent('daily_star_click')
+            router.push('/account/my-star')
+          }}
+          className="p-1.5 flex-center"
+        >
           <ImgStar className="size-[28px]" />
         </div>
       </TooltipTrigger>

@@ -15,6 +15,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from 
 import { Input } from '@/shared/components/ui/input'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 
 // TODO: 내용 수정
 const inviteText = {
@@ -30,6 +31,8 @@ interface Props {
 }
 
 const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
+  const { trackEvent } = useAmplitude()
+
   // 외부 제어 여부 확인 (controlled vs uncontrolled)
   const isControlled = open !== undefined
   const [internalOpen, setInternalOpen] = useState(false) // 내부 상태는 uncontrolled 모드에서만 사용
@@ -59,6 +62,8 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
       return
     }
 
+    trackEvent('invite_share_click', { method: '카카오톡' })
+
     try {
       const imageUrl = `${window.location.origin}images/kakao-share-thumbnail.png`
 
@@ -81,12 +86,16 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
       url: inviteLink,
     }
 
+    trackEvent('invite_share_click', { method: '일반 공유' })
+
     // fallback: 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
     await nativeShare(content, handleCopy)
   }
 
   const handleCopy = async () => {
     if (!inviteLink) return
+
+    trackEvent('invite_share_click', { method: '복사' })
 
     try {
       await navigator.clipboard.writeText(inviteLink)

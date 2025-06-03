@@ -24,6 +24,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogCTA, DialogContent } from '@/shared/components/ui/dialog'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { getLocalStorageItem, setLocalStorageItem } from '@/shared/lib/storage/lib'
 import { cn } from '@/shared/lib/utils'
@@ -337,6 +338,8 @@ const QuizSettingDrawer = ({
   quizSetting: { autoNext: boolean; hideTimeSpent: boolean }
   setQuizSetting: React.Dispatch<SetStateAction<{ autoNext: boolean; hideTimeSpent: boolean }>>
 }) => {
+  const { trackEvent } = useAmplitude()
+
   const [params] = useQueryParam('/progress-quiz/:quizSetId')
   const [isOpen, setIsOpen] = useState(false)
 
@@ -370,6 +373,11 @@ const QuizSettingDrawer = ({
         hideTimeSpent: tempSettings.hideTimeSpent,
       })
     }
+
+    trackEvent('quiz_setting_save_click', {
+      time: tempSettings.hideTimeSpent,
+      skip: tempSettings.autoNext,
+    })
   }
   // 해설이 존재하는 상태에서는 바로 autoNext를 on시키지 않는다. 이때는 다음 문제부터 적용된다.
   useEffect(() => {
@@ -490,6 +498,7 @@ const ExitDialog = ({
   exitDialogOpen: boolean
   setExitDialogOpen: (open: boolean) => void
 }) => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
 
   return (
@@ -509,7 +518,10 @@ const ExitDialog = ({
 
         <DialogCTA.B
           className="pt-10"
-          onPrimaryButtonClick={() => router.back()}
+          onPrimaryButtonClick={() => {
+            trackEvent('quiz_exit_click')
+            router.back()
+          }}
           onSecondaryButtonClick={() => setExitDialogOpen(false)}
           primaryButtonLabel="나가기"
           secondaryButtonLabel="계속하기"

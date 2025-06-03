@@ -13,9 +13,11 @@ import { IcAdd, IcBack, IcProfile } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import Loading from '@/shared/components/ui/loading'
 import { TextButton } from '@/shared/components/ui/text-button'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
 
 const LibraryPage = () => {
+  const { trackEvent } = useAmplitude()
   const router = useRouter()
 
   const {
@@ -67,7 +69,10 @@ const LibraryPage = () => {
           }
           right={
             <button
-              onClick={() => router.push('/note/create', { search: { documentType: 'FILE' } })}
+              onClick={() => {
+                router.push('/note/create', { search: { documentType: 'FILE' } })
+                trackEvent('library_quiz_add_click')
+              }}
               className="size-[40px] flex-center"
             >
               <IcAdd className="size-[24px]" />

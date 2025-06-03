@@ -19,6 +19,7 @@ import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
 import { Button } from '@/shared/components/ui/button'
 import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { useSessionStorage } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
@@ -246,6 +247,8 @@ const ExploreSwipeCard = ({
   document: GetPublicDocumentsDto
   setDocuments: React.Dispatch<React.SetStateAction<PublicDocumentsDto[]>>
 }) => {
+  const { trackEvent } = useAmplitude()
+
   const {
     id,
     creator,
@@ -270,6 +273,8 @@ const ExploreSwipeCard = ({
 
   // 공유하기 핸들러
   const handleShare = async () => {
+    trackEvent('explore_share_click', { location: '미리보기 페이지' })
+
     if (navigator.share) {
       try {
         await navigator.share({
@@ -329,6 +334,8 @@ const ExploreSwipeCard = ({
     }
 
     const onSuccess = () => {
+      trackEvent('explore_bookmark_click', { location: '미리보기 페이지' })
+
       if (!isCurrentlyBookmarked) {
         toast('퀴즈가 도서관에 저장되었어요', {
           icon: <IcBookmarkFilled className="size-4" />,
@@ -351,6 +358,7 @@ const ExploreSwipeCard = ({
   }
 
   const handleQuizStart = () => {
+    trackEvent('explore_quizstart_click', { location: '상세 페이지' })
     createQuizSet(
       {
         quizType: 'ALL',
@@ -395,7 +403,12 @@ const ExploreSwipeCard = ({
         <ExploreQuizCard.Quizzes
           quizzes={quizzes}
           totalQuizCount={quizzes.length}
-          onClickViewAllBtn={() => router.push('/explore/detail/:noteId', { params: [String(id)] })}
+          onClickViewAllBtn={() => {
+            trackEvent('explore_detail_click', {
+              type: isBookmarked ? '보관한 컬렉션' : isOwner ? '만든 컬렉션' : '탐색',
+            })
+            router.push('/explore/detail/:noteId', { params: [String(id)] })
+          }}
         />
       }
       footer={<ExploreQuizCard.Footer onClickStartQuiz={handleQuizStart} isLoading={isCreatingQuizSet} />}
