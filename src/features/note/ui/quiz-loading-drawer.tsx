@@ -7,6 +7,8 @@ import { useProgressAnimation } from '@/features/quiz/model/use-progress-animati
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import QuizLoadingProgressBar from '@/features/quiz/ui/quiz-loading-progress-bar'
 
+import { useDeleteDocument } from '@/entities/document/api/hooks'
+
 import { ImgQuizEmpty, ImgQuizcard } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Button } from '@/shared/components/ui/button'
@@ -55,6 +57,8 @@ export const QuizLoadingDrawer = () => {
     estimatedLoadingTime: ESTIMATED_LOADING_TIME,
   })
 
+  const { mutate: deleteDocument } = useDeleteDocument()
+
   useEffect(() => {
     if (isLoading) {
       startAnimation()
@@ -81,6 +85,12 @@ export const QuizLoadingDrawer = () => {
       toast.success('문서가 생성되었습니다.')
     }
   }, [quizSetId])
+
+  useOnceEffect(() => {
+    if (error != null) {
+      deleteDocument({ documentIds: [documentId] })
+    }
+  }, [error])
 
   const renderQuizLoadingDrawerContent = () => {
     // 에러 발생 시 에러 화면 표시
