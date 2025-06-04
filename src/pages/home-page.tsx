@@ -21,7 +21,6 @@ import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizz
 import { IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
 import { ImgPush, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
-import { LackingStarDrawer } from '@/shared/components/drawers/lacking-star-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/components/ui/drawer'
