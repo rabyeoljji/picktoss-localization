@@ -5,6 +5,7 @@ import {
   CreateDocumentPayload,
   CreateQuizzesRequest,
   DeleteDocumentRequest,
+  GetAllDocumentsDocumentDto,
   GetBookmarkedDocumentsDto,
   GetBookmarkedDocumentsResponse,
   GetPublicDocumentsResponse,
@@ -526,14 +527,43 @@ export const useDeleteDocument = (options?: {
   sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
 }) => {
   const queryClient = useQueryClient()
+  const queryKey = [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption]
 
   return useMutation({
     mutationKey: DOCUMENT_KEYS.deleteDocument,
     mutationFn: (data: DeleteDocumentRequest) => deleteDocument(data),
+    onMutate: async ({ documentIds }) => {
+      // 1. 진행 중인 쿼리 취소
+      await queryClient.cancelQueries({ queryKey })
+      
+      // 2. 이전 데이터 스냅샷 저장
+      const previousData = queryClient.getQueryData(queryKey)
+      
+      // 3. 낙관적 업데이트 수행
+      queryClient.setQueryData(
+        queryKey,
+        (oldData: { documents?: GetAllDocumentsDocumentDto[] } | undefined) => {
+          if (!oldData) return { documents: [] }
+          
+          return {
+            ...oldData,
+            documents: oldData.documents?.filter((doc) => !documentIds.includes(doc.id)) || [],
+          }
+        },
+      )
+      
+      // 4. 롤백을 위한 컨텍스트 반환
+      return { previousData }
+    },
+    onError: (_err, _variables, context) => {
+      // 5. 오류 발생 시 이전 데이터로 롤백
+      if (context?.previousData) {
+        queryClient.setQueryData(queryKey, context.previousData)
+      }
+    },
     onSettled: () => {
-      queryClient.invalidateQueries({
-        queryKey: [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
-      })
+      // 6. 확정된 후 쿼리 무효화
+      queryClient.invalidateQueries({ queryKey })
     },
   })
 }

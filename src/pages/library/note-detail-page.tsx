@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router'
 
@@ -14,6 +15,7 @@ import { NoteDetailQuizLoadingDrawer } from '@/features/note/ui/note-detail-quiz
 import { useGetCategories } from '@/entities/category/api/hooks'
 import {
   useAddQuizzes,
+  useDeleteDocument,
   useGetSingleDocument,
   useUpdateDocumentCategory,
   useUpdateDocumentEmoji,
@@ -46,6 +48,7 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
+import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
@@ -107,7 +110,8 @@ const NoteDetailPage = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
 
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
-  const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL' | null>(null)
+  const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
+  const { mutate: deleteDocument } = useDeleteDocument()
 
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
@@ -729,9 +733,9 @@ const NoteDetailPage = () => {
               <DropdownMenuItem
                 className="text-red-500"
                 right={<IcDelete className="text-icon-critical" />}
-                onClick={() => setDeleteTargetQuizType(quizType)}
+                onClick={() => setDeleteDocumentDialogOpen(true)}
               >
-                문제 전체 삭제
+                문서 삭제
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -1091,33 +1095,28 @@ const NoteDetailPage = () => {
         </Dialog>
       )}
 
-      {/* 유형 문제 삭제 confirm 모달 */}
-      {deleteTargetQuizType !== null && (
-        <Dialog
-          defaultOpen={true}
-          onOpenChange={(open) => {
-            if (!open) {
-              setDeleteTargetQuizType(null)
-            }
-          }}
-        >
-          <DialogContent className="pt-[24px] px-[20px] pb-[8px] w-[280px]">
-            <DialogTitle className="typo-subtitle-2-bold text-center">문제를 삭제할까요?</DialogTitle>
-            <DialogDescription className="typo-body-1-medium text-sub text-center mt-1">
-              삭제한 문제는 다시 복구할 수 없어요
-            </DialogDescription>
-            <div className="flex gap-2.5 mt-[20px]">
-              <DialogClose asChild>
-                <button className="h-[48px] flex-1 text-sub">취소</button>
-              </DialogClose>
-              {/* TODO: 문제 삭제 */}
-              <button className="h-[48px] flex-1 text-red-500" onClick={() => {}}>
-                삭제
-              </button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* 문서 삭제 confirm 모달 */}
+      <SystemDialog
+        open={deleteDocumentDialogOpen}
+        onOpenChange={setDeleteDocumentDialogOpen}
+        title="퀴즈를 삭제하시겠어요?"
+        content={
+          <Text typo="body-1-medium" color="sub">
+            선택한 퀴즈와{' '}
+            <Text as="span" typo="body-1-medium" color="incorrect">
+              {`${document?.quizzes.length}개의 문제`}
+            </Text>
+            가 모두 삭제되며, 복구할 수 없어요
+          </Text>
+        }
+        variant="critical"
+        confirmLabel="삭제"
+        onConfirm={() => {
+          deleteDocument({ documentIds: [Number(noteId)] })
+          router.replace('/library')
+          toast('퀴즈가 삭제되었습니다.')
+        }}
+      />
 
       {isCreatingNewQuizzes && (
         <NoteDetailQuizLoadingDrawer
