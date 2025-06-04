@@ -21,6 +21,7 @@ import {
   useUpdateDocumentEmoji,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
+import { useUser } from '@/entities/member/api/hooks'
 import {
   useCreateQuizSet,
   useDeleteQuiz,
@@ -47,6 +48,7 @@ import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
+import { LackingStarDrawer } from '@/shared/components/drawers/lacking-star-drawer'
 import { Header } from '@/shared/components/header'
 import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
@@ -105,6 +107,7 @@ const NoteDetailPage = () => {
   } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
+  const { data: user } = useUser()
 
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
@@ -512,64 +515,79 @@ const NoteDetailPage = () => {
                 퀴즈도 풀어보고 싶다면?
               </Text>
 
-              <Dialog open={createQuizDialogOpen} onOpenChange={setCreateQuizDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="xs" variant="secondary1" className="ml-auto">
-                    생성하기
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <div className="flex-center flex-col text-center gap-4 mb-[32px]">
-                    <div className="h-[120px] flex-center">
-                      {quizType === 'MIX_UP' ? <ImgMultiple className="w-[99px]" /> : <ImgOx className="w-[106.6px]" />}
+              {Number(user?.star) < calculateStar(document?.content.length || 0) ? (
+                <LackingStarDrawer
+                  trigger={
+                    <Button size="xs" variant="secondary1" className="ml-auto">
+                      생성하기
+                    </Button>
+                  }
+                  needStars={calculateStar(document?.content.length || 0)}
+                />
+              ) : (
+                <Dialog open={createQuizDialogOpen} onOpenChange={setCreateQuizDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="xs" variant="secondary1" className="ml-auto">
+                      생성하기
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <div className="flex-center flex-col text-center gap-4 mb-[32px]">
+                      <div className="h-[120px] flex-center">
+                        {quizType === 'MIX_UP' ? (
+                          <ImgMultiple className="w-[99px]" />
+                        ) : (
+                          <ImgOx className="w-[106.6px]" />
+                        )}
+                      </div>
+                      <div className="grid gap-2">
+                        <Text typo="h4" color="primary">
+                          {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
+                        </Text>
+                        <Text typo="subtitle-2-medium" color="sub">
+                          이 유형의 문제를 생성할까요?
+                        </Text>
+                      </div>
                     </div>
-                    <div className="grid gap-2">
-                      <Text typo="h4" color="primary">
-                        {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
-                      </Text>
-                      <Text typo="subtitle-2-medium" color="sub">
-                        이 유형의 문제를 생성할까요?
-                      </Text>
-                    </div>
-                  </div>
 
-                  <DialogCTA
-                    customButton={
-                      <Button
-                        variant="special"
-                        right={
-                          <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
-                            <ImgStar className="size-[16px] mr-[4px]" />
-                            <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
-                          </div>
-                        }
-                        onClick={() => {
-                          addQuizzes(
-                            {
-                              documentId: Number(noteId),
-                              data: {
-                                star: calculateStar(document?.content.length || 0),
-                                quizType: mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP',
+                    <DialogCTA
+                      customButton={
+                        <Button
+                          variant="special"
+                          right={
+                            <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                              <ImgStar className="size-[16px] mr-[4px]" />
+                              <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
+                            </div>
+                          }
+                          onClick={() => {
+                            addQuizzes(
+                              {
+                                documentId: Number(noteId),
+                                data: {
+                                  star: calculateStar(document?.content.length || 0),
+                                  quizType: mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP',
+                                },
                               },
-                            },
-                            {
-                              onSuccess: () => {
-                                refetchSingleDocument()
-                                setCreateQuizDialogOpen(false)
-                                setIsCreatingNewQuizzes(true)
+                              {
+                                onSuccess: () => {
+                                  refetchSingleDocument()
+                                  setCreateQuizDialogOpen(false)
+                                  setIsCreatingNewQuizzes(true)
+                                },
                               },
-                            },
-                          )
-                        }}
-                      >
-                        생성하기
-                      </Button>
-                    }
-                    hasClose
-                    closeLabel="취소"
-                  />
-                </DialogContent>
-              </Dialog>
+                            )
+                          }}
+                        >
+                          생성하기
+                        </Button>
+                      }
+                      hasClose
+                      closeLabel="취소"
+                    />
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           )}
 

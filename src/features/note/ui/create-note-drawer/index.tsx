@@ -6,9 +6,11 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { QuizType, useCreateNoteContext } from '@/features/note/model/create-note-context'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
+import { useUser } from '@/entities/member/api/hooks'
 
 import { IcCheck, IcChevronDown, IcChevronUp } from '@/shared/assets/icon'
 import { ImgStar } from '@/shared/assets/images'
+import { LackingStarDrawer } from '@/shared/components/drawers/lacking-star-drawer'
 import { Button } from '@/shared/components/ui/button'
 import { Drawer, DrawerContent, DrawerTrigger } from '@/shared/components/ui/drawer'
 import { Spinner } from '@/shared/components/ui/spinner'
@@ -42,6 +44,36 @@ export const CreateNoteDrawer = () => {
   const toggleQuizTypeExpand = () => setIsQuizTypeExpanded((prev) => !prev)
 
   const selectedCategory = categories?.find((category) => category.id === categoryId)
+
+  const { data: user } = useUser()
+
+  if (!user) return null
+
+  if (Number(user.star) < Number(star)) {
+    return (
+      <LackingStarDrawer
+        trigger={
+          <Button
+            variant="special"
+            right={
+              <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                <ImgStar className="size-[16px] mr-[4px]" />
+                <Text typo="body-1-medium">{star}</Text>
+              </div>
+            }
+            onClick={() =>
+              trackEvent('generate_quiz_click', {
+                location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+              })
+            }
+          >
+            생성하기
+          </Button>
+        }
+        needStars={Number(star)}
+      />
+    )
+  }
 
   return (
     <Drawer open={open || isPending} onOpenChange={setOpen}>
