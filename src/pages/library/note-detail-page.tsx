@@ -753,7 +753,7 @@ const NoteDetailPage = () => {
                 right={<IcDelete className="text-icon-critical" />}
                 onClick={() => setDeleteDocumentDialogOpen(true)}
               >
-                문서 삭제
+                퀴즈 삭제
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
