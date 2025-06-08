@@ -34,29 +34,32 @@ const QuizRecordDailyDetailPage = () => {
     })
   }
 
-  useEffect(() => {
-    console.log('searchParams', searchParams.get('solvedDate'))
-  }, [dailyQuizRecordId, searchParams])
+  const getSafeAreaTop = () => {
+    const root = document.documentElement
+    const computed = getComputedStyle(root)
+    const value = computed.getPropertyValue('--safe-area-inset-top') || '0px'
+    return parseFloat(value)
+  }
+
+  const [threshold, setThreshold] = useState(0)
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setShowScrollTopButton(entry.isIntersecting)
-      },
-      {
-        root: null,
-        threshold: 0,
-        rootMargin: '0px 0px -96% 0px',
-      },
-    )
+    if (!quizContainerRef.current) return
+    const rect = quizContainerRef.current.getBoundingClientRect()
+    setThreshold(rect.top + getSafeAreaTop())
+  }, [quizContainerRef.current])
 
-    const el = quizContainerRef.current
-    if (el) observer.observe(el)
+  useEffect(() => {
+    const container = scrollContainerRef.current
+    if (!container) return
 
-    return () => {
-      if (el) observer.unobserve(el)
+    const handleScroll = () => {
+      setShowScrollTopButton(container.scrollTop > threshold)
     }
-  }, [])
+
+    container.addEventListener('scroll', handleScroll)
+    return () => container.removeEventListener('scroll', handleScroll)
+  }, [threshold])
 
   if (isLoading) {
     return <Loading center />
