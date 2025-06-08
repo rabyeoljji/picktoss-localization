@@ -35,19 +35,24 @@ export const getQuizzes = async (
 export interface GetAllQuizRecordDailyQuizDto {
   dailyQuizRecordId: number
   totalQuizCount: number
-  solvedDate: string
+  solvedDateTime: string
 }
 
 export interface GetAllQuizRecordQuizSetDto {
   quizSetId: number
   quizSetName: string
+  emoji: string
   totalQuizCount: number
-  createdAt: string
+  correctAnswerCount: number
+  solvedDateTime: string
 }
 
 export interface GetAllQuizRecordsResponse {
-  quizSets: GetAllQuizRecordQuizSetDto[]
-  dailyQuizRecords: GetAllQuizRecordDailyQuizDto[]
+  quizRecords: {
+    solvedDate: string
+    quizSets: GetAllQuizRecordQuizSetDto[]
+    dailyQuizRecords: GetAllQuizRecordDailyQuizDto[]
+  }[]
 }
 
 export const getQuizzesRecords = async (): Promise<GetAllQuizRecordsResponse> => {

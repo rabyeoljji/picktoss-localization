@@ -11,7 +11,9 @@ import {
   PaymentHistoryPage,
   PolicyPage,
   QuizAnalysisPage,
+  QuizRecordDailyDetailPage,
   QuizRecordPage,
+  QuizRecordSetDetailPage,
   WithdrawPage,
 } from '@/pages/account'
 import { FeedbackCompletePage } from '@/pages/account/feedback-complete-page'
@@ -73,6 +75,8 @@ export const AppRouter = () => {
                 <Route path={RoutePath.accountDailyQuizAttendance} element={<DailyQuizAttendancePage />} />
                 <Route path={RoutePath.accountQuizAnalysis} element={<QuizAnalysisPage />} />
                 <Route path={RoutePath.accountQuizRecord} element={<QuizRecordPage />} />
+                <Route path={RoutePath.accountQuizRecordDailyDetail} element={<QuizRecordDailyDetailPage />} />
+                <Route path={RoutePath.accountQuizRecordSetDetail} element={<QuizRecordSetDetailPage />} />
                 <Route path={RoutePath.accountNotificationConfig} element={<NotificationConfigPage />} />
                 <Route path={RoutePath.accountMyStar} element={<MyStarPage />} />
                 <Route path={RoutePath.accountStarHistory} element={<StarHistoryPage />} />
