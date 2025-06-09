@@ -48,10 +48,14 @@ const QuizRecordSetDetailPage = () => {
   const [threshold, setThreshold] = useState(0)
 
   useEffect(() => {
-    if (!quizContainerRef.current) return
-    const rect = quizContainerRef.current.getBoundingClientRect()
-    setThreshold(rect.top + getSafeAreaTop())
-  }, [quizContainerRef.current])
+    if (!quizSetRecordData) return
+
+    requestAnimationFrame(() => {
+      if (!quizContainerRef.current) return
+      const rect = quizContainerRef.current.getBoundingClientRect()
+      setThreshold(rect.top + getSafeAreaTop())
+    })
+  }, [quizSetRecordData])
 
   useEffect(() => {
     const container = scrollContainerRef.current
@@ -62,6 +66,9 @@ const QuizRecordSetDetailPage = () => {
     }
 
     container.addEventListener('scroll', handleScroll)
+
+    handleScroll() // 초기 설정
+
     return () => container.removeEventListener('scroll', handleScroll)
   }, [threshold])
 
@@ -154,7 +161,10 @@ const QuizRecordSetDetailPage = () => {
                 ) : (
                   <QuestionCard.Multiple
                     answerIndex={question.options.findIndex((option) => option === question.answer)}
-                    showIndexs={[question.options.findIndex((option) => option === question.choseAnswer)]}
+                    showIndexs={[
+                      question.options.findIndex((option) => option === question.answer),
+                      question.options.findIndex((option) => option === question.choseAnswer),
+                    ]}
                     options={question.options}
                   />
                 )}
