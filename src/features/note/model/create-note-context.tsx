@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
+import { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
 
 import { toast } from 'sonner'
 
@@ -10,6 +10,7 @@ import { CreateDocumentPayload } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
+import { generateSimpleNonce } from '@/shared/lib/nonce'
 import { useQueryParam } from '@/shared/lib/router'
 
 export type DocumentType = CreateDocumentPayload['documentType']
@@ -17,7 +18,6 @@ export type QuizType = CreateDocumentPayload['quizType']
 
 export interface CreateNoteState {
   documentType: DocumentType
-  documentName: string
   quizType: QuizType | null
   star: string
   content: string
@@ -30,7 +30,6 @@ export interface CreateNoteState {
 export interface CreateNoteContextValues extends CreateNoteState {
   // Setter functions
   setDocumentType: (documentType: DocumentType) => void
-  setDocumentName: (documentName: string) => void
   setQuizType: (quizType: QuizType) => void
   setStar: (star: string) => void
   setContent: (content: string) => void
@@ -57,7 +56,6 @@ export interface CreateNoteContextValues extends CreateNoteState {
 const initialNoteState = {
   star: '5',
   emoji: '📝',
-  documentName: '',
   categoryId: null,
   isPublic: true,
   quizType: null,
@@ -74,7 +72,6 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
   const [state, setState] = useState<{
     star: string
     emoji: string
-    documentName: string
     categoryId: number | null
     isPublic: boolean
     quizType: QuizType | null
@@ -119,9 +116,8 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     const isContentValid =
       state.content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN &&
       state.content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
-    const isNameValid = state.documentName.trim().length > 0
     const isTypeValid = documentType !== null
-    return isContentValid && isNameValid && isTypeValid
+    return isContentValid && isTypeValid
   }
 
   const checkCreateActivate = () => {
@@ -173,14 +169,8 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         return
       }
 
-      const removeFileExtension = (filename: string) => {
-        const lastDotIndex = filename.lastIndexOf('.')
-        return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
-      }
-
       setState((prev) => ({
         ...prev,
-        documentName: removeFileExtension(newFileInfo.name),
         content: newFileInfo.content,
         fileInfo: newFileInfo,
       }))
@@ -199,12 +189,11 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
   /** 노트 생성 유효성 검사 함수 */
   const checkIsValid = () => {
     const blob = new Blob([state.content], { type: 'text/markdown' })
-    const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
+    const file = new File([blob], `${generateSimpleNonce(16)}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
       categoryId: state.categoryId,
       isPublic: state.isPublic,
-      documentName: state.documentName,
       file,
       quizType: state.quizType,
       star: state.star,
@@ -228,10 +217,9 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     }
 
     const blob = new Blob([state.content], { type: 'text/markdown' })
-    const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
+    const file = new File([blob], `${generateSimpleNonce(16)}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
-      documentName: state.documentName,
       file,
       categoryId: state.categoryId || 0,
       isPublic: state.isPublic,
@@ -260,14 +248,12 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         documentType: documentType,
         categoryId: state.categoryId,
         isPublic: state.isPublic,
-        documentName: state.documentName,
         quizType: state.quizType,
         star: state.star,
         content: state.content,
         emoji: state.emoji,
 
         setDocumentType: (documentType: DocumentType) => setParams({ documentType }),
-        setDocumentName: (documentName: string) => setState((prev) => ({ ...prev, documentName })),
         setQuizType: (quizType: QuizType) => setState((prev) => ({ ...prev, quizType })),
         setStar: (star: string) => setState((prev) => ({ ...prev, star })),
         setContent: (content: string) => setState((prev) => ({ ...prev, content })),

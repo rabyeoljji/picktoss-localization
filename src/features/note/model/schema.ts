@@ -35,10 +35,6 @@ export type FileInfo = z.infer<typeof FileInfoSchema>
 export const CreateDocumentSchema = z.object({
   categoryId: z.number().min(1, '카테고리 선택은 필수입니다'),
   isPublic: z.boolean(),
-  documentName: z
-    .string()
-    .min(DOCUMENT_CONSTRAINTS.TITLE.MIN, '노트 제목을 입력해주세요')
-    .max(DOCUMENT_CONSTRAINTS.TITLE.MAX, '노트 제목은 30자까지 작성할 수 있어요'),
   file: z.any().refine((data) => data instanceof File, {
     message: 'The data must be a File object.',
   }),

@@ -28,7 +28,7 @@ export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
   const { pathname } = useLocation()
   const router = useRouter()
-  const { documentName, quizType, documentType } = useCreateNoteContext()
+  const { quizType, documentType } = useCreateNoteContext()
 
   // 로딩 상태를 queryParam으로 관리
   const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
@@ -188,7 +188,7 @@ export const QuizLoadingDrawer = () => {
         <div className="border-b border-divider">
           <div className="pt-[14px] pb-[2px] pl-[17px] pr-[18px] flex items-center gap-2.5">
             <Text typo="subtitle-2-bold" color="primary">
-              {documentName}
+              {/* {documentName} */}
             </Text>
             <Text typo="body-1-medium" color="sub">
               {quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X'}

@@ -5,7 +5,6 @@ import { DOCUMENT_ENDPOINTS } from './config'
 // 문서 생성
 export interface CreateDocumentPayload {
   file: File | Blob
-  documentName: string
   categoryId: number
   isPublic: boolean
   quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
@@ -21,7 +20,6 @@ export interface CreateDocumentResponse {
 export const createDocument = async (data: CreateDocumentPayload): Promise<CreateDocumentResponse> => {
   const formData = new FormData()
   formData.append('file', data.file)
-  formData.append('documentName', data.documentName)
   formData.append('categoryId', String(data.categoryId))
   formData.append('isPublic', String(data.isPublic))
   formData.append('star', data.star)

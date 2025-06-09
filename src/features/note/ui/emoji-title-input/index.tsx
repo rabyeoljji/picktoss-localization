@@ -2,12 +2,10 @@ import { useEffect, useRef, useState } from 'react'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 
-import { Input } from '@/shared/components/ui/input'
-
 import { useCreateNoteContext } from '../../model/create-note-context'
 
 export const EmojiTitleInput = () => {
-  const { emoji, setEmoji, documentName, setDocumentName } = useCreateNoteContext()
+  const { emoji, setEmoji } = useCreateNoteContext()
 
   const emojiPickerRef = useRef<HTMLDivElement>(null)
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
@@ -53,13 +51,13 @@ export const EmojiTitleInput = () => {
       </div>
 
       <div className="flex-1">
-        <Input
+        {/* <Input
           className="border-none placeholder:text-caption h-auto px-0 focus-visible:ring-0"
           typo="h3"
           placeholder="제목 입력"
           value={documentName}
           onChange={(e) => setDocumentName(e.target.value)}
-        />
+        /> */}
       </div>
     </div>
   )
