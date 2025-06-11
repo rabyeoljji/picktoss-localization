@@ -4,12 +4,15 @@
 //   if (Notification.permission === 'granted' || Notification.permission === 'denied') {
 //     return true
 //   }
+import { StorageKey } from '@/shared/lib/storage'
 
 //   return false
 // }
 /** 알림 권한이 설정되었는지 확인 (iOS 대응) */
 export const checkNotificationPermission = (): boolean => {
-  return Notification.permission !== 'default'
+  return (
+    Notification.permission !== 'default' || localStorage.getItem(StorageKey.notificationPermissionComplete) === 'true'
+  )
 }
 
 /** 범용 알림 권한 요청 함수 (iOS 대응 포함) */
@@ -31,6 +34,8 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
         console.warn('사용자가 알림 권한을 거부했습니다.')
         return false
       }
+
+      localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
     } else if (Notification.permission === 'denied') {
       console.warn('이미 알림 권한이 차단된 상태입니다.')
       return false
@@ -56,6 +61,7 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
       try {
         const permissionResult = await registration.pushManager.permissionState({ userVisibleOnly: true })
         pushPermissionState = permissionResult
+        localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
         console.log(`PushManager.permissionState 결과: ${pushPermissionState}`)
       } catch (error) {
         console.warn('PushManager.permissionState 조회 실패', error)

@@ -17,6 +17,8 @@ export const StorageKey = {
   /** 북마크 변경 체크 */
   bookmarkUpdate: 'bookmarkUpdate',
   quizSetting: 'quizSetting',
+  /** 알림 권한 설정 */
+  notificationPermissionComplete: 'notificationPermissionComplete',
 } as const
 
 /**
