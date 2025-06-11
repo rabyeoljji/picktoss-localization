@@ -254,7 +254,7 @@ export const ProgressQuizPage = () => {
 
   const currentQuiz = quizSetData.quizzes[params.quizIndex]
 
-  return !!quizResultCardDatas ? (
+  return quizResultCardDatas ? (
     <QuizResultView totalElapsedTime={totalElapsedTime} quizWithResultData={quizResultCardDatas} />
   ) : (
     <div className="min-h-screen bg-surface-1">

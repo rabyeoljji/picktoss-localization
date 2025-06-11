@@ -334,7 +334,10 @@ const ExploreSwipeCard = ({
     }
 
     const onSuccess = () => {
-      trackEvent('explore_bookmark_click', { location: '미리보기 페이지' })
+      trackEvent('explore_bookmark_click', {
+        location: '미리보기 페이지',
+        state: isCurrentlyBookmarked ? '추가' : '해제',
+      })
 
       if (!isCurrentlyBookmarked) {
         toast('퀴즈가 도서관에 저장되었어요', {
@@ -358,7 +361,6 @@ const ExploreSwipeCard = ({
   }
 
   const handleQuizStart = () => {
-    trackEvent('explore_quizstart_click', { location: '상세 페이지' })
     createQuizSet(
       {
         quizType: 'ALL',
@@ -366,6 +368,7 @@ const ExploreSwipeCard = ({
       },
       {
         onSuccess: (data) => {
+          trackEvent('quiz_start_click', { location: '탐험 메인' })
           router.push('/progress-quiz/:quizSetId', {
             params: [String(data.quizSetId)],
             search: {
@@ -404,9 +407,7 @@ const ExploreSwipeCard = ({
           quizzes={quizzes}
           totalQuizCount={quizzes.length}
           onClickViewAllBtn={() => {
-            trackEvent('explore_detail_click', {
-              type: isBookmarked ? '보관한 컬렉션' : isOwner ? '만든 컬렉션' : '탐색',
-            })
+            trackEvent('explore_detail_click')
             router.push('/explore/detail/:noteId', { params: [String(id)] })
           }}
         />

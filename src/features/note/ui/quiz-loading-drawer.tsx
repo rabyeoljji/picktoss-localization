@@ -1,10 +1,13 @@
 import { useEffect } from 'react'
+import { useLocation } from 'react-router'
 
 import { toast } from 'sonner'
 
 import { useProgressAnimation } from '@/features/quiz/model/use-progress-animation'
 import { useQuizGenerationPolling } from '@/features/quiz/model/use-quiz-generation-polling'
 import QuizLoadingProgressBar from '@/features/quiz/ui/quiz-loading-progress-bar'
+
+import { useDeleteDocument } from '@/entities/document/api/hooks'
 
 import { ImgQuizEmpty, ImgQuizcard } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
@@ -16,15 +19,16 @@ import { useOnceEffect } from '@/shared/hooks'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
-import { QuizType, useCreateNoteContext } from '../model/create-note-context'
+import { useCreateNoteContext } from '../model/create-note-context'
 
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
 export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
+  const { pathname } = useLocation()
   const router = useRouter()
-  const { documentName, quizType } = useCreateNoteContext()
+  const { documentType } = useCreateNoteContext()
 
   // 로딩 상태를 queryParam으로 관리
   const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
@@ -53,6 +57,8 @@ export const QuizLoadingDrawer = () => {
     estimatedLoadingTime: ESTIMATED_LOADING_TIME,
   })
 
+  const { mutate: deleteDocument } = useDeleteDocument()
+
   useEffect(() => {
     if (isLoading) {
       startAnimation()
@@ -61,7 +67,7 @@ export const QuizLoadingDrawer = () => {
 
   // 문서 퀴즈 상태 폴링 훅 사용 (로딩 중일 때만 활성화)
   const { error, quizSetId, clearError } = useQuizGenerationPolling(
-    { documentId, quizType: quizType as QuizType },
+    { documentId },
     {
       pollingInterval: 2000,
       maxPollingCount: 60,
@@ -79,6 +85,12 @@ export const QuizLoadingDrawer = () => {
       toast.success('문서가 생성되었습니다.')
     }
   }, [quizSetId])
+
+  useOnceEffect(() => {
+    if (error != null) {
+      deleteDocument({ documentIds: [documentId] })
+    }
+  }, [error])
 
   const renderQuizLoadingDrawerContent = () => {
     // 에러 발생 시 에러 화면 표시
@@ -138,7 +150,11 @@ export const QuizLoadingDrawer = () => {
           <div className="mt-10 w-full flex flex-col items-center">
             <Button
               onClick={() => {
-                trackEvent('generate_quiz_click')
+                trackEvent('generate_confirm_click', {
+                  location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                  format: documentType === 'TEXT' ? '텍스트' : '파일',
+                  type: '전체',
+                })
                 completeAnimation()
                 setTimeout(() => {
                   router.replace('/progress-quiz/:quizSetId', {
@@ -168,16 +184,9 @@ export const QuizLoadingDrawer = () => {
     }
 
     return (
-      <div className="p-0">
-        <div className="border-b border-divider">
-          <div className="pt-[14px] pb-[2px] pl-[17px] pr-[18px] flex items-center gap-2.5">
-            <Text typo="subtitle-2-bold" color="primary">
-              {documentName}
-            </Text>
-            <Text typo="body-1-medium" color="sub">
-              {quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X'}
-            </Text>
-          </div>
+      <div className="flex-center center w-full">
+        <div className="flex-center flex-col gap-[32px] w-full">
+          <Loading size="small" />
 
           <QuizLoadingProgressBar
             progressOverride={progress}
@@ -190,8 +199,6 @@ export const QuizLoadingDrawer = () => {
             }
           />
         </div>
-
-        <Loading size="small" className="center" />
       </div>
     )
   }

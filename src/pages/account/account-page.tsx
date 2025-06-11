@@ -30,6 +30,7 @@ const AccountPage = () => {
 
   // 낙관적 업데이트 적용
   const handleNotification = (checked: boolean) => {
+    trackEvent('my_setting_push_click', { value: checked })
     setNotificationEnabled(checked)
 
     if (checked) {
@@ -179,7 +180,7 @@ const AccountPage = () => {
                     <div
                       className="bg-accent rounded-[8px] py-[16px] px-[24px] flex items-center gap-[16px]"
                       onClick={() => {
-                        trackEvent('invite_view')
+                        trackEvent('invite_view', { location: '마이 페이지' })
                       }}
                     >
                       <div className="flex-1 flex flex-col gap-[4px]">

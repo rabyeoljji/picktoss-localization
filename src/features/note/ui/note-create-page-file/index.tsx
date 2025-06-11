@@ -3,7 +3,6 @@ import styled from 'styled-components'
 
 import { formatFileSize } from '@/features/note/lib'
 import { useCreateNoteContext } from '@/features/note/model/create-note-context'
-import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
 
 import { useUser } from '@/entities/member/api/hooks'
 
@@ -101,9 +100,6 @@ const NoteCreatePageFile = () => {
             <Text typo="body-1-medium" color="primary">
               {user?.star.toLocaleString('ko-kr')}개
             </Text>
-          </div>
-          <div className="flex-1">
-            <CreateNoteDrawer />
           </div>
         </div>
       </FixedBottom>

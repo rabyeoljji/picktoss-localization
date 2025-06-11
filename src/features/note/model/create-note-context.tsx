@@ -10,33 +10,25 @@ import { CreateDocumentPayload } from '@/entities/document/api'
 import { useCreateDocument } from '@/entities/document/api/hooks'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
+import { generateSimpleNonce } from '@/shared/lib/nonce'
 import { useQueryParam } from '@/shared/lib/router'
 
 export type DocumentType = CreateDocumentPayload['documentType']
-export type QuizType = CreateDocumentPayload['quizType']
 
 export interface CreateNoteState {
   documentType: DocumentType
-  documentName: string
-  quizType: QuizType | null
+  isPublic: boolean
   star: string
   content: string
-  emoji: string
-  categoryId: number | null
-  isPublic: boolean
   fileInfo: FileInfo | null
 }
 
 export interface CreateNoteContextValues extends CreateNoteState {
   // Setter functions
   setDocumentType: (documentType: DocumentType) => void
-  setDocumentName: (documentName: string) => void
-  setQuizType: (quizType: QuizType) => void
   setStar: (star: string) => void
-  setContent: (content: string) => void
-  setEmoji: (emoji: string) => void
-  setCategoryId: (categoryId: number) => void
   setIsPublic: (isPublic: boolean) => void
+  setContent: (content: string) => void
   clearNoteInfo: () => void
 
   isPending: boolean
@@ -56,11 +48,7 @@ export interface CreateNoteContextValues extends CreateNoteState {
 
 const initialNoteState = {
   star: '5',
-  emoji: '📝',
-  documentName: '',
-  categoryId: null,
   isPublic: true,
-  quizType: null,
   content: '',
   fileInfo: null,
 }
@@ -73,12 +61,8 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
 
   const [state, setState] = useState<{
     star: string
-    emoji: string
-    documentName: string
-    categoryId: number | null
-    isPublic: boolean
-    quizType: QuizType | null
     content: string
+    isPublic: boolean
     fileInfo: FileInfo | null
   }>(initialNoteState)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -119,13 +103,12 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     const isContentValid =
       state.content.length >= DOCUMENT_CONSTRAINTS.CONTENT.MIN &&
       state.content.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX
-    const isNameValid = state.documentName.trim().length > 0
     const isTypeValid = documentType !== null
-    return isContentValid && isNameValid && isTypeValid
+    return isContentValid && isTypeValid
   }
 
   const checkCreateActivate = () => {
-    return checkDrawerTriggerActivate() && state.categoryId !== null && state.quizType !== null
+    return checkDrawerTriggerActivate()
   }
 
   /** fileInfo 유효성 검사 함수 */
@@ -173,14 +156,8 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         return
       }
 
-      const removeFileExtension = (filename: string) => {
-        const lastDotIndex = filename.lastIndexOf('.')
-        return lastDotIndex > 0 ? filename.slice(0, lastDotIndex) : filename
-      }
-
       setState((prev) => ({
         ...prev,
-        documentName: removeFileExtension(newFileInfo.name),
         content: newFileInfo.content,
         fileInfo: newFileInfo,
       }))
@@ -199,16 +176,12 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
   /** 노트 생성 유효성 검사 함수 */
   const checkIsValid = () => {
     const blob = new Blob([state.content], { type: 'text/markdown' })
-    const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
+    const file = new File([blob], `${generateSimpleNonce(16)}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
-      categoryId: state.categoryId,
       isPublic: state.isPublic,
-      documentName: state.documentName,
       file,
-      quizType: state.quizType,
       star: state.star,
-      emoji: state.emoji,
       documentType: documentType,
     }
 
@@ -228,16 +201,12 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
     }
 
     const blob = new Blob([state.content], { type: 'text/markdown' })
-    const file = new File([blob], `${state.documentName}.md`, { type: 'text/markdown' })
+    const file = new File([blob], `${generateSimpleNonce(16)}.md`, { type: 'text/markdown' })
 
     const createDocumentData = {
-      documentName: state.documentName,
       file,
-      categoryId: state.categoryId || 0,
       isPublic: state.isPublic,
-      quizType: state.quizType || 'MIX_UP',
       star: state.star,
-      emoji: state.emoji,
       documentType: documentType,
     }
 
@@ -257,25 +226,16 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
   return (
     <CreateNoteContext.Provider
       value={{
-        documentType: documentType,
-        categoryId: state.categoryId,
+        documentType,
         isPublic: state.isPublic,
-        documentName: state.documentName,
-        quizType: state.quizType,
         star: state.star,
         content: state.content,
-        emoji: state.emoji,
 
         setDocumentType: (documentType: DocumentType) => setParams({ documentType }),
-        setDocumentName: (documentName: string) => setState((prev) => ({ ...prev, documentName })),
-        setQuizType: (quizType: QuizType) => setState((prev) => ({ ...prev, quizType })),
         setStar: (star: string) => setState((prev) => ({ ...prev, star })),
         setContent: (content: string) => setState((prev) => ({ ...prev, content })),
-        setEmoji: (emoji: string) => setState((prev) => ({ ...prev, emoji })),
-        setCategoryId: (categoryId: number) => setState((prev) => ({ ...prev, categoryId })),
-        setIsPublic: (isPublic: boolean) => setState((prev) => ({ ...prev, isPublic })),
         clearNoteInfo,
-
+        setIsPublic: (isPublic: boolean) => setState((prev) => ({ ...prev, isPublic })),
         fileInfo: state.fileInfo,
         changeFileInfo,
         isProcessing,

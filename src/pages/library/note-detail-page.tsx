@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useParams } from 'react-router'
 
@@ -14,11 +15,13 @@ import { NoteDetailQuizLoadingDrawer } from '@/features/note/ui/note-detail-quiz
 import { useGetCategories } from '@/entities/category/api/hooks'
 import {
   useAddQuizzes,
+  useDeleteDocument,
   useGetSingleDocument,
   useUpdateDocumentCategory,
   useUpdateDocumentEmoji,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
+import { useUser } from '@/entities/member/api/hooks'
 import {
   useCreateQuizSet,
   useDeleteQuiz,
@@ -45,7 +48,9 @@ import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
+import { LackingStarDrawer } from '@/shared/components/drawers/lacking-star-drawer'
 import { Header } from '@/shared/components/header'
+import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
 import {
   Dialog,
@@ -102,12 +107,14 @@ const NoteDetailPage = () => {
   } = useGetSingleDocument(Number(noteId))
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const emojiPickerRef = useRef<HTMLDivElement>(null)
+  const { data: user } = useUser()
 
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false)
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null)
 
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
-  const [deleteTargetQuizType, setDeleteTargetQuizType] = useState<'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL' | null>(null)
+  const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
+  const { mutate: deleteDocument } = useDeleteDocument()
 
   const [detailInfoOpen, setDetailInfoOpen] = useState(false)
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
@@ -193,6 +200,7 @@ const NoteDetailPage = () => {
       },
       {
         onSuccess: (data) => {
+          trackEvent('quiz_start_click', { location: '내 퀴즈 상세' })
           router.push('/progress-quiz/:quizSetId', {
             params: [String(data.quizSetId)],
             search: {
@@ -234,7 +242,7 @@ const NoteDetailPage = () => {
                   size="sm"
                   left={<IcUpload />}
                   onClick={() => {
-                    trackEvent('library_toolbar_play_click')
+                    trackEvent('library_detail_play_click')
                   }}
                 >
                   공유하기
@@ -507,64 +515,79 @@ const NoteDetailPage = () => {
                 퀴즈도 풀어보고 싶다면?
               </Text>
 
-              <Dialog open={createQuizDialogOpen} onOpenChange={setCreateQuizDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="xs" variant="secondary1" className="ml-auto">
-                    생성하기
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <div className="flex-center flex-col text-center gap-4 mb-[32px]">
-                    <div className="h-[120px] flex-center">
-                      {quizType === 'MIX_UP' ? <ImgMultiple className="w-[99px]" /> : <ImgOx className="w-[106.6px]" />}
+              {Number(user?.star) < calculateStar(document?.content.length || 0) ? (
+                <LackingStarDrawer
+                  trigger={
+                    <Button size="xs" variant="secondary1" className="ml-auto">
+                      생성하기
+                    </Button>
+                  }
+                  needStars={calculateStar(document?.content.length || 0)}
+                />
+              ) : (
+                <Dialog open={createQuizDialogOpen} onOpenChange={setCreateQuizDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="xs" variant="secondary1" className="ml-auto">
+                      생성하기
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <div className="flex-center flex-col text-center gap-4 mb-[32px]">
+                      <div className="h-[120px] flex-center">
+                        {quizType === 'MIX_UP' ? (
+                          <ImgMultiple className="w-[99px]" />
+                        ) : (
+                          <ImgOx className="w-[106.6px]" />
+                        )}
+                      </div>
+                      <div className="grid gap-2">
+                        <Text typo="h4" color="primary">
+                          {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
+                        </Text>
+                        <Text typo="subtitle-2-medium" color="sub">
+                          이 유형의 문제를 생성할까요?
+                        </Text>
+                      </div>
                     </div>
-                    <div className="grid gap-2">
-                      <Text typo="h4" color="primary">
-                        {quizType === 'MIX_UP' ? '객관식' : 'O/X'}
-                      </Text>
-                      <Text typo="subtitle-2-medium" color="sub">
-                        이 유형의 문제를 생성할까요?
-                      </Text>
-                    </div>
-                  </div>
 
-                  <DialogCTA
-                    customButton={
-                      <Button
-                        variant="special"
-                        right={
-                          <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
-                            <ImgStar className="size-[16px] mr-[4px]" />
-                            <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
-                          </div>
-                        }
-                        onClick={() => {
-                          addQuizzes(
-                            {
-                              documentId: Number(noteId),
-                              data: {
-                                star: calculateStar(document?.content.length || 0),
-                                quizType: mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP',
+                    <DialogCTA
+                      customButton={
+                        <Button
+                          variant="special"
+                          right={
+                            <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                              <ImgStar className="size-[16px] mr-[4px]" />
+                              <Text typo="body-1-medium">{calculateStar(document?.content.length || 0)}</Text>
+                            </div>
+                          }
+                          onClick={() => {
+                            addQuizzes(
+                              {
+                                documentId: Number(noteId),
+                                data: {
+                                  star: calculateStar(document?.content.length || 0),
+                                  quizType: mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP',
+                                },
                               },
-                            },
-                            {
-                              onSuccess: () => {
-                                refetchSingleDocument()
-                                setCreateQuizDialogOpen(false)
-                                setIsCreatingNewQuizzes(true)
+                              {
+                                onSuccess: () => {
+                                  refetchSingleDocument()
+                                  setCreateQuizDialogOpen(false)
+                                  setIsCreatingNewQuizzes(true)
+                                },
                               },
-                            },
-                          )
-                        }}
-                      >
-                        생성하기
-                      </Button>
-                    }
-                    hasClose
-                    closeLabel="취소"
-                  />
-                </DialogContent>
-              </Dialog>
+                            )
+                          }}
+                        >
+                          생성하기
+                        </Button>
+                      }
+                      hasClose
+                      closeLabel="취소"
+                    />
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           )}
 
@@ -636,7 +659,7 @@ const NoteDetailPage = () => {
             checked={showAnswer}
             onCheckedChange={(checked) => {
               setShowAnswer(checked)
-              trackEvent('library_toolbar_answer_click', { value: checked })
+              trackEvent('library_detail_answer_click', { value: checked })
             }}
           />
         </div>
@@ -649,7 +672,7 @@ const NoteDetailPage = () => {
               <button
                 className="p-2"
                 onClick={() => {
-                  trackEvent('library_toolbar_play_click')
+                  trackEvent('library_detail_play_click')
                 }}
               >
                 <IcPlay className="size-6" />
@@ -700,7 +723,7 @@ const NoteDetailPage = () => {
             className="p-2"
             onClick={() => {
               setReviewPickOpen(true)
-              trackEvent('library_toolbar_review_click')
+              trackEvent('library_detail_review_click')
             }}
           >
             <IcReview className="size-6" />
@@ -709,7 +732,7 @@ const NoteDetailPage = () => {
             className="p-2"
             onClick={() => {
               setContentDrawerOpen(true)
-              trackEvent('library_toolbar_note_click')
+              trackEvent('library_detail_note_click')
             }}
           >
             <IcNote className="size-6" />
@@ -719,7 +742,7 @@ const NoteDetailPage = () => {
               <IcKebab
                 className="size-6"
                 onClick={() => {
-                  trackEvent('library_toolbar_more_click')
+                  trackEvent('library_detail_more_click')
                 }}
               />
             </DropdownMenuTrigger>
@@ -728,9 +751,9 @@ const NoteDetailPage = () => {
               <DropdownMenuItem
                 className="text-red-500"
                 right={<IcDelete className="text-icon-critical" />}
-                onClick={() => setDeleteTargetQuizType(quizType)}
+                onClick={() => setDeleteDocumentDialogOpen(true)}
               >
-                문제 전체 삭제
+                퀴즈 삭제
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -1090,38 +1113,32 @@ const NoteDetailPage = () => {
         </Dialog>
       )}
 
-      {/* 유형 문제 삭제 confirm 모달 */}
-      {deleteTargetQuizType !== null && (
-        <Dialog
-          defaultOpen={true}
-          onOpenChange={(open) => {
-            if (!open) {
-              setDeleteTargetQuizType(null)
-            }
-          }}
-        >
-          <DialogContent className="pt-[24px] px-[20px] pb-[8px] w-[280px]">
-            <DialogTitle className="typo-subtitle-2-bold text-center">문제를 삭제할까요?</DialogTitle>
-            <DialogDescription className="typo-body-1-medium text-sub text-center mt-1">
-              삭제한 문제는 다시 복구할 수 없어요
-            </DialogDescription>
-            <div className="flex gap-2.5 mt-[20px]">
-              <DialogClose asChild>
-                <button className="h-[48px] flex-1 text-sub">취소</button>
-              </DialogClose>
-              {/* TODO: 문제 삭제 */}
-              <button className="h-[48px] flex-1 text-red-500" onClick={() => {}}>
-                삭제
-              </button>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
+      {/* 문서 삭제 confirm 모달 */}
+      <SystemDialog
+        open={deleteDocumentDialogOpen}
+        onOpenChange={setDeleteDocumentDialogOpen}
+        title="퀴즈를 삭제하시겠어요?"
+        content={
+          <Text typo="body-1-medium" color="sub">
+            선택한 퀴즈와{' '}
+            <Text as="span" typo="body-1-medium" color="incorrect">
+              {`${document?.quizzes.length}개의 문제`}
+            </Text>
+            가 모두 삭제되며, 복구할 수 없어요
+          </Text>
+        }
+        variant="critical"
+        confirmLabel="삭제"
+        onConfirm={() => {
+          deleteDocument({ documentIds: [Number(noteId)] })
+          router.replace('/library')
+          toast('퀴즈가 삭제되었습니다.')
+        }}
+      />
 
       {isCreatingNewQuizzes && (
         <NoteDetailQuizLoadingDrawer
           documentName={document?.name ?? ''}
-          quizType={mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP'}
           documentId={document?.id ?? 0}
           isLoading={isCreatingNewQuizzes}
           close={() => setIsCreatingNewQuizzes(false)}

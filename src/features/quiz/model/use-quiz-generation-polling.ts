@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { calculateStar } from '@/features/note/lib'
-import { QuizType } from '@/features/note/model/create-note-context'
 
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
@@ -49,10 +48,7 @@ export interface PollingResult {
  * @param options 폴링 옵션
  * @returns 폴링 관련 상태 및 메서드
  */
-export const useQuizGenerationPolling = (
-  { documentId, quizType }: { documentId: number; quizType: QuizType | 'ALL' },
-  options?: PollingOptions,
-) => {
+export const useQuizGenerationPolling = ({ documentId }: { documentId: number }, options?: PollingOptions) => {
   const { pollingInterval = 2000, maxPollingCount = 60, autoCompleteTime = 70000 } = options || {}
   const [quizSetId, setQuizSetId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -85,7 +81,7 @@ export const useQuizGenerationPolling = (
     // 문서 상태에 따라 처리
     if (document.quizGenerationStatus === 'PROCESSED') {
       createQuizSet(
-        { quizCount: calculateStar(document.content.length), quizType },
+        { quizCount: calculateStar(document.content.length), quizType: 'ALL' },
         {
           onSuccess: ({ quizSetId }) => {
             stopPolling()

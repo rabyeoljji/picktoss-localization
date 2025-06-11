@@ -74,12 +74,8 @@ const MyNotesContent = ({
   }
 
   const handleDelete = (documentIds: number[]) => {
-    deleteDocument(
-      { documentIds },
-      {
-        onSuccess: () => toast.success('퀴즈가 삭제되었어요'),
-      },
-    )
+    deleteDocument({ documentIds })
+    toast.success('퀴즈가 삭제되었어요')
   }
 
   useEffect(() => {

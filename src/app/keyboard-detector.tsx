@@ -33,7 +33,7 @@ export const useKeyboard = () => {
 
       // 입력 요소에 포커스가 있고 화면 크기가 변경된 경우에만 키보드가 표시된 것으로 간주
       const keyboardVisible = isKeyboard && (isInputFocused || false)
-      
+
       // 키보드 높이 계산
       const calculatedKeyboardHeight = keyboardVisible ? initialHeight - visualViewport.height : 0
 
@@ -46,18 +46,18 @@ export const useKeyboard = () => {
       document.documentElement.style.setProperty('--keyboard-height', `${calculatedKeyboardHeight}px`)
 
       // 디버깅용 콘솔 로그 (개발 환경에서만 사용)
-      if (process.env.NODE_ENV === 'development') {
-        console.log({
-          initialHeight,
-          currentHeight: visualViewport.height,
-          heightDifference,
-          heightRatio,
-          isKeyboard,
-          isInputFocused,
-          keyboardVisible,
-          keyboardHeight: calculatedKeyboardHeight
-        })
-      }
+      // if (process.env.NODE_ENV === 'development') {
+      //   console.log({
+      //     initialHeight,
+      //     currentHeight: visualViewport.height,
+      //     heightDifference,
+      //     heightRatio,
+      //     isKeyboard,
+      //     isInputFocused,
+      //     keyboardVisible,
+      //     keyboardHeight: calculatedKeyboardHeight
+      //   })
+      // }
     }
 
     // 다양한 이벤트에 리스너 추가
@@ -93,9 +93,13 @@ export const useKeyboard = () => {
  * and updates CSS variables for viewport height
  * @deprecated 대신 useKeyboard 훅을 사용하세요
  */
-export const KeyboardDetector = ({ onKeyboardVisibilityChange }: { onKeyboardVisibilityChange: (isVisible: boolean) => void }) => {
+export const KeyboardDetector = ({
+  onKeyboardVisibilityChange,
+}: {
+  onKeyboardVisibilityChange: (isVisible: boolean) => void
+}) => {
   const { isKeyboardVisible } = useKeyboard()
-  
+
   useEffect(() => {
     onKeyboardVisibilityChange(isKeyboardVisible)
   }, [isKeyboardVisible, onKeyboardVisibilityChange])

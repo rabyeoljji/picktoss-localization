@@ -12,14 +12,11 @@ import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useRouter } from '@/shared/lib/router'
 
-import { QuizType } from '../model/create-note-context'
-
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
 interface NoteDetailQuizLoadingDrawerProps {
   documentName: string
-  quizType: QuizType
   documentId: number
   isLoading: boolean
   close: () => void
@@ -29,7 +26,6 @@ export const NoteDetailQuizLoadingDrawer = ({
   isLoading,
   documentId,
   documentName,
-  quizType,
   close,
 }: NoteDetailQuizLoadingDrawerProps) => {
   const router = useRouter()
@@ -60,7 +56,7 @@ export const NoteDetailQuizLoadingDrawer = ({
 
   // 문서 퀴즈 상태 폴링 훅 사용 (로딩 중일 때만 활성화)
   const { error, quizSetId, clearError } = useQuizGenerationPolling(
-    { documentId, quizType },
+    { documentId },
     {
       pollingInterval: 2000,
       maxPollingCount: 60,
@@ -158,7 +154,7 @@ export const NoteDetailQuizLoadingDrawer = ({
               {documentName}
             </Text>
             <Text typo="body-1-medium" color="sub">
-              {quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X'}
+              전체
             </Text>
           </div>
 
