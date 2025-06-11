@@ -43,6 +43,7 @@ const QuizRecordDailyDetailPage = () => {
 
   const [threshold, setThreshold] = useState(0)
 
+  // 최초 렌더링 시 퀴즈 컨테이너의 위치를 기준으로 스크롤 임계값 설정
   useEffect(() => {
     if (!DailyRecordData) return
 
@@ -53,17 +54,43 @@ const QuizRecordDailyDetailPage = () => {
     })
   }, [DailyRecordData])
 
+  // 스크롤 컨테이너의 크기가 변경될 때마다 임계값 업데이트
+  useEffect(() => {
+    if (!DailyRecordData) return
+
+    const updateThreshold = () => {
+      if (!quizContainerRef.current) return
+      const rect = quizContainerRef.current.getBoundingClientRect()
+      setThreshold(rect.top + getSafeAreaTop())
+    }
+
+    requestAnimationFrame(updateThreshold)
+
+    window.addEventListener('resize', updateThreshold)
+    return () => window.removeEventListener('resize', updateThreshold)
+  }, [DailyRecordData])
+
+  // 스크롤 이벤트 핸들러 설정
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
+    let ticking = false
+
     const handleScroll = () => {
-      setShowScrollTopButton(container.scrollTop > threshold)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setShowScrollTopButton(container.scrollTop > threshold)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     container.addEventListener('scroll', handleScroll)
 
-    handleScroll() // 초기 설정
+    // 최초 진입 시에도 상태 설정
+    handleScroll()
 
     return () => container.removeEventListener('scroll', handleScroll)
   }, [threshold])

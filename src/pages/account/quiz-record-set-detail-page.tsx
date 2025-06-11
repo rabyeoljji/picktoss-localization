@@ -47,6 +47,7 @@ const QuizRecordSetDetailPage = () => {
 
   const [threshold, setThreshold] = useState(0)
 
+  // 최초 렌더링 시 퀴즈 컨테이너의 위치를 기준으로 스크롤 임계값 설정
   useEffect(() => {
     if (!quizSetRecordData) return
 
@@ -57,17 +58,43 @@ const QuizRecordSetDetailPage = () => {
     })
   }, [quizSetRecordData])
 
+  // 스크롤 컨테이너의 크기가 변경될 때마다 임계값 업데이트
+  useEffect(() => {
+    if (!quizSetRecordData) return
+
+    const updateThreshold = () => {
+      if (!quizContainerRef.current) return
+      const rect = quizContainerRef.current.getBoundingClientRect()
+      setThreshold(rect.top + getSafeAreaTop())
+    }
+
+    requestAnimationFrame(updateThreshold)
+
+    window.addEventListener('resize', updateThreshold)
+    return () => window.removeEventListener('resize', updateThreshold)
+  }, [quizSetRecordData])
+
+  // 스크롤 이벤트 핸들러 설정
   useEffect(() => {
     const container = scrollContainerRef.current
     if (!container) return
 
+    let ticking = false
+
     const handleScroll = () => {
-      setShowScrollTopButton(container.scrollTop > threshold)
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setShowScrollTopButton(container.scrollTop > threshold)
+          ticking = false
+        })
+        ticking = true
+      }
     }
 
     container.addEventListener('scroll', handleScroll)
 
-    handleScroll() // 초기 설정
+    // 최초 진입 시에도 상태 설정
+    handleScroll()
 
     return () => container.removeEventListener('scroll', handleScroll)
   }, [threshold])
@@ -84,12 +111,12 @@ const QuizRecordSetDetailPage = () => {
         <div className="flex-center flex-col gap-[40px] p-[16px]">
           <div className="flex-center flex-col gap-[16px]">
             <Text typo="h1" className="!text-[64px]">
-              {'🔥'}
+              {quizSetRecordData?.emoji}
             </Text>
 
             <div className="flex-center flex-col gap-[8px]">
               <Text typo="h4" className="max-w-[300px] truncate">
-                이것이 최대길이 이후로는 말줄임표가 적용
+                {quizSetRecordData?.name}
               </Text>
               <Text typo="subtitle-2-medium" color="sub">
                 {format(date, 'yyyy.M.d')}
@@ -154,10 +181,7 @@ const QuizRecordSetDetailPage = () => {
                 />
                 <QuestionCard.Question>{question.question}</QuestionCard.Question>
                 {question.quizType === 'MIX_UP' ? (
-                  <QuestionCard.OX
-                    answerIndex={question.answer === 'correct' ? 0 : 1}
-                    showIndexs={question.choseAnswer === 'correct' ? [0] : [1]}
-                  />
+                  <QuestionCard.OX answerIndex={question.answer === 'correct' ? 0 : 1} showIndexs={[0, 1]} />
                 ) : (
                   <QuestionCard.Multiple
                     answerIndex={question.options.findIndex((option) => option === question.answer)}

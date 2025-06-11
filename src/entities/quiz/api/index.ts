@@ -150,6 +150,8 @@ export interface GetSingleQuizSetRecordDto {
 }
 
 export interface GetSingleQuizSetRecordResponse {
+  name: string
+  emoji: string
   totalQuizCount: number
   totalElapsedTimeMs: number
   averageCorrectAnswerRate: number
