@@ -1,4 +1,4 @@
-import { UseQueryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { UseQueryOptions, keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
@@ -209,15 +209,16 @@ export const useGetPublicDocuments = ({
   })
 }
 
-export const useGetPublicSingleDocument = (documentId: number) => {
+export const useGetPublicSingleDocument = (documentId: number, sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY') => {
   return useQuery({
-    queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId),
-    queryFn: () => getPublicSingleDocument(documentId),
+    queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId), sortOption],
+    queryFn: () => getPublicSingleDocument(documentId, sortOption),
     enabled: !!documentId,
     select: (data) => ({
       ...data,
       quizzes: data.quizzes.sort((a, b) => b.id - a.id),
     }),
+    placeholderData: keepPreviousData,
   })
 }
 
@@ -535,23 +536,20 @@ export const useDeleteDocument = (options?: {
     onMutate: async ({ documentIds }) => {
       // 1. 진행 중인 쿼리 취소
       await queryClient.cancelQueries({ queryKey })
-      
+
       // 2. 이전 데이터 스냅샷 저장
       const previousData = queryClient.getQueryData(queryKey)
-      
+
       // 3. 낙관적 업데이트 수행
-      queryClient.setQueryData(
-        queryKey,
-        (oldData: { documents?: GetAllDocumentsDocumentDto[] } | undefined) => {
-          if (!oldData) return { documents: [] }
-          
-          return {
-            ...oldData,
-            documents: oldData.documents?.filter((doc) => !documentIds.includes(doc.id)) || [],
-          }
-        },
-      )
-      
+      queryClient.setQueryData(queryKey, (oldData: { documents?: GetAllDocumentsDocumentDto[] } | undefined) => {
+        if (!oldData) return { documents: [] }
+
+        return {
+          ...oldData,
+          documents: oldData.documents?.filter((doc) => !documentIds.includes(doc.id)) || [],
+        }
+      })
+
       // 4. 롤백을 위한 컨텍스트 반환
       return { previousData }
     },

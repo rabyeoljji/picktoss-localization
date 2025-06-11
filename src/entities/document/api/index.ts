@@ -200,9 +200,15 @@ export interface GetPublicSingleDocumentResponse {
   isOwner: boolean
 }
 
-export const getPublicSingleDocument = async (documentId: number): Promise<GetPublicSingleDocumentResponse> => {
+export const getPublicSingleDocument = async (
+  documentId: number,
+  sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY',
+): Promise<GetPublicSingleDocumentResponse> => {
+  const params = sortOption ? { 'sort-option': sortOption } : undefined
+
   const response = await client.get<GetPublicSingleDocumentResponse>(
     DOCUMENT_ENDPOINTS.getPublicSingleDocument(documentId),
+    { params },
   )
   return response.data
 }
