@@ -77,7 +77,7 @@ export const QuizLoadingProgressBar = ({
   const progressText = `${Math.round(progress)}%`
 
   return (
-    <div className="relative py-[7px] px-4">
+    <div className="relative w-full py-[7px] px-[40px]">
       <div className="relative h-2 w-full overflow-hidden rounded-full bg-base-3">
         <div
           className="absolute h-full bg-orange rounded-full transition-all duration-300"

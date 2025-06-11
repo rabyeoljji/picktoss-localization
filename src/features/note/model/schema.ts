@@ -33,19 +33,14 @@ export type FileInfo = z.infer<typeof FileInfoSchema>
 
 // 문서 생성 요청 스키마
 export const CreateDocumentSchema = z.object({
-  categoryId: z.number().min(1, '카테고리 선택은 필수입니다'),
   isPublic: z.boolean(),
   file: z.any().refine((data) => data instanceof File, {
     message: 'The data must be a File object.',
-  }),
-  quizType: z.enum(['MULTIPLE_CHOICE', 'MIX_UP'], {
-    required_error: '퀴즈 유형을 선택해주세요',
   }),
   star: z.string(),
   documentType: z.enum(['FILE', 'TEXT', 'NOTION'], {
     required_error: '노트 유형을 선택해주세요',
   }),
-  emoji: z.string().default('📝'),
 })
 
 export type CreateDocumentRequest = z.infer<typeof CreateDocumentSchema>
