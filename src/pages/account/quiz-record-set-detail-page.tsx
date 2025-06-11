@@ -107,7 +107,7 @@ const QuizRecordSetDetailPage = () => {
     <>
       <Header className="bg-surface-2" left={<BackButton />} />
 
-      <HeaderOffsetLayout ref={scrollContainerRef} className="px-[16px] h-full overflow-y-auto">
+      <HeaderOffsetLayout ref={scrollContainerRef} className="h-full overflow-y-auto">
         <div className="flex-center flex-col gap-[40px] p-[16px]">
           <div className="flex-center flex-col gap-[16px]">
             <Text typo="h1" className="!text-[64px]">
