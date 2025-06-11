@@ -1139,7 +1139,6 @@ const NoteDetailPage = () => {
       {isCreatingNewQuizzes && (
         <NoteDetailQuizLoadingDrawer
           documentName={document?.name ?? ''}
-          quizType={mixUpQuizCount > 0 ? 'MULTIPLE_CHOICE' : 'MIX_UP'}
           documentId={document?.id ?? 0}
           isLoading={isCreatingNewQuizzes}
           close={() => setIsCreatingNewQuizzes(false)}

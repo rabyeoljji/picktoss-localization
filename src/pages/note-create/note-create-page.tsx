@@ -70,7 +70,7 @@ const NoteCreateContent = () => {
   return (
     <div className="flex flex-col relative bg-base-1 h-full">
       {/* 퀴즈 공개 여부 스위치 */}
-      <div className="h-[48px] bg-surface-2 flex items-center justify-between px-4">
+      <div className="h-[48px] bg-surface-2 flex items-center justify-between px-4 sticky top-[54px]">
         <div className="flex gap-1 items-end">
           <Text typo="body-1-medium" color="secondary">
             퀴즈 공개
