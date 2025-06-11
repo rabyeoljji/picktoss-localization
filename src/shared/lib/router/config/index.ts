@@ -98,6 +98,15 @@ export const RouteConfig = {
   accountQuizRecord: {
     pathname: '/account/quiz-record',
   },
+  accountQuizRecordSetDetail: {
+    pathname: '/account/quiz-record/set/:quizSetId',
+  },
+  accountQuizRecordDailyDetail: {
+    pathname: '/account/quiz-record/daily/:dailyQuizRecordId',
+    search: {
+      solvedDate: '' as string, // 'yyyy.M.d' 형식의 날짜 문자열
+    },
+  },
   accountNotificationConfig: {
     pathname: '/account/notification-config',
   },

@@ -23,7 +23,7 @@ export const QuestionCard = ({ children, className }: { children: React.ReactNod
   const [isExplanationOpen, setExplanationOpen] = useState(false)
   return (
     <QuestionCardContext.Provider value={{ isExplanationOpen, setExplanationOpen }}>
-      <div className={cn('pt-5 rounded-[12px] bg-surface-1 border border-outline', className)}>{children}</div>
+      <div className={cn('pt-5 rounded-[12px] bg-surface-1', className)}>{children}</div>
     </QuestionCardContext.Provider>
   )
 }
@@ -211,7 +211,7 @@ const QuestionCardExplanation = ({
         </div>
       </motion.div>
       {hideToggle ? null : (
-        <button className="w-full flex-center border-t border-divider" onClick={handleToggle}>
+        <button className="w-full flex-center" onClick={handleToggle}>
           <div className="self-stretch h-11 flex-center gap-[4px]">
             <Text typo="body-2-medium" color="sub">
               {effectiveOpen ? '닫기' : '해설 보기'}

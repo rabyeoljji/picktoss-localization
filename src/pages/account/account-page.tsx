@@ -299,4 +299,6 @@ const AccountPage = () => {
   )
 }
 
-export default withHOC(AccountPage, {})
+export default withHOC(AccountPage, {
+  backgroundClassName: 'bg-surface-1',
+})

@@ -8,7 +8,9 @@ import NotificationConfigPage from './notification-config-page'
 import PaymentHistoryPage from './payment-history-page'
 import PolicyPage from './policy-page'
 import QuizAnalysisPage from './quiz-analysis-page'
+import QuizRecordDailyDetailPage from './quiz-record-daily-detail-page'
 import QuizRecordPage from './quiz-record-page'
+import QuizRecordSetDetailPage from './quiz-record-set-detail-page'
 import WithdrawPage from './withdraw-page'
 
 export {
@@ -20,6 +22,8 @@ export {
   ContactPage,
   NoticePage,
   QuizRecordPage,
+  QuizRecordDailyDetailPage,
+  QuizRecordSetDetailPage,
   PaymentHistoryPage,
   NotificationConfigPage,
   QuizAnalysisPage,
