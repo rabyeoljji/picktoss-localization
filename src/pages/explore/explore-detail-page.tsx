@@ -14,7 +14,7 @@ import {
 } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
-import { IcArrange, IcBookmark, IcBookmarkFilled, IcKebab, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
+import { IcArrange, IcBookmark, IcBookmarkFilled, IcCheck, IcKebab, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
@@ -44,11 +44,18 @@ const ExploreDetailPage = () => {
 
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/explore/detail/:noteId', 'quizType')
+  const [sortOption, setSortOption] = useQueryParam('/explore/detail/:noteId', 'sort')
 
   const { mutate: updatePublic } = useUpdateDocumentIsPublic(Number(noteId))
   const { mutate: bookmark } = useDocumentBookmarkMutation(Number(noteId))
 
-  const { data: document, isLoading: isDocumentLoading } = useGetPublicSingleDocument(Number(noteId))
+  const {
+    data: document,
+    isLoading: isDocumentLoading,
+    isRefetching,
+  } = useGetPublicSingleDocument(Number(noteId), sortOption)
+
+  const showSkeleton = isDocumentLoading && !isRefetching
 
   // 북마크 상태와 카운트 관리
   const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
@@ -296,7 +303,7 @@ const ExploreDetailPage = () => {
       <HeaderOffsetLayout className="flex-1 scrollbar-hide">
         <div className="px-4 pb-6 flex flex-col gap-[8px]">
           <div className="flex flex-col gap-[12px]">
-            {isDocumentLoading ? (
+            {showSkeleton ? (
               <div className="size-[48px]">
                 <Skeleton className="size-[40px]" />
               </div>
@@ -306,7 +313,7 @@ const ExploreDetailPage = () => {
               </Text>
             )}
 
-            {isDocumentLoading ? (
+            {showSkeleton ? (
               <Skeleton className="w-[160px] h-[30px] rounded-full" />
             ) : (
               // 제목 요소에 ref 추가
@@ -315,7 +322,7 @@ const ExploreDetailPage = () => {
               </Text>
             )}
 
-            {isDocumentLoading ? (
+            {showSkeleton ? (
               <Skeleton className="w-[180px] h-[22px] rounded-full" />
             ) : (
               <Text typo="body-1-medium" color="sub" className="flex items-center">
@@ -340,7 +347,7 @@ const ExploreDetailPage = () => {
             )}
           </div>
 
-          {isDocumentLoading ? (
+          {showSkeleton ? (
             <Skeleton className="w-[200px] h-[22px] rounded-full" />
           ) : (
             <Text typo="body-1-medium" color="sub" className="flex items-center">
@@ -385,14 +392,35 @@ const ExploreDetailPage = () => {
           </div>
 
           {/* 정렬 버튼 */}
-          <button className="size-[32px] flex-center">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="size-[32px] flex-center">
+                <IcArrange className="size-[20px] text-icon-secondary" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onClick={() => setSortOption('CREATED_AT')}
+                right={sortOption === 'CREATED_AT' && <IcCheck className="size-[20px]" />}
+              >
+                기본 생성 순
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => setSortOption('LOWEST_ACCURACY')}
+                right={sortOption === 'LOWEST_ACCURACY' && <IcCheck className="size-[20px]" />}
+              >
+                정답률 낮은 순
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          {/* <button className="size-[32px] flex-center">
             <IcArrange className="size-[20px] text-icon-secondary" />
-          </button>
+          </button> */}
         </div>
 
         {/* 4. 문제 리스트 */}
         <div className="px-4 pt-4 pb-[113px] bg-base-2 flex flex-col gap-2">
-          {isDocumentLoading &&
+          {showSkeleton &&
             Array.from({ length: 10 }).map((_, index) => <Skeleton key={index} className="rounded-[12px] h-[250px]" />)}
 
           {quizType === 'MIX_UP' || quizType === 'ALL' ? (

@@ -182,6 +182,7 @@ export const RouteConfig = {
     pathname: '/explore/detail/:noteId',
     search: {
       quizType: 'ALL' as 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE',
+      sort: 'CREATED_AT' as 'CREATED_AT' | 'LOWEST_ACCURACY',
     },
   },
   exploreComplain: {
