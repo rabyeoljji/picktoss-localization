@@ -19,7 +19,7 @@ import { useOnceEffect } from '@/shared/hooks'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
-import { QuizType, useCreateNoteContext } from '../model/create-note-context'
+import { useCreateNoteContext } from '../model/create-note-context'
 
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
@@ -28,7 +28,7 @@ export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
   const { pathname } = useLocation()
   const router = useRouter()
-  const { quizType, documentType } = useCreateNoteContext()
+  const { documentType } = useCreateNoteContext()
 
   // 로딩 상태를 queryParam으로 관리
   const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
@@ -67,7 +67,7 @@ export const QuizLoadingDrawer = () => {
 
   // 문서 퀴즈 상태 폴링 훅 사용 (로딩 중일 때만 활성화)
   const { error, quizSetId, clearError } = useQuizGenerationPolling(
-    { documentId, quizType: quizType as QuizType },
+    { documentId },
     {
       pollingInterval: 2000,
       maxPollingCount: 60,
@@ -153,7 +153,7 @@ export const QuizLoadingDrawer = () => {
                 trackEvent('generate_confirm_click', {
                   location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
                   format: documentType === 'TEXT' ? '텍스트' : '파일',
-                  type: quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X',
+                  type: '전체',
                 })
                 completeAnimation()
                 setTimeout(() => {
@@ -191,7 +191,7 @@ export const QuizLoadingDrawer = () => {
               {/* {documentName} */}
             </Text>
             <Text typo="body-1-medium" color="sub">
-              {quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X'}
+              {/* {quizType === 'MULTIPLE_CHOICE' ? '객관식' : 'O/X'} */}
             </Text>
           </div>
 

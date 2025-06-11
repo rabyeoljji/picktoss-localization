@@ -3,7 +3,7 @@ import { useLocation } from 'react-router'
 
 import { AnimatePresence, motion } from 'framer-motion'
 
-import { QuizType, useCreateNoteContext } from '@/features/note/model/create-note-context'
+import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
 import { useUser } from '@/entities/member/api/hooks'
@@ -19,22 +19,13 @@ import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { cn } from '@/shared/lib/utils'
 
+/** @deprecated */
+
 export const CreateNoteDrawer = () => {
   const { trackEvent } = useAmplitude()
   const { pathname } = useLocation()
   const { data: categories } = useGetCategories()
-  const {
-    categoryId,
-    setCategoryId,
-    handleCreateDocument,
-    checkCreateActivate,
-    isPublic,
-    setIsPublic,
-    quizType,
-    setQuizType,
-    star,
-    isPending,
-  } = useCreateNoteContext()
+  const { handleCreateDocument, checkCreateActivate, isPublic, setIsPublic, star, isPending } = useCreateNoteContext()
 
   const [open, setOpen] = useState(false)
   const [isCategoryExpanded, setIsCategoryExpanded] = useState(true)
@@ -42,8 +33,6 @@ export const CreateNoteDrawer = () => {
 
   const toggleCategoryExpand = () => setIsCategoryExpanded((prev) => !prev)
   const toggleQuizTypeExpand = () => setIsQuizTypeExpanded((prev) => !prev)
-
-  const selectedCategory = categories?.find((category) => category.id === categoryId)
 
   const { data: user } = useUser()
 

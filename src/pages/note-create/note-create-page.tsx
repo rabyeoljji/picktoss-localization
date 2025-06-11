@@ -1,11 +1,11 @@
+import { useLocation } from 'react-router'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import { useKeyboard } from '@/app/keyboard-detector'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 import { CreateNoteProvider, DocumentType, useCreateNoteContext } from '@/features/note/model/create-note-context'
-import { CreateNoteDrawer } from '@/features/note/ui/create-note-drawer'
-import { EmojiTitleInput } from '@/features/note/ui/emoji-title-input'
 import NoteCreatePageFile from '@/features/note/ui/note-create-page-file'
 import { NoteCreateWrite } from '@/features/note/ui/note-create-write'
 import { QuizLoadingDrawer } from '@/features/note/ui/quiz-loading-drawer'
@@ -13,10 +13,14 @@ import { QuizLoadingDrawer } from '@/features/note/ui/quiz-loading-drawer'
 import { useUser } from '@/entities/member/api/hooks'
 
 import { IcInfo } from '@/shared/assets/icon'
+import { ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
+import { Button } from '@/shared/components/ui/button'
+import { Switch } from '@/shared/components/ui/switch'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { cn } from '@/shared/lib/utils'
 
 const NoteCreatePage = () => {
@@ -55,14 +59,27 @@ const NoteCreateHeader = () => {
 }
 
 const NoteCreateContent = () => {
-  const { documentType, content, checkDrawerTriggerActivate } = useCreateNoteContext()
+  const { trackEvent } = useAmplitude()
+  const { pathname } = useLocation()
+
+  const { star, isPublic, setIsPublic, documentType, content, checkDrawerTriggerActivate, handleCreateDocument } =
+    useCreateNoteContext()
   const { isKeyboardVisible } = useKeyboard()
   const { data: user } = useUser()
 
   return (
     <div className="flex flex-col relative bg-base-1 h-full">
-      <div className="border-b border-divider">
-        <EmojiTitleInput />
+      {/* 퀴즈 공개 여부 스위치 */}
+      <div className="h-[48px] bg-surface-2 flex items-center justify-between px-4">
+        <div className="flex gap-1 items-end">
+          <Text typo="body-1-medium" color="secondary">
+            퀴즈 공개
+          </Text>
+          <Text typo="body-2-medium" color="caption">
+            {isPublic ? '*다른 사람들도 퀴즈를 풀어볼 수 있어요' : '*이 퀴즈를 나만 볼 수 있어요'}
+          </Text>
+        </div>
+        <Switch checked={isPublic} onCheckedChange={setIsPublic} />
       </div>
 
       {documentType === 'TEXT' && <NoteCreateWrite />}
@@ -85,7 +102,25 @@ const NoteCreateContent = () => {
                 </Text>
               </div>
               <div className="flex-1">
-                <CreateNoteDrawer />
+                <Button
+                  variant="special"
+                  right={
+                    <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                      <ImgStar className="size-[16px] mr-[4px]" />
+                      <Text typo="body-1-medium">{star}</Text>
+                    </div>
+                  }
+                  onClick={() => {
+                    handleCreateDocument({
+                      onSuccess: () => {},
+                    })
+                    trackEvent('generate_quiz_click', {
+                      location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                    })
+                  }}
+                >
+                  생성하기
+                </Button>
               </div>
             </div>
           ) : (
