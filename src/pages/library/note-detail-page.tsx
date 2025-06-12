@@ -4,6 +4,7 @@ import { useLocation, useParams } from 'react-router'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import html2pdf from 'html2pdf.js'
 import { toast } from 'sonner'
 
 import { withHOC } from '@/app/hoc/with-page-config'
@@ -211,6 +212,75 @@ const NoteDetailPage = () => {
         },
       },
     )
+  }
+
+  const handleDownloadQuizAsPdf = () => {
+    if (!document) return
+
+    // 기존 showAnswer 값 저장 후 강제로 true로 설정해 정답이 보이게 하기
+    const originalShowAnswer = showAnswer
+    setShowAnswer(true)
+
+    setTimeout(() => {
+      // 컨텐츠가 렌더링될 시간을 주고 PDF 생성
+      // DOM document에서 요소 가져오기 (document 객체는 API 응답이 아닌 DOM document)
+      const quizContainer = window.document.getElementById('quiz-container')
+      if (!quizContainer) {
+        setShowAnswer(originalShowAnswer)
+        return
+      }
+
+      // quizType에 따른 파일명 설정
+      let quizTypeText
+      switch (quizType) {
+        case 'ALL':
+          quizTypeText = '전체'
+          break
+        case 'MULTIPLE_CHOICE':
+          quizTypeText = '객관식'
+          break
+        case 'MIX_UP':
+          quizTypeText = 'OX'
+          break
+        default:
+          quizTypeText = ''
+      }
+
+      const docName = document.name || '퀴즈'
+      const filename = `${docName}_${quizTypeText}_퀴즈.pdf`
+
+      // html2pdf 옵션 설정
+      const options = {
+        margin: 10,
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: {
+          scale: 2,
+          useCORS: true,
+          letterRendering: true,
+          scrollY: 0,
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+      }
+
+      // PDF 생성
+      html2pdf()
+        .from(quizContainer)
+        .set(options)
+        .save()
+        .then(() => {
+          // 원래 상태로 복원
+          setShowAnswer(originalShowAnswer)
+          toast('퀴즈가 PDF로 저장되었습니다.')
+          // @ts-expect-error - 이벤트 타입이 정의되지 않은 사용자 정의 이벤트
+          trackEvent('quiz_pdf_download', { quizType, documentName: docName })
+        })
+        .catch((err: Error) => {
+          console.error('PDF 생성 오류:', err)
+          toast('PDF 생성 중 오류가 발생했습니다.')
+          setShowAnswer(originalShowAnswer)
+        })
+    }, 500) // 렌더링에 시간 주기
   }
 
   const hasMultipleChoiceQuiz = document?.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
@@ -516,7 +586,7 @@ const NoteDetailPage = () => {
         </div>
 
         {/* 4. 문제 리스트 */}
-        <div className="px-4 pt-4 pb-[113px] bg-base-2 min-h-[100svh]">
+        <div id="quiz-container" className="px-4 pt-4 pb-[113px] bg-base-2 min-h-[100svh]">
           {!isDocumentLoading && (!hasMixUpQuiz || !hasMultipleChoiceQuiz) && (
             <div className="mb-2.5 rounded-[12px] bg-base-1 py-3 px-4 flex items-center gap-2">
               <IcSparkle className="text-icon-accent size-4" />
@@ -761,7 +831,9 @@ const NoteDetailPage = () => {
               />
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="-translate-y-2">
-              <DropdownMenuItem right={<IcDownload />}>문제 다운로드</DropdownMenuItem>
+              <DropdownMenuItem right={<IcDownload />} onClick={handleDownloadQuizAsPdf}>
+                문제 다운로드
+              </DropdownMenuItem>
               <DropdownMenuItem
                 className="text-red-500"
                 right={<IcDelete className="text-icon-critical" />}

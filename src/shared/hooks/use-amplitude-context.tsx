@@ -138,6 +138,9 @@ export interface QuizSettingSaveClickProps {
 /** [퀴즈] quiz_exit_click - 퀴즈 나가기' 버튼 클릭 */
 export interface QuizExitClickProps {}
 
+/** [퀴즈] quiz_pdf_download - 퀴즈 PDF 다운로드 버튼 클릭 */
+export interface QuizPdfDownloadProps {}
+
 // 마이 이벤트
 /** [마이] my_analysis_click - 퀴즈 분석 메뉴 클릭 */
 export interface MyAnalysisClickProps {}
@@ -271,6 +274,7 @@ export type EventPropsMap = {
   quiz_setting_skip_click: QuizSettingSkipClickProps
   quiz_setting_save_click: QuizSettingSaveClickProps
   quiz_exit_click: QuizExitClickProps
+  quiz_pdf_download: QuizPdfDownloadProps
   // 마이
   my_analysis_click: MyAnalysisClickProps
   my_star_click: MyStarClickProps
