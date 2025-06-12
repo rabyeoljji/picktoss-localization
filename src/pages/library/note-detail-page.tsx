@@ -39,6 +39,7 @@ import {
   IcEdit,
   IcKebab,
   IcNote,
+  IcPagelink,
   IcPlay,
   IcReview,
   IcSparkle,
@@ -89,7 +90,7 @@ import { TextButton } from '@/shared/components/ui/text-button'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { useOnceEffect } from '@/shared/hooks'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
-import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const NoteDetailPage = () => {
@@ -461,9 +462,22 @@ const NoteDetailPage = () => {
             {isDocumentLoading ? (
               <Skeleton className="w-[200px] h-[22px]" />
             ) : (
-              <Text typo="body-1-medium" color="sub">
-                {document?.createdAt.split('T')[0].split('-').join('.')} · {document?.quizzes?.length}문제 · 공개됨
-              </Text>
+              <div className="flex items-center">
+                <Text typo="body-1-medium" color="sub">
+                  {document?.createdAt.split('T')[0].split('-').join('.')} · {document?.quizzes?.length}문제
+                </Text>
+                {document?.isPublic && (
+                  <div className="flex items-center">
+                    <div className="w-px h-[12px] bg-gray-100 mx-2" />
+                    <Link to="/explore/detail/:noteId" params={[String(noteId)]} className="flex items-center gap-1">
+                      <Text typo="body-1-medium" color="caption">
+                        공개됨
+                      </Text>
+                      <IcPagelink className="size-4 text-icon-sub" />
+                    </Link>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </div>
