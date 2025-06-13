@@ -1,3 +1,5 @@
+import { isMobile } from 'react-device-detect'
+
 import { TabNavigation } from '@/shared/components/tab-navigation'
 import { cn } from '@/shared/lib/utils'
 
@@ -9,6 +11,16 @@ interface Props {
 
 export function withHOC<P extends object>(Component: React.ComponentType<P>, config: Props) {
   const backgroundClass = config.backgroundClassName ?? 'bg-surface-1'
+
+  const checkPWA = () => {
+    const isIOSStandalone =
+      typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
+    const isStandaloneMedia = window.matchMedia('(display-mode: standalone)').matches
+
+    return isIOSStandalone || isStandaloneMedia
+  }
+
+  const accessMobileWeb = !checkPWA() && isMobile
 
   return (props: P) => (
     <div
@@ -26,7 +38,9 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
     >
       <Component {...props} />
 
-      {config.activeTab && <TabNavigation activeTab={config.activeTab} className={config.navClassName} />}
+      {config.activeTab && !accessMobileWeb && (
+        <TabNavigation activeTab={config.activeTab} className={config.navClassName} />
+      )}
     </div>
   )
 }
