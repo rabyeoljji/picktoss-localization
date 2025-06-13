@@ -32,12 +32,14 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
 
       if (permission !== 'granted') {
         console.warn('사용자가 알림 권한을 거부했습니다.')
+        localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
         return false
       }
 
       localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
     } else if (Notification.permission === 'denied') {
       console.warn('이미 알림 권한이 차단된 상태입니다.')
+      localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
       return false
     }
 
@@ -55,6 +57,7 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
       // 만약 지원된다면 permission 요청
       if (pushPermissionState === 'denied') {
         console.warn('PushManager 권한 거부 상태입니다.')
+        localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
         return false
       }
 
@@ -70,6 +73,7 @@ export const requestNotificationPermission = async (): Promise<boolean> => {
 
     // 4. 모든 권한이 OK라면 true 반환
     console.log('알림 권한이 허용되었습니다.')
+    localStorage.setItem(StorageKey.notificationPermissionComplete, 'true')
     return true
   } catch (error) {
     console.error('알림 권한 요청 중 에러 발생', error)
