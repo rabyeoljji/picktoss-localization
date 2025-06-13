@@ -14,7 +14,7 @@ export const PWAOnlyMobileLayout = () => {
   if (!isPWA && isMobile) {
     return (
       <div
-        className="fixed bottom-0 right-1/2 z-20 h-screen w-dvw translate-x-1/2 flex flex-col pt-[var(--header-height-safe)] px-[16px]"
+        className="size-full flex flex-col pt-[var(--header-height-safe)] px-[16px]"
         style={{
           backgroundImage: `url("/images/Background-with-falling-shooting-stars.png")`,
           backgroundSize: '100% 100%',
