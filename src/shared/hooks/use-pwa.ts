@@ -16,7 +16,7 @@ interface BeforeInstallPromptEvent extends Event {
 }
 
 export const usePWA = () => {
-  const [isPWA, setIsPWA] = useState(false)
+  const [isPWA, setIsPWA] = useState<boolean | undefined>(undefined)
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [installable, setInstallable] = useState(false)
 
