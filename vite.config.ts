@@ -18,12 +18,18 @@ export default defineConfig({
       manifest: {
         name: '픽토스',
         short_name: 'Picktoss',
-        description: '픽토스 앱',
+        description: '나를 성장시키는 똑똑한 퀴즈',
         start_url: '/',
         display: 'fullscreen',
         background_color: '#ffffff',
         theme_color: '#00000000',
-        icons: [],
+        icons: [
+          {
+            src: '/favicon.svg',
+            sizes: '375x375',
+            type: 'image/svg+xml',
+          },
+        ],
       },
       workbox: {
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 3MB limit instead of default 2MB

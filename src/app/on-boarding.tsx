@@ -57,7 +57,10 @@ const OnBoardingPage = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit(onSubmit)} className="relative size-full overflow-hidden bg-surface-2 z-[9999]">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="fixed top-0 left-1/2 -translate-x-1/2 size-full max-w-xl overflow-hidden bg-surface-2 z-[9999]"
+      >
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -68,7 +71,7 @@ const OnBoardingPage = () => {
             stiffness: 80,
             damping: 20,
           }}
-          className="flex flex-col gap-[48px] pt-[66px] px-[16px]"
+          className="flex flex-col gap-[48px] pt-[66px] px-[16px] overflow-y-auto"
         >
           <div className="w-full max-w-[324px] inline-flex flex-col justify-start items-start gap-3">
             <div className="flex flex-col justify-start items-start gap-1">
