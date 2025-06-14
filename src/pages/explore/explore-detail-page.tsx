@@ -441,7 +441,27 @@ const ExploreDetailPage = () => {
           {showSkeleton &&
             Array.from({ length: 10 }).map((_, index) => <Skeleton key={index} className="rounded-[12px] h-[250px]" />)}
 
-          {quizType === 'MIX_UP' || quizType === 'ALL' ? (
+          {quizType === 'ALL' ? (
+            <div className="grid gap-2">
+              {document?.quizzes?.map((quiz, index) => (
+                <QuestionCard key={quiz.id}>
+                  <QuestionCard.Header order={index + 1} />
+                  <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
+                  {quiz.quizType === 'MIX_UP' ? (
+                    <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} />
+                  ) : (
+                    <QuestionCard.Multiple options={quiz.options} answerIndex={quiz.options.indexOf(quiz.answer)} />
+                  )}
+                  <QuestionCard.Explanation
+                    open={!!explanationOpenStates[quiz.id]}
+                    onOpenChange={(open) => setExplanationOpenStates((prev) => ({ ...prev, [quiz.id]: open }))}
+                  >
+                    {quiz.explanation}
+                  </QuestionCard.Explanation>
+                </QuestionCard>
+              ))}
+            </div>
+          ) : quizType === 'MIX_UP' ? (
             <div className="grid gap-2">
               {document?.quizzes
                 ?.filter((quiz) => quiz.quizType === 'MIX_UP')
@@ -460,7 +480,7 @@ const ExploreDetailPage = () => {
                 ))}
             </div>
           ) : (
-            (quizType === 'MULTIPLE_CHOICE' || quizType === 'ALL') && (
+            quizType === 'MULTIPLE_CHOICE' && (
               <div className="grid gap-2">
                 {document?.quizzes
                   ?.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
