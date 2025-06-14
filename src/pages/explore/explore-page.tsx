@@ -93,7 +93,7 @@ const ExplorePage = () => {
         }
       />
 
-      <HeaderOffsetLayout>
+      <HeaderOffsetLayout className="size-full">
         {isAppDownloadBannerOpen && (
           <AppDownloadBanner onClick={handleAppDownloadBannerClick} onClose={() => setIsAppDownloadBannerOpen(false)} />
         )}
