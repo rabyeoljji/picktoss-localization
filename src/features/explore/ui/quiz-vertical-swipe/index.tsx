@@ -46,6 +46,8 @@ type ShareCard = {
 type PublicDocumentsDto = GetPublicDocumentsDto | ShareCard
 
 const QuizVerticalSwipe = () => {
+  const token = useStore(useAuthStore, (state) => state.token)
+
   const DATA_PER_PAGE = 10
 
   const [categoryId] = useQueryParam('/explore', 'category')
@@ -70,7 +72,7 @@ const QuizVerticalSwipe = () => {
   })
 
   // 비공개 문서 개수 가져오기
-  const { data: notPublicDocumentsData } = useGetIsNotPublicDocuments()
+  const { data: notPublicDocumentsData } = useGetIsNotPublicDocuments({ enabled: !!token })
   const notPublicCount = notPublicDocumentsData?.documents.length ?? 0
 
   // 디테일 페이지에서 변경된 북마크 정보 카드 리스트에 업데이트
@@ -159,13 +161,13 @@ const QuizVerticalSwipe = () => {
     setIsFetching(false)
   }, [publicData, isFetched])
 
-  // activeIndex가 마지막에서 2번째 카드에 도달했을 때 다음 페이지 가져오기
+  // activeIndex가 마지막에서 3번째 카드에 도달했을 때 다음 페이지 가져오기
   useEffect(() => {
     const nextPage = fetchParams.page + 1
 
     const shouldFetchNext =
       documents.length > 0 &&
-      activeIndex === documents.length - 2 &&
+      activeIndex === documents.length - 3 &&
       !isFetching &&
       documents.length < (publicData?.totalDocuments ?? Infinity) && // 서버 데이터를 이용한 마지막 페이지 감지
       hasMore && // 프론트 측 마지막 페이지 감지 도구

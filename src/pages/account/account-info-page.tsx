@@ -45,6 +45,7 @@ const AccountInfoPage = () => {
   // 로그아웃
   const handleLogout = () => {
     clearToken()
+    window.location.reload()
   }
 
   // 이름 변경 dialog open 핸들러

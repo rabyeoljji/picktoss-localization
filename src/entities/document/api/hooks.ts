@@ -170,10 +170,11 @@ export const useGetDocumentsNeedingReview = () => {
   })
 }
 
-export const useGetIsNotPublicDocuments = () => {
+export const useGetIsNotPublicDocuments = (queryOptions?: { enabled: boolean }) => {
   return useQuery({
     queryKey: DOCUMENT_KEYS.getIsNotPublicDocuments,
     queryFn: () => getIsNotPublicDocuments(),
+    enabled: queryOptions?.enabled ?? true,
   })
 }
 
