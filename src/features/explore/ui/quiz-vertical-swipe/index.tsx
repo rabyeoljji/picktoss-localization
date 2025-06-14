@@ -4,6 +4,10 @@ import { toast } from 'sonner'
 import SwiperCore from 'swiper'
 import { Mousewheel, Virtual } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { useStore } from 'zustand'
+
+import { useAuthStore } from '@/features/auth'
+import LoginDialog from '@/features/explore/ui/login-dialog'
 
 import { GetPublicDocumentsDto } from '@/entities/document/api'
 import {
@@ -247,6 +251,8 @@ const ExploreSwipeCard = ({
   document: GetPublicDocumentsDto
   setDocuments: React.Dispatch<React.SetStateAction<PublicDocumentsDto[]>>
 }) => {
+  const token = useStore(useAuthStore, (state) => state.token)
+
   const { trackEvent } = useAmplitude()
 
   const {
@@ -271,6 +277,8 @@ const ExploreSwipeCard = ({
 
   const [isBookmarkPending, setIsBookmarkPending] = useState(false)
 
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+
   // 공유하기 핸들러
   const handleShare = async () => {
     trackEvent('explore_share_click', { location: '미리보기 페이지' })
@@ -279,8 +287,7 @@ const ExploreSwipeCard = ({
       try {
         await navigator.share({
           title: name,
-          text: `Q. ${quizzes[0].question} 외 ${totalQuizCount - 1}문제`,
-          url: `${window.location.origin}explore/detail/${id}`, // 추후 picktoss.com으로 변경
+          url: `${window.location.origin}/explore/detail/${id}`, // 추후 picktoss.com으로 변경
         })
         console.log('공유 성공')
       } catch (error) {
@@ -293,6 +300,11 @@ const ExploreSwipeCard = ({
 
   // 북마크 핸들러
   const handleBookmark = () => {
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
     if (isBookmarkPending) return // 중복 방지
 
     setIsBookmarkPending(true)
@@ -360,6 +372,14 @@ const ExploreSwipeCard = ({
     }
   }
 
+  // 전체 보기 버튼 클릭 핸들러
+  const handleViewAllBtnClick = () => {
+    trackEvent('explore_detail_click')
+
+    router.push('/explore/detail/:noteId', { params: [String(id)] })
+  }
+
+  // 퀴즈 시작 핸들러
   const handleQuizStart = () => {
     createQuizSet(
       {
@@ -381,39 +401,40 @@ const ExploreSwipeCard = ({
   }
 
   return (
-    <ExploreQuizCard
-      index={index}
-      activeIndex={activeIndex}
-      header={
-        <ExploreQuizCard.Header
-          creator={creator}
-          isOwner={isOwner}
-          isBookmarked={isBookmarked}
-          onClickShare={handleShare}
-          onClickBookmark={handleBookmark}
-        />
-      }
-      content={
-        <ExploreQuizCard.Content
-          emoji={emoji}
-          title={name}
-          category={category}
-          playedCount={tryCount}
-          bookmarkCount={bookmarkCount}
-        />
-      }
-      quizzes={
-        <ExploreQuizCard.Quizzes
-          quizzes={quizzes}
-          totalQuizCount={quizzes.length}
-          onClickViewAllBtn={() => {
-            trackEvent('explore_detail_click')
-            router.push('/explore/detail/:noteId', { params: [String(id)] })
-          }}
-        />
-      }
-      footer={<ExploreQuizCard.Footer onClickStartQuiz={handleQuizStart} isLoading={isCreatingQuizSet} />}
-    />
+    <>
+      <ExploreQuizCard
+        index={index}
+        activeIndex={activeIndex}
+        header={
+          <ExploreQuizCard.Header
+            creator={creator}
+            isOwner={isOwner}
+            isBookmarked={isBookmarked}
+            onClickShare={handleShare}
+            onClickBookmark={handleBookmark}
+          />
+        }
+        content={
+          <ExploreQuizCard.Content
+            emoji={emoji}
+            title={name}
+            category={category}
+            playedCount={tryCount}
+            bookmarkCount={bookmarkCount}
+          />
+        }
+        quizzes={
+          <ExploreQuizCard.Quizzes
+            quizzes={quizzes}
+            totalQuizCount={quizzes.length}
+            onClickViewAllBtn={handleViewAllBtnClick}
+          />
+        }
+        footer={<ExploreQuizCard.Footer onClickStartQuiz={handleQuizStart} isLoading={isCreatingQuizSet} />}
+      />
+
+      <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+    </>
   )
 }
 

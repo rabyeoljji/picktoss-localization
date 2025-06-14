@@ -3,9 +3,13 @@ import { useParams } from 'react-router'
 
 import { format } from 'date-fns'
 import { toast } from 'sonner'
+import { useStore } from 'zustand'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+
+import { useAuthStore } from '@/features/auth'
+import LoginDialog from '@/features/explore/ui/login-dialog'
 
 import {
   useDocumentBookmarkMutation,
@@ -38,6 +42,11 @@ import { useSessionStorage } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
 
 const ExploreDetailPage = () => {
+  const token = useStore(useAuthStore, (state) => state.token)
+
+  // 미로그인 시 관리
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+
   const { trackEvent } = useAmplitude()
   const defaultDateString = new Date().toISOString()
   const router = useRouter()
@@ -130,6 +139,19 @@ const ExploreDetailPage = () => {
     )
   }
 
+  // 신고하기 핸들러
+  const handleComplain = () => {
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
+    router.push('/explore/complain/:noteId', {
+      params: [String(noteId)],
+      search: { name: document?.name },
+    })
+  }
+
   // 공유하기 핸들러
   const handleShare = async () => {
     trackEvent('explore_share_click', { location: '상세 페이지' })
@@ -138,8 +160,7 @@ const ExploreDetailPage = () => {
       try {
         await navigator.share({
           title: document.name,
-          text: `Q. ${document.quizzes[0].question} 외 ${document.totalQuizCount - 1}문제`,
-          url: `${window.location.origin}explore/detail/${document.id}`,
+          url: `${window.location.origin}/explore/detail/${document.id}`,
         })
         console.log('공유 성공')
       } catch (error) {
@@ -152,6 +173,11 @@ const ExploreDetailPage = () => {
 
   // 북마크 핸들러
   const handleBookmark = () => {
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
     if (!document || isBookmarkProcessing) return
 
     setIsBookmarkProcessing(true)
@@ -280,15 +306,7 @@ const ExploreDetailPage = () => {
                       </DropdownMenuItem>
                     </>
                   ) : (
-                    <DropdownMenuItem
-                      onClick={() =>
-                        router.push('/explore/complain/:noteId', {
-                          params: [String(noteId)],
-                          search: { name: document?.name },
-                        })
-                      }
-                      className="cursor-pointer"
-                    >
+                    <DropdownMenuItem onClick={handleComplain} className="cursor-pointer">
                       퀴즈 신고
                     </DropdownMenuItem>
                   )}
@@ -513,6 +531,9 @@ const ExploreDetailPage = () => {
           </Drawer>
         </FixedBottom>
       </HeaderOffsetLayout>
+
+      {/* 로그인 모달 */}
+      <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
     </div>
   )
 }

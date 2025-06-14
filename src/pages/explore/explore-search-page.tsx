@@ -1,8 +1,12 @@
 import { useState } from 'react'
 
+import { useStore } from 'zustand'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
+import { useAuthStore } from '@/features/auth'
+import LoginDialog from '@/features/explore/ui/login-dialog'
 import { highlightAndTrimText } from '@/features/search/lib'
 import { useSearch } from '@/features/search/model/use-search'
 
@@ -122,7 +126,11 @@ interface ExploreSearchResultsProps {
 
 /** 내 문서에서 검색 결과가 있을 때 결과들을 보여주는 컴포넌트 */
 const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsProps) => {
+  const token = useStore(useAuthStore, (state) => state.token)
+
   const router = useRouter()
+
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
 
   const [isBookmarked, setIsBookmarked] = useState(searchItem.isBookmarked)
 
@@ -131,6 +139,11 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
 
   // 낙관적 업데이트 적용한 북마크 핸들러
   const handleBookmark = () => {
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
     const nextState = !isBookmarked
     setIsBookmarked(nextState)
 
@@ -146,46 +159,51 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
   }
 
   return (
-    <BookmarkVerticalCard
-      role="link"
-      onClick={() => {
-        router.push('/explore/detail/:noteId', {
-          params: [String(searchItem.id)],
-        })
-      }}
-    >
-      <BookmarkVerticalCard.Header
-        emoji={searchItem.emoji}
-        isOwner={searchItem.isOwner}
-        bookmarkBtn={
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation()
-              e.preventDefault()
-              handleBookmark()
-            }}
-          >
-            {isBookmarked ? (
-              <IcBookmarkFilled className="size-[24px] text-icon-primary" />
-            ) : (
-              <IcBookmark className="size-[24px] text-icon-secondary" />
-            )}
-          </button>
-        }
-        category={searchItem.category}
-      />
+    <>
+      <BookmarkVerticalCard
+        role="link"
+        onClick={() => {
+          router.push('/explore/detail/:noteId', {
+            params: [String(searchItem.id)],
+          })
+        }}
+      >
+        <BookmarkVerticalCard.Header
+          emoji={searchItem.emoji}
+          isOwner={searchItem.isOwner}
+          bookmarkBtn={
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation()
+                e.preventDefault()
+                handleBookmark()
+              }}
+            >
+              {isBookmarked ? (
+                <IcBookmarkFilled className="size-[24px] text-icon-primary" />
+              ) : (
+                <IcBookmark className="size-[24px] text-icon-secondary" />
+              )}
+            </button>
+          }
+          category={searchItem.category}
+        />
 
-      <BookmarkVerticalCard.Content title={highlightAndTrimText(searchItem.name, keyword)} />
-      <BookmarkVerticalCard.Detail
-        isPublic
-        quizCount={searchItem.totalQuizCount}
-        playedCount={searchItem.tryCount}
-        bookmarkCount={searchItem.bookmarkCount}
-      />
+        <BookmarkVerticalCard.Content title={highlightAndTrimText(searchItem.name, keyword)} />
+        <BookmarkVerticalCard.Detail
+          isPublic
+          quizCount={searchItem.totalQuizCount}
+          playedCount={searchItem.tryCount}
+          bookmarkCount={searchItem.bookmarkCount}
+        />
 
-      <BookmarkVerticalCard.Footer creator={searchItem.creatorName} />
-    </BookmarkVerticalCard>
+        <BookmarkVerticalCard.Footer creator={searchItem.creatorName} />
+      </BookmarkVerticalCard>
+
+      {/* 로그인 모달 */}
+      <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+    </>
   )
 }
 

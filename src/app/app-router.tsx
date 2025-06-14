@@ -97,14 +97,19 @@ export const AppRouter = () => {
                 <Route path={RoutePath.bombQuiz} element={<BombQuizPage />} />
               </Route>
             </Route>
+          </Route>
 
-            {/* Explore */}
-            <Route path={RoutePath.explore}>
-              <Route index element={<ExplorePage />} />
-              <Route path={RoutePath.exploreDetail} element={<ExploreDetailPage />} />
-              <Route path={RoutePath.exploreComplain} element={<ExploreComplainPage />} />
-              <Route path={RoutePath.exploreRelease} element={<ExploreReleasePage />} />
-              <Route path={RoutePath.exploreSearch} element={<ExploreSearchPage />} />
+          {/* Explore */}
+          <Route path={RoutePath.explore}>
+            <Route index element={<ExplorePage />} />
+            <Route path={RoutePath.exploreSearch} element={<ExploreSearchPage />} />
+            <Route path={RoutePath.exploreDetail} element={<ExploreDetailPage />} />
+
+            <Route element={<AuthLayout />}>
+              <Route element={<PWAOnlyMobileLayout />}>
+                <Route path={RoutePath.exploreComplain} element={<ExploreComplainPage />} />
+                <Route path={RoutePath.exploreRelease} element={<ExploreReleasePage />} />
+              </Route>
             </Route>
           </Route>
 

@@ -10,7 +10,8 @@ export const AuthLayout = () => {
 
   if (!token) {
     // 현재 경로를 state로 전달하여 로그인 후 리다이렉트할 수 있도록 함
-    return <Navigate to="/login" state={{ from: location.pathname + location.search }} />
+    // return <Navigate to="/login" state={{ from: location.pathname + location.search }} />
+    return <Navigate to="/explore" state={{ from: location.pathname + location.search }} />
   }
 
   return <Outlet />

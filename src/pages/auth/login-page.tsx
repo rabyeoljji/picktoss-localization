@@ -1,64 +1,108 @@
+import Marquee from 'react-fast-marquee'
 import { Link as ReactRouterLink } from 'react-router'
+
+import { withHOC } from '@/app/hoc/with-page-config'
+import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useGLogin } from '@/features/auth'
 
 import { IcLogo } from '@/shared/assets/icon'
-import { ImgRoundGoogle, ImgRoundKakao, ImgTodayquiz } from '@/shared/assets/images'
+import { ImgRoundGoogle, ImgRoundKakao, ImgSymbol } from '@/shared/assets/images'
+import { BackButton } from '@/shared/components/buttons/back-button'
+import { Header } from '@/shared/components/header'
+import QuestionBox from '@/shared/components/items/question-box-item'
 import { Text } from '@/shared/components/ui/text'
+
+const exampleQuestions = [
+  { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
+  { emoji: '👠', question: '프로세스는 무엇인가요?' },
+  { emoji: '💡', question: '롤스는 무엇을 주장했나요?' },
+  { emoji: '🚩', question: '미토콘드리아에 대한 설명 중 틀린 것은?' },
+  { emoji: '🧠', question: '참여가 늘어나는 이유는 무엇인가요?' },
+]
 
 const LoginPage = () => {
   const { googleLogin, isLoading } = useGLogin()
 
   return (
-    <main className="h-screen bg-surface-1 px-[38px] flex-center flex-col">
+    <>
       {isLoading ? (
         <LoadingSpinner />
       ) : (
         <>
-          <div className="grid gap-3">
-            <ImgTodayquiz className="w-[180px] mx-auto" />
-            <IcLogo className="w-[160px] mx-auto" />
-          </div>
+          <Header
+            className="bg-gray-900 px-[8px]"
+            left={<BackButton type="close" className="text-icon-inverse-dim" />}
+          />
 
-          <div className="mt-[72px] text-center">
-            <Text typo="subtitle-2-medium" color="accent">
-              3초만에 픽토스 시작하기
-            </Text>
-            <div className="grid gap-2 mt-3">
-              <GoogleLoginButton onClick={() => googleLogin()} />
-              <KakaoLoginButton />
+          <HeaderOffsetLayout className="size-full flex-center flex-col gap-[71.52px]">
+            <div className="flex flex-col gap-[32px]">
+              <div className="flex-center flex-col gap-[16px]">
+                <ImgSymbol className="w-[80px]" />
+                <IcLogo className="w-[210px] h-[53.48px] text-icon-inverse" />
+              </div>
+              <div className="flex flex-col gap-[10px]">
+                <Marquee gradient={false} speed={20} direction="left">
+                  {exampleQuestions.map((item, index) => (
+                    <QuestionBox
+                      key={index}
+                      emoji={item.emoji}
+                      question={item.question}
+                      color="dark"
+                      className="mr-[8px]"
+                    />
+                  ))}
+                </Marquee>
+                <Marquee gradient={false} speed={20} direction="right">
+                  {exampleQuestions.map((item, index) => (
+                    <QuestionBox
+                      key={index}
+                      emoji={item.emoji}
+                      question={item.question}
+                      color="dark"
+                      className="mr-[8px]"
+                    />
+                  ))}
+                </Marquee>
+              </div>
             </div>
-            <div className="mt-4">
-              <Text typo="caption-medium" color="caption">
-                로그인 시{' '}
-                <ReactRouterLink
-                  to="https://picktoss.notion.site/1209d818f56080fbb469e82def758e9c?pvs=4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  개인정보보호 정책
-                </ReactRouterLink>{' '}
-                및{' '}
-                <ReactRouterLink
-                  to="https://picktoss.notion.site/1209d818f560809aad11c5b64020d735?pvs=4"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="underline"
-                >
-                  서비스 이용약관
-                </ReactRouterLink>
-                에 동의하는 것으로 간주하며, 서비스 이용을 위해 이메일과 이름을 수집합니다.
-              </Text>
+
+            <div className="w-full flex-center flex-col gap-[16px]">
+              <div className="w-full flex flex-col gap-2 px-[32px]">
+                <KakaoLoginButton />
+                <GoogleLoginButton onClick={() => googleLogin()} />
+              </div>
+
+              <div className="text-center">
+                <Text typo="caption-medium" color="caption">
+                  로그인 시{' '}
+                  <ReactRouterLink
+                    to="https://picktoss.notion.site/1209d818f56080fbb469e82def758e9c?pvs=4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    개인정보보호 정책
+                  </ReactRouterLink>{' '}
+                  및{' '}
+                  <ReactRouterLink
+                    to="https://picktoss.notion.site/1209d818f560809aad11c5b64020d735?pvs=4"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline"
+                  >
+                    서비스 이용약관
+                  </ReactRouterLink>
+                  에 동의하는 것으로 <br /> 간주하며, 서비스 이용을 위해 이메일과 이름을 수집합니다.
+                </Text>
+              </div>
             </div>
-          </div>
+          </HeaderOffsetLayout>
         </>
       )}
-    </main>
+    </>
   )
 }
-
-export default LoginPage
 
 const LoadingSpinner = () => {
   return (
@@ -79,7 +123,7 @@ const GoogleLoginButton = ({ ...props }) => {
     >
       <ImgRoundGoogle className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
-        Google로 로그인
+        Google로 시작하기
       </Text>
     </button>
   )
@@ -90,8 +134,12 @@ const KakaoLoginButton = ({ ...props }) => {
     <button className="h-[48px] relative rounded-full flex-center bg-[#FFE45F] active:opacity-90" {...props}>
       <ImgRoundKakao className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
-        카카오로 로그인
+        카카오로 시작하기
       </Text>
     </button>
   )
 }
+
+export default withHOC(LoginPage, {
+  backgroundClassName: 'bg-gray-900',
+})
