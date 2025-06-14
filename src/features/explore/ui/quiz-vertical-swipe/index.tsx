@@ -198,7 +198,7 @@ const QuizVerticalSwipe = () => {
         overscrollBehaviorY: 'contain',
         WebkitOverflowScrolling: 'touch',
       }}
-      className="relative w-full p-[16px] pt-[28px] flex flex-col items-center gap-[10px] overscroll-none overflow-hidden bg-base-2"
+      className="relative w-full p-[16px] pt-[28px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2"
     >
       <Swiper
         direction="vertical"
