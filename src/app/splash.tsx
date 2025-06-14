@@ -1,11 +1,13 @@
-import { motion } from 'framer-motion'
-
+// import { motion } from 'framer-motion'
 import { ImgSymbol } from '@/shared/assets/images'
 
 const Splash = () => {
   return (
     <div className="size-full overflow-hidden bg-surface-1">
-      <motion.div
+      <ImgSymbol className="size-36 center z-50" />
+
+      {/* 추후 애니메이션이 쓰이게 되면 활성화 */}
+      {/* <motion.div
         className="center z-50"
         initial={{ x: 120, y: -120, opacity: 0 }}
         animate={{ x: 0, y: 0, opacity: 1 }}
@@ -18,7 +20,7 @@ const Splash = () => {
         }}
       >
         <ImgSymbol className="size-36" />
-      </motion.div>
+      </motion.div> */}
     </div>
   )
 }
