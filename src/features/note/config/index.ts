@@ -5,7 +5,7 @@ export const DOCUMENT_CONSTRAINTS = {
     MAX: 50,
   },
   CONTENT: {
-    MIN: 3000,
+    MIN: 1000,
     MAX: 50000,
   },
 } as const

@@ -1,3 +1,5 @@
+import { useLocation } from 'react-router'
+
 import { marked } from 'marked'
 import styled from 'styled-components'
 
@@ -7,11 +9,17 @@ import { useCreateNoteContext } from '@/features/note/model/create-note-context'
 import { useUser } from '@/entities/member/api/hooks'
 
 import { IcChange, IcFile, IcNote } from '@/shared/assets/icon'
+import { ImgStar } from '@/shared/assets/images'
 import FixedBottom from '@/shared/components/fixed-bottom'
+import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 
 const NoteCreatePageFile = () => {
-  const { content, fileInfo, changeFileInfo, isProcessing } = useCreateNoteContext()
+  const { trackEvent } = useAmplitude()
+  const { pathname } = useLocation()
+
+  const { content, fileInfo, changeFileInfo, isProcessing, star, handleCreateDocument } = useCreateNoteContext()
   const { data: user } = useUser()
 
   if (!fileInfo) {
@@ -100,6 +108,27 @@ const NoteCreatePageFile = () => {
             <Text typo="body-1-medium" color="primary">
               {user?.star.toLocaleString('ko-kr')}개
             </Text>
+          </div>
+          <div className="flex-1">
+            <Button
+              variant="special"
+              right={
+                <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                  <ImgStar className="size-[16px] mr-[4px]" />
+                  <Text typo="body-1-medium">{star}</Text>
+                </div>
+              }
+              onClick={() => {
+                handleCreateDocument({
+                  onSuccess: () => {},
+                })
+                trackEvent('generate_quiz_click', {
+                  location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                })
+              }}
+            >
+              생성하기
+            </Button>
           </div>
         </div>
       </FixedBottom>
