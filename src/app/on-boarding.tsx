@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { z } from 'zod'
 
-import { withHOC } from '@/app/hoc/with-page-config'
+// import { withHOC } from '@/app/hoc/with-page-config'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
 import { useUpdateMemberCategory, useUser } from '@/entities/member/api/hooks'
@@ -149,6 +149,8 @@ const OnBoardingPage = () => {
   )
 }
 
-export default withHOC(OnBoardingPage, {
-  backgroundClassName: 'bg-surface-2',
-})
+export default OnBoardingPage
+
+// export default withHOC(OnBoardingPage, {
+//   backgroundClassName: 'bg-surface-2',
+// })
