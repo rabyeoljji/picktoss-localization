@@ -27,7 +27,9 @@ const LoginPage = () => {
   return (
     <>
       {isLoading ? (
-        <LoadingSpinner />
+        <div className="size-full flex-center">
+          <LoadingSpinner />
+        </div>
       ) : (
         <>
           <Header
