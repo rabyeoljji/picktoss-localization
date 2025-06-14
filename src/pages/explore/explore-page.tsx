@@ -136,59 +136,57 @@ const ExplorePage = () => {
           </DrawerContent>
         </Drawer>
 
-        <div className="">
-          {/* 카테고리 선택 탭 */}
-          <div
-            ref={scrollRef}
-            className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
-          >
-            {isLoading ? (
-              Array.from({ length: 7 }).map((_, index) => (
-                <div key={'tab-skeleton-' + index} className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
-              ))
-            ) : (
-              <>
-                {/* 전체 */}
-                <Chip
-                  variant={activeCategory === 0 ? 'selected' : 'darken'}
-                  left={activeCategory === 0 ? '💫' : undefined}
-                  onClick={() => setCategory(0)}
-                  className={cn('ml-[16px]')}
-                >
-                  전체
-                </Chip>
+        {/* 카테고리 선택 탭 */}
+        <div
+          ref={scrollRef}
+          className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
+        >
+          {isLoading ? (
+            Array.from({ length: 7 }).map((_, index) => (
+              <div key={'tab-skeleton-' + index} className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
+            ))
+          ) : (
+            <>
+              {/* 전체 */}
+              <Chip
+                variant={activeCategory === 0 ? 'selected' : 'darken'}
+                left={activeCategory === 0 ? '💫' : undefined}
+                onClick={() => setCategory(0)}
+                className={cn('ml-[16px]')}
+              >
+                전체
+              </Chip>
 
-                {/* Chip 요소들 */}
-                {categoryData &&
-                  categoryData.map((category, index) => (
-                    <Chip
-                      key={index}
-                      variant={category.id === activeCategory ? 'selected' : 'darken'}
-                      left={category.id === activeCategory ? category.emoji : undefined}
-                      onClick={() => {
-                        setCategory(category.id)
-                        trackEvent('explore_tab_click', {
-                          category: category.name as
-                            | '전체'
-                            | '자격증·수험'
-                            | '학문·전공'
-                            | 'IT·개발'
-                            | '재테크·시사'
-                            | '언어'
-                            | '상식·교양',
-                        })
-                      }}
-                    >
-                      {category.name}
-                    </Chip>
-                  ))}
-              </>
-            )}
-          </div>
-
-          {/* 카드 스와이프 영역 */}
-          <QuizVerticalSwipe />
+              {/* Chip 요소들 */}
+              {categoryData &&
+                categoryData.map((category, index) => (
+                  <Chip
+                    key={index}
+                    variant={category.id === activeCategory ? 'selected' : 'darken'}
+                    left={category.id === activeCategory ? category.emoji : undefined}
+                    onClick={() => {
+                      setCategory(category.id)
+                      trackEvent('explore_tab_click', {
+                        category: category.name as
+                          | '전체'
+                          | '자격증·수험'
+                          | '학문·전공'
+                          | 'IT·개발'
+                          | '재테크·시사'
+                          | '언어'
+                          | '상식·교양',
+                      })
+                    }}
+                  >
+                    {category.name}
+                  </Chip>
+                ))}
+            </>
+          )}
         </div>
+
+        {/* 카드 스와이프 영역 */}
+        <QuizVerticalSwipe />
 
         {/* 로그인 모달 */}
         <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
