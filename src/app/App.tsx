@@ -26,9 +26,9 @@ function App() {
         <meta name="twitter:image" content="https://picktoss.vercel.app/images/og-image.png" />
 
         {/* Favicon */}
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicon.svg" />
-        <link rel="mask-icon" href="/favicon.svg" color="#FF9928" />
+        <link rel="icon" href="/favicon/favicon.svg" type="image/svg+xml" />
+        <link rel="apple-touch-icon" href="/favicon/apple-touch-icon.png" />
+        <link rel="mask-icon" href="/favicon/apple-touch-icon.png" color="#FF9928" />
 
         <link rel="canonical" href="https://www.picktoss.vercel.app" />
       </Helmet>
