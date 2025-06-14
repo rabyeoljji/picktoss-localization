@@ -193,9 +193,9 @@ const QuizVerticalSwipe = () => {
     <div
       ref={swiperContainerRef}
       style={{
-        height: 'calc(100vh - env(safe-area-inset-top) - 184px)',
+        height: 'calc(100vh - var(--safe-area-inset-top) - 186px)',
         touchAction: 'pan-y',
-        overscrollBehaviorY: 'contain',
+        overscrollBehaviorY: 'none',
         WebkitOverflowScrolling: 'touch',
       }}
       className="relative w-full p-[16px] pt-[28px] flex flex-col items-center gap-[10px] overflow-hidden bg-base-2"

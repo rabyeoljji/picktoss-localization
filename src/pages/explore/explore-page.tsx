@@ -75,7 +75,7 @@ const ExplorePage = () => {
   return (
     <>
       <Header
-        className={cn('transition-all duration-300 ease-in-out', 'bg-surface-2 px-[8px]')}
+        className={cn('bg-surface-2')}
         left={
           <button onClick={handleProfileClick} className="size-[40px] flex-center">
             <IcProfile className="size-[24px]" />
@@ -93,7 +93,7 @@ const ExplorePage = () => {
         }
       />
 
-      <HeaderOffsetLayout className="size-full overscroll-none">
+      <HeaderOffsetLayout className="overscroll-none">
         {/* 앱 다운로드 배너 */}
         {isAppDownloadBannerOpen && (
           <AppDownloadBanner onClick={handleAppDownloadBannerClick} onClose={() => setIsAppDownloadBannerOpen(false)} />
@@ -138,10 +138,7 @@ const ExplorePage = () => {
         </Drawer>
 
         {/* 카테고리 선택 탭 */}
-        <div
-          ref={scrollRef}
-          className="sticky top-[var(--header-height-safe)] z-50 bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
-        >
+        <div ref={scrollRef} className=" bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]">
           {isLoading ? (
             Array.from({ length: 7 }).map((_, index) => (
               <div key={'tab-skeleton-' + index} className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
