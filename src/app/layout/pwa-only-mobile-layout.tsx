@@ -1,6 +1,8 @@
 import { isMobile } from 'react-device-detect'
 import { Outlet } from 'react-router'
 
+import Splash from '@/app/splash'
+
 import { ImgSymbol } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
@@ -10,6 +12,10 @@ import { useRouter } from '@/shared/lib/router'
 export const PWAOnlyMobileLayout = () => {
   const router = useRouter()
   const { isPWA } = usePWA()
+
+  if (isPWA === undefined) {
+    return <Splash />
+  }
 
   if (!isPWA && isMobile) {
     return (

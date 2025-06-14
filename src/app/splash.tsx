@@ -10,7 +10,7 @@ const Splash = () => {
         initial={{ x: 120, y: -120, opacity: 0 }}
         animate={{ x: 0, y: 0, opacity: 1 }}
         transition={{
-          delay: 0.1,
+          // delay: 0.1,
           type: 'spring',
           mass: 1,
           stiffness: 100,
