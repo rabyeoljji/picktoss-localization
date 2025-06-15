@@ -6,8 +6,6 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import OnBoarding from '@/app/on-boarding'
 
-import RewardDialogForInvitee from '@/features/invite/ui/reward-dialog-for-invitee'
-import RewardDialogForInviter from '@/features/invite/ui/reward-dialog-for-inviter'
 import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
 import { InfoCarousel } from '@/features/quiz/ui/banner'
 import { DailyQuizTooltip } from '@/features/quiz/ui/daliy-quiz-tooltip'
@@ -532,14 +530,6 @@ const HomePage = () => {
           </div>
         }
       />
-
-      {/* 초대 보상 dialog */}
-      <RewardDialogForInvitee
-        open={openRewardForInvitee}
-        onOpenChange={setOpenRewardForInvitee}
-        inviteCode={inviteCode ?? ''}
-      />
-      <RewardDialogForInviter open={openRewardForInviter} onOpenChange={setOpenRewardForInviter} />
     </>
   )
 }
