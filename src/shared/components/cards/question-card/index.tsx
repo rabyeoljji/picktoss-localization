@@ -82,7 +82,7 @@ const QuestionCardMultiple = ({
           <div key={index} className="flex gap-2 items-start">
             <div
               className={cn(
-                'bg-base-2 rounded-[4px] shrink-0 size-5 flex-center',
+                'bg-base-2 rounded-[4px] shrink-0 size-5 flex-center text-sub',
                 finalShowIndexs.includes(index) &&
                   (answerIndex === index ? 'bg-correct text-correct' : 'bg-incorrect text-incorrect'),
                 finalShowIndexs.length && !finalShowIndexs.includes(index) && 'bg-base-2 text-disabled',
