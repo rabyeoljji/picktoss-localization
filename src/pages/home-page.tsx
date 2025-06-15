@@ -6,8 +6,6 @@ import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import OnBoarding from '@/app/on-boarding'
 
-import RewardDialogForInvitee from '@/features/invite/ui/reward-dialog-for-invitee'
-import RewardDialogForInviter from '@/features/invite/ui/reward-dialog-for-inviter'
 import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
 import { InfoCarousel } from '@/features/quiz/ui/banner'
 import { DailyQuizTooltip } from '@/features/quiz/ui/daliy-quiz-tooltip'
@@ -16,7 +14,6 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { QuizSettingDrawer } from '@/features/quiz/ui/quiz-setting-drawer'
 import { ResultIcon } from '@/features/quiz/ui/result-icon'
 
-import { useCheckInviteCodeBySignUp } from '@/entities/auth/api/hooks'
 import { useUser } from '@/entities/member/api/hooks'
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
@@ -35,7 +32,6 @@ import { useMessaging } from '@/shared/hooks/use-messaging'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { checkNotificationPermission } from '@/shared/lib/notification'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
-import { getLocalStorageItem } from '@/shared/lib/storage/lib'
 import { cn } from '@/shared/lib/utils'
 
 type Quiz = GetAllQuizzesResponse['quizzes'][number]
@@ -43,24 +39,6 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 const HomePage = () => {
   const router = useRouter()
   const { trackEvent } = useAmplitude()
-
-  // 초대 코드 보상 관련
-  const inviteCode = getLocalStorageItem('inviteCode')
-  const [openRewardForInvitee, setOpenRewardForInvitee] = useState(false)
-  const [openRewardForInviter, setOpenRewardForInviter] = useState(false)
-  const { data: hasInviteeData } = useCheckInviteCodeBySignUp()
-
-  useEffect(() => {
-    if (inviteCode) {
-      setOpenRewardForInvitee(true)
-    }
-  }, [inviteCode])
-
-  useEffect(() => {
-    if (hasInviteeData?.type === 'READY') {
-      setOpenRewardForInviter(true)
-    }
-  }, [hasInviteeData])
 
   // 온보딩 관련
   const [userLoaded, setUserLoaded] = useState(false)
@@ -543,14 +521,6 @@ const HomePage = () => {
           </div>
         }
       />
-
-      {/* 초대 보상 dialog */}
-      <RewardDialogForInvitee
-        open={openRewardForInvitee}
-        onOpenChange={setOpenRewardForInvitee}
-        inviteCode={inviteCode ?? ''}
-      />
-      <RewardDialogForInviter open={openRewardForInviter} onOpenChange={setOpenRewardForInviter} />
     </>
   )
 }
