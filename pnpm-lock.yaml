@@ -74,6 +74,9 @@ dependencies:
   '@tiptap/starter-kit':
     specifier: ^2.11.5
     version: 2.11.7
+  '@types/kakao-js-sdk':
+    specifier: ^1.39.5
+    version: 1.39.5
   axios:
     specifier: ^1.8.2
     version: 1.8.4
@@ -5070,6 +5073,10 @@ packages:
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
     dev: true
+
+  /@types/kakao-js-sdk@1.39.5:
+    resolution: {integrity: sha512-+u+sfAq2ZcBM4yF3zE/FDxaNq85DeLkKh8K6jP9GQwGdbIJ/IGwoAQEfkbG5tL5XHOP30b3KeHmxDFG2n1E96Q==}
+    dev: false
 
   /@types/linkify-it@5.0.0:
     resolution: {integrity: sha512-sVDA58zAw4eWAffKOaQH5/5j3XeayukzDk+ewSsnv3p4yJEZHCCzMDiZM8e0OUrRvmpGZ85jf4yDHkHsgBNr9Q==}

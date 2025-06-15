@@ -4,7 +4,7 @@ import { Link as ReactRouterLink } from 'react-router'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useGLogin } from '@/features/auth'
+import { useGLogin, useKakaoLogin } from '@/features/auth'
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgRoundGoogle, ImgRoundKakao, ImgSymbol } from '@/shared/assets/images'
@@ -22,7 +22,23 @@ const exampleQuestions = [
 ]
 
 const LoginPage = () => {
-  const { googleLogin, isLoading } = useGLogin()
+  const { googleLogin, isLoading: isGoogleLoading } = useGLogin()
+  const { kakaoLogin, isLoading: isKakaoLoading } = useKakaoLogin()
+
+  const isLoading = isGoogleLoading || isKakaoLoading
+
+  const handleLogin = (platform: 'GOOGLE' | 'KAKAO') => {
+    try {
+      if (platform === 'GOOGLE') {
+        googleLogin()
+      } else if (platform === 'KAKAO') {
+        kakaoLogin()
+      }
+    } catch (error) {
+      // window.location.reload()
+      console.error('로그인 실패:', error)
+    }
+  }
 
   return (
     <>
@@ -71,8 +87,8 @@ const LoginPage = () => {
 
             <div className="w-full flex-center flex-col gap-[16px]">
               <div className="w-full flex flex-col gap-2 px-[32px]">
-                <KakaoLoginButton />
-                <GoogleLoginButton onClick={() => googleLogin()} />
+                <KakaoLoginButton onClick={() => handleLogin('KAKAO')} />
+                <GoogleLoginButton onClick={() => handleLogin('GOOGLE')} />
               </div>
 
               <div className="text-center">
