@@ -298,7 +298,7 @@ const HomePage = () => {
           {currQuiz ? (
             <motion.div
               className={cn(
-                'relative mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 relative overflow-hidden z-50 h-[62svh]',
+                'relative mt-1 shadow-[var(--shadow-md)] rounded-[24px] px-4 pt-7 pb-6 bg-surface-1 relative overflow-hidden z-50 h-[66svh]',
                 quizState.status === 'incorrect' && 'px-[32px] pt-[64px] pb-6',
               )}
               key={currQuiz.id}
