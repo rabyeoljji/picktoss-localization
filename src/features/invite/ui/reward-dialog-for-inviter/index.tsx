@@ -1,5 +1,6 @@
 import { useQueryClient } from '@tanstack/react-query'
 
+import { useConfirmInviteCodeBySignUp } from '@/entities/auth/api/hooks'
 import { MEMBER_KEYS } from '@/entities/member/api/config'
 
 import { ImgStar } from '@/shared/assets/images'
@@ -9,18 +10,16 @@ import { Text } from '@/shared/components/ui/text'
 
 const RewardDialogForInviter = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
   const queryClient = useQueryClient()
+  const { mutate: confirmInvite } = useConfirmInviteCodeBySignUp()
 
   const handleReward = () => {
-    // TODO: 서버에 상태 변경 요청
+    confirmInvite()
     queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
     onOpenChange(false)
-
-    // build error를 막기 위한 임시 코드, 추후 삭제
-    console.log(open)
   }
 
   return (
-    <Dialog open={false} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
         onPointerDownOutside={(e) => e.preventDefault()}
         className="pt-[32px] px-[24px] pb-[20px] w-[308px] flex flex-col gap-[32px]"

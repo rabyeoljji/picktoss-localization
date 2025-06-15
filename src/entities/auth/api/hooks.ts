@@ -59,3 +59,10 @@ export const useCheckInviteCodeBySignUp = (queryOptions?: { enabled: boolean }) 
     enabled: queryOptions?.enabled || true,
   })
 }
+
+export const useConfirmInviteCodeBySignUp = () => {
+  return useMutation({
+    mutationKey: AUTH_KEYS.getAuthInviteStatus,
+    mutationFn: () => checkInviteCodeBySignUp(),
+  })
+}
