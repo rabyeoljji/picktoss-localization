@@ -1,4 +1,6 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+
+import { MEMBER_KEYS } from '@/entities/member/api/config'
 
 import {
   checkInviteCodeBySignUp,
@@ -25,9 +27,14 @@ export const useVerifyInviteCode = () => {
 }
 
 export const useRewardForInviteCode = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: AUTH_KEYS.postAuthInviteReward,
     mutationFn: ({ data }: { data: { inviteCode: string } }) => rewardForInviteCode({ data }),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
+    },
   })
 }
 

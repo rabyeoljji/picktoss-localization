@@ -15,6 +15,23 @@ firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
 
-messaging.onBackgroundMessage(() => {
-  console.log('백그라운드 메시지 수신')
+// messaging.onBackgroundMessage(() => {
+//   console.log('백그라운드 메시지 수신')
+// })
+
+// ✅ from picktoss 제거를 위한 수동 알림 표시
+self.addEventListener('push', function (event) {
+  if (event?.data) {
+    const payload = event.data.json()
+
+    const title = payload.title || '픽토스 알림입니다'
+    const options = {
+      body: payload.body,
+      icon: '/favicon/apple-touch-icon.png',
+    }
+
+    event.waitUntil(
+      self.registration.showNotification(title, options)
+    )
+  }
 })

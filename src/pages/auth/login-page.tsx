@@ -7,8 +7,7 @@ import { useStore } from 'zustand'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useAuthStore, useGLogin } from '@/features/auth'
-import { useKakaoLogin } from '@/features/auth/model/use-k-Login'
+import { useAuthStore, useGLogin, useKakaoLogin } from '@/features/auth'
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgRoundGoogle, ImgRoundKakao, ImgSymbol } from '@/shared/assets/images'
@@ -27,12 +26,12 @@ const exampleQuestions = [
 ]
 
 const LoginPage = () => {
+  const router = useRouter()
+
   const token = useStore(useAuthStore, (state) => state.token)
 
-  const { googleLogin, isLoading: googleLoading } = useGLogin()
-  const { kakaoLogin, isLoading: kakaoLoading } = useKakaoLogin()
-
-  const router = useRouter()
+  const { googleLogin, isLoading: isGoogleLoading } = useGLogin()
+  const { kakaoLogin, isLoading: isKakaoLoading } = useKakaoLogin()
 
   useEffect(() => {
     if (token) {
@@ -41,9 +40,24 @@ const LoginPage = () => {
     }
   }, [token])
 
+  const isLoading = isGoogleLoading || isKakaoLoading
+
+  const handleLogin = (platform: 'GOOGLE' | 'KAKAO') => {
+    try {
+      if (platform === 'GOOGLE') {
+        googleLogin()
+      } else if (platform === 'KAKAO') {
+        kakaoLogin()
+      }
+    } catch (error) {
+      // window.location.reload()
+      console.error('로그인 실패:', error)
+    }
+  }
+
   return (
     <>
-      {googleLoading || kakaoLoading ? (
+      {isLoading ? (
         <div className="size-full flex-center">
           <LoadingSpinner />
         </div>
@@ -96,8 +110,8 @@ const LoginPage = () => {
 
             <div className="w-full flex-center flex-col gap-[16px]">
               <div className="w-full flex flex-col gap-2 px-[32px]">
-                <KakaoLoginButton onClick={() => kakaoLogin()} />
-                <GoogleLoginButton onClick={() => googleLogin()} />
+                <KakaoLoginButton onClick={() => handleLogin('KAKAO')} />
+                <GoogleLoginButton onClick={() => handleLogin('GOOGLE')} />
               </div>
 
               <div className="text-center">
