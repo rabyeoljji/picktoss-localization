@@ -527,14 +527,6 @@ const HomePage = () => {
           }
         />
       )}
-
-      {/* 초대 보상 dialog */}
-      <RewardDialogForInvitee
-        open={openRewardForInvitee}
-        onOpenChange={setOpenRewardForInvitee}
-        inviteCode={inviteCode ?? ''}
-      />
-      <RewardDialogForInviter open={openRewardForInviter} onOpenChange={setOpenRewardForInviter} />
     </>
   )
 }
