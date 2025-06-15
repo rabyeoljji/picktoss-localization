@@ -24,18 +24,14 @@ const messaging = firebase.messaging()
 
 // ✅ from picktoss 제거를 위한 수동 알림 표시
 self.addEventListener('push', function (event) {
-  console.log('event: ', event);
-  
 
   if (event?.data) {
     const payload = event.data.json()
+    const data = payload.data
 
-    console.log('payload: ' , payload);
-    
-
-    const title = payload.title || '픽토스 알림입니다'
+    const title = data.title || '픽토스 알림입니다'
     const options = {
-      body: payload.content,
+      body: data.content,
       icon: '/favicon/apple-touch-icon.png',
     }
 

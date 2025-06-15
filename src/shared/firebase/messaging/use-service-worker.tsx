@@ -102,8 +102,7 @@ export const useServiceWorker = () => {
                   })
                 }
               } else {
-                // 백그라운드 상태일 때는 onBackgroundMessage가 처리하도록 함
-
+                // 서비스 워커에서 처리
                 console.log('📪 백그라운드 상태 메세지:', '서비스 워커에서 messaging 처리')
               }
             })
