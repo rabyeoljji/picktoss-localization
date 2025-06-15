@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
+import { useAuthStore } from '@/features/auth'
 import { WithdrawFormValues, withdrawFormSchema, withdrawReasonMap } from '@/features/withdraw/model/schema'
 
 import { useDeleteMember, useUser } from '@/entities/member/api/hooks'
@@ -20,6 +21,8 @@ import { useRouter } from '@/shared/lib/router'
 
 const WithdrawForm = () => {
   const router = useRouter()
+
+  const { clearToken } = useAuthStore()
 
   const { data: user } = useUser()
   const { mutate: deleteMemberMutate, isPending } = useDeleteMember()
@@ -43,6 +46,7 @@ const WithdrawForm = () => {
       },
       {
         onSuccess: () => {
+          clearToken()
           router.replace('/login')
         },
       },

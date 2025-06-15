@@ -1,3 +1,23 @@
+interface KakaoAuthSuccess {
+  access_token: string
+  refresh_token: string
+  expires_in: number
+  refresh_token_expires_in: number
+  scope: string
+  token_type: string
+}
+
+interface KakaoAuth {
+  login: (options: {
+    scope?: string
+    success: (authObj: KakaoAuthSuccess) => void
+    fail: (err: unknown) => void
+  }) => void
+  logout: (callback?: () => void) => void
+  getAccessToken: () => string | null
+  setAccessToken: (token: string) => void
+}
+
 interface KakaoShareButton {
   title: string
   link: {
@@ -36,6 +56,7 @@ interface KakaoShare {
 interface KakaoInstance {
   init: (apiKey: string) => void
   isInitialized: () => boolean
+  Auth: KakaoAuth
   Share: KakaoShare
 }
 

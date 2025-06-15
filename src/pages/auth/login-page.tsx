@@ -1,10 +1,14 @@
+import { useEffect } from 'react'
 import Marquee from 'react-fast-marquee'
 import { Link as ReactRouterLink } from 'react-router'
+
+import { useStore } from 'zustand'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useGLogin } from '@/features/auth'
+import { useAuthStore, useGLogin } from '@/features/auth'
+import { useKakaoLogin } from '@/features/auth/model/use-k-Login'
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgRoundGoogle, ImgRoundKakao, ImgSymbol } from '@/shared/assets/images'
@@ -12,6 +16,7 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 import QuestionBox from '@/shared/components/items/question-box-item'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
 
 const exampleQuestions = [
   { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
@@ -22,11 +27,23 @@ const exampleQuestions = [
 ]
 
 const LoginPage = () => {
-  const { googleLogin, isLoading } = useGLogin()
+  const token = useStore(useAuthStore, (state) => state.token)
+
+  const { googleLogin, isLoading: googleLoading } = useGLogin()
+  const { kakaoLogin, isLoading: kakaoLoading } = useKakaoLogin()
+
+  const router = useRouter()
+
+  useEffect(() => {
+    if (token) {
+      // 로그인 상태라면 해당 페이지에 접근하지 못하도록, 메인으로 리다이렉트
+      router.replace('/')
+    }
+  }, [token])
 
   return (
     <>
-      {isLoading ? (
+      {googleLoading || kakaoLoading ? (
         <div className="size-full flex-center">
           <LoadingSpinner />
         </div>
@@ -34,7 +51,15 @@ const LoginPage = () => {
         <>
           <Header
             className="bg-gray-900 px-[8px]"
-            left={<BackButton type="close" className="text-icon-inverse-dim" />}
+            left={
+              <BackButton
+                type="close"
+                className="text-icon-inverse-dim"
+                onClick={() => {
+                  router.replace('/explore')
+                }}
+              />
+            }
           />
 
           <HeaderOffsetLayout className="size-full flex-center flex-col gap-[71.52px]">
@@ -71,7 +96,7 @@ const LoginPage = () => {
 
             <div className="w-full flex-center flex-col gap-[16px]">
               <div className="w-full flex flex-col gap-2 px-[32px]">
-                <KakaoLoginButton />
+                <KakaoLoginButton onClick={() => kakaoLogin()} />
                 <GoogleLoginButton onClick={() => googleLogin()} />
               </div>
 

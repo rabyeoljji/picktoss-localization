@@ -11,7 +11,7 @@ import { useRouter } from '@/shared/lib/router'
 
 import { useAuthStore } from './auth-store'
 
-export const useGLogin = () => {
+export const useGLogin = (onSuccess?: () => void) => {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const location = useLocation()
@@ -37,7 +37,9 @@ export const useGLogin = () => {
         // 이전 페이지가 있으면 해당 페이지로 리다이렉트, 없으면 홈으로 리다이렉트
         const from = location.state?.from || defaultPath
 
-        router.replace(from as any, {})
+        router.replace(from, {})
+
+        onSuccess?.()
       } catch (error) {
         console.error('Google 로그인 실패:', error)
         setIsLoading(false)

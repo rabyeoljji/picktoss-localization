@@ -17,20 +17,38 @@ export const loadKakaoSDK = () => {
     }
 
     const script = document.createElement('script')
-    script.src = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js'
+    script.src = 'https://developers.kakao.com/sdk/js/kakao.min.js'
     script.onload = () => {
-      if (window.Kakao && !window.Kakao.isInitialized()) {
+      try {
         const appKey = import.meta.env.VITE_KAKAO_JAVASCRIPT_KEY
 
-        if (appKey) {
+        if (!appKey) return reject(new Error('Kakao API Key가 설정되지 않았습니다.'))
+
+        if (!window.Kakao.isInitialized()) {
           window.Kakao.init(appKey)
+        }
+
+        // ✅ 실제로 Auth 모듈이 존재하는지 확인
+        if (window.Kakao.Auth && typeof window.Kakao.Auth.login === 'function') {
           resolve()
         } else {
-          reject(new Error('Kakao API Key가 설정되지 않았습니다.'))
+          // 조금 기다렸다가 다시 확인
+          setTimeout(() => {
+            if (window.Kakao.Auth && typeof window.Kakao.Auth.login === 'function') {
+              resolve()
+            } else {
+              reject(new Error('Kakao SDK Auth 모듈이 준비되지 않았습니다.'))
+            }
+          }, 100)
         }
+      } catch (e) {
+        reject(new Error('Kakao SDK 초기화 실패: ' + (e as Error).message))
       }
     }
-    script.onerror = reject
+    script.onerror = () => {
+      reject(new Error('Kakao SDK 스크립트 로드 실패'))
+    }
+
     document.head.appendChild(script)
   })
 }

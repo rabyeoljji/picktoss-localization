@@ -1,17 +1,24 @@
+import { useEffect, useState } from 'react'
 import Marquee from 'react-fast-marquee'
-import { Link as ReactRouterLink } from 'react-router'
+import { Link as ReactRouterLink, useSearchParams } from 'react-router'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useGLogin } from '@/features/auth'
+import { useKakaoLogin } from '@/features/auth/model/use-k-Login'
+
+import { useVerifyInviteCode } from '@/entities/auth/api/hooks'
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgRoundGoogle, ImgRoundKakao, ImgSymbol } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 import QuestionBox from '@/shared/components/items/question-box-item'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
+import { setLocalStorageItem } from '@/shared/lib/storage/lib'
 
 const exampleQuestions = [
   { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
@@ -22,11 +29,50 @@ const exampleQuestions = [
 ]
 
 const InviteLoginPage = () => {
-  const { googleLogin, isLoading } = useGLogin()
+  const router = useRouter()
+
+  const [searchParams] = useSearchParams()
+  const inviteCode = searchParams.get('inviteCode') ?? ''
+
+  const [verifyCode, setVerifyCode] = useState(false)
+  const { mutate: verifyInviteCode, isPending } = useVerifyInviteCode()
+
+  const onLoginSuccess = () => {
+    setLocalStorageItem('inviteCode', inviteCode)
+  }
+
+  const { googleLogin, isLoading } = useGLogin(onLoginSuccess)
+  const { kakaoLogin, isLoading: kakaoLoading } = useKakaoLogin(onLoginSuccess)
+
+  useEffect(() => {
+    if (!inviteCode) return
+
+    verifyInviteCode(
+      { data: { inviteCode } },
+      {
+        onSuccess: () => {
+          setVerifyCode(true)
+        },
+        onError: () => {
+          setVerifyCode(false)
+        },
+      },
+    )
+  }, [inviteCode])
+
+  if (isPending) {
+    return <Loading center />
+  }
+
+  if (!verifyCode) {
+    router.replace('/invite/:inviteCode', {
+      params: [inviteCode ?? ''],
+    })
+  }
 
   return (
     <>
-      {isLoading ? (
+      {isLoading || kakaoLoading ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -69,7 +115,7 @@ const InviteLoginPage = () => {
 
             <div className="w-full flex-center flex-col gap-[16px]">
               <div className="w-full flex flex-col gap-2 px-[32px]">
-                <KakaoLoginButton />
+                <KakaoLoginButton onClick={() => kakaoLogin()} />
                 <GoogleLoginButton onClick={() => googleLogin()} />
               </div>
 
@@ -106,7 +152,7 @@ const InviteLoginPage = () => {
 
 const LoadingSpinner = () => {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="size-full flex-center flex-col">
       <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
       <Text typo="body-1-medium" color="sub" className="mt-4">
         로그인 중...

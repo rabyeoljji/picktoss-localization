@@ -19,6 +19,8 @@ export const StorageKey = {
   quizSetting: 'quizSetting',
   /** 알림 권한 설정 */
   notificationPermissionComplete: 'notificationPermissionComplete',
+  /** 초대코드로 회원가입 시 */
+  inviteCode: 'inviteCode',
 } as const
 
 /**
@@ -40,4 +42,6 @@ export interface StorageSchema {
     autoNext: boolean
     hideTimeSpent: boolean
   }
+  [StorageKey.notificationPermissionComplete]: string
+  [StorageKey.inviteCode]: string
 }
