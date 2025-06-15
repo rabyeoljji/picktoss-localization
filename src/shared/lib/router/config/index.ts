@@ -152,6 +152,7 @@ export const RouteConfig = {
       quizIndex: 0 as number,
       selectedOption: null as string | null,
       quizSetType: 'DOCUMENT_QUIZ_SET' as QuizSetType,
+      prevUrl: '' as string,
     },
   },
   randomQuiz: {

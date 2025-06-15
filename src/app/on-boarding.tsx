@@ -9,6 +9,8 @@ import { z } from 'zod'
 import { useGetCategories } from '@/entities/category/api/hooks'
 import { useUpdateMemberCategory, useUser } from '@/entities/member/api/hooks'
 
+import { useOnboardingStore } from '@/features/onboarding/model/onboarding-store'
+
 import { SelectCard } from '@/shared/components/cards/select-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
 import { Button } from '@/shared/components/ui/button'
@@ -29,6 +31,7 @@ const OnBoardingPage = () => {
   const { data: user } = useUser()
   const { data: categories } = useGetCategories()
   const { mutate: updateCategory } = useUpdateMemberCategory()
+  const { setOnboardingCompleted } = useOnboardingStore()
 
   const form = useForm<CategoryForm>({
     resolver: zodResolver(categorySchema),
@@ -49,6 +52,7 @@ const OnBoardingPage = () => {
       { categoryId: Number(data.categoryId) },
       {
         onSuccess: () => {
+          setOnboardingCompleted()
           router.replace('/')
         },
       },
