@@ -465,12 +465,12 @@ const HomePage = () => {
         </button>
       </div>
 
-      {rewardDrawerOpen && (
-        <AlertDrawer
-          open={rewardDrawerOpen}
-          onOpenChange={setRewardDrawerOpen}
-          hasClose={false}
-          body={
+      <AlertDrawer
+        open={rewardDrawerOpen}
+        onOpenChange={setRewardDrawerOpen}
+        hasClose={false}
+        body={
+          rewardDrawerOpen ? (
             <div className="pt-5">
               <ImgStar className="size-[120px] mx-auto" />
               <Text typo="h2" className="mt-4 text-center">
@@ -505,7 +505,12 @@ const HomePage = () => {
                             animate={{
                               opacity: 1,
                               scale: 1,
-                              transition: { duration: 0.4, delay: index * 0.1, type: 'spring', bounce: 0.5 },
+                              transition: {
+                                duration: 0.4,
+                                delay: index === 0 ? 0.6 : 0.6 + index * 0.1,
+                                type: 'spring',
+                                bounce: 0.5,
+                              },
                             }}
                           >
                             <svg
@@ -546,9 +551,9 @@ const HomePage = () => {
                 </Button>
               </div>
             </div>
-          }
-        />
-      )}
+          ) : null
+        }
+      />
 
       {/* 초대 보상 dialog */}
       <RewardDialogForInvitee

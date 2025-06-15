@@ -161,6 +161,7 @@ export const QuizLoadingDrawer = () => {
                     params: [String(quizSetId)],
                     search: {
                       documentId,
+                      prevUrl: `/library/${documentId}`,
                     },
                   })
                 }, 500)

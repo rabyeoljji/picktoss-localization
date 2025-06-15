@@ -498,6 +498,7 @@ const ExitDialog = ({
   exitDialogOpen: boolean
   setExitDialogOpen: (open: boolean) => void
 }) => {
+  const [prevUrl] = useQueryParam('/progress-quiz/:quizSetId', 'prevUrl')
   const { trackEvent } = useAmplitude()
   const router = useRouter()
 
@@ -520,7 +521,11 @@ const ExitDialog = ({
           className="pt-10"
           onPrimaryButtonClick={() => {
             trackEvent('quiz_exit_click')
-            router.back()
+            if (prevUrl) {
+              router.replace(prevUrl as any, {})
+            } else {
+              router.back()
+            }
           }}
           onSecondaryButtonClick={() => setExitDialogOpen(false)}
           primaryButtonLabel="나가기"
