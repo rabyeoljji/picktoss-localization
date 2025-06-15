@@ -15,14 +15,23 @@ firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
 
-// messaging.onBackgroundMessage(() => {
-//   console.log('백그라운드 메시지 수신')
-// })
+/** 알림 스키마
+ * data: {
+ *  title: string
+ *  content: string
+ * }
+ */
 
 // ✅ from picktoss 제거를 위한 수동 알림 표시
 self.addEventListener('push', function (event) {
+  console.log('event: ', event);
+  
+
   if (event?.data) {
     const payload = event.data.json()
+
+    console.log('payload: ' , payload);
+    
 
     const title = payload.title || '픽토스 알림입니다'
     const options = {
