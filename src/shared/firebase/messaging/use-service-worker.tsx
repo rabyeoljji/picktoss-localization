@@ -96,8 +96,8 @@ export const useServiceWorker = () => {
 
                 // 앱 실행중에는 푸시 알림을 받지 않도록 정책이 변경되면 아래 코드 삭제
                 if (registration && Notification.permission === 'granted') {
-                  await registration.showNotification(payload.data?.title || '픽토스 알림입니다', {
-                    body: payload.data?.content,
+                  await registration.showNotification(payload.notification?.title || '픽토스 알림입니다', {
+                    body: payload.notification?.body,
                     icon: '/favicon/apple-touch-icon.png',
                   })
                 }

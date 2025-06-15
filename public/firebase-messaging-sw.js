@@ -15,28 +15,32 @@ firebase.initializeApp(firebaseConfig)
 
 const messaging = firebase.messaging()
 
-/** 알림 스키마
+messaging.onBackgroundMessage(() => {
+  console.log('백그라운드 메시지 수신')
+})
+
+/** 수동 알림 시 알림 스키마
  * data: {
  *  title: string
  *  content: string
  * }
  */
 
-// ✅ from picktoss 제거를 위한 수동 알림 표시
-self.addEventListener('push', function (event) {
+// 수동 알림 표시
+// self.addEventListener('push', function (event) {
 
-  if (event?.data) {
-    const payload = event.data.json()
-    const data = payload.data
+//   if (event?.data) {
+//     const payload = event.data.json()
+//     const data = payload.data
 
-    const title = data.title || '픽토스 알림입니다'
-    const options = {
-      body: data.content,
-      icon: '/favicon/apple-touch-icon.png',
-    }
+//     const title = data.title || '픽토스 알림입니다'
+//     const options = {
+//       body: data.content,
+//       icon: '/favicon/apple-touch-icon.png',
+//     }
 
-    event.waitUntil(
-      self.registration.showNotification(title, options)
-    )
-  }
-})
+//     event.waitUntil(
+//       self.registration.showNotification(title, options)
+//     )
+//   }
+// })
