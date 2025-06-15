@@ -19,7 +19,7 @@ export const RewardLayout = () => {
   const [inviteCode, setInviteCode] = useState(storageInviteCode)
   const [openRewardForInvitee, setOpenRewardForInvitee] = useState(false)
   const [openRewardForInviter, setOpenRewardForInviter] = useState(false)
-  const { data: hasInviteeData } = useCheckInviteCodeBySignUp()
+  const { data: hasInviteeData } = useCheckInviteCodeBySignUp({ enabled: !!token })
 
   useEffect(() => {
     if (token) {

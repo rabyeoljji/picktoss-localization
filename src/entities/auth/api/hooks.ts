@@ -52,9 +52,10 @@ export const useGetInviteMemberInfo = (inviteCode: string) => {
   })
 }
 
-export const useCheckInviteCodeBySignUp = () => {
+export const useCheckInviteCodeBySignUp = (queryOptions?: { enabled: boolean }) => {
   return useQuery({
     queryKey: AUTH_KEYS.getAuthInviteStatus,
     queryFn: () => checkInviteCodeBySignUp(),
+    enabled: queryOptions?.enabled || true,
   })
 }

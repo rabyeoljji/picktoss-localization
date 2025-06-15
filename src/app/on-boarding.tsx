@@ -59,7 +59,7 @@ const OnBoardingPage = () => {
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="fixed top-0 left-1/2 -translate-x-1/2 size-full max-w-xl overflow-hidden bg-surface-2 z-[9999]"
+        className="fixed top-0 pt-[var(--safe-area-inset-top)] left-1/2 -translate-x-1/2 size-full max-w-xl overflow-hidden bg-surface-2 z-[9999]"
       >
         <motion.div
           initial={{ opacity: 0 }}
