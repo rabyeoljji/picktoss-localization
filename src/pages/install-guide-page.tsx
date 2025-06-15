@@ -24,7 +24,7 @@ export const InstallGuidePage = () => {
 
 const AppInstallIos = () => {
   return (
-    <main className="flex h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-base-02 px-[16px] pb-[65px] pt-[32px]">
+    <main className="flex h-dvh flex-col items-center overflow-y-auto bg-base-02 px-[16px] pb-[65px] pt-[32px]">
       <Text typo="subtitle-1-bold" color="secondary" className="text-center">
         스토어에 방문할 필요 없이 <br />
         3초만에 다운로드 받아보세요
@@ -106,21 +106,21 @@ interface AppInstallAosProps {
 
 const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
   return (
-    <main className="flex min-h-dvh w-dvw max-w-mobile flex-col items-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
-      <Text typo="subtitle-1-bold" color="secondary" className="text-center">
-        스토어에 방문할 필요 없이 <br />
-        3초만에 다운로드 받아보세요
+    <main className="flex min-h-dvh flex-col flex-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
+      <Text typo="h2" color="secondary" className="text-center">
+        <span className="text-caption">스토어 방문 없이</span>
+        <br />
+        3초만에 시작할 수 있어요
       </Text>
 
-      <div className="flex-center mt-[40px] size-[130px] rounded-[30.59px] bg-surface-1">
-        <ImgSymbol className="size-[73.41px]" />
+      <div className="py-[24px] px-[30px] rounded-[24px] bg-surface-1 mt-[44px] w-full max-w-[380px]">
+        <ImgSymbol className="size-[100px] mt-[32px] mx-auto" />
+        <IcLogo className="mt-4 w-[140px] shrink-0 mx-auto" />
+
+        <Button onClick={handleInstallClick} className="mt-[48px]">
+          앱 다운로드
+        </Button>
       </div>
-
-      <IcLogo className="mt-[12px] w-[87px] shrink-0" />
-
-      <Button onClick={handleInstallClick} className="mt-[66.15px]">
-        앱 다운로드
-      </Button>
     </main>
   )
 }
