@@ -26,7 +26,7 @@ self.addEventListener('push', function (event) {
 
     const title = payload.title || '픽토스 알림입니다'
     const options = {
-      body: payload.body,
+      body: payload.content,
       icon: '/favicon/apple-touch-icon.png',
     }
 
