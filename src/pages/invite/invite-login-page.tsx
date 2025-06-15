@@ -5,8 +5,7 @@ import { Link as ReactRouterLink, useSearchParams } from 'react-router'
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useGLogin } from '@/features/auth'
-import { useKakaoLogin } from '@/features/auth/model/use-k-Login'
+import { useGLogin, useKakaoLogin } from '@/features/auth'
 
 import { useVerifyInviteCode } from '@/entities/auth/api/hooks'
 
@@ -41,8 +40,23 @@ const InviteLoginPage = () => {
     setLocalStorageItem('inviteCode', inviteCode)
   }
 
-  const { googleLogin, isLoading } = useGLogin(onLoginSuccess)
-  const { kakaoLogin, isLoading: kakaoLoading } = useKakaoLogin(onLoginSuccess)
+  const { googleLogin, isLoading: isGoogleLoading } = useGLogin(onLoginSuccess)
+  const { kakaoLogin, isLoading: isKakaoLoading } = useKakaoLogin(onLoginSuccess)
+
+  const isLoading = isGoogleLoading || isKakaoLoading
+
+  const handleLogin = (platform: 'GOOGLE' | 'KAKAO') => {
+    try {
+      if (platform === 'GOOGLE') {
+        googleLogin()
+      } else if (platform === 'KAKAO') {
+        kakaoLogin()
+      }
+    } catch (error) {
+      // window.location.reload()
+      console.error('로그인 실패:', error)
+    }
+  }
 
   useEffect(() => {
     if (!inviteCode) return
@@ -72,7 +86,7 @@ const InviteLoginPage = () => {
 
   return (
     <>
-      {isLoading || kakaoLoading ? (
+      {isLoading ? (
         <LoadingSpinner />
       ) : (
         <>
@@ -115,8 +129,8 @@ const InviteLoginPage = () => {
 
             <div className="w-full flex-center flex-col gap-[16px]">
               <div className="w-full flex flex-col gap-2 px-[32px]">
-                <KakaoLoginButton onClick={() => kakaoLogin()} />
-                <GoogleLoginButton onClick={() => googleLogin()} />
+                <KakaoLoginButton onClick={() => handleLogin('KAKAO')} />
+                <GoogleLoginButton onClick={() => handleLogin('GOOGLE')} />
               </div>
 
               <div className="text-center">
