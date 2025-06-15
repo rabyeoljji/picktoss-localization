@@ -7,6 +7,8 @@ import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
 import { Text } from '@/shared/components/ui/text'
 
+// 잠시 모달이 뜨지 않도록 해뒀습니다
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const RewardDialogForInviter = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
   const queryClient = useQueryClient()
 
