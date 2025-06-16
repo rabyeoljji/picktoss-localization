@@ -76,7 +76,7 @@ const AccountPage = () => {
 
       <HeaderOffsetLayout className="h-full overflow-y-auto scrollbar-hide">
         <div className="px-[16px] pb-[36px] flex flex-col">
-          <div className="flex items-center gap-[16px] py-[20px]">
+          <Link to="/account/info" className="flex items-center gap-[16px] py-[20px]">
             <div className="size-[72px] bg-base-3 rounded-full overflow-hidden flex-center shrink-0">
               {user?.image ? (
                 <img src={user?.image} alt="" className="object-cover" />
@@ -99,26 +99,34 @@ const AccountPage = () => {
                 {user?.email}
               </Text>
             </div>
-          </div>
+          </Link>
 
           <div className="flex flex-col gap-[24px]">
-            <div className="bg-surface-2 rounded-[12px] flex items-center h-[56px] py-[12px]">
-              <div className="flex-1/2 h-full px-[16px] flex-center gap-[8px] border-r border-divider">
+            <div className="bg-surface-2 rounded-[12px] flex items-center h-[56px]">
+              <Link
+                to="/library"
+                search={{ tab: 'MY' }}
+                className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px] border-r border-divider"
+              >
                 <Text typo="subtitle-2-bold" color="secondary">
                   내 퀴즈
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.totalQuizCount}
                 </Text>
-              </div>
-              <div className="flex-1/2 h-full px-[16px] flex-center gap-[8px]">
+              </Link>
+              <Link
+                to="/library"
+                search={{ tab: 'BOOKMARK' }}
+                className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px]"
+              >
                 <Text typo="subtitle-2-bold" color="secondary">
                   북마크
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.bookmarkCount}
                 </Text>
-              </div>
+              </Link>
             </div>
 
             <div className="flex flex-col gap-[12px]">
