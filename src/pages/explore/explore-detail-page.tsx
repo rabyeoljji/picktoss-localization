@@ -252,7 +252,7 @@ const ExploreDetailPage = () => {
   }
 
   return (
-    <div className="relative flex flex-col h-screen overflow-y-auto bg-base-1">
+    <div className="relative flex flex-col h-screen bg-base-1">
       <Header
         left={<BackButton />}
         content={
@@ -318,7 +318,7 @@ const ExploreDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 */}
-      <HeaderOffsetLayout className="flex-1 scrollbar-hide">
+      <HeaderOffsetLayout className="flex-1 scrollbar-hide overflow-auto pt-[var(--header-height)]">
         <div className="px-4 pb-6 flex flex-col gap-[8px]">
           <div className="flex flex-col gap-[12px]">
             {showSkeleton ? (
@@ -377,7 +377,7 @@ const ExploreDetailPage = () => {
         </div>
 
         {/* 3. 탭 바 - sticky로 상단에 고정 */}
-        <div className="sticky top-[var(--header-height-safe)] z-40 bg-white flex items-center justify-between border-b border-divider pt-[10px] pb-[14px] px-[20px]">
+        <div className="sticky top-0 z-40 bg-white flex items-center justify-between border-b border-divider pt-[10px] pb-[14px] px-[20px]">
           <div className="flex items-center gap-[24px]">
             {existQuizTypes.find((type) => type === 'MULTIPLE_CHOICE') &&
               existQuizTypes.find((type) => type === 'MIX_UP') && (
