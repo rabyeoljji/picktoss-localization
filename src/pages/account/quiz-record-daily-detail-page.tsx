@@ -131,10 +131,7 @@ const QuizRecordDailyDetailPage = () => {
                 />
                 <QuestionCard.Question>{question.question}</QuestionCard.Question>
                 {question.quizType === 'MIX_UP' ? (
-                  <QuestionCard.OX
-                    answerIndex={question.answer === 'correct' ? 0 : 1}
-                    showIndexs={question.choseAnswer === 'correct' ? [0] : [1]}
-                  />
+                  <QuestionCard.OX answerIndex={question.answer === 'correct' ? 0 : 1} showIndexs={[0, 1]} />
                 ) : (
                   <QuestionCard.Multiple
                     answerIndex={question.options.findIndex((option) => option === question.answer)}

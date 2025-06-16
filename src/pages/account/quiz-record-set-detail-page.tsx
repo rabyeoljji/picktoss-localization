@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
-import { format, millisecondsToMinutes } from 'date-fns'
+import { format } from 'date-fns'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -30,6 +30,17 @@ const QuizRecordSetDetailPage = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const quizContainerRef = useRef<HTMLDivElement | null>(null)
   const [showScrollTopButton, setShowScrollTopButton] = useState(false)
+
+  const formatDuration = (ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000)
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = Math.floor(totalSeconds % 60)
+
+    return [hours && `${hours}시간`, minutes && `${minutes}분`, seconds && `${seconds}초`]
+      .filter((value) => value)
+      .join(' ')
+  }
 
   const handleScrollToTop = () => {
     scrollContainerRef.current?.scrollTo({
@@ -141,7 +152,7 @@ const QuizRecordSetDetailPage = () => {
                 <ImgStopwatch className="size-[32px]" />
               </div>
               <Text typo="subtitle-2-bold" className="mb-[2px]">
-                {millisecondsToMinutes(quizSetRecordData?.totalElapsedTimeMs || 0)}분
+                {formatDuration(quizSetRecordData?.totalElapsedTimeMs || 0)}
               </Text>
               <Text typo="body-2-medium" color="sub">
                 소요시간
@@ -152,7 +163,7 @@ const QuizRecordSetDetailPage = () => {
                 <ImgCheckbadge className="size-[32px]" />
               </div>
               <Text typo="subtitle-2-bold" className="mb-[2px]">
-                {quizSetRecordData?.averageCorrectAnswerRate}%
+                {Math.round(quizSetRecordData?.averageCorrectAnswerRate ?? 0)}%
               </Text>
               <Text typo="body-2-medium" color="sub">
                 정답률
