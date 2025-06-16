@@ -1,29 +1,29 @@
 export default async function handler(req, res) {
   const { id } = req.query
-  
+
   try {
     // API URL 설정
     const apiUrl = process.env.VITE_API_URL || 'https://api.picktoss.com'
-    
+
     // 문서 데이터 가져오기
     const response = await fetch(`${apiUrl}/documents/${id}`, {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'User-Agent': 'Picktoss-OG-Bot/1.0',
       },
     })
-    
+
     let document = null
     if (response.ok) {
       document = await response.json()
     }
-    
+
     // 메타 데이터 설정
     const title = document ? `${document.name} - 픽토스` : '픽토스: 나를 성장시키는 AI 퀴즈'
     const description = document?.previewContent || document?.description || '나를 성장시키는 똑똑한 퀴즈'
     const image = document?.ogImage || 'https://picktoss.vercel.app/images/og-image.png'
     const url = `https://picktoss.vercel.app/library/${id}`
-    
+
     // HTML 생성
     const html = `<!doctype html>
 <html lang="ko">
@@ -94,10 +94,9 @@ export default async function handler(req, res) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
     res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=300')
     res.status(200).send(html)
-    
   } catch (error) {
     console.error('Error in library page handler:', error)
-    
+
     // 에러 시 기본 페이지로 리다이렉트
     res.redirect(302, `https://picktoss.vercel.app/library/${id}`)
   }
