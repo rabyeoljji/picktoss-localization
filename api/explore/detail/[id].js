@@ -22,7 +22,7 @@ export default async function handler(req, res) {
     const title = document ? `${document.name} - 픽토스` : '픽토스: 나를 성장시키는 AI 퀴즈'
     const description = document?.previewContent || document?.description || '나를 성장시키는 똑똑한 퀴즈'
     const image = document?.ogImage || 'https://picktoss.vercel.app/images/og-image.png'
-    const url = `https://picktoss.vercel.app/explore/${id}`
+    const url = `https://picktoss.vercel.app/explore/detail/${id}`
 
     // HTML 생성
     const html = `<!doctype html>
@@ -98,6 +98,6 @@ export default async function handler(req, res) {
     console.error('Error in explore page handler:', error)
 
     // 에러 시 기본 페이지로 리다이렉트
-    res.redirect(302, `https://picktoss.vercel.app/explore/${id}`)
+    res.redirect(302, `https://picktoss.vercel.app/explore/detail/${id}`)
   }
 }

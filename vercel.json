@@ -21,6 +21,17 @@
         }
       ],
       "destination": "/api/explore"
+    },
+    {
+      "source": "/explore/detail/:id",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
+        }
+      ],
+      "destination": "/api/explore/detail/:id"
     }
   ]
 }
