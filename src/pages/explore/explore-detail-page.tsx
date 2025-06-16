@@ -18,7 +18,7 @@ import {
 } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
-import { IcArrange, IcBookmark, IcBookmarkFilled, IcCheck, IcKebab, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
+import { IcBookmark, IcBookmarkFilled, IcKebab, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
@@ -53,7 +53,7 @@ const ExploreDetailPage = () => {
 
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/explore/detail/:noteId', 'quizType')
-  const [sortOption, setSortOption] = useQueryParam('/explore/detail/:noteId', 'sort')
+  const [sortOption, _setSortOption] = useQueryParam('/explore/detail/:noteId', 'sort')
 
   const { mutate: updatePublic } = useUpdateDocumentIsPublic(Number(noteId))
   const { mutate: bookmark } = useDocumentBookmarkMutation(Number(noteId))
@@ -409,8 +409,8 @@ const ExploreDetailPage = () => {
             )}
           </div>
 
-          {/* 정렬 버튼 */}
-          <DropdownMenu>
+          {/* TODO: 정렬 버튼 */}
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="size-[32px] flex-center">
                 <IcArrange className="size-[20px] text-icon-secondary" />
@@ -430,7 +430,7 @@ const ExploreDetailPage = () => {
                 정답률 낮은 순
               </DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
           {/* <button className="size-[32px] flex-center">
             <IcArrange className="size-[20px] text-icon-secondary" />
           </button> */}

@@ -31,7 +31,6 @@ import {
 } from '@/entities/quiz/api/hooks'
 
 import {
-  IcArrange,
   IcChange,
   IcChevronDown,
   IcChevronUp,
@@ -580,9 +579,10 @@ const NoteDetailPage = () => {
               </TextButton>
             )}
           </div>
-          <button className="p-2">
+          {/* TODO: 정렬 버튼 */}
+          {/* <button className="p-2">
             <IcArrange className="size-4 text-icon-secondary" />
-          </button>
+          </button> */}
         </div>
 
         {/* 4. 문제 리스트 */}
