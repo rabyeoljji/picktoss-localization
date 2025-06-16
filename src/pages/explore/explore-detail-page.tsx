@@ -252,7 +252,7 @@ const ExploreDetailPage = () => {
   }
 
   return (
-    <div className="relative flex flex-col h-screen bg-base-1">
+    <div className="relative flex flex-col h-screen overflow-y-auto bg-base-1">
       <Header
         left={<BackButton />}
         content={
@@ -377,7 +377,7 @@ const ExploreDetailPage = () => {
         </div>
 
         {/* 3. 탭 바 - sticky로 상단에 고정 */}
-        <div className="sticky top-[var(--header-height-safe)] z-40 bg-white flex items-center justify-between border-b border-divider pt-[10px] pb-[6px] px-[20px]">
+        <div className="sticky top-[var(--header-height-safe)] z-40 bg-white flex items-center justify-between border-b border-divider pt-[10px] pb-[14px] px-[20px]">
           <div className="flex items-center gap-[24px]">
             {existQuizTypes.find((type) => type === 'MULTIPLE_CHOICE') &&
               existQuizTypes.find((type) => type === 'MIX_UP') && (
