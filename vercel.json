@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    {
+      "source": "/library/:id",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
+        }
+      ],
+      "destination": "/api/library/:id"
+    }
+  ]
+}

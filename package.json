@@ -6,17 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "prettier": "prettier --write .",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build",
-    "chromatic": "pnpm dlx chromatic --project-token=chpt_db6fc810cf9f7ab --exit-zero-on-changes --auto-accept-changes",
     "modify-svg": "node src/shared/config/scripts/modify-svg-fill.cjs",
     "generate-icons": "node src/shared/config/scripts/generate-icons.cjs",
     "svg": "pnpm modify-svg && pnpm generate-icons",
     "generate-images": "node src/shared/config/scripts/generate-images.cjs",
-    "img": "pnpm generate-images"
+    "img": "pnpm generate-images",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "chromatic": "pnpm dlx chromatic --project-token=chpt_db6fc810cf9f7ab --exit-zero-on-changes --auto-accept-changes"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.17.6",
