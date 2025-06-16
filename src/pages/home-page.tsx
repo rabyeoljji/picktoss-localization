@@ -249,6 +249,10 @@ const HomePage = () => {
     }
   }, [userLoaded, refetchUser])
 
+  if (!user) {
+    return null
+  }
+
   // 설정한 카테고리가 없을 경우 온보딩 화면 노출
   if (user && !user.category.id) {
     return <OnBoarding />
