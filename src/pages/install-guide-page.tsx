@@ -3,13 +3,14 @@ import { isIOS } from 'react-device-detect'
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgSymbol } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
 
 export const InstallGuidePage = () => {
   const router = useRouter()
-  const { isPWA, installPWA } = usePWA()
+  const { isPWA, installPWA, installable } = usePWA()
 
   if (isPWA) {
     router.push('/')
@@ -18,7 +19,8 @@ export const InstallGuidePage = () => {
   if (isIOS) {
     return <AppInstallIos />
   } else {
-    return <AppInstallAos handleInstallClick={installPWA} />
+    // return <AppInstallAos/>
+    return <>{!installable ? <Loading center /> : <AppInstallAos handleInstallClick={installPWA} />}</>
   }
 }
 
