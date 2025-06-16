@@ -28,7 +28,7 @@ export function withHOC<P extends object>(Component: React.ComponentType<P>, con
       className={cn(
         'relative size-full safe-area-space overscroll-none',
         backgroundClass,
-        config.activeTab && 'pb-[var(--spacing-tab-navigation)]',
+        config.activeTab && !accessMobileWeb && 'pb-[var(--spacing-tab-navigation)]',
         // before pseudo-element에 필요한 클래스들
         "before:content-['']",
         'before:absolute before:top-0 before:left-0 before:z-50',

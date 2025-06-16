@@ -505,7 +505,15 @@ const ExploreDetailPage = () => {
         {/* 5. 하단 퀴즈 시작하기 버튼 */}
         <FixedBottom className="bg-[linear-gradient(to_top,#ffffff_85%,rgba(255,255,255,0)_100%)]">
           <Drawer>
-            <DrawerTrigger asChild>
+            <DrawerTrigger
+              asChild
+              onClick={(e) => {
+                if (!token) {
+                  e.preventDefault()
+                  setIsLoginOpen(true)
+                }
+              }}
+            >
               <Button>퀴즈 시작하기</Button>
             </DrawerTrigger>
             <DrawerContent height="sm">
