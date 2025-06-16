@@ -43,13 +43,14 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
   const { isPWA } = usePWA()
 
   const handleNavigation = (to: (typeof navItems)[number]['to']) => {
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
     if (isPWA) {
       router.replace(to)
     } else {
-      if (!token) {
-        setIsLoginOpen(true)
-        return
-      }
       router.push(to)
     }
   }
