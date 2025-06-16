@@ -383,6 +383,11 @@ const ExploreSwipeCard = ({
 
   // 퀴즈 시작 핸들러
   const handleQuizStart = () => {
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
     createQuizSet(
       {
         quizType: 'ALL',
