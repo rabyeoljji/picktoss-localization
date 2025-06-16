@@ -1,23 +1,25 @@
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useGetNotifications } from '@/entities/notification/api/hooks'
+// import { useGetNotifications } from '@/entities/notification/api/hooks'
 
 import { ImgMegaphoneEmpty } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
-import NotificationItem from '@/shared/components/items/notification-item'
+// import NotificationItem from '@/shared/components/items/notification-item'
 import { Text } from '@/shared/components/ui/text'
 
 const NotificationConfigPage = () => {
-  const { data, isLoading } = useGetNotifications()
+  // const { data, isLoading } = useGetNotifications()
 
   return (
     <>
       <Header left={<BackButton />} title="알림" className="px-[8px]" />
 
       <HeaderOffsetLayout className="px-[16px] h-full">
-        {isLoading && <div className="size-full flex-center">is Loading...</div>}
+        <EmptyNotification />
+
+        {/* {isLoading && <div className="size-full flex-center">is Loading...</div>}
 
         {!data?.notifications || data.notifications.length === 0 ? (
           <EmptyNotification />
@@ -36,7 +38,7 @@ const NotificationConfigPage = () => {
               최근 14일 동안 받은 알림을 모두 확인했어요
             </Text>
           </>
-        )}
+        )} */}
       </HeaderOffsetLayout>
     </>
   )
