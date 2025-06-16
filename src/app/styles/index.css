@@ -54,11 +54,13 @@
 }
 
 html {
+  height: 100dvh;
   overscroll-behavior: none;
   color: var(--color-gray-900);
 }
 
 body {
+  height: 100dvh;
   overscroll-behavior-x: none;
   -ms-overflow-style: none; /* IE, Edge */
 }
