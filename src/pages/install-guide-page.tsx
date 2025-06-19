@@ -1,5 +1,7 @@
 import { isIOS, isMacOs } from 'react-device-detect'
 
+import Splash from '@/app/splash'
+
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgSymbol } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
@@ -9,7 +11,11 @@ import { useRouter } from '@/shared/lib/router'
 
 export const InstallGuidePage = () => {
   const router = useRouter()
-  const { isPWA, installPWA } = usePWA()
+  const { isPWA, installPWA, init } = usePWA()
+
+  if (!init) {
+    return <Splash />
+  }
 
   if (isPWA) {
     router.push('/')
@@ -47,6 +53,8 @@ interface AppInstallAosProps {
 }
 
 const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
+  const { installed } = usePWA()
+
   return (
     <main className="flex min-h-dvh flex-col flex-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
       <Text typo="h2" color="secondary" className="text-center">
@@ -59,9 +67,15 @@ const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
         <ImgSymbol className="size-[100px] mt-[32px] mx-auto" />
         <IcLogo className="mt-4 w-[140px] shrink-0 mx-auto" />
 
-        <Button onClick={handleInstallClick} className="mt-[48px]">
-          앱 다운로드
-        </Button>
+        {!installed ? (
+          <Button onClick={handleInstallClick} className="mt-[48px]">
+            앱 다운로드
+          </Button>
+        ) : (
+          <Button onClick={() => {}} disabled className="mt-[48px]">
+            앱 설치 완료
+          </Button>
+        )}
       </div>
     </main>
   )

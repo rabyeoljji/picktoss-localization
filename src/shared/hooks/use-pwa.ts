@@ -19,6 +19,14 @@ export const usePWA = () => {
   const [isPWA, setIsPWA] = useState<boolean | undefined>(undefined)
   const [installPrompt, setInstallPrompt] = useState<BeforeInstallPromptEvent | null>(null)
   const [installable, setInstallable] = useState(false)
+  const [installed, setInstalled] = useState(false)
+  const [init, setInit] = useState(false)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setInit(true)
+    }, 3000)
+  }, [])
 
   useEffect(() => {
     const checkPWA = () => {
@@ -26,7 +34,14 @@ export const usePWA = () => {
       const isStandalone = window.matchMedia('(display-mode: standalone)').matches
       // iOS Safari의 경우
       const isIOSStandalone = window.navigator.standalone === true
-      setIsPWA(isStandalone || isIOSStandalone)
+      const pwaStatus = isStandalone || isIOSStandalone
+
+      setIsPWA(pwaStatus)
+
+      // PWA가 이미 설치되어 있다면 installed를 true로 설정
+      if (pwaStatus) {
+        setInstalled(true)
+      }
     }
 
     checkPWA()
@@ -65,18 +80,33 @@ export const usePWA = () => {
         console.log('현재 브라우저:', navigator.userAgent)
         console.log('HTTPS:', location.protocol === 'https:' ? 'YES' : 'NO')
         console.log('현재 PWA 상태:', isPWA)
+        console.log('설치 상태:', installed)
       }
     }
 
     checkPWAConditions()
 
+    // beforeinstallprompt 이벤트가 일정 시간 후에도 발생하지 않으면 이미 설치된 것으로 간주
+    const timer = setTimeout(() => {
+      if (!installPrompt && !isPWA) {
+        // beforeinstallprompt 이벤트가 발생하지 않고 PWA 모드도 아닌 경우
+        // 이미 설치되었을 가능성이 높음 (또는 설치 조건 미충족)
+        setInstalled(true)
+        if (import.meta.env.DEV) {
+          console.log('beforeinstallprompt 이벤트 미발생 - 이미 설치된 것으로 판단')
+        }
+      }
+    }, 0) // 3초 후 체크
+
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
       if (import.meta.env.DEV) {
         console.log('beforeinstallprompt 이벤트 발생!', e)
       }
+      clearTimeout(timer) // 이벤트가 발생하면 타이머 해제
       e.preventDefault()
       setInstallPrompt(e)
       setInstallable(true)
+      setInstalled(false) // 설치 프롬프트가 나타나면 아직 설치되지 않은 상태
     }
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener)
@@ -88,13 +118,15 @@ export const usePWA = () => {
       }
       setInstallable(false)
       setInstallPrompt(null)
+      setInstalled(true) // 설치 완료되면 installed를 true로 설정
     })
 
     return () => {
+      clearTimeout(timer)
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener)
       window.removeEventListener('appinstalled', () => {})
     }
-  }, [isPWA])
+  }, [isPWA, installPrompt, installed])
 
   const installPWA = async () => {
     if (installPrompt) {
@@ -126,5 +158,5 @@ export const usePWA = () => {
     }
   }
 
-  return { isPWA, installable, installPWA }
+  return { isPWA, installable, installPWA, installed, init }
 }
