@@ -1,4 +1,4 @@
-import { isIOS } from 'react-device-detect'
+import { isIOS, isMacOs } from 'react-device-detect'
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgSymbol } from '@/shared/assets/images'
@@ -15,7 +15,7 @@ export const InstallGuidePage = () => {
     router.push('/')
   }
 
-  if (isIOS) {
+  if (isIOS || isMacOs) {
     return <AppInstallIos />
   } else {
     return <AppInstallAos handleInstallClick={installPWA} />
