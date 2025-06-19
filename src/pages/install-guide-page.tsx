@@ -11,7 +11,7 @@ import { useRouter } from '@/shared/lib/router'
 
 export const InstallGuidePage = () => {
   const router = useRouter()
-  const { isPWA, installPWA, canInstall, init } = usePWA()
+  const { isPWA, installPWA, init } = usePWA()
 
   if (!init) {
     return <Splash />
