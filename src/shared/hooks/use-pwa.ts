@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { usePwa } from '@dotmind/react-use-pwa'
+import usePwa from 'use-pwa'
 
 declare global {
   interface Navigator {
@@ -19,15 +19,7 @@ declare global {
 
 export const usePWA = () => {
   // const [isPWA, setIsPWA] = useState<boolean | undefined>(undefined)
-  const { isStandalone, installPrompt, isInstalled, canInstall } = usePwa()
-
-  const [init, setInit] = useState(false)
-
-  useEffect(() => {
-    setTimeout(() => {
-      setInit(true)
-    }, 1500)
-  }, [])
+  const { appinstalled, canInstallprompt, isPwa, isLoading, showInstallPrompt } = usePwa()
 
   // useEffect(() => {
   //   const checkPWA = () => {
@@ -115,5 +107,11 @@ export const usePWA = () => {
   //   }
   // }, [isPWA, installPrompt, isInstalled])
 
-  return { isPWA: isStandalone, canInstall, installPWA: installPrompt, isInstalled, init }
+  return {
+    isPWA: isPwa,
+    canInstall: canInstallprompt,
+    installPWA: showInstallPrompt,
+    isInstalled: appinstalled,
+    isLoading,
+  }
 }

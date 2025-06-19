@@ -11,9 +11,9 @@ import { useRouter } from '@/shared/lib/router'
 
 export const InstallGuidePage = () => {
   const router = useRouter()
-  const { isPWA, installPWA, init } = usePWA()
+  const { isPWA, installPWA, isLoading } = usePWA()
 
-  if (!init) {
+  if (isLoading) {
     return <Splash />
   }
 
@@ -49,7 +49,7 @@ const AppInstallIos = () => {
 }
 
 interface AppInstallAosProps {
-  handleInstallClick: () => Promise<void>
+  handleInstallClick: () => void
 }
 
 const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
