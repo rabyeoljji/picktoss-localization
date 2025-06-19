@@ -11,7 +11,7 @@ import { useRouter } from '@/shared/lib/router'
 
 export const InstallGuidePage = () => {
   const router = useRouter()
-  const { isPWA, installPWA, init } = usePWA()
+  const { isPWA, installPWA, canInstall, init } = usePWA()
 
   if (!init) {
     return <Splash />
@@ -53,7 +53,7 @@ interface AppInstallAosProps {
 }
 
 const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
-  const { isInstalled: installed } = usePWA()
+  const { isInstalled, canInstall } = usePWA()
 
   return (
     <main className="flex min-h-dvh flex-col flex-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
@@ -67,7 +67,11 @@ const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
         <ImgSymbol className="size-[100px] mt-[32px] mx-auto" />
         <IcLogo className="mt-4 w-[140px] shrink-0 mx-auto" />
 
-        {!installed ? (
+        {!canInstall ? (
+          <Text typo="body-1-medium" className="text-center mt-[48px]">
+            앱 설치가 불가능한 환경입니다.
+          </Text>
+        ) : !isInstalled ? (
           <Button onClick={handleInstallClick} className="mt-[48px]">
             앱 다운로드
           </Button>
