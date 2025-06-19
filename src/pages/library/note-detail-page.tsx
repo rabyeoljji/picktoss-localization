@@ -20,6 +20,7 @@ import {
   useGetSingleDocument,
   useUpdateDocumentCategory,
   useUpdateDocumentEmoji,
+  useUpdateDocumentIsPublic,
   useUpdateDocumentName,
 } from '@/entities/document/api/hooks'
 import { useUser } from '@/entities/member/api/hooks'
@@ -129,6 +130,9 @@ const NoteDetailPage = () => {
   const { mutate: updateDocumentName } = useUpdateDocumentName()
   const { mutate: updateDocumentEmoji } = useUpdateDocumentEmoji()
   const { mutate: updateDocumentCategory, isPending: isUpdatingDocumentCategory } = useUpdateDocumentCategory(
+    Number(noteId),
+  )
+  const { mutate: updateDocumentIsPublic, isPending: isUpdatingDocumentIsPublic } = useUpdateDocumentIsPublic(
     Number(noteId),
   )
 
@@ -306,65 +310,104 @@ const NoteDetailPage = () => {
             <Text typo="subtitle-2-medium" className="ml-2 text-ellipsis overflow-hidden whitespace-nowrap">
               {document?.name}
             </Text>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button
-                  size="sm"
-                  left={<IcUpload />}
-                  onClick={() => {
-                    trackEvent('library_detail_play_click')
-                  }}
-                >
-                  공유하기
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader className="typo-h4">전공 필기 요약</DialogHeader>
-                <div className="mt-[20px] mb-[32px]">
-                  <div className="relative bg-disabled rounded-[8px]">
-                    <Input
-                      disabled={true}
-                      value={`${window.location.origin}${pathname}`}
-                      className="w-[calc(100%-70px)] truncate"
-                    />
-                    <SquareButton
-                      variant="tertiary"
-                      size="sm"
-                      className="absolute right-[12px] bottom-1/2 translate-y-1/2"
-                      onClick={() => {
-                        navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
-                        toast('링크가 복사되었어요.')
-                      }}
-                    >
-                      복사
-                    </SquareButton>
+            {document?.isPublic && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    left={<IcUpload />}
+                    onClick={() => {
+                      trackEvent('library_detail_play_click')
+                    }}
+                  >
+                    공유하기
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader className="typo-h4">{document?.name}</DialogHeader>
+                  <div className="mt-[20px] mb-[32px]">
+                    <div className="relative bg-disabled rounded-[8px]">
+                      <Input
+                        disabled={true}
+                        value={`${window.location.origin}${pathname}`}
+                        className="w-[calc(100%-70px)] truncate"
+                      />
+                      <SquareButton
+                        variant="tertiary"
+                        size="sm"
+                        className="absolute right-[12px] bottom-1/2 translate-y-1/2"
+                        onClick={() => {
+                          navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
+                          toast('링크가 복사되었어요.')
+                        }}
+                      >
+                        복사
+                      </SquareButton>
+                    </div>
                   </div>
-                </div>
-                <DialogCTA
-                  label="링크 공유하기"
-                  onClick={() => {
-                    if (navigator.share) {
-                      navigator
-                        .share({
-                          title: document?.name || '전공 필기 요약',
-                          text: '전공 필기 요약을 확인해보세요!',
-                          url: `${window.location.origin}${pathname}`,
-                        })
-                        .catch((error) => {
-                          if (error.name !== 'AbortError') {
-                            console.error('공유하기 실패:', error)
-                          }
-                        })
-                    } else {
-                      // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
-                      navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
-                      toast('링크가 복사되었어요')
+                  <DialogCTA
+                    label="링크 공유하기"
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator
+                          .share({
+                            title: document?.name || '',
+                            text: `${document?.name}을 확인해보세요!`,
+                            url: `${window.location.origin}${pathname}`,
+                          })
+                          .catch((error) => {
+                            if (error.name !== 'AbortError') {
+                              console.error('공유하기 실패:', error)
+                            }
+                          })
+                      } else {
+                        // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
+                        navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
+                        toast('링크가 복사되었어요')
+                      }
+                    }}
+                    hasClose
+                  />
+                </DialogContent>
+              </Dialog>
+            )}
+            {!document?.isPublic && (
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    size="sm"
+                    left={<IcUpload />}
+                    onClick={() => {
+                      trackEvent('library_detail_play_click')
+                    }}
+                  >
+                    공유하기
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader className="typo-h4">퀴즈 공개가 필요해요</DialogHeader>
+                  <DialogDescription className="text-center mt-2 text-sub">
+                    픽토스에 퀴즈가 공개된 상태여야
+                    <br />
+                    공유할 수 있어요
+                  </DialogDescription>
+                  <DialogCTA
+                    label="퀴즈 공유하기"
+                    onClick={() =>
+                      updateDocumentIsPublic(
+                        { isPublic: true },
+                        {
+                          onSuccess: () => router.push('/explore/detail/:noteId', { params: [String(noteId)] }),
+                        },
+                      )
                     }
-                  }}
-                  hasClose
-                />
-              </DialogContent>
-            </Dialog>
+                    disabled={isUpdatingDocumentIsPublic}
+                    hasClose
+                    className="mt-[32px]"
+                  />
+                </DialogContent>
+              </Dialog>
+            )}
           </div>
         }
       />
