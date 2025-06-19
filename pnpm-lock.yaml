@@ -8,9 +8,6 @@ dependencies:
   '@amplitude/analytics-browser':
     specifier: ^2.17.6
     version: 2.17.6
-  '@dotmind/react-use-pwa':
-    specifier: ^1.0.4
-    version: 1.0.4
   '@firebase/messaging':
     specifier: ^0.12.17
     version: 0.12.17(@firebase/app@0.11.5)
@@ -1463,10 +1460,6 @@ packages:
       - '@chromatic-com/playwright'
       - react
     dev: true
-
-  /@dotmind/react-use-pwa@1.0.4:
-    resolution: {integrity: sha512-qZauJLQu9hbdy6eAIm49YfI+8Dxty9tr8Zmv99M4rV37zwT7LVSdohXlGmFXXo19v5YV/Ig0Mnn5hRGPCxWDrA==}
-    dev: false
 
   /@emotion/is-prop-valid@1.2.2:
     resolution: {integrity: sha512-uNsoYd37AFmaCdXlg6EYD1KaPOaRWRByMCYzbKUX4+hhMfrxdVSelShywL4JVaAeM/eHUOSprYBQls+/neX3pw==}
