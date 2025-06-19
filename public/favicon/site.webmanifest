@@ -1,7 +1,7 @@
 {
   "name": "Picktoss",
   "short_name": "Picktoss",
-  "start_url": "/",
+  "start_url": "/?v=2",
   "scope": "/",
   "display": "standalone",
   "theme_color": "#ffffff",
