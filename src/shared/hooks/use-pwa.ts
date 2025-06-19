@@ -39,7 +39,41 @@ export const usePWA = () => {
   }, [])
 
   useEffect(() => {
+    // PWA 설치 조건 체크 및 디버깅
+    const checkPWAConditions = async () => {
+      if (import.meta.env.DEV) {
+        console.log('=== PWA 설치 조건 체크 ===')
+
+        // Service Worker 체크
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.getRegistration()
+          console.log('Service Worker 등록 상태:', registration ? 'OK' : 'NOT_REGISTERED')
+        } else {
+          console.log('Service Worker 지원:', 'NOT_SUPPORTED')
+        }
+
+        // Manifest 체크
+        try {
+          const manifestResponse = await fetch('/manifest.webmanifest')
+          console.log('Manifest 파일:', manifestResponse.ok ? 'OK' : 'NOT_FOUND')
+        } catch (error) {
+          console.log('Manifest 파일:', 'NOT_ACCESSIBLE', error)
+        }
+
+        // 브라우저 지원 체크
+        console.log('beforeinstallprompt 지원:', 'beforeinstallprompt' in window ? 'YES' : 'NO')
+        console.log('현재 브라우저:', navigator.userAgent)
+        console.log('HTTPS:', location.protocol === 'https:' ? 'YES' : 'NO')
+        console.log('현재 PWA 상태:', isPWA)
+      }
+    }
+
+    checkPWAConditions()
+
     const handleBeforeInstallPrompt = (e: BeforeInstallPromptEvent) => {
+      if (import.meta.env.DEV) {
+        console.log('beforeinstallprompt 이벤트 발생!', e)
+      }
       e.preventDefault()
       setInstallPrompt(e)
       setInstallable(true)
@@ -47,10 +81,20 @@ export const usePWA = () => {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener)
 
+    // 앱이 이미 설치된 경우 감지
+    window.addEventListener('appinstalled', () => {
+      if (import.meta.env.DEV) {
+        console.log('PWA가 설치되었습니다!')
+      }
+      setInstallable(false)
+      setInstallPrompt(null)
+    })
+
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener)
+      window.removeEventListener('appinstalled', () => {})
     }
-  }, [])
+  }, [isPWA])
 
   const installPWA = async () => {
     if (installPrompt) {
@@ -59,15 +103,21 @@ export const usePWA = () => {
         const result = await installPrompt.userChoice
 
         if (result.outcome === 'accepted') {
-          console.log('앱 설치 승인')
+          if (import.meta.env.DEV) {
+            console.log('앱 설치 승인')
+          }
         } else {
-          console.log('앱 설치 거부')
+          if (import.meta.env.DEV) {
+            console.log('앱 설치 거부')
+          }
         }
 
         setInstallable(false)
       } catch (error) {
         // 추가 폴백 메커니즘
-        console.error('설치 중 오류 발생', error)
+        if (import.meta.env.DEV) {
+          console.error('설치 중 오류 발생', error)
+        }
 
         alert(
           '앱 설치 과정에서 오류가 발생했습니다. 다시 시도해주세요. 문제가 반복될 경우 브라우저의 ⋮ (더보기) 버튼 혹은 공유 버튼을 클릭 후 "홈 화면에 추가" 옵션을 클릭하시면 앱 설치가 가능합니다.',
