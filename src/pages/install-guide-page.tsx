@@ -53,7 +53,7 @@ interface AppInstallAosProps {
 }
 
 const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
-  const { installed } = usePWA()
+  const { isInstalled: installed } = usePWA()
 
   return (
     <main className="flex min-h-dvh flex-col flex-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
