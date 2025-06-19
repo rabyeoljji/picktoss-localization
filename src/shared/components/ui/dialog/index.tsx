@@ -83,6 +83,7 @@ function DialogCTA({
   hasClose = false,
   closeLabel = '닫기',
   customButton,
+  disabled = false,
   className,
 }: React.ComponentProps<'button'> & {
   label?: string
@@ -97,7 +98,7 @@ function DialogCTA({
       {customButton ? (
         customButton
       ) : (
-        <Button onClick={onClick} className={className}>
+        <Button onClick={onClick} className={className} disabled={disabled}>
           {label}
         </Button>
       )}

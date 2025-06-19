@@ -392,12 +392,15 @@ const NoteDetailPage = () => {
                     공유할 수 있어요
                   </DialogDescription>
                   <DialogCTA
-                    label="퀴즈 공유하기"
+                    label="퀴즈 공개하기"
                     onClick={() =>
                       updateDocumentIsPublic(
                         { isPublic: true },
                         {
-                          onSuccess: () => router.push('/explore/detail/:noteId', { params: [String(noteId)] }),
+                          onSuccess: () => {
+                            router.push('/explore/detail/:noteId', { params: [String(noteId)] })
+                            toast('퀴즈가 공개되었어요')
+                          },
                         },
                       )
                     }
