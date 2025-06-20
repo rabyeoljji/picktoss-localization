@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { isMobile } from 'react-device-detect'
 
 import { toast } from 'sonner'
 import SwiperCore from 'swiper'
@@ -24,6 +25,7 @@ import { Button } from '@/shared/components/ui/button'
 import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
+import { usePWA } from '@/shared/hooks/use-pwa'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { useSessionStorage } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
@@ -46,6 +48,7 @@ type ShareCard = {
 type PublicDocumentsDto = GetPublicDocumentsDto | ShareCard
 
 const QuizVerticalSwipe = () => {
+  const { isPWA } = usePWA()
   const token = useStore(useAuthStore, (state) => state.token)
 
   const DATA_PER_PAGE = 10
@@ -191,11 +194,13 @@ const QuizVerticalSwipe = () => {
     )
   }
 
+  const accessMobileWeb = !isPWA && isMobile
+
   return (
     <div
       ref={swiperContainerRef}
       style={{
-        height: 'calc(100vh - var(--safe-area-inset-top) - 186px)',
+        height: `calc(100vh - var(--safe-area-inset-top)${accessMobileWeb ? '' : ' - 186px'})`,
         touchAction: 'pan-y',
         overscrollBehaviorY: 'none',
         WebkitOverflowScrolling: 'touch',
