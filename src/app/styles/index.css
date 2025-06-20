@@ -50,15 +50,19 @@
 
   --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
 
+  --header-height: 54px;
+
   --safe-area-inset-top: env(safe-area-inset-top);
 }
 
 html {
+  height: 100dvh;
   overscroll-behavior: none;
   color: var(--color-gray-900);
 }
 
 body {
+  height: 100dvh;
   overscroll-behavior-x: none;
   -ms-overflow-style: none; /* IE, Edge */
 }
@@ -67,7 +71,7 @@ body::-webkit-scrollbar {
 }
 
 #root {
-  @apply scrollbar-hide h-screen w-screen overflow-y-auto;
+  @apply scrollbar-hide h-dvh w-screen;
 }
 
 /* 로컬 폰트 파일 적용 */

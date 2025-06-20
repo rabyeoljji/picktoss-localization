@@ -32,6 +32,10 @@
         }
       ],
       "destination": "/api/explore/detail/:id"
+    },
+    {
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
