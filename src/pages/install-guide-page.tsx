@@ -1,11 +1,7 @@
-<<<<<<< HEAD
 import { useState } from 'react'
 import { isIOS } from 'react-device-detect'
-=======
-import { isIOS, isMacOs } from 'react-device-detect'
 
 import Splash from '@/app/splash'
->>>>>>> 60249ff15967f55301572b15c13ec77cfc59104d
 
 import { IcLogo } from '@/shared/assets/icon'
 import { ImgSymbol } from '@/shared/assets/images'
@@ -18,15 +14,15 @@ export const InstallGuidePage = () => {
   const router = useRouter()
   const { isPWA, installPWA, isLoading } = usePWA()
 
-  if (isLoading) {
-    return <Splash />
-  }
-
   if (isPWA) {
     router.push('/')
   }
 
-  if (isIOS || isMacOs) {
+  if (isLoading) {
+    return <Splash />
+  }
+
+  if (isIOS) {
     return <AppInstallIos />
   } else {
     return <AppInstallAos handleInstallClick={installPWA} />
@@ -58,7 +54,6 @@ interface AppInstallAosProps {
 }
 
 const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
-<<<<<<< HEAD
   const [showInstallGuide, setShowInstallGuide] = useState(false)
 
   if (showInstallGuide) {
@@ -80,9 +75,6 @@ const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
       </main>
     )
   }
-=======
-  const { isInstalled, canInstall } = usePWA()
->>>>>>> 60249ff15967f55301572b15c13ec77cfc59104d
 
   return (
     <main className="flex min-h-dvh flex-col flex-center overflow-y-auto bg-base-02 px-[16px] py-[32px]">
@@ -96,19 +88,9 @@ const AppInstallAos = ({ handleInstallClick }: AppInstallAosProps) => {
         <ImgSymbol className="size-[100px] mt-[32px] mx-auto" />
         <IcLogo className="mt-4 w-[140px] shrink-0 mx-auto" />
 
-        {!canInstall ? (
-          <Text typo="body-1-medium" className="text-center mt-[48px]">
-            앱 설치가 불가능한 환경입니다.
-          </Text>
-        ) : !isInstalled ? (
-          <Button onClick={handleInstallClick} className="mt-[48px]">
-            앱 다운로드
-          </Button>
-        ) : (
-          <Button onClick={() => {}} disabled className="mt-[48px]">
-            앱 설치 완료
-          </Button>
-        )}
+        <Button onClick={handleInstallClick} className="mt-[48px]">
+          앱 다운로드
+        </Button>
       </div>
 
       <button onClick={() => setShowInstallGuide(true)}>
