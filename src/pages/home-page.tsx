@@ -542,7 +542,7 @@ const HomePage = () => {
           <Text typo="subtitle-2-medium" color="sub" className="text-center mt-2">
             가입 기념으로 퀴즈를
             <br />
-            생성할 수 있는 별을 <span className="text-accent">100개</span> 드려요
+            생성할 수 있는 별을 <span className="text-accent">200개</span> 드려요
           </Text>
           <Button onClick={() => setShouldShowOnboardingReward(false)} className="mt-[32px]">
             받기
