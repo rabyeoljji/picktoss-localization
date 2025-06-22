@@ -71,7 +71,7 @@ export const QuizLoadingDrawer = () => {
     {
       pollingInterval: 3500,
       maxPollingCount: 120,
-      autoCompleteTime: Infinity,
+      autoCompleteTime: 100000,
     },
   )
 
