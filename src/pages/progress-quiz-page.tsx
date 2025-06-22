@@ -478,7 +478,7 @@ const ResultPeekingDrawer = ({
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                정답: {currentQuiz.answer}
+                정답: {currentQuiz.answer === 'correct' ? 'O' : 'X'}
               </Text>
               <Text typo="body-1-medium" as="p" color="secondary">
                 {currentQuiz.explanation}
