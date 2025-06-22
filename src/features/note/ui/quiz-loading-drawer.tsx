@@ -69,9 +69,9 @@ export const QuizLoadingDrawer = () => {
   const { error, quizSetId, clearError } = useQuizGenerationPolling(
     { documentId },
     {
-      pollingInterval: 2000,
-      maxPollingCount: 60,
-      autoCompleteTime: 70000,
+      pollingInterval: 3500,
+      maxPollingCount: 120,
+      autoCompleteTime: Infinity,
     },
   )
 
