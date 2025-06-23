@@ -1,8 +1,11 @@
 import { ImgNoteEmpty } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
 
 const EmptyMyNote = () => {
+  const router = useRouter()
+
   return (
     <div className="size-full flex-center flex-col gap-[32px]">
       <div className="flex-center flex-col gap-[16px]">
@@ -17,7 +20,17 @@ const EmptyMyNote = () => {
         </div>
       </div>
 
-      <Button size={'md'} className="size-fit">
+      <Button
+        size={'md'}
+        className="size-fit"
+        onClick={() =>
+          router.push('/note/create', {
+            search: {
+              documentType: 'TEXT',
+            },
+          })
+        }
+      >
         퀴즈 생성하기
       </Button>
     </div>
