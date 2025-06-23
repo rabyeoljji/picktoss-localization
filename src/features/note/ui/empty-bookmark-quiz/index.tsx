@@ -1,8 +1,11 @@
 import { ImgBookmarkEmpty } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
+import { useRouter } from '@/shared/lib/router'
 
 const EmptyBookmarkQuiz = () => {
+  const router = useRouter()
+
   return (
     <div className="size-full flex-center flex-col gap-[32px]">
       <div className="flex-center flex-col gap-[16px]">
@@ -17,7 +20,7 @@ const EmptyBookmarkQuiz = () => {
         </div>
       </div>
 
-      <Button size={'md'} className="size-fit">
+      <Button size={'md'} className="size-fit" onClick={() => router.replace('/explore')}>
         퀴즈 보러가기
       </Button>
     </div>
