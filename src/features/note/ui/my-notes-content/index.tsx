@@ -54,12 +54,12 @@ const MyNotesContent = ({
   )
 
   // 공유하기 핸들러
-  const handleShare = async (id: number, name: string) => {
+  const handleShare = async () => {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: name,
-          url: `${window.location.origin}/explore/detail/${id}`, // 추후 picktoss.com으로 변경
+          title: getCheckedList()[0].name,
+          url: `${window.location.origin}/explore/detail/${getCheckedList()}`,
         })
         console.log('공유 성공')
       } catch (error) {
@@ -161,7 +161,7 @@ const MyNotesContent = ({
                   if (!document.isPublic) {
                     setOpenRelease(true)
                   } else {
-                    handleShare(document.id, document.name)
+                    handleShare()
                   }
                 }}
                 key={'shareButton'}
