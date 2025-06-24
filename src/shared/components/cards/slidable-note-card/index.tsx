@@ -109,7 +109,7 @@ export const SlidableNoteCard = ({
     >
       {/* Swipe 영역 */}
       <motion.div
-        className="relative flex h-[104px] max-w-full items-center rounded-[16px]"
+        className="relative flex h-[104px] w-full items-center rounded-[16px]"
         drag={_selectMode ? false : 'x'}
         dragConstraints={{ left: -(swipeOptions.length * 65), right: 0 }}
         onDrag={() => {
