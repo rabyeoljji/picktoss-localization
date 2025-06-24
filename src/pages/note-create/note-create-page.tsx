@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { withHOC } from '@/app/hoc/with-page-config'
@@ -68,6 +69,8 @@ const NoteCreateContent = () => {
   const { isKeyboardVisible } = useKeyboard()
   const { data: user } = useUser()
 
+  const [lackingStarDrawerOpen, setLackingStarDrawerOpen] = useState(false)
+
   return (
     <div className="flex flex-col relative bg-base-1 h-full">
       {/* 퀴즈 공개 여부 스위치 */}
@@ -103,34 +106,35 @@ const NoteCreateContent = () => {
                 </Text>
               </div>
               <div className="flex-1">
-                <LackingStarDrawer
-                  needStars={Number(star)}
-                  trigger={
-                    <Button
-                      variant="special"
-                      right={
-                        <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
-                          <ImgStar className="size-[16px] mr-[4px]" />
-                          <Text typo="body-1-medium">{star}</Text>
-                        </div>
-                      }
-                      onClick={() => {
-                        if (Number(star) > (user?.star ?? 0)) {
-                          return
-                        }
-                        handleCreateDocument({
-                          onSuccess: () => {},
-                        })
-                        trackEvent('generate_quiz_click', {
-                          location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
-                        })
-                      }}
-                    >
-                      생성하기
-                    </Button>
+                <Button
+                  variant="special"
+                  right={
+                    <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                      <ImgStar className="size-[16px] mr-[4px]" />
+                      <Text typo="body-1-medium">{star}</Text>
+                    </div>
                   }
-                />
+                  onClick={() => {
+                    if (Number(star) > (user?.star ?? 0)) {
+                      setLackingStarDrawerOpen(true)
+                      return
+                    }
+                    handleCreateDocument({
+                      onSuccess: () => {},
+                    })
+                    trackEvent('generate_quiz_click', {
+                      location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                    })
+                  }}
+                >
+                  생성하기
+                </Button>
               </div>
+              <LackingStarDrawer
+                open={lackingStarDrawerOpen}
+                onOpenChange={setLackingStarDrawerOpen}
+                needStars={Number(star)}
+              />
             </div>
           ) : (
             <>

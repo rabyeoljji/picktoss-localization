@@ -9,7 +9,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
-import { useRouter } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 
 export const QuizResultView = ({
   totalElapsedTime,
@@ -22,6 +22,8 @@ export const QuizResultView = ({
   useEffect(() => {
     trackEvent('quiz_complete_view')
   }, [])
+
+  const [prevUrl] = useQueryParam('/progress-quiz/:quizSetId', 'prevUrl')
 
   const router = useRouter()
 
@@ -138,7 +140,7 @@ export const QuizResultView = ({
       </div>
 
       <FixedBottom className="bg-surface-2 h-[114px]">
-        <Button onClick={() => router.back()}>확인</Button>
+        <Button onClick={() => (prevUrl ? router.replace(prevUrl as any, {}) : router.back())}>확인</Button>
       </FixedBottom>
     </div>
   )
