@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { calculateStar } from '@/features/note/lib'
-
 import { useGetSingleDocument } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
@@ -81,7 +79,7 @@ export const useQuizGenerationPolling = ({ documentId }: { documentId: number },
     // 문서 상태에 따라 처리
     if (document.quizGenerationStatus === 'PROCESSED') {
       createQuizSet(
-        { quizCount: calculateStar(document.content.length), quizType: 'ALL' },
+        { quizCount: document.totalQuizCount, quizType: 'ALL' },
         {
           onSuccess: ({ quizSetId }) => {
             stopPolling()
