@@ -15,6 +15,7 @@ import { useUser } from '@/entities/member/api/hooks'
 import { IcInfo } from '@/shared/assets/icon'
 import { ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
+import { LackingStarDrawer } from '@/shared/components/drawers/lacking-star-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Switch } from '@/shared/components/ui/switch'
@@ -102,25 +103,33 @@ const NoteCreateContent = () => {
                 </Text>
               </div>
               <div className="flex-1">
-                <Button
-                  variant="special"
-                  right={
-                    <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
-                      <ImgStar className="size-[16px] mr-[4px]" />
-                      <Text typo="body-1-medium">{star}</Text>
-                    </div>
+                <LackingStarDrawer
+                  needStars={Number(star)}
+                  trigger={
+                    <Button
+                      variant="special"
+                      right={
+                        <div className="flex-center size-[fit] rounded-full bg-[#D3DCE4]/[0.2] px-[8px]">
+                          <ImgStar className="size-[16px] mr-[4px]" />
+                          <Text typo="body-1-medium">{star}</Text>
+                        </div>
+                      }
+                      onClick={() => {
+                        if (Number(star) > (user?.star ?? 0)) {
+                          return
+                        }
+                        handleCreateDocument({
+                          onSuccess: () => {},
+                        })
+                        trackEvent('generate_quiz_click', {
+                          location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                        })
+                      }}
+                    >
+                      생성하기
+                    </Button>
                   }
-                  onClick={() => {
-                    handleCreateDocument({
-                      onSuccess: () => {},
-                    })
-                    trackEvent('generate_quiz_click', {
-                      location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
-                    })
-                  }}
-                >
-                  생성하기
-                </Button>
+                />
               </div>
             </div>
           ) : (

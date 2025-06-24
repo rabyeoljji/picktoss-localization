@@ -461,7 +461,12 @@ const ResultPeekingDrawer = ({
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                정답: {currentQuiz.answer === 'correct' ? 'O' : 'X'}
+                정답:{' '}
+                {currentQuiz.quizType === 'MULTIPLE_CHOICE'
+                  ? currentQuiz.answer
+                  : currentQuiz.answer === 'correct'
+                    ? 'O'
+                    : 'X'}
               </Text>
               <Text typo="body-1-medium" as="p" color="secondary">
                 {currentQuiz.explanation}
@@ -478,7 +483,12 @@ const ResultPeekingDrawer = ({
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                정답: {currentQuiz.answer === 'correct' ? 'O' : 'X'}
+                정답:{' '}
+                {currentQuiz.quizType === 'MULTIPLE_CHOICE'
+                  ? currentQuiz.answer
+                  : currentQuiz.answer === 'correct'
+                    ? 'O'
+                    : 'X'}
               </Text>
               <Text typo="body-1-medium" as="p" color="secondary">
                 {currentQuiz.explanation}
@@ -522,6 +532,7 @@ const ExitDialog = ({
           onPrimaryButtonClick={() => {
             trackEvent('quiz_exit_click')
             if (prevUrl) {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               router.replace(prevUrl as any, {})
             } else {
               router.back()
