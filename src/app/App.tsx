@@ -3,7 +3,11 @@ import { Helmet } from 'react-helmet-async'
 import { AppRouter } from '@/app/app-router'
 import { Providers } from '@/app/providers'
 
+import { useKakaoExternal } from '@/shared/hooks/use-kakao-external'
+
 function App() {
+  useKakaoExternal()
+
   return (
     <Providers>
       <Helmet>
