@@ -71,6 +71,9 @@ export default async function handler(req, res) {
       
       <!-- Kakao JavaScript SDK -->
       <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+      <!-- Kakao 인앱 브라우저 탈출 -->
+      <script>if(/KAKAOTALK/i.test(navigator.userAgent))location.href='kakaotalk://web/openExternal?url='+encodeURIComponent(location.href)</script>
     </head>
     <body>
       <div id="root">

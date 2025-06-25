@@ -9,7 +9,12 @@ export function useKakaoExternal() {
     const already = new URL(location.href).searchParams.has('ext')
     if (!isKakao || already) return
 
-    const target = encodeURIComponent(location.origin + location.pathname + location.search + '&ext=1')
+    const target =
+      location.origin +
+      location.pathname +
+      location.search + // ✅ 쿼리에 무엇이 있든 그대로 두고
+      (location.search ? '&' : '?') + // ① 쿼리 없는 주소엔 '?' 붙이기
+      'ext=1'
 
     // ① 인앱 창 닫기(안드로이드) ② 외부 브라우저로 열기
     location.href = 'kakaotalk://inappbrowser/close' // try‑catch 필요 없음
