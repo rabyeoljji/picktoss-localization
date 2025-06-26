@@ -34,6 +34,10 @@ const AccountPage = () => {
   const [openNotificationPermission, setOpenNotificationPermission] = useState(false)
   const [openNotificationSettingInfo, setOpenNotificationSettingInfo] = useState(false)
 
+  const handleServiceNotification = (permission: boolean) => {
+    setNotificationEnabled(permission)
+  }
+
   const handleNotification = async (checked: boolean) => {
     trackEvent('my_setting_push_click', { value: checked })
     setNotificationEnabled(checked)
@@ -254,7 +258,11 @@ const AccountPage = () => {
               </div>
 
               {/* 알림 권한 요청 drawer */}
-              <NotificationDrawer open={openNotificationPermission} onOpenChange={setOpenNotificationPermission} />
+              <NotificationDrawer
+                open={openNotificationPermission}
+                onOpenChange={setOpenNotificationPermission}
+                onServiceNotificationChange={handleServiceNotification}
+              />
 
               {/* 알림 재설정 안내 dialog */}
               <NotificationSettingInfoDialog
@@ -339,11 +347,20 @@ const AccountPage = () => {
   )
 }
 
-const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
+const NotificationDrawer = ({
+  open,
+  onOpenChange,
+  onServiceNotificationChange,
+}: {
+  open: boolean
+  onOpenChange: (value: boolean) => void
+  onServiceNotificationChange: (value: boolean) => void
+}) => {
   const { setupMessaging, isReadyNotification } = useMessaging()
 
   const clickNotification = async () => {
-    const callbackAfterPermission = () => {
+    const callbackAfterPermission = (permission?: boolean) => {
+      onServiceNotificationChange(permission ?? false)
       onOpenChange(false)
     }
     await setupMessaging(callbackAfterPermission)
