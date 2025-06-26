@@ -357,10 +357,12 @@ const NotificationDrawer = ({
   onServiceNotificationChange: (value: boolean) => void
 }) => {
   const { setupMessaging, isReadyNotification } = useMessaging()
+  const { mutate: updateNotification } = useUpdateQuizNotification()
 
   const clickNotification = async () => {
     const callbackAfterPermission = (permission?: boolean) => {
       onServiceNotificationChange(permission ?? false)
+      updateNotification({ quizNotificationEnabled: permission ?? false })
       onOpenChange(false)
     }
     await setupMessaging(callbackAfterPermission)

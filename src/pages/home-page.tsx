@@ -15,7 +15,7 @@ import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
 import { QuizSettingDrawer } from '@/features/quiz/ui/quiz-setting-drawer'
 import { ResultIcon } from '@/features/quiz/ui/result-icon'
 
-import { useUser } from '@/entities/member/api/hooks'
+import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
@@ -620,9 +620,11 @@ const IncorrectAnswerBody = ({
 
 const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
   const { setupMessaging, isReadyNotification } = useMessaging()
+  const { mutate: updateNotification } = useUpdateQuizNotification()
 
   const clickNotification = async () => {
-    const callbackAfterPermission = () => {
+    const callbackAfterPermission = (permission?: boolean) => {
+      updateNotification({ quizNotificationEnabled: permission ?? false })
       onOpenChange(false)
     }
     await setupMessaging(callbackAfterPermission)
