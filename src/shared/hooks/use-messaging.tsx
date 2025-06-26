@@ -19,7 +19,7 @@ export const useMessaging = () => {
 
   useServiceWorker()
 
-  const setupMessaging = async (callbackAfterPermission: () => void) => {
+  const setupMessaging = async (callbackAfterPermission?: () => void) => {
     try {
       const isBrowser = typeof window !== 'undefined'
 
@@ -30,7 +30,7 @@ export const useMessaging = () => {
         try {
           await requestNotificationPermission()
 
-          callbackAfterPermission()
+          callbackAfterPermission?.()
 
           const isGranted = Notification.permission === 'granted'
 

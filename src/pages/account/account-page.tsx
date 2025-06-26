@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -8,15 +8,19 @@ import InviteDrawer from '@/features/invite/ui/invite-drawer'
 import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 
 import { IcChevronRight, IcDisclaimer, IcMy, IcNotification, IcRecord } from '@/shared/assets/icon'
-import { ImgGraph, ImgInviteStar, ImgStar } from '@/shared/assets/images'
+import { ImgAlarm, ImgGraph, ImgInviteStar, ImgPush, ImgStar } from '@/shared/assets/images'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
 import { Disclaimer, DisclaimerContent, DisclaimerTrigger } from '@/shared/components/ui/disclaimer'
+import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/components/ui/drawer'
 import { Switch } from '@/shared/components/ui/switch'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
+import { useMessaging } from '@/shared/hooks/use-messaging'
+import { checkNotificationPermission } from '@/shared/lib/notification'
 import { Link, useRouter } from '@/shared/lib/router'
 
 const AccountPage = () => {
@@ -27,28 +31,47 @@ const AccountPage = () => {
   const { mutate: updateNotification } = useUpdateQuizNotification()
 
   const [notificationEnabled, setNotificationEnabled] = useState(user?.quizNotificationEnabled)
+  const [openNotificationPermission, setOpenNotificationPermission] = useState(false)
+  const [openNotificationSettingInfo, setOpenNotificationSettingInfo] = useState(false)
 
-  // 낙관적 업데이트 적용
-  const handleNotification = (checked: boolean) => {
+  const handleNotification = async (checked: boolean) => {
     trackEvent('my_setting_push_click', { value: checked })
     setNotificationEnabled(checked)
 
     if (checked) {
-      updateNotification(
-        { quizNotificationEnabled: checked },
-        {
-          onError: () => setNotificationEnabled(false),
-        },
-      )
-    } else {
-      updateNotification(
-        { quizNotificationEnabled: checked },
-        {
-          onError: () => setNotificationEnabled(true),
-        },
-      )
+      // 권한 설정을 한 적 없을 경우 권한 요청 drawer open
+      if (!checkNotificationPermission()) {
+        setOpenNotificationPermission(true)
+        return
+      }
+
+      // 이전에 거부한 적이 있다면 운영체제나 브라우저 설정에서 변경할 수 있도록 유도
+      if (Notification.permission === 'denied') {
+        setOpenNotificationSettingInfo(true)
+        return
+      }
     }
+
+    // 서버 업데이트 호출
+    updateNotification(
+      { quizNotificationEnabled: checked },
+      {
+        onError: () => setNotificationEnabled(!checked),
+      },
+    )
   }
+
+  useEffect(() => {
+    console.log(user?.quizNotificationEnabled)
+
+    // os 알림 권한 설정 자체가 거부되어있으면 서버와도 동기화
+    if ((Notification.permission === 'denied' || !checkNotificationPermission()) && user?.quizNotificationEnabled) {
+      setNotificationEnabled(false)
+      updateNotification({ quizNotificationEnabled: false })
+    }
+
+    setNotificationEnabled(user?.quizNotificationEnabled)
+  }, [updateNotification, user?.quizNotificationEnabled])
 
   return (
     <>
@@ -229,6 +252,15 @@ const AccountPage = () => {
                 <Text typo="subtitle-2-medium">푸시 알림</Text>
                 <Switch size="md" checked={notificationEnabled} onCheckedChange={handleNotification} />
               </div>
+
+              {/* 알림 권한 요청 drawer */}
+              <NotificationDrawer open={openNotificationPermission} onOpenChange={setOpenNotificationPermission} />
+
+              {/* 알림 재설정 안내 dialog */}
+              <NotificationSettingInfoDialog
+                open={openNotificationSettingInfo}
+                onOpenChange={setOpenNotificationSettingInfo}
+              />
             </div>
           </div>
 
@@ -304,6 +336,85 @@ const AccountPage = () => {
         </footer>
       </HeaderOffsetLayout>
     </>
+  )
+}
+
+const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
+  const { setupMessaging, isReadyNotification } = useMessaging()
+
+  const clickNotification = async () => {
+    const callbackAfterPermission = () => {
+      onOpenChange(false)
+    }
+    await setupMessaging(callbackAfterPermission)
+  }
+
+  useEffect(() => {
+    console.log('알림 준비: ' + isReadyNotification)
+  }, [isReadyNotification])
+
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent height="md" hasHandle={false} className="flex flex-col items-center">
+        <DrawerHeader className="w-full flex-center flex-col gap-[8px] py-[10px]">
+          <Text typo="h4" className="text-center">
+            푸시 알림 허용 안내
+          </Text>
+          <Text typo="subtitle-2-medium" color="sub" className="text-center">
+            다음 단계에서 알림을 허용하시면
+            <br />
+            매일 잊지 않고 퀴즈를 풀 수 있어요
+          </Text>
+        </DrawerHeader>
+
+        <ImgPush height={200} width={301.25} />
+
+        <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
+          <Button onClick={clickNotification}>설정하기</Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
+  )
+}
+
+const NotificationSettingInfoDialog = ({
+  open,
+  onOpenChange,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="pt-[32px] px-[24px] pb-[20px] w-[308px] flex flex-col gap-[32px]">
+        <div className="w-full flex flex-col gap-[16px]">
+          <div className="w-full flex-center">
+            <ImgAlarm className="size-[120px]" />
+          </div>
+
+          <div className="flex flex-col gap-[8px]">
+            <DialogTitle className="typo-h4 text-center">푸시 알림 설정 안내</DialogTitle>
+            <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
+              퀴즈 알림을 다시 받아보고 싶다면,
+              <br />
+              기기 설정 혹은 브라우저 설정에서 <br />
+              picktoss 알림을 <br />
+              [허용]으로 변경해주세요
+              {/* 퀴즈 알림을 다시 받아보고 싶다면,
+              <br />
+              아이폰 설정&gt;앱&gt;picktoss를 선택 후 <br />
+              알림을 [허용]으로 변경해주세요 */}
+            </DialogDescription>
+          </div>
+        </div>
+
+        <div className="w-full flex flex-col gap-[24px]">
+          <Button onClick={() => onOpenChange(false)} className="w-full">
+            확인
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
