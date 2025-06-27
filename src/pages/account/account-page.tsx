@@ -416,13 +416,8 @@ const NotificationSettingInfoDialog = ({
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
               퀴즈 알림을 다시 받아보고 싶다면,
               <br />
-              기기 설정 혹은 브라우저 설정에서 <br />
-              picktoss 알림을 <br />
-              [허용]으로 변경해주세요
-              {/* 퀴즈 알림을 다시 받아보고 싶다면,
-              <br />
-              아이폰 설정&gt;앱&gt;picktoss를 선택 후 <br />
-              알림을 [허용]으로 변경해주세요 */}
+              디바이스의 설정&gt;앱&gt;picktoss를 선택 후 <br />
+              알림을 [허용]으로 변경해주세요
             </DialogDescription>
           </div>
         </div>
