@@ -171,13 +171,9 @@ const LibrarySearchResults = ({ tab, documents, keyword }: LibrarySearchResultsP
                 documentEmoji={searchItem.emoji}
                 matchingSentence={
                   isSearchDocumentsDto(searchItem) && searchItem.content.includes(keyword) ? (
-                    <MarkdownProcessor
-                      markdownText={searchItem.content}
-                      keyword={keyword ?? ''}
-                      typo="subtitle-2-bold"
-                    />
+                    <MarkdownProcessor markdownText={searchItem.content} keyword={keyword ?? ''} typo="body-1-bold" />
                   ) : (
-                    highlightAndTrimText(formatQAText(searchItem.quizzes), keyword ?? '', 'subtitle-2-bold')
+                    highlightAndTrimText(formatQAText(searchItem.quizzes), keyword ?? '', 'body-1-bold')
                   )
                 }
                 quizCount={searchItem.totalQuizCount}
