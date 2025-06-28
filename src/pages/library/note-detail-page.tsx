@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useRef, useState } from 'react'
-import { useLocation, useParams } from 'react-router'
+import { useParams } from 'react-router'
 
 import EmojiPicker, { Theme } from 'emoji-picker-react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -97,7 +97,6 @@ import { cn } from '@/shared/lib/utils'
 const NoteDetailPage = () => {
   const { trackEvent } = useAmplitude()
   const router = useRouter()
-  const { pathname } = useLocation()
 
   const { noteId } = useParams()
   const [quizType, setQuizType] = useQueryParam('/library/:noteId', 'quizType')
@@ -329,7 +328,7 @@ const NoteDetailPage = () => {
                     <div className="relative bg-disabled rounded-[8px]">
                       <Input
                         disabled={true}
-                        value={`${window.location.origin}${pathname}`}
+                        value={`${window.location.origin}/explore/detail/${noteId}`}
                         className="w-[calc(100%-70px)] truncate"
                       />
                       <SquareButton
@@ -337,7 +336,7 @@ const NoteDetailPage = () => {
                         size="sm"
                         className="absolute right-[12px] bottom-1/2 translate-y-1/2"
                         onClick={() => {
-                          navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
+                          navigator.clipboard.writeText(`${window.location.origin}/explore/detail/${noteId}`)
                           toast('링크가 복사되었어요.')
                         }}
                       >
@@ -353,7 +352,7 @@ const NoteDetailPage = () => {
                           .share({
                             title: document?.name || '',
                             text: `${document?.name}을 확인해보세요!`,
-                            url: `${window.location.origin}${pathname}`,
+                            url: `${window.location.origin}/explore/detail/${noteId}`,
                           })
                           .catch((error) => {
                             if (error.name !== 'AbortError') {
@@ -362,7 +361,7 @@ const NoteDetailPage = () => {
                           })
                       } else {
                         // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
-                        navigator.clipboard.writeText(`${window.location.origin}${pathname}`)
+                        navigator.clipboard.writeText(`${window.location.origin}/explore/detail/${noteId}`)
                         toast('링크가 복사되었어요')
                       }
                     }}
