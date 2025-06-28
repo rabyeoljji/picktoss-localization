@@ -190,7 +190,7 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
           category={searchItem.category}
         />
 
-        <BookmarkVerticalCard.Content title={highlightAndTrimText(searchItem.name, keyword)} />
+        <BookmarkVerticalCard.Content title={highlightAndTrimText(searchItem.name, keyword, 'subtitle-2-bold')} />
         <BookmarkVerticalCard.Detail
           isPublic
           quizCount={searchItem.totalQuizCount}

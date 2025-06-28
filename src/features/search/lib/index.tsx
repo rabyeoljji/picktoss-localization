@@ -2,7 +2,7 @@ import { JSX } from 'react'
 
 import { extractPlainText } from '@/features/note/lib'
 
-import { Text } from '@/shared/components/ui/text'
+import { Text, Typo } from '@/shared/components/ui/text'
 
 type Quiz = {
   question: string
@@ -25,9 +25,17 @@ export function formatQAText(quizzes: Quiz[]): string {
 /** 마크다운 텍스트를 받아
  * 문법을 제거하고 키워드에 강조를 해서 반환하는 컴포넌트
  */
-export const MarkdownProcessor = ({ markdownText, keyword }: { markdownText: string; keyword: string }) => {
+export const MarkdownProcessor = ({
+  markdownText,
+  keyword,
+  typo,
+}: {
+  markdownText: string
+  keyword: string
+  typo: Typo
+}) => {
   const plainText = extractPlainText(markdownText)
-  const highlightedText = highlightAndTrimText(plainText, keyword)
+  const highlightedText = highlightAndTrimText(plainText, keyword, typo)
 
   return <div>{highlightedText}</div>
 }
@@ -35,7 +43,7 @@ export const MarkdownProcessor = ({ markdownText, keyword }: { markdownText: str
 /**
  * 텍스트에서 키워드를 강조하는 함수
  */
-export function highlightAndTrimText(text: string, keyword: string): JSX.Element | string {
+export function highlightAndTrimText(text: string, keyword: string, typo: Typo): JSX.Element | string {
   if (!text) return text
 
   const totalLength = 80
@@ -72,7 +80,7 @@ export function highlightAndTrimText(text: string, keyword: string): JSX.Element
       {prefix}
       {parts.map((part, index) =>
         regex.test(part) ? (
-          <Text typo="body-1-bold" key={index} color="accent" className="inline-block size-fit">
+          <Text typo={typo} key={index} color="accent" className="inline-block size-fit">
             {part}
           </Text>
         ) : (
