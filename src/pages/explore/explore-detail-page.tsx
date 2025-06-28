@@ -252,7 +252,7 @@ const ExploreDetailPage = () => {
   }
 
   return (
-    <div className="relative flex flex-col h-screen bg-base-1">
+    <div className="relative flex flex-col h-[calc(100vh-var(--safe-area-inset-top))] bg-base-1">
       <Header
         left={<BackButton />}
         content={
