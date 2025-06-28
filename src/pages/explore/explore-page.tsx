@@ -129,7 +129,7 @@ const ExplorePage = () => {
               </div>
 
               <img
-                src="/images/QR_picktoss_app_install_guide.png"
+                src="/images/QR_picktoss_app_install.png"
                 alt="픽토스 앱 다운로드 QR코드"
                 className="w-[208px] h-[208px]"
               />
