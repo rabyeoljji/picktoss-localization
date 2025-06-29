@@ -311,14 +311,13 @@ const NoteDetailPage = () => {
             </Text>
             {document?.isPublic && (
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    size="sm"
-                    left={<IcUpload />}
-                    onClick={() => {
-                      trackEvent('library_share_click')
-                    }}
-                  >
+                <DialogTrigger
+                  asChild
+                  onClick={() => {
+                    trackEvent('library_share_click')
+                  }}
+                >
+                  <Button size="sm" left={<IcUpload />}>
                     공유하기
                   </Button>
                 </DialogTrigger>
@@ -372,14 +371,13 @@ const NoteDetailPage = () => {
             )}
             {!document?.isPublic && (
               <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    size="sm"
-                    left={<IcUpload />}
-                    onClick={() => {
-                      trackEvent('library_share_click')
-                    }}
-                  >
+                <DialogTrigger
+                  asChild
+                  onClick={() => {
+                    trackEvent('library_share_click')
+                  }}
+                >
+                  <Button size="sm" left={<IcUpload />}>
                     공유하기
                   </Button>
                 </DialogTrigger>
@@ -797,13 +795,13 @@ const NoteDetailPage = () => {
 
         <div className="flex items-center text-icon-secondary">
           <Drawer>
-            <DrawerTrigger asChild>
-              <button
-                className="p-2"
-                onClick={() => {
-                  trackEvent('library_detail_play_click')
-                }}
-              >
+            <DrawerTrigger
+              asChild
+              onClick={() => {
+                trackEvent('library_detail_play_click')
+              }}
+            >
+              <button className="p-2">
                 <IcPlay className="size-6" />
               </button>
             </DrawerTrigger>
