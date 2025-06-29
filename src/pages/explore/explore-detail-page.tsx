@@ -251,10 +251,18 @@ const ExploreDetailPage = () => {
     )
   }
 
+  const handleBack = () => {
+    if (window.history.length > 0) {
+      router.back()
+    } else {
+      router.replace('/explore')
+    }
+  }
+
   return (
-    <div className="relative flex flex-col h-[calc(100vh-var(--safe-area-inset-top))] bg-base-1">
+    <div className="relative flex flex-col h-[calc(100%-var(--safe-area-inset-top))] bg-base-1">
       <Header
-        left={<BackButton />}
+        left={<BackButton onClick={handleBack} />}
         content={
           <div className={cn('flex items-center w-full justify-between')}>
             <Text typo="subtitle-2-medium" className="text-ellipsis overflow-hidden whitespace-nowrap">
