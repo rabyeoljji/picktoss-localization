@@ -1,5 +1,3 @@
-import { useLocation } from 'react-router'
-
 import { marked } from 'marked'
 import styled from 'styled-components'
 
@@ -17,7 +15,6 @@ import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 
 const NoteCreatePageFile = () => {
   const { trackEvent } = useAmplitude()
-  const { pathname } = useLocation()
 
   const { content, fileInfo, changeFileInfo, isProcessing, star, handleCreateDocument } = useCreateNoteContext()
   const { data: user } = useUser()

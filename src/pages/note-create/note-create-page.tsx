@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useLocation } from 'react-router'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import { useKeyboard } from '@/app/keyboard-detector'
@@ -62,7 +61,6 @@ const NoteCreateHeader = () => {
 
 const NoteCreateContent = () => {
   const { trackEvent } = useAmplitude()
-  const { pathname } = useLocation()
 
   const { star, isPublic, setIsPublic, documentType, content, checkDrawerTriggerActivate, handleCreateDocument } =
     useCreateNoteContext()
