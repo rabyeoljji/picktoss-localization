@@ -1,31 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 export function useInstagramExternal() {
-  const [target, setTarget] = useState('')
-
   useEffect(() => {
     const ua = navigator.userAgent
-    const isInstagram = /Instagram/i.test(ua)
+    // 인스타그램 인앱 브라우저 감지
+    const isInstagram = /Instagram/i.test(ua) //  [oai_citation:0‡stackoverflow.com](https://stackoverflow.com/questions/50212683/how-to-open-link-in-external-browser-instead-of-in-app-instagram)
 
-    // '?ext=1' 같은 플래그가 있으면 재귀 호출 방지
-    const already = new URL(location.href).searchParams.has('ext')
+    // 이미 `?ext=1` 플래그가 있으면 재귀 호출 방지
+    const already = new URL(window.location.href).searchParams.has('ext')
     if (!isInstagram || already) return
 
-    const target =
-      location.origin +
-      location.pathname +
-      location.search + // 쿼리에 무엇이 있든 그대로 두고
-      (location.search ? '&' : '?') + // 쿼리 없는 주소엔 '?' 붙이기
-      'ext=1'
+    const { origin, pathname, search } = window.location
+    const connector = search ? '&' : '?'
+    const target = `${origin}${pathname}${search}${connector}ext=1`
 
-    setTarget(target)
+    // 플랫폼별 외부 브라우저 오픈 URL 구성
+    let externalUrl = target
+    if (/android/i.test(ua)) {
+      // Android: Chrome으로 인텐트 방식 호출
+      externalUrl = `intent://${window.location.host}${pathname}${search}${connector}ext=1#Intent;scheme=https;package=com.android.chrome;end` //  [oai_citation:1‡stackoverflow.com](https://stackoverflow.com/questions/50212683/how-to-open-link-in-external-browser-instead-of-in-app-instagram)
+    } else if (/iPad|iPhone|iPod/i.test(ua)) {
+      // iOS: Chrome 앱이 설치되어 있으면 열기
+      externalUrl = `googlechrome://${window.location.host}${pathname}${search}${connector}ext=1`
+    }
+
+    // 인앱 브라우저 닫고 외부 브라우저 열기
+    window.location.href = externalUrl
   }, [])
-
-  if (!target) return null
-
-  return (
-    <a href={target} target="_blank" download>
-      Open in browser
-    </a>
-  )
 }
