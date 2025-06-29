@@ -252,7 +252,7 @@ const ExploreDetailPage = () => {
   }
 
   const handleBack = () => {
-    if (window.history.length > 0) {
+    if (window.history.length > 2) {
       router.back()
     } else {
       router.replace('/explore')
