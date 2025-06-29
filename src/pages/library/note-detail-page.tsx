@@ -71,7 +71,6 @@ import {
   DrawerFooter,
   DrawerHeader,
   DrawerTitle,
-  DrawerTrigger,
 } from '@/shared/components/ui/drawer'
 import {
   DropdownMenu,
