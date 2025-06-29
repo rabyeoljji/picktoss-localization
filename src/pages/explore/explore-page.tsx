@@ -164,7 +164,7 @@ const ExplorePage = () => {
                     left={category.id === activeCategory ? category.emoji : undefined}
                     onClick={() => {
                       setCategory(category.id)
-                      trackEvent('explore_tab_click', {
+                      trackEvent('explore_category_click', {
                         category: category.name as
                           | '전체'
                           | '자격증·수험'

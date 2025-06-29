@@ -7,6 +7,7 @@ import LoginDialog from '@/features/explore/ui/login-dialog'
 
 import { IcDaily, IcExplore, IcLibrary } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { RoutePath } from '@/shared/lib/router'
 import { useRouter } from '@/shared/lib/router'
@@ -38,6 +39,7 @@ interface TabNavigationProps {
 export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigationProps) => {
   const token = useStore(useAuthStore, (state) => state.token)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const { trackEvent } = useAmplitude()
 
   const router = useRouter()
   const { isPWA } = usePWA()
@@ -46,6 +48,14 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
     if (!token) {
       setIsLoginOpen(true)
       return
+    }
+
+    if (to === '/') {
+      trackEvent('daily_click', {})
+    } else if (to === '/explore') {
+      trackEvent('explore_click', {})
+    } else if (to === '/library') {
+      trackEvent('library_click', {})
     }
 
     if (isPWA) {

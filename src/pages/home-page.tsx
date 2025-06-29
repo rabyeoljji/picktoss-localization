@@ -424,8 +424,9 @@ const HomePage = () => {
                 documentType: 'TEXT',
               },
             })
-            trackEvent('daily_quiz_add_click', {
+            trackEvent('generate_new_click', {
               format: '텍스트 버튼',
+              location: '데일리 페이지',
             })
           }}
         >
@@ -440,8 +441,9 @@ const HomePage = () => {
                   documentType: 'FILE',
                 },
               })
-              trackEvent('daily_quiz_add_click', {
+              trackEvent('generate_new_click', {
                 format: '파일 버튼',
+                location: '데일리 페이지',
               })
             }}
             className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"

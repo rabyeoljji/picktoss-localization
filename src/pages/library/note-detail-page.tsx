@@ -275,8 +275,7 @@ const NoteDetailPage = () => {
           // 원래 상태로 복원
           setShowAnswer(originalShowAnswer)
           toast('퀴즈가 PDF로 저장되었습니다.')
-          // @ts-expect-error - 이벤트 타입이 정의되지 않은 사용자 정의 이벤트
-          trackEvent('quiz_pdf_download', { quizType, documentName: docName })
+          trackEvent('library_detail_download_click')
         })
         .catch((err: Error) => {
           console.error('PDF 생성 오류:', err)
@@ -824,11 +823,7 @@ const NoteDetailPage = () => {
           </button>
           <DropdownMenu>
             <DropdownMenuTrigger className="p-2" asChild>
-              <button
-                onClick={() => {
-                  trackEvent('library_detail_more_click')
-                }}
-              >
+              <button>
                 <IcKebab className="size-6" />
               </button>
             </DropdownMenuTrigger>
@@ -839,7 +834,10 @@ const NoteDetailPage = () => {
               <DropdownMenuItem
                 className="text-red-500"
                 right={<IcDelete className="text-icon-critical" />}
-                onClick={() => setDeleteDocumentDialogOpen(true)}
+                onClick={() => {
+                  trackEvent('library_detail_delete_click')
+                  setDeleteDocumentDialogOpen(true)
+                }}
               >
                 퀴즈 삭제
               </DropdownMenuItem>

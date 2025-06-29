@@ -120,7 +120,7 @@ const NoteCreateContent = () => {
                     handleCreateDocument({
                       onSuccess: () => {},
                     })
-                    trackEvent('generate_confirm_click', {
+                    trackEvent('generate_quiz_click', {
                       format: '텍스트',
                       type: '전체',
                     })

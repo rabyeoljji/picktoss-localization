@@ -71,7 +71,10 @@ const LibraryPage = () => {
             <button
               onClick={() => {
                 router.push('/note/create', { search: { documentType: 'FILE' } })
-                trackEvent('library_quiz_add_click')
+                trackEvent('generate_new_click', {
+                  format: '파일 버튼',
+                  location: '도서관 페이지',
+                })
               }}
               className="size-[40px] flex-center"
             >

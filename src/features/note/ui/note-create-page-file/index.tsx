@@ -119,7 +119,7 @@ const NoteCreatePageFile = () => {
                 handleCreateDocument({
                   onSuccess: () => {},
                 })
-                trackEvent('generate_confirm_click', {
+                trackEvent('generate_quiz_click', {
                   format: '파일',
                   type: '전체',
                 })

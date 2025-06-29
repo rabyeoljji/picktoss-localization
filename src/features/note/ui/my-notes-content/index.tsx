@@ -151,7 +151,9 @@ const MyNotesContent = ({
             changeSelectMode={changeSelectMode}
             onClick={() => {
               router.push('/library/:noteId', { params: [String(document.id)] })
-              trackEvent('library_myquiz_click')
+              trackEvent('library_item_click', {
+                location: '내 퀴즈 탭',
+              })
             }}
             swipeOptions={[
               <button
