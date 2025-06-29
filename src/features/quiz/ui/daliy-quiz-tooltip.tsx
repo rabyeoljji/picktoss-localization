@@ -24,8 +24,8 @@ export const DailyQuizTooltip = ({
         !!(todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount < 10 && 10 - todaySolvedDailyQuizCount > 0)
       }
     >
-      <TooltipTrigger>
-        <div
+      <TooltipTrigger asChild>
+        <button
           onClick={() => {
             trackEvent('daily_star_click')
             router.push('/account/my-star')
@@ -33,7 +33,7 @@ export const DailyQuizTooltip = ({
           className="p-1.5 flex-center"
         >
           <ImgStar className="size-[28px]" />
-        </div>
+        </button>
       </TooltipTrigger>
       <TooltipContent side="right" color="inverse">
         {todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount > 0 ? (

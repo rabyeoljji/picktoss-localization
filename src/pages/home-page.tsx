@@ -29,6 +29,7 @@ import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/comp
 import Loading from '@/shared/components/ui/loading'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { checkNotificationPermission } from '@/shared/lib/notification'
@@ -39,6 +40,7 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 
 const HomePage = () => {
   const router = useRouter()
+  const { trackEvent } = useAmplitude()
 
   // 온보딩 관련
   const [userLoaded, setUserLoaded] = useState(false)
@@ -117,6 +119,7 @@ const HomePage = () => {
   useEffect(() => {
     if (dailyQuizRecord && (dailyQuizRecord.reward ?? 0) > 0) {
       setRewardDrawerOpen(true)
+      trackEvent('daily_complete_click')
     }
   }, [dailyQuizRecord])
 
@@ -421,6 +424,9 @@ const HomePage = () => {
                 documentType: 'TEXT',
               },
             })
+            trackEvent('daily_quiz_add_click', {
+              format: '텍스트 버튼',
+            })
           }}
         >
           <Text typo="subtitle-2-medium" color="sub" className="center">
@@ -433,6 +439,9 @@ const HomePage = () => {
                 search: {
                   documentType: 'FILE',
                 },
+              })
+              trackEvent('daily_quiz_add_click', {
+                format: '파일 버튼',
               })
             }}
             className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
@@ -499,9 +508,9 @@ const HomePage = () => {
                             <path
                               d="M12.3047 19.5L17.8049 25L27.6962 15"
                               stroke="white"
-                              stroke-width="4"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
+                              strokeWidth="4"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
                             />
                           </svg>
                         </motion.div>

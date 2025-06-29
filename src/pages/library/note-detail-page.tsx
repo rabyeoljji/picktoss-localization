@@ -316,7 +316,7 @@ const NoteDetailPage = () => {
                     size="sm"
                     left={<IcUpload />}
                     onClick={() => {
-                      trackEvent('library_detail_play_click')
+                      trackEvent('library_share_click')
                     }}
                   >
                     공유하기
@@ -377,7 +377,7 @@ const NoteDetailPage = () => {
                     size="sm"
                     left={<IcUpload />}
                     onClick={() => {
-                      trackEvent('library_detail_play_click')
+                      trackEvent('library_share_click')
                     }}
                   >
                     공유하기
