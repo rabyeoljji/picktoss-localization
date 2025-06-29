@@ -122,8 +122,9 @@ const NoteCreateContent = () => {
                     handleCreateDocument({
                       onSuccess: () => {},
                     })
-                    trackEvent('generate_quiz_click', {
-                      location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
+                    trackEvent('generate_confirm_click', {
+                      format: '텍스트',
+                      type: '전체',
                     })
                   }}
                 >

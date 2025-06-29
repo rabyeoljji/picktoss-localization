@@ -119,7 +119,7 @@ const MyStarPage = () => {
                   <div
                     className="bg-accent rounded-[12px] py-[16px] px-[24px] flex items-center justify-between"
                     onClick={() => {
-                      trackEvent('invite_view', { location: '마이 페이지' })
+                      trackEvent('invite_view', { location: '나의 별 페이지' })
                     }}
                   >
                     <div className="flex flex-col gap-[4px]">

@@ -867,13 +867,14 @@ const NoteDetailPage = () => {
             <IcNote className="size-6" />
           </button>
           <DropdownMenu>
-            <DropdownMenuTrigger className="p-2">
-              <IcKebab
-                className="size-6"
+            <DropdownMenuTrigger className="p-2" asChild>
+              <button
                 onClick={() => {
                   trackEvent('library_detail_more_click')
                 }}
-              />
+              >
+                <IcKebab className="size-6" />
+              </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="-translate-y-2">
               <DropdownMenuItem right={<IcDownload />} onClick={handleDownloadQuizAsPdf}>

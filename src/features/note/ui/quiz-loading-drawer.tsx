@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router'
 
 import { toast } from 'sonner'
@@ -19,19 +19,16 @@ import { useOnceEffect } from '@/shared/hooks'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 
-import { useCreateNoteContext } from '../model/create-note-context'
-
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
 export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
-  const { pathname } = useLocation()
   const router = useRouter()
-  const { documentType } = useCreateNoteContext()
 
   // 로딩 상태를 queryParam으로 관리
   const [{ isLoading, documentId }, setParams] = useQueryParam('/note/create')
+  const [complete, setComplete] = useState(false)
 
   // 단계적 진행 타임라인 정의
   const progressTimeline = [
@@ -82,7 +79,11 @@ export const QuizLoadingDrawer = () => {
 
   useOnceEffect(() => {
     if (quizSetId != null) {
-      toast.success('문서가 생성되었습니다.')
+      completeAnimation()
+      setTimeout(() => {
+        setComplete(true)
+        toast.success('문서가 생성되었습니다.')
+      }, 500)
     }
   }, [quizSetId])
 
@@ -134,7 +135,7 @@ export const QuizLoadingDrawer = () => {
       )
     }
 
-    if (quizSetId != null) {
+    if (complete) {
       return (
         <div className="px-[57px] w-full center">
           <div className="flex-center flex-col">
@@ -150,21 +151,14 @@ export const QuizLoadingDrawer = () => {
           <div className="mt-10 w-full flex flex-col items-center">
             <Button
               onClick={() => {
-                trackEvent('generate_confirm_click', {
-                  location: pathname.startsWith('/note/create') ? '생성 페이지' : '상세 페이지',
-                  format: documentType === 'TEXT' ? '텍스트' : '파일',
-                  type: '전체',
+                trackEvent('generate_quiz_start_click')
+                router.replace('/progress-quiz/:quizSetId', {
+                  params: [String(quizSetId)],
+                  search: {
+                    documentId,
+                    prevUrl: `/library/${documentId}`,
+                  },
                 })
-                completeAnimation()
-                setTimeout(() => {
-                  router.replace('/progress-quiz/:quizSetId', {
-                    params: [String(quizSetId)],
-                    search: {
-                      documentId,
-                      prevUrl: `/library/${documentId}`,
-                    },
-                  })
-                }, 500)
               }}
             >
               시작하기

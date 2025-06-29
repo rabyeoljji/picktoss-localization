@@ -92,14 +92,8 @@ export interface ExploreShareClickProps {
 export interface ExploreDetailClickProps {}
 
 // 퀴즈 생성 이벤트
-/** [퀴즈 생성] generate_quiz_click - 퀴즈 생성하기' 버튼 클릭 */
-export interface GenerateQuizClickProps {
-  location: '생성 페이지' | '상세 페이지'
-}
-
 /** [퀴즈 생성] generate_confirm_click - 완료' 버튼 클릭 */
 export interface GenerateConfirmClickProps {
-  location: '생성 페이지' | '상세 페이지'
   format: '텍스트' | '파일'
   type: '전체' | '객관식' | 'O/X'
 }
@@ -209,7 +203,6 @@ export type EventName =
   | 'explore_share_click'
   | 'explore_detail_click'
   // 퀴즈 생성
-  | 'generate_quiz_click'
   | 'generate_confirm_click'
   | 'generate_quiz_start_click'
   | 'generate_quiz_later_click'
@@ -263,7 +256,6 @@ export type EventPropsMap = {
   explore_share_click: ExploreShareClickProps
   explore_detail_click: ExploreDetailClickProps
   // 퀴즈 생성
-  generate_quiz_click: GenerateQuizClickProps
   generate_confirm_click: GenerateConfirmClickProps
   generate_quiz_start_click: GenerateQuizStartClickProps
   generate_quiz_later_click: GenerateQuizLaterClickProps
