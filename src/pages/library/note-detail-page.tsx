@@ -124,6 +124,8 @@ const NoteDetailPage = () => {
   const [editTargetQuizId, setEditTargetQuizId] = useState<number | null>(null)
   const [isCreatingNewQuizzes, setIsCreatingNewQuizzes] = useState(false)
 
+  const [playDrawerOpen, setPlayDrawerOpen] = useState(false)
+
   const { data: categories } = useGetCategories()
 
   const { mutate: updateDocumentName } = useUpdateDocumentName()
@@ -794,58 +796,15 @@ const NoteDetailPage = () => {
         <div className="h-[24px] w-px bg-gray-100 mx-[16px] shrink-0" />
 
         <div className="flex items-center text-icon-secondary">
-          <Drawer>
-            <DrawerTrigger
-              asChild
-              onClick={() => {
-                trackEvent('library_detail_play_click')
-              }}
-            >
-              <button className="p-2">
-                <IcPlay className="size-6" />
-              </button>
-            </DrawerTrigger>
-            <DrawerContent height="sm">
-              <div className="py-[20px]">
-                <Text typo="body-1-medium" color="sub" className="text-center">
-                  풀 문제 수
-                </Text>
-                <Text typo="h2" color="accent" className="mt-1 text-center">
-                  {selectedQuizCount} 문제
-                </Text>
-                {document && (
-                  <div className="mt-[32px]">
-                    <Slider
-                      min={1}
-                      max={maxQuizCount}
-                      step={1}
-                      defaultValue={[maxQuizCount ?? 0]}
-                      value={[selectedQuizCount]}
-                      onValueChange={(value) => setSelectedQuizCount(value[0])}
-                    />
-                    <div className="mt-[12px] flex items-center justify-between">
-                      <Text typo="body-2-medium" color="sub">
-                        1 문제
-                      </Text>
-                      <Text typo="body-2-medium" color="sub">
-                        {maxQuizCount} 문제
-                      </Text>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              <DrawerFooter className="h-[114px]">
-                <Button
-                  onClick={() => handlePlay(selectedQuizCount)}
-                  className="mt-[14px]"
-                  disabled={isCreatingQuizSet}
-                >
-                  {isCreatingQuizSet ? <Spinner className="size-6" /> : '퀴즈 시작하기'}
-                </Button>
-              </DrawerFooter>
-            </DrawerContent>
-          </Drawer>
+          <button
+            className="p-2"
+            onClick={() => {
+              trackEvent('library_detail_play_click')
+              setPlayDrawerOpen(true)
+            }}
+          >
+            <IcPlay className="size-6" />
+          </button>
           <button
             className="p-2"
             onClick={() => {
@@ -889,6 +848,46 @@ const NoteDetailPage = () => {
           </DropdownMenu>
         </div>
       </div>
+
+      {/* 풀 문제 수 drawer */}
+      <Drawer open={playDrawerOpen} onOpenChange={setPlayDrawerOpen}>
+        <DrawerContent height="sm">
+          <div className="py-[20px]">
+            <Text typo="body-1-medium" color="sub" className="text-center">
+              풀 문제 수
+            </Text>
+            <Text typo="h2" color="accent" className="mt-1 text-center">
+              {selectedQuizCount} 문제
+            </Text>
+            {document && (
+              <div className="mt-[32px]">
+                <Slider
+                  min={1}
+                  max={maxQuizCount}
+                  step={1}
+                  defaultValue={[maxQuizCount ?? 0]}
+                  value={[selectedQuizCount]}
+                  onValueChange={(value) => setSelectedQuizCount(value[0])}
+                />
+                <div className="mt-[12px] flex items-center justify-between">
+                  <Text typo="body-2-medium" color="sub">
+                    1 문제
+                  </Text>
+                  <Text typo="body-2-medium" color="sub">
+                    {maxQuizCount} 문제
+                  </Text>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <DrawerFooter className="h-[114px]">
+            <Button onClick={() => handlePlay(selectedQuizCount)} className="mt-[14px]" disabled={isCreatingQuizSet}>
+              {isCreatingQuizSet ? <Spinner className="size-6" /> : '퀴즈 시작하기'}
+            </Button>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
 
       {/* 문제 수정 drawer */}
       <AlertDrawer
