@@ -1,29 +1,4 @@
 {
-  "version": 2,
-  "functions": {
-    "api/**/*.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "headers": [
-    {
-      "source": "/api/og",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        },
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Access-Control-Allow-Methods",
-          "value": "GET, OPTIONS"
-        }
-      ]
-    }
-  ],
   "rewrites": [
     {
       "source": "/library/:id",
@@ -34,7 +9,7 @@
           "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
         }
       ],
-      "destination": "/api/library/:id"
+      "destination": "/index.html"
     },
     {
       "source": "/explore",
@@ -45,7 +20,7 @@
           "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
         }
       ],
-      "destination": "/api/explore"
+      "destination": "/index.html"
     },
     {
       "source": "/explore/detail/:id",
@@ -56,7 +31,7 @@
           "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
         }
       ],
-      "destination": "/api/explore/detail/:id"
+      "destination": "/index.html"
     },
     {
       "source": "/((?!api/).*)",
