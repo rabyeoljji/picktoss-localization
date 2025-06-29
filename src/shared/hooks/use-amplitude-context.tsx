@@ -56,8 +56,8 @@ export interface LibraryQuizEditClickProps {}
 /** [도서관] library_share_click - 노트 상세 공유하기 버튼 클릭 */
 export interface LibraryShareClickProps {}
 
-/** [도서관] library_detail_play_click - 노트 상세 툴바- 플레이 버튼 클릭 */
-export interface LibraryDetailPlayClickProps {}
+/** [도서관] library_detail_p_click - 노트 상세 툴바- 플레이 버튼 클릭 */
+export interface LibraryDetailPClickProps {}
 
 /** [도서관] library_detail_review_click - 노트 상세 툴바- 복습 pick 버튼 클릭 */
 export interface LibraryDetailReviewClickProps {}
@@ -206,7 +206,7 @@ export type EventName =
   | 'library_item_click'
   | 'library_quiz_edit_click'
   | 'library_share_click'
-  | 'library_detail_play_click'
+  | 'library_detail_p_click'
   | 'library_detail_review_click'
   | 'library_detail_note_click'
   | 'library_detail_download_click'
@@ -263,7 +263,7 @@ export type EventPropsMap = {
   library_item_click: LibraryItemClickProps
   library_quiz_edit_click: LibraryQuizEditClickProps
   library_share_click: LibraryShareClickProps
-  library_detail_play_click: LibraryDetailPlayClickProps
+  library_detail_p_click: LibraryDetailPClickProps
   library_detail_review_click: LibraryDetailReviewClickProps
   library_detail_note_click: LibraryDetailNoteClickProps
   library_detail_download_click: LibraryDetailDownloadClickProps

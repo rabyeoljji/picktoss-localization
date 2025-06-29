@@ -51,11 +51,11 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
     }
 
     if (to === '/') {
-      trackEvent('daily_click', {})
+      trackEvent('daily_click')
     } else if (to === '/explore') {
-      trackEvent('explore_click', {})
+      trackEvent('explore_click')
     } else if (to === '/library') {
-      trackEvent('library_click', {})
+      trackEvent('library_click')
     }
 
     if (isPWA) {

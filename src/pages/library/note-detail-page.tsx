@@ -797,7 +797,7 @@ const NoteDetailPage = () => {
           <button
             className="p-2"
             onClick={() => {
-              trackEvent('library_detail_play_click')
+              trackEvent('library_detail_p_click')
               setPlayDrawerOpen(true)
             }}
           >
