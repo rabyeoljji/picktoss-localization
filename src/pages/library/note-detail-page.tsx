@@ -327,7 +327,7 @@ const NoteDetailPage = () => {
                     <div className="relative bg-disabled rounded-[8px]">
                       <Input
                         disabled={true}
-                        value={`https://app.picktoss.com/explore/detail/${noteId}`}
+                        value={`${window.location.origin}/explore/detail/${noteId}`}
                         className="w-[calc(100%-70px)] truncate"
                       />
                       <SquareButton
@@ -335,7 +335,7 @@ const NoteDetailPage = () => {
                         size="sm"
                         className="absolute right-[12px] bottom-1/2 translate-y-1/2"
                         onClick={() => {
-                          navigator.clipboard.writeText(`https://app.picktoss.com/explore/detail/${noteId}`)
+                          navigator.clipboard.writeText(`${window.location.origin}/explore/detail/${noteId}`)
                           toast('링크가 복사되었어요.')
                         }}
                       >
@@ -351,7 +351,7 @@ const NoteDetailPage = () => {
                           .share({
                             title: document?.name || '',
                             text: `${document?.name}을 확인해보세요!`,
-                            url: `https://app.picktoss.com/explore/detail/${noteId}`,
+                            url: `${window.location.origin}/explore/detail/${noteId}`,
                           })
                           .catch((error) => {
                             if (error.name !== 'AbortError') {
@@ -360,7 +360,7 @@ const NoteDetailPage = () => {
                           })
                       } else {
                         // 공유 API를 지원하지 않는 환경에서는 클립보드에 복사
-                        navigator.clipboard.writeText(`https://app.picktoss.com/explore/detail/${noteId}`)
+                        navigator.clipboard.writeText(`${window.location.origin}/explore/detail/${noteId}`)
                         toast('링크가 복사되었어요')
                       }
                     }}

@@ -294,7 +294,7 @@ const ExploreSwipeCard = ({
       try {
         await navigator.share({
           title: name,
-          url: `${window.location.origin}/explore/detail/${id}`, // 추후 picktoss.com으로 변경
+          url: `${window.location.origin}/explore/detail/${id}`,
         })
         console.log('공유 성공')
       } catch (error) {

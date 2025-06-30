@@ -59,7 +59,7 @@ const MyNotesContent = ({
       try {
         await navigator.share({
           title: name,
-          url: `https://app.picktoss.com/explore/detail/${id}`,
+          url: `${window.location.origin}/explore/detail/${id}`,
         })
         console.log('공유 성공')
       } catch (error) {

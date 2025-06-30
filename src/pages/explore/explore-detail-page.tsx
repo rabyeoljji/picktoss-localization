@@ -160,7 +160,7 @@ const ExploreDetailPage = () => {
       try {
         await navigator.share({
           title: document.name,
-          url: `https://app.picktoss.com/explore/detail/${document.id}`,
+          url: `${window.location.origin}/explore/detail/${noteId}`,
         })
         console.log('공유 성공')
       } catch (error) {
