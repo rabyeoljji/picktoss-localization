@@ -1,27 +1,6 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    {
-      "source": "/library/:id",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
-        }
-      ],
-      "destination": "/index.html"
-    },
-    {
-      "source": "/explore",
-      "has": [
-        {
-          "type": "header",
-          "key": "user-agent",
-          "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
-        }
-      ],
-      "destination": "/index.html"
-    },
     {
       "source": "/explore/detail/:id",
       "has": [
@@ -31,10 +10,10 @@
           "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk).*"
         }
       ],
-      "destination": "/index.html"
+      "destination": "https://app.picktoss.com/explore/detail/:id"
     },
     {
-      "source": "/((?!api/).*)",
+      "source": "/:path((?!api/).*)",
       "destination": "/index.html"
     }
   ]
