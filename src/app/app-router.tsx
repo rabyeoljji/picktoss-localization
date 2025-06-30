@@ -31,7 +31,6 @@ import { LibraryPage, LibrarySearchPage, NoteDetailPage, NoteEditPage, NoteQuizP
 import { NoteCreatePage } from '@/pages/note-create'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
 import SearchPage from '@/pages/search-page'
-import TestOgTagsPage from '@/pages/test-og-tags-page'
 
 import { AuthLayout } from '@/app/layout/auth-layout'
 import { PWAOnlyMobileLayout } from '@/app/layout/pwa-only-mobile-layout'
@@ -115,8 +114,6 @@ export const AppRouter = () => {
             {/* Invite */}
             <Route path={RoutePath.invite} element={<InvitePage />} />
             <Route path={RoutePath.inviteLogin} element={<InviteLoginPage />} />
-
-            <Route path={RoutePath.testOgTags} element={<TestOgTagsPage />} />
 
             {/* Install Induce */}
             <Route path={RoutePath.installGuide} element={<InstallGuidePage />} />
