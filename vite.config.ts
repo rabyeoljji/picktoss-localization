@@ -8,7 +8,18 @@ import svgr from 'vite-plugin-svgr'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      babel: {
+        plugins: [
+          [
+            '@locator/babel-jsx/dist',
+            {
+              env: 'development',
+            },
+          ],
+        ],
+      },
+    }),
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
