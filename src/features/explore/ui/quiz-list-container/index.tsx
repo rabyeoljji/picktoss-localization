@@ -97,7 +97,6 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
         height: `calc(100vh - var(--safe-area-inset-top)${accessMobileWeb ? '' : ' - 186px'})`,
         overscrollBehaviorY: 'none',
       }}
-      // ref={containerRef}
       className="relative w-full pt-[8px] flex flex-col items-center bg-base-2"
     >
       {documents.reduce<React.ReactNode[]>((acc, document, index) => {
