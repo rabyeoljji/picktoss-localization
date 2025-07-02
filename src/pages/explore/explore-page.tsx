@@ -109,7 +109,9 @@ const ExplorePage = () => {
         ref={listScrollRef}
         className={cn(
           'overscroll-none h-full overflow-y-auto scrollbar-hide',
-          hideHeader && 'pt-0 h-[calc(100vh-var(--spacing-tab-navigation))]',
+          isMobile && 'h-[calc(100dvh-var(--safe-area-inset-top)-var(--safe-area-inset-bottom))]',
+          hideHeader && 'pt-0',
+          hideHeader && !isMobile && 'h-[calc(100vh-var(--spacing-tab-navigation))]',
         )}
       >
         {/* 앱 다운로드 배너 */}
@@ -216,7 +218,10 @@ const CreateQuizButton = () => {
 
   return (
     <button
-      className="absolute bg-base-3 rounded-full bottom-[calc(var(--spacing-tab-navigation)+12px)] left-1/2 -translate-x-1/2 h-[48px] w-[calc(100%-32px)] border border-box shadow-[var(--shadow-drop)]"
+      className={cn(
+        'absolute bg-base-3 rounded-full bottom-[12px] left-1/2 -translate-x-1/2 h-[48px] w-[calc(100%-32px)] border border-box shadow-[var(--shadow-drop)]',
+        !isMobile && 'bottom-[calc(var(--spacing-tab-navigation)+12px)]',
+      )}
       onClick={() => {
         router.push('/note/create', {
           search: {
