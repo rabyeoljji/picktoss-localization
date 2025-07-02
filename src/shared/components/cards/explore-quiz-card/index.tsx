@@ -54,27 +54,37 @@ const ExploreQuizCardHeader = ({ emoji, title, creator }: { emoji: string; title
 const ExploreQuizCardQuizzes = ({
   onClickMoveToDetailPageBtn,
   quizzes,
+  isFetching,
 }: {
   onClickMoveToDetailPageBtn: () => void
   quizzes: { id: number; question: string }[]
+  isFetching?: boolean
 }) => {
   const showQuizList = quizzes.length > 3 ? quizzes.slice(0, 3) : quizzes
 
   return (
     <div className="flex flex-col gap-[10px] pl-[16px]">
       <div className="flex items-center gap-[8px] overflow-x-auto scrollbar-hide">
-        {showQuizList.map((quiz) => (
-          <div
-            key={`quiz-${quiz.id}`}
-            className={cn(
-              'bg-base-2 py-[12px] px-[16px] w-[280px] h-[64px] rounded-[12px] flex-center flex-shrink-0 border-1 border-outline',
-            )}
-          >
-            <Text typo="body-1-medium" color="sub" className="line-clamp-2">
-              {quiz.question}
-            </Text>
-          </div>
-        ))}
+        {isFetching ? (
+          <>
+            <div className="flex-shrink-0 w-[280px] h-[64px] rounded-[12px]  bg-[linear-gradient(120deg,#f8f8f7_25%,#ffffff_50%,#f8f8f7_75%)] bg-[length:200%_100%] animate-[skeleton_1.8s_linear_infinite]"></div>
+            <div className="flex-shrink-0 w-[280px] h-[64px] rounded-[12px] bg-[linear-gradient(120deg,#f8f8f7_25%,#ffffff_50%,#f8f8f7_75%)] bg-[length:200%_100%] animate-[skeleton_1.8s_linear_infinite]"></div>
+            <div className="flex-shrink-0 w-[280px] h-[64px] rounded-[12px] bg-[linear-gradient(120deg,#f8f8f7_25%,#ffffff_50%,#f8f8f7_75%)] bg-[length:200%_100%] animate-[skeleton_1.8s_linear_infinite]"></div>
+          </>
+        ) : (
+          showQuizList.map((quiz) => (
+            <div
+              key={`quiz-${quiz.id}`}
+              className={cn(
+                'bg-base-2 py-[12px] px-[16px] w-[280px] h-[64px] rounded-[12px] flex-center flex-shrink-0 border-1 border-outline',
+              )}
+            >
+              <Text typo="body-1-medium" color="sub" className="line-clamp-2">
+                {quiz.question}
+              </Text>
+            </div>
+          ))
+        )}
         <ButtonSolidIcon onClick={onClickMoveToDetailPageBtn} size={'md'} variant={'tertiary'} className="mr-[16px]">
           <IcChevronRight className="text-icon-sub" />
         </ButtonSolidIcon>

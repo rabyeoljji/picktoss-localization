@@ -49,6 +49,7 @@
   --color-yellow: #ffe45f;
 
   --shadow-md: 0 4px 28px 0 rgba(0, 0, 0, 0.1);
+  --shadow-drop: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
 
   --header-height: 54px;
 
@@ -195,5 +196,14 @@ body::-webkit-scrollbar {
   100% {
     transform: translateX(0);
     opacity: 1;
+  }
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
   }
 }
