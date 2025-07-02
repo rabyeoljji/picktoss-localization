@@ -129,7 +129,7 @@ const ExplorePage = () => {
         <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
 
         {/* 새로운 퀴즈 만들기 버튼 */}
-        <CreateQuizButton />
+        {!hideHeader && <CreateQuizButton />}
       </HeaderOffsetLayout>
     </>
   )

@@ -194,27 +194,13 @@ export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' 
 
 export const useGetPublicDocuments = ({
   categoryId,
-  // page,
   pageSize,
-  // enabled,
 }: {
   categoryId?: number
   page?: number
   pageSize?: number
   enabled?: boolean
 }) => {
-  // return useQuery({
-  //   queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId, page],
-  //   queryFn: () => getPublicDocuments({ categoryId, page, pageSize }),
-  //   enabled: enabled ?? true,
-  //   select: (data) => ({
-  //     ...data,
-  //     documents: data.documents.map((doc) => ({
-  //       ...doc,
-  //       quizzes: doc.quizzes.sort((a, b) => b.id - a.id),
-  //     })),
-  //   }),
-  // })
   const query = useInfiniteQuery({
     queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId],
     queryFn: ({ pageParam = 0 }) => getPublicDocuments({ categoryId, pageSize, page: pageParam }),
@@ -223,7 +209,6 @@ export const useGetPublicDocuments = ({
       const nextPage = allPages.length
       return nextPage < lastPage.totalPages ? nextPage : undefined
     },
-    // placeholderData: keepPreviousData,
   })
 
   return {
