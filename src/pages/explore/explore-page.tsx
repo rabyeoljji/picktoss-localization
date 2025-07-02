@@ -57,7 +57,7 @@ const ExplorePage = () => {
   }
 
   useEffect(() => {
-    let prevScrollY = listScrollRef.current?.scrollTop ?? 0 // 클로저 변수
+    let prevScrollY = listScrollRef.current?.scrollTop ?? 0
 
     const handleScroll = () => {
       const currentY = listScrollRef.current?.scrollTop ?? 0
@@ -66,7 +66,7 @@ const ExplorePage = () => {
       } else {
         setHideHeader(false)
       }
-      prevScrollY = currentY // 클로저 값 업데이트
+      prevScrollY = currentY
     }
 
     listScrollRef.current?.addEventListener('scroll', handleScroll)
@@ -122,7 +122,7 @@ const ExplorePage = () => {
         {/* 카테고리 선택 탭 */}
         <CategoryTab />
 
-        {/* 카드 스와이프 영역 */}
+        {/* 퀴즈 리스트 영역 */}
         <QuizListContainer scrollRef={listScrollRef} />
 
         {/* 로그인 모달 */}
@@ -141,6 +141,7 @@ export default withHOC(ExplorePage, {
   backgroundClassName: 'bg-surface-2 h-fit',
 })
 
+// 카테고리 선택 탭 컴포넌트
 const CategoryTab = () => {
   const { trackEvent } = useAmplitude()
 
@@ -207,6 +208,7 @@ const CategoryTab = () => {
   )
 }
 
+// 새로운 퀴즈 만들기 버튼 컴포넌트
 const CreateQuizButton = () => {
   const { trackEvent } = useAmplitude()
 
@@ -251,6 +253,7 @@ const CreateQuizButton = () => {
   )
 }
 
+// 앱 다운로드 배너 컴포넌트
 const AppDownloadBanner = ({ onClick, onClose }: { onClick: () => void; onClose: () => void }) => {
   return (
     <div
@@ -306,6 +309,7 @@ const AppDownloadBanner = ({ onClick, onClose }: { onClick: () => void; onClose:
   )
 }
 
+// pc 화면에서 다운로드 배너 클릭 시 노출될 QR코드 drawer 컴포넌트
 const DesktopDownloadQRDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>
