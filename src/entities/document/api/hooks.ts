@@ -441,10 +441,10 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
     onSettled: async () => {
       // 모든 관련 쿼리 무효화
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] }),
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] }),
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments }),
       ])
     },
   })
@@ -457,10 +457,10 @@ export const useCreateDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.createDocumentBookmark(documentId),
     mutationFn: () => createDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
     },
   })
 }
@@ -472,10 +472,10 @@ export const useDeleteDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.deleteDocumentBookmark(documentId),
     mutationFn: () => deleteDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
     },
   })
 }
@@ -494,10 +494,9 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
     mutationFn: (data: UpdateDocumentIsPublicRequest) => updateDocumentIsPublic(documentId, data),
     onSuccess: async () => {
-      await queryClient.refetchQueries({ queryKey: [DOCUMENT_KEYS.getSingleDocument(documentId)] })
-
-      await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
     },
   })
 }
