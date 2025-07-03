@@ -212,5 +212,16 @@ export const useDeleteQuiz = () => {
         }),
       )
     },
+    onSuccess: (_, { documentId }) => {
+      queryClient.invalidateQueries({
+        queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId),
+      })
+      queryClient.invalidateQueries({
+        queryKey: DOCUMENT_KEYS.getPublicDocuments,
+      })
+    },
   })
 }

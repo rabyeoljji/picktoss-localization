@@ -102,8 +102,8 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
       {documents.reduce<React.ReactNode[]>((acc, document, index) => {
         const isTarget = index === documents.length - 5
         const showShareCard = index === 2
-        const showAd = index % 3 === 2
-        const adIndex = Math.floor(index / 3)
+        // const showAd = index % 3 === 2
+        // const adIndex = Math.floor(index / 3)
 
         acc.push(
           <div
@@ -123,13 +123,13 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
           acc.push(<ShareCard key="share-card" notPublicCount={notPublicCount} />)
         }
 
-        if (showAd) {
-          acc.push(
-            <div key={`ad-${adIndex + 1}`} id={`ad-${adIndex + 1}`}>
-              광고
-            </div>,
-          )
-        }
+        // if (showAd) {
+        //   acc.push(
+        //     <div key={`ad-${adIndex + 1}`} id={`ad-${adIndex + 1}`}>
+        //       광고
+        //     </div>,
+        //   )
+        // }
 
         return acc
       }, [])}
