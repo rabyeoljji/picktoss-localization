@@ -16,7 +16,6 @@ import {
 } from '@/entities/document/api/hooks'
 
 import { IcBookmarkFilled, IcLibrary } from '@/shared/assets/icon'
-import ExploreListAds from '@/shared/components/ads/explore-list-ads'
 import { ExploreQuizCard } from '@/shared/components/cards/explore-quiz-card'
 import { Button } from '@/shared/components/ui/button'
 import Loading from '@/shared/components/ui/loading'
@@ -103,8 +102,8 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
       {documents.reduce<React.ReactNode[]>((acc, document, index) => {
         const isTarget = index === documents.length - 5
         const showShareCard = index === 2 && notPublicCount > 0
-        const showAd = index % 3 === 2
-        const adIndex = Math.floor(index / 3)
+        // const showAd = index % 3 === 2
+        // const adIndex = Math.floor(index / 3)
 
         acc.push(
           <div
@@ -124,9 +123,9 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
           acc.push(<ShareCard key="share-card" notPublicCount={notPublicCount} />)
         }
 
-        if (showAd) {
-          acc.push(<ExploreListAds key={`ad-${adIndex + 1}`} />)
-        }
+        // if (showAd) {
+        //   acc.push(<div />)
+        // }
 
         return acc
       }, [])}
