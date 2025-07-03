@@ -15,6 +15,7 @@ import {
   SearchPublicDocumentsResponse,
   UpdateDocumentContentRequest,
   UpdateDocumentEmojiRequest,
+  UpdateDocumentIsPublicRequest,
   UpdateDocumentNameRequest,
   addQuizzes,
   createDocument,
@@ -483,10 +484,12 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
 
   return useMutation({
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
-    mutationFn: (data: Parameters<typeof updateDocumentIsPublic>[1]) => updateDocumentIsPublic(documentId, data),
+    mutationFn: (data: UpdateDocumentIsPublicRequest) => updateDocumentIsPublic(documentId, data),
     onSuccess: async () => {
+      await queryClient.refetchQueries({ queryKey: [DOCUMENT_KEYS.getSingleDocument(documentId)] })
+
       await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getSingleDocument(documentId)] })
+      await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
     },
   })
 }
