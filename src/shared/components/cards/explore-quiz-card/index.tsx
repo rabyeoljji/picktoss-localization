@@ -1,7 +1,6 @@
 import React from 'react'
 
-import { IcBookmark, IcBookmarkFilled, IcChevronRight, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
-import { ButtonSolidIcon } from '@/shared/components/ui/button-solid-icon'
+import { IcBookmark, IcBookmarkFilled, IcPlayFilled, IcUpload } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
 
@@ -52,7 +51,6 @@ const ExploreQuizCardHeader = ({ emoji, title, creator }: { emoji: string; title
 }
 
 const ExploreQuizCardQuizzes = ({
-  onClickMoveToDetailPageBtn,
   quizzes,
   isFetching,
 }: {
@@ -60,8 +58,6 @@ const ExploreQuizCardQuizzes = ({
   quizzes: { id: number; question: string }[]
   isFetching?: boolean
 }) => {
-  const showQuizList = quizzes.length > 3 ? quizzes.slice(0, 3) : quizzes
-
   return (
     <div className="flex flex-col gap-[10px] pl-[16px]">
       <div className="flex items-center gap-[8px] overflow-x-auto scrollbar-hide">
@@ -72,7 +68,7 @@ const ExploreQuizCardQuizzes = ({
             <div className="flex-shrink-0 w-[280px] h-[64px] rounded-[12px] bg-[linear-gradient(120deg,#f8f8f7_25%,#ffffff_50%,#f8f8f7_75%)] bg-[length:200%_100%] animate-[skeleton_1.8s_linear_infinite]"></div>
           </>
         ) : (
-          showQuizList.map((quiz) => (
+          quizzes.map((quiz) => (
             <div
               key={`quiz-${quiz.id}`}
               className={cn(
@@ -85,9 +81,6 @@ const ExploreQuizCardQuizzes = ({
             </div>
           ))
         )}
-        <ButtonSolidIcon onClick={onClickMoveToDetailPageBtn} size={'md'} variant={'tertiary'} className="mr-[16px]">
-          <IcChevronRight className="text-icon-sub" />
-        </ButtonSolidIcon>
       </div>
     </div>
   )
@@ -133,12 +126,24 @@ const ExploreQuizCardFooter = ({
       </div>
 
       <div className="flex gap-[8px]">
-        <button onClick={onClickShare} className="p-[8px]">
+        <button
+          onClick={(e) => {
+            e.stopPropagation()
+            onClickShare()
+          }}
+          className="p-[8px]"
+        >
           <IcUpload className="size-[20px]" />
         </button>
 
         {!isOwner && (
-          <button onClick={onClickBookmark} className="p-[8px]">
+          <button
+            onClick={(e) => {
+              e.stopPropagation()
+              onClickBookmark()
+            }}
+            className="p-[8px]"
+          >
             {isBookmarked ? (
               <IcBookmarkFilled className="size-[20px] text-icon-primary" />
             ) : (

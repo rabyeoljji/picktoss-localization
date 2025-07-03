@@ -213,6 +213,7 @@ const CategoryTab = () => {
 // 새로운 퀴즈 만들기 버튼 컴포넌트
 const CreateQuizButton = () => {
   const { trackEvent } = useAmplitude()
+  const token = useStore(useAuthStore, (state) => state.token)
 
   const router = useRouter()
 
@@ -223,6 +224,11 @@ const CreateQuizButton = () => {
         !isMobile && 'bottom-[calc(var(--spacing-tab-navigation)+12px)]',
       )}
       onClick={() => {
+        if (!token) {
+          router.push('/login')
+          return
+        }
+
         router.push('/note/create', {
           search: {
             documentType: 'TEXT',
@@ -240,6 +246,11 @@ const CreateQuizButton = () => {
       <button
         onClick={(e) => {
           e.stopPropagation()
+          if (!token) {
+            router.push('/login')
+            return
+          }
+
           router.push('/note/create', {
             search: {
               documentType: 'FILE',

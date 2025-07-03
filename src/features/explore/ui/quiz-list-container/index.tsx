@@ -280,7 +280,7 @@ const ExploreCard = ({
 
   return (
     <>
-      <ExploreQuizCard>
+      <ExploreQuizCard onClick={() => router.push('/explore/detail/:noteId', { params: [String(id)] })}>
         <ExploreQuizCard.Content>
           <ExploreQuizCard.Header emoji={emoji} title={name} creator={creator} />
           <ExploreQuizCard.Quizzes
