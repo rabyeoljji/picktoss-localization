@@ -109,9 +109,9 @@ const ExplorePage = () => {
         ref={listScrollRef}
         className={cn(
           'overscroll-none h-full overflow-y-auto scrollbar-hide',
-          isMobile && 'h-[calc(100dvh-var(--safe-area-inset-top)-var(--safe-area-inset-bottom))]',
+          isMobile && !isPWA && 'h-[calc(100dvh-var(--safe-area-inset-top)-var(--safe-area-inset-bottom))]',
           hideHeader && 'pt-0',
-          hideHeader && !isMobile && 'h-[calc(100vh-var(--spacing-tab-navigation))]',
+          hideHeader && (!isMobile || isPWA) && 'h-[calc(100vh-var(--spacing-tab-navigation))]',
         )}
       >
         {/* 앱 다운로드 배너 */}
