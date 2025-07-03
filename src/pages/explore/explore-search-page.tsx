@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { isMobile } from 'react-device-detect'
 
 import { useStore } from 'zustand'
 
@@ -24,10 +25,14 @@ import { Header } from '@/shared/components/header'
 import Loading from '@/shared/components/ui/loading'
 import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
+import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
 import { StorageKey } from '@/shared/lib/storage'
+import { cn } from '@/shared/lib/utils'
 
 const ExploreSearchPage = () => {
+  const { isPWA } = usePWA()
+
   const {
     inputValue,
     setInputValue,
@@ -64,7 +69,12 @@ const ExploreSearchPage = () => {
   }
 
   return (
-    <div className="h-screen bg-base-1 flex flex-col">
+    <div
+      className={cn(
+        'h-full bg-base-1 flex flex-col',
+        isMobile && !isPWA && 'h-[calc(100%-var(--safe-area-inset-top))]',
+      )}
+    >
       <Header
         left={<BackButton className="mr-1" />}
         content={
