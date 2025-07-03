@@ -1,4 +1,11 @@
-import { UseQueryOptions, keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  UseQueryOptions,
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
@@ -15,6 +22,7 @@ import {
   SearchPublicDocumentsResponse,
   UpdateDocumentContentRequest,
   UpdateDocumentEmojiRequest,
+  UpdateDocumentIsPublicRequest,
   UpdateDocumentNameRequest,
   addQuizzes,
   createDocument,
@@ -187,27 +195,28 @@ export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' 
 
 export const useGetPublicDocuments = ({
   categoryId,
-  page,
   pageSize,
-  enabled,
 }: {
   categoryId?: number
   page?: number
   pageSize?: number
   enabled?: boolean
 }) => {
-  return useQuery({
-    queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId, page],
-    queryFn: () => getPublicDocuments({ categoryId, page, pageSize }),
-    enabled: enabled ?? true,
-    select: (data) => ({
-      ...data,
-      documents: data.documents.map((doc) => ({
-        ...doc,
-        quizzes: doc.quizzes.sort((a, b) => b.id - a.id),
-      })),
-    }),
+  const query = useInfiniteQuery({
+    queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId],
+    queryFn: ({ pageParam = 0 }) => getPublicDocuments({ categoryId, pageSize, page: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length
+      return nextPage < lastPage.totalPages ? nextPage : undefined
+    },
   })
+
+  return {
+    ...query,
+    isInitialFetching: !query.data && query.isFetching,
+    documents: query?.data?.pages?.flatMap((page) => page?.documents ?? []).flat() ?? [],
+  }
 }
 
 export const useGetPublicSingleDocument = (documentId: number, sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY') => {
@@ -432,10 +441,10 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
     onSettled: async () => {
       // 모든 관련 쿼리 무효화
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] }),
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] }),
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
-        queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) }),
+        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments }),
       ])
     },
   })
@@ -448,10 +457,10 @@ export const useCreateDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.createDocumentBookmark(documentId),
     mutationFn: () => createDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
     },
   })
 }
@@ -463,10 +472,10 @@ export const useDeleteDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.deleteDocumentBookmark(documentId),
     mutationFn: () => deleteDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] })
-      queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
     },
   })
 }
@@ -483,10 +492,11 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
 
   return useMutation({
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
-    mutationFn: (data: Parameters<typeof updateDocumentIsPublic>[1]) => updateDocumentIsPublic(documentId, data),
+    mutationFn: (data: UpdateDocumentIsPublicRequest) => updateDocumentIsPublic(documentId, data),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] })
-      await queryClient.invalidateQueries({ queryKey: [DOCUMENT_KEYS.getSingleDocument(documentId)] })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
     },
   })
 }

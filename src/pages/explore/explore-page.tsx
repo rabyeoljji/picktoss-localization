@@ -8,11 +8,11 @@ import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useAuthStore } from '@/features/auth'
 import LoginDialog from '@/features/explore/ui/login-dialog'
-import QuizVerticalSwipe from '@/features/explore/ui/quiz-vertical-swipe'
+import QuizListContainer from '@/features/explore/ui/quiz-list-container'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
 
-import { IcClose, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
+import { IcClose, IcFile, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import { Chip } from '@/shared/components/ui/chip'
 import { Drawer, DrawerContent, DrawerHeader } from '@/shared/components/ui/drawer'
@@ -26,22 +26,15 @@ import { cn } from '@/shared/lib/utils'
 const ExplorePage = () => {
   const token = useStore(useAuthStore, (state) => state.token)
 
-  const { trackEvent } = useAmplitude()
   const router = useRouter()
   const { isPWA } = usePWA()
+
+  const listScrollRef = useRef<HTMLDivElement>(null)
+  const [hideHeader, setHideHeader] = useState(false)
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState(!isPWA && isMobile)
   const [isAppDownloadDrawerOpen, setIsAppDownloadDrawerOpen] = useState(false)
-
-  const { data: categoryData, isLoading } = useGetCategories()
-
-  const [params, setParams] = useQueryParam('/explore')
-  const activeCategory = params.category
-
-  const setCategory = (categoryId: number) => {
-    setParams({ ...params, category: categoryId })
-  }
 
   const scrollRef = useRef<HTMLDivElement>(null)
   useHorizontalScrollWheel(scrollRef)
@@ -64,6 +57,23 @@ const ExplorePage = () => {
   }
 
   useEffect(() => {
+    let prevScrollY = listScrollRef.current?.scrollTop ?? 0
+
+    const handleScroll = () => {
+      const currentY = listScrollRef.current?.scrollTop ?? 0
+      if (currentY > prevScrollY && currentY > 0) {
+        setHideHeader(true)
+      } else {
+        setHideHeader(false)
+      }
+      prevScrollY = currentY
+    }
+
+    listScrollRef.current?.addEventListener('scroll', handleScroll)
+    return () => listScrollRef.current?.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  useEffect(() => {
     if ((!isPWA && isMobile) || !isMobile) {
       // PWA가 아니고 모바일인 경우, 또는 pc 접근일 경우, 앱 다운로드 배너를 열도록 설정
       setIsAppDownloadBannerOpen(true)
@@ -74,120 +84,54 @@ const ExplorePage = () => {
 
   return (
     <>
-      <Header
-        className={cn('bg-surface-2')}
-        left={
-          <button onClick={handleProfileClick} className="size-[40px] flex-center">
-            <IcProfile className="size-[24px]" />
-          </button>
-        }
-        right={
-          <Link to={'/explore/search'} className="size-[40px] flex-center">
-            <IcSearch className="size-[24px]" />
-          </Link>
-        }
-        content={
-          <div className="center">
-            <IcLogo className="w-[102px] h-[26px]" />
-          </div>
-        }
-      />
+      {!hideHeader && (
+        <Header
+          className={cn('bg-surface-2')}
+          left={
+            <button onClick={handleProfileClick} className="size-[40px] flex-center">
+              <IcProfile className="size-[24px]" />
+            </button>
+          }
+          right={
+            <Link to={'/explore/search'} className="size-[40px] flex-center">
+              <IcSearch className="size-[24px]" />
+            </Link>
+          }
+          content={
+            <div className="center">
+              <IcLogo className="w-[102px] h-[26px]" />
+            </div>
+          }
+        />
+      )}
 
-      <HeaderOffsetLayout className="overscroll-none">
+      <HeaderOffsetLayout
+        ref={listScrollRef}
+        className={cn(
+          'overscroll-none h-full overflow-y-auto scrollbar-hide',
+          isMobile && 'h-[calc(100dvh-var(--safe-area-inset-top)-var(--safe-area-inset-bottom))]',
+          hideHeader && 'pt-0',
+          hideHeader && !isMobile && 'h-[calc(100vh-var(--spacing-tab-navigation))]',
+        )}
+      >
         {/* 앱 다운로드 배너 */}
         {isAppDownloadBannerOpen && (
           <AppDownloadBanner onClick={handleAppDownloadBannerClick} onClose={() => setIsAppDownloadBannerOpen(false)} />
         )}
         {/* pc 화면에서 다운로드 배너 클릭 시 노출될 QR코드 drawer */}
-        <Drawer open={isAppDownloadDrawerOpen} onOpenChange={setIsAppDownloadDrawerOpen}>
-          <DrawerContent height="lg" hasHandle={false}>
-            <div className="flex justify-end items-center">
-              <button onClick={() => setIsAppDownloadDrawerOpen(false)}>
-                <IcClose className="size-[24px] text-icon-secondary" />
-              </button>
-            </div>
-
-            <DrawerHeader className="flex-center flex-col gap-[8px]">
-              <Text typo="subtitle-1-bold" color="sub" className="text-center">
-                픽토스 앱 다운로드
-              </Text>
-              <Text typo="h3" className="text-center">
-                스토어 방문 없이 3초만에 <br />
-                픽토스에서 매일 성장해보세요!
-              </Text>
-            </DrawerHeader>
-
-            <div className="flex-center pt-[20px] pb-[32px]">
-              <Text typo="subtitle-2-medium" color="accent">
-                * 휴대폰으로 QR코드를 촬영해주세요
-              </Text>
-            </div>
-
-            <div className="relative size-[250px] w-full flex-center">
-              <div className="absolute">
-                <FocusBox />
-              </div>
-
-              <img
-                src="/images/QR_picktoss_app_install.png"
-                alt="픽토스 앱 다운로드 QR코드"
-                className="w-[208px] h-[208px]"
-              />
-            </div>
-          </DrawerContent>
-        </Drawer>
+        <DesktopDownloadQRDrawer open={isAppDownloadDrawerOpen} onOpenChange={setIsAppDownloadDrawerOpen} />
 
         {/* 카테고리 선택 탭 */}
-        <div ref={scrollRef} className=" bg-base-2 flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]">
-          {isLoading ? (
-            Array.from({ length: 7 }).map((_, index) => (
-              <div key={'tab-skeleton-' + index} className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
-            ))
-          ) : (
-            <>
-              {/* 전체 */}
-              <Chip
-                variant={activeCategory === 0 ? 'selected' : 'darken'}
-                left={activeCategory === 0 ? '💫' : undefined}
-                onClick={() => setCategory(0)}
-                className={cn('ml-[16px]')}
-              >
-                전체
-              </Chip>
+        <CategoryTab />
 
-              {/* Chip 요소들 */}
-              {categoryData &&
-                categoryData.map((category, index) => (
-                  <Chip
-                    key={index}
-                    variant={category.id === activeCategory ? 'selected' : 'darken'}
-                    left={category.id === activeCategory ? category.emoji : undefined}
-                    onClick={() => {
-                      setCategory(category.id)
-                      trackEvent('explore_category_click', {
-                        category: category.name as
-                          | '전체'
-                          | '자격증·수험'
-                          | '학문·전공'
-                          | 'IT·개발'
-                          | '재테크·시사'
-                          | '언어'
-                          | '상식·교양',
-                      })
-                    }}
-                  >
-                    {category.name}
-                  </Chip>
-                ))}
-            </>
-          )}
-        </div>
-
-        {/* 카드 스와이프 영역 */}
-        <QuizVerticalSwipe />
+        {/* 퀴즈 리스트 영역 */}
+        <QuizListContainer scrollRef={listScrollRef} />
 
         {/* 로그인 모달 */}
         <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+
+        {/* 새로운 퀴즈 만들기 버튼 */}
+        {!hideHeader && <CreateQuizButton />}
       </HeaderOffsetLayout>
     </>
   )
@@ -199,6 +143,122 @@ export default withHOC(ExplorePage, {
   backgroundClassName: 'bg-surface-2 h-fit',
 })
 
+// 카테고리 선택 탭 컴포넌트
+const CategoryTab = () => {
+  const { trackEvent } = useAmplitude()
+
+  const { data: categoryData, isLoading } = useGetCategories()
+
+  const [params, setParams] = useQueryParam('/explore')
+  const activeCategory = params.category
+
+  const setCategory = (categoryId: number) => {
+    setParams({ ...params, category: categoryId })
+  }
+
+  const scrollRef = useRef<HTMLDivElement>(null)
+  useHorizontalScrollWheel(scrollRef)
+
+  return (
+    <div
+      ref={scrollRef}
+      className="sticky top-0 z-10 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)] flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
+    >
+      {isLoading ? (
+        Array.from({ length: 7 }).map((_, index) => (
+          <div key={'tab-skeleton-' + index} className="h-[30px] w-[82px] rounded-full bg-base-3 animate-pulse" />
+        ))
+      ) : (
+        <>
+          {/* 전체 */}
+          <Chip
+            variant={activeCategory === 0 ? 'selected' : 'darken'}
+            left={activeCategory === 0 ? '💫' : undefined}
+            onClick={() => setCategory(0)}
+            className={cn('ml-[16px]')}
+          >
+            전체
+          </Chip>
+
+          {/* Chip 요소들 */}
+          {categoryData &&
+            categoryData.map((category, index) => (
+              <Chip
+                key={index}
+                variant={category.id === activeCategory ? 'selected' : 'darken'}
+                left={category.id === activeCategory ? category.emoji : undefined}
+                onClick={() => {
+                  setCategory(category.id)
+                  trackEvent('explore_category_click', {
+                    category: category.name as
+                      | '전체'
+                      | '자격증·수험'
+                      | '학문·전공'
+                      | 'IT·개발'
+                      | '재테크·시사'
+                      | '언어'
+                      | '상식·교양',
+                  })
+                }}
+              >
+                {category.name}
+              </Chip>
+            ))}
+        </>
+      )}
+    </div>
+  )
+}
+
+// 새로운 퀴즈 만들기 버튼 컴포넌트
+const CreateQuizButton = () => {
+  const { trackEvent } = useAmplitude()
+
+  const router = useRouter()
+
+  return (
+    <button
+      className={cn(
+        'absolute bg-base-3 rounded-full bottom-[12px] left-1/2 -translate-x-1/2 h-[48px] w-[calc(100%-32px)] border border-box shadow-[var(--shadow-drop)]',
+        !isMobile && 'bottom-[calc(var(--spacing-tab-navigation)+12px)]',
+      )}
+      onClick={() => {
+        router.push('/note/create', {
+          search: {
+            documentType: 'TEXT',
+          },
+        })
+        trackEvent('generate_new_click', {
+          format: '텍스트 버튼',
+          location: '데일리 페이지',
+        })
+      }}
+    >
+      <Text typo="subtitle-2-medium" color="sub" className="center">
+        새로운 퀴즈 만들기...
+      </Text>
+      <button
+        onClick={(e) => {
+          e.stopPropagation()
+          router.push('/note/create', {
+            search: {
+              documentType: 'FILE',
+            },
+          })
+          trackEvent('generate_new_click', {
+            format: '파일 버튼',
+            location: '데일리 페이지',
+          })
+        }}
+        className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
+      >
+        <IcFile className="size-5 text-white" />
+      </button>
+    </button>
+  )
+}
+
+// 앱 다운로드 배너 컴포넌트
 const AppDownloadBanner = ({ onClick, onClose }: { onClick: () => void; onClose: () => void }) => {
   return (
     <div
@@ -251,6 +311,49 @@ const AppDownloadBanner = ({ onClick, onClose }: { onClick: () => void; onClose:
         <IcClose className="size-[16px]" />
       </button>
     </div>
+  )
+}
+
+// pc 화면에서 다운로드 배너 클릭 시 노출될 QR코드 drawer 컴포넌트
+const DesktopDownloadQRDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+  return (
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerContent height="lg" hasHandle={false}>
+        <div className="flex justify-end items-center">
+          <button onClick={() => onOpenChange(false)}>
+            <IcClose className="size-[24px] text-icon-secondary" />
+          </button>
+        </div>
+
+        <DrawerHeader className="flex-center flex-col gap-[8px]">
+          <Text typo="subtitle-1-bold" color="sub" className="text-center">
+            픽토스 앱 다운로드
+          </Text>
+          <Text typo="h3" className="text-center">
+            스토어 방문 없이 3초만에 <br />
+            픽토스에서 매일 성장해보세요!
+          </Text>
+        </DrawerHeader>
+
+        <div className="flex-center pt-[20px] pb-[32px]">
+          <Text typo="subtitle-2-medium" color="accent">
+            * 휴대폰으로 QR코드를 촬영해주세요
+          </Text>
+        </div>
+
+        <div className="relative size-[250px] w-full flex-center">
+          <div className="absolute">
+            <FocusBox />
+          </div>
+
+          <img
+            src="/images/QR_picktoss_app_install.png"
+            alt="픽토스 앱 다운로드 QR코드"
+            className="w-[208px] h-[208px]"
+          />
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
 
