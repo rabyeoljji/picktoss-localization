@@ -99,10 +99,14 @@ const ExplorePage = () => {
   return (
     <>
       <Header
-        className={cn(
-          'bg-surface-2 transition-transform duration-300',
-          hideHeader ? '-translate-y-full pointer-events-none' : 'translate-y-0',
-        )}
+        className={cn('bg-surface-2', hideHeader ? 'pointer-events-none' : '')}
+        style={{
+          transition: hideHeader
+            ? 'transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s cubic-bezier(0.4,0,0.2,1) 0.15s'
+            : 'transform 0.3s cubic-bezier(0.4,0,0.2,1), opacity 0.3s cubic-bezier(0.4,0,0.2,1)',
+          transform: hideHeader ? 'translateY(calc(-1 * var(--header-height)))' : 'translateY(0)',
+          opacity: hideHeader ? 0 : 1,
+        }}
         left={
           <button onClick={handleProfileClick} className="size-[40px] flex-center">
             <IcProfile className="size-[24px]" />
