@@ -112,7 +112,8 @@ const ExplorePage = () => {
           'overscroll-none h-full overflow-y-auto scrollbar-hide',
           isMobile && !isPWA && 'h-[calc(100dvh-var(--safe-area-inset-top)-var(--safe-area-inset-bottom))]',
           hideHeader && 'pt-0',
-          hideHeader && (!isMobile || isPWA) && 'h-[calc(100vh-var(--spacing-tab-navigation))]',
+          hideHeader && !isMobile && 'h-[calc(100vh-var(--spacing-tab-navigation))]',
+          hideHeader && isMobile && isPWA && 'h-[calc(100vh-var(--safe-area-inset-top)-var(--spacing-tab-navigation))]',
         )}
       >
         {/* 앱 다운로드 배너 */}
