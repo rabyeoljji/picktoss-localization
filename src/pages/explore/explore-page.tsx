@@ -130,24 +130,30 @@ const ExplorePage = () => {
           hideHeader && isMobile && isPWA && 'h-[calc(100vh-var(--safe-area-inset-top)-var(--spacing-tab-navigation))]',
         )}
       >
-        {/* 앱 다운로드 배너 */}
-        {isAppDownloadBannerOpen && (
-          <AppDownloadBanner onClick={handleAppDownloadBannerClick} onClose={() => setIsAppDownloadBannerOpen(false)} />
-        )}
-        {/* pc 화면에서 다운로드 배너 클릭 시 노출될 QR코드 drawer */}
-        <DesktopDownloadQRDrawer open={isAppDownloadDrawerOpen} onOpenChange={setIsAppDownloadDrawerOpen} />
+        <div className="pt-[48px]">
+          {/* 앱 다운로드 배너 */}
+          {isAppDownloadBannerOpen && (
+            <AppDownloadBanner
+              onClick={handleAppDownloadBannerClick}
+              onClose={() => setIsAppDownloadBannerOpen(false)}
+              hideHeader={hideHeader}
+            />
+          )}
+          {/* pc 화면에서 다운로드 배너 클릭 시 노출될 QR코드 drawer */}
+          <DesktopDownloadQRDrawer open={isAppDownloadDrawerOpen} onOpenChange={setIsAppDownloadDrawerOpen} />
 
-        {/* 카테고리 선택 탭 */}
-        <CategoryTab />
+          {/* 카테고리 선택 탭 */}
+          <CategoryTab hideHeader={hideHeader} />
 
-        {/* 퀴즈 리스트 영역 */}
-        <QuizListContainer scrollRef={listScrollRef} />
+          {/* 퀴즈 리스트 영역 */}
+          <QuizListContainer scrollRef={listScrollRef} />
 
-        {/* 로그인 모달 */}
-        <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+          {/* 로그인 모달 */}
+          <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
 
-        {/* 새로운 퀴즈 만들기 버튼 */}
-        <CreateQuizButton hide={hideHeader} />
+          {/* 새로운 퀴즈 만들기 버튼 */}
+          <CreateQuizButton hide={hideHeader} />
+        </div>
       </HeaderOffsetLayout>
     </>
   )
@@ -160,7 +166,7 @@ export default withHOC(ExplorePage, {
 })
 
 // 카테고리 선택 탭 컴포넌트
-const CategoryTab = () => {
+const CategoryTab = ({ hideHeader }: { hideHeader: boolean }) => {
   const { trackEvent } = useAmplitude()
 
   const { data: categoryData, isLoading } = useGetCategories()
@@ -178,7 +184,11 @@ const CategoryTab = () => {
   return (
     <div
       ref={scrollRef}
-      className="sticky top-0 z-10 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)] flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]"
+      className={cn(
+        'fixed top-[var(--header-height-safe)] left-1/2 -translate-x-1/2 w-full max-w-xl z-10 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)] flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]',
+        'transition-transform duration-300',
+        hideHeader ? '-translate-y-[var(--header-height)]' : 'translate-y-0',
+      )}
     >
       {isLoading ? (
         Array.from({ length: 7 }).map((_, index) => (
@@ -289,10 +299,22 @@ const CreateQuizButton = ({ hide }: { hide: boolean }) => {
 }
 
 // 앱 다운로드 배너 컴포넌트
-const AppDownloadBanner = ({ onClick, onClose }: { onClick: () => void; onClose: () => void }) => {
+const AppDownloadBanner = ({
+  onClick,
+  onClose,
+  hideHeader,
+}: {
+  onClick: () => void
+  onClose: () => void
+  hideHeader: boolean
+}) => {
   return (
     <div
-      className="absolute z-[9999] w-full flex items-center justify-between px-[16px] h-[72px] bg-surface-1 cursor-pointer"
+      className={cn(
+        'absolute top-[var(--header-height-safe)] z-[9999] w-full flex items-center justify-between px-[16px] h-[72px] bg-surface-1 cursor-pointer',
+        'transition-transform duration-300',
+        hideHeader ? '-translate-y-[var(--header-height)]' : 'translate-y-0',
+      )}
       onClick={onClick}
     >
       <div className="flex-center gap-[15.5px]">
