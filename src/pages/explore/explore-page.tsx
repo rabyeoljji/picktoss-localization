@@ -214,13 +214,14 @@ const CategoryTab = () => {
 const CreateQuizButton = () => {
   const { trackEvent } = useAmplitude()
 
+  const { isPWA } = usePWA()
   const router = useRouter()
 
   return (
     <button
       className={cn(
         'absolute bg-base-3 rounded-full bottom-[12px] left-1/2 -translate-x-1/2 h-[48px] w-[calc(100%-32px)] border border-box shadow-[var(--shadow-drop)]',
-        !isMobile && 'bottom-[calc(var(--spacing-tab-navigation)+12px)]',
+        (!isMobile || isPWA) && 'bottom-[calc(var(--spacing-tab-navigation)+12px)]',
       )}
       onClick={() => {
         router.push('/note/create', {
