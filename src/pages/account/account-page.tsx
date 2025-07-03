@@ -49,9 +49,10 @@ const AccountPage = () => {
         return
       }
 
-      // 이전에 거부한 적이 있다면 운영체제나 브라우저 설정에서 변경할 수 있도록 유도
+      // 이전에 거부한 적이 있다면 운영체제나 브라우저 설정에서 먼저 변경할 수 있도록 유도
       if (Notification.permission === 'denied') {
         setOpenNotificationSettingInfo(true)
+        setNotificationEnabled(false)
         return
       }
     }
