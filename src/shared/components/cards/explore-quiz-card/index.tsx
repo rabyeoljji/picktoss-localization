@@ -12,7 +12,7 @@ export const ExploreQuizCard = ({
   return (
     <div
       className={cn(
-        'w-full relative bg-surface-1 flex flex-col gap-[16px] pt-[24px] pb-[12px] border-b border-divider',
+        'w-full relative bg-surface-1 flex flex-col gap-[16px] pt-[24px] pb-[12px] border-b border-divider cursor-pointer',
         className,
       )}
       {...props}

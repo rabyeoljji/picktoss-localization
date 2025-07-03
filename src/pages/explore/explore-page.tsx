@@ -84,26 +84,27 @@ const ExplorePage = () => {
 
   return (
     <>
-      {!hideHeader && (
-        <Header
-          className={cn('bg-surface-2')}
-          left={
-            <button onClick={handleProfileClick} className="size-[40px] flex-center">
-              <IcProfile className="size-[24px]" />
-            </button>
-          }
-          right={
-            <Link to={'/explore/search'} className="size-[40px] flex-center">
-              <IcSearch className="size-[24px]" />
-            </Link>
-          }
-          content={
-            <div className="center">
-              <IcLogo className="w-[102px] h-[26px]" />
-            </div>
-          }
-        />
-      )}
+      <Header
+        className={cn(
+          'bg-surface-2 transition-transform duration-300',
+          hideHeader ? '-translate-y-full pointer-events-none' : 'translate-y-0',
+        )}
+        left={
+          <button onClick={handleProfileClick} className="size-[40px] flex-center">
+            <IcProfile className="size-[24px]" />
+          </button>
+        }
+        right={
+          <Link to={'/explore/search'} className="size-[40px] flex-center">
+            <IcSearch className="size-[24px]" />
+          </Link>
+        }
+        content={
+          <div className="center">
+            <IcLogo className="w-[102px] h-[26px]" />
+          </div>
+        }
+      />
 
       <HeaderOffsetLayout
         ref={listScrollRef}
@@ -131,7 +132,7 @@ const ExplorePage = () => {
         <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
 
         {/* 새로운 퀴즈 만들기 버튼 */}
-        {!hideHeader && <CreateQuizButton />}
+        <CreateQuizButton hide={hideHeader} />
       </HeaderOffsetLayout>
     </>
   )
@@ -211,7 +212,7 @@ const CategoryTab = () => {
 }
 
 // 새로운 퀴즈 만들기 버튼 컴포넌트
-const CreateQuizButton = () => {
+const CreateQuizButton = ({ hide }: { hide: boolean }) => {
   const { trackEvent } = useAmplitude()
   const token = useStore(useAuthStore, (state) => state.token)
 
@@ -222,6 +223,8 @@ const CreateQuizButton = () => {
     <button
       className={cn(
         'absolute bg-base-3 rounded-full bottom-[12px] left-1/2 -translate-x-1/2 h-[48px] w-[calc(100%-32px)] border border-box shadow-[var(--shadow-drop)]',
+        'transition-opacity duration-300',
+        hide ? 'opacity-0 pointer-events-none' : 'opacity-100',
         (!isMobile || isPWA) && 'bottom-[calc(var(--spacing-tab-navigation)+12px)]',
       )}
       onClick={() => {
