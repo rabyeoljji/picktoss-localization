@@ -1,4 +1,11 @@
-import { UseQueryOptions, keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  UseQueryOptions,
+  keepPreviousData,
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 
 import { DOCUMENT_KEYS } from './config'
 import {
@@ -188,27 +195,28 @@ export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' 
 
 export const useGetPublicDocuments = ({
   categoryId,
-  page,
   pageSize,
-  enabled,
 }: {
   categoryId?: number
   page?: number
   pageSize?: number
   enabled?: boolean
 }) => {
-  return useQuery({
-    queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId, page],
-    queryFn: () => getPublicDocuments({ categoryId, page, pageSize }),
-    enabled: enabled ?? true,
-    select: (data) => ({
-      ...data,
-      documents: data.documents.map((doc) => ({
-        ...doc,
-        quizzes: doc.quizzes.sort((a, b) => b.id - a.id),
-      })),
-    }),
+  const query = useInfiniteQuery({
+    queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId],
+    queryFn: ({ pageParam = 0 }) => getPublicDocuments({ categoryId, pageSize, page: pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, allPages) => {
+      const nextPage = allPages.length
+      return nextPage < lastPage.totalPages ? nextPage : undefined
+    },
   })
+
+  return {
+    ...query,
+    isInitialFetching: !query.data && query.isFetching,
+    documents: query?.data?.pages?.flatMap((page) => page?.documents ?? []).flat() ?? [],
+  }
 }
 
 export const useGetPublicSingleDocument = (documentId: number, sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY') => {
