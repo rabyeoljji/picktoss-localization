@@ -76,6 +76,9 @@ export const useScrollRestoration = <T extends HTMLElement = HTMLDivElement>(
         const scrollTop = element.scrollTop
         if (scrollTop > threshold) {
           sessionStorage.setItem(`scroll-${key}`, scrollTop.toString())
+        } else {
+          // 임계값 이하로 스크롤되면 저장된 값 삭제
+          sessionStorage.removeItem(`scroll-${key}`)
         }
       }, debounceMs)
     }
