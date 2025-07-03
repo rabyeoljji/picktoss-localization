@@ -101,7 +101,7 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
     >
       {documents.reduce<React.ReactNode[]>((acc, document, index) => {
         const isTarget = index === documents.length - 5
-        const showShareCard = index === 2
+        const showShareCard = index === 2 && notPublicCount > 0
         // const showAd = index % 3 === 2
         // const adIndex = Math.floor(index / 3)
 
@@ -310,7 +310,11 @@ const ShareCard = ({ notPublicCount }: { notPublicCount: number }) => {
   const router = useRouter()
 
   return (
-    <div className={cn('w-full relative flex-center flex-col gap-[16px] bg-base-1 px-[52px] py-[20px]')}>
+    <div
+      className={cn(
+        'w-full relative flex-center flex-col gap-[16px] bg-base-1 border-b border-divider px-[52px] py-[20px]',
+      )}
+    >
       <IcLibrary className="size-[56px] text-icon-accent" />
 
       <div className="flex-center flex-col">
