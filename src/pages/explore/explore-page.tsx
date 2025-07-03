@@ -20,6 +20,7 @@ import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useHorizontalScrollWheel } from '@/shared/hooks/use-horizontal-scroll-wheel'
 import { usePWA } from '@/shared/hooks/use-pwa'
+import { useScrollRestoration } from '@/shared/hooks/use-scroll-restoration'
 import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
@@ -29,8 +30,15 @@ const ExplorePage = () => {
   const router = useRouter()
   const { isPWA } = usePWA()
 
-  const listScrollRef = useRef<HTMLDivElement>(null)
+  const listScrollRef = useScrollRestoration<HTMLDivElement>('explore-page', {
+    restoreDelay: 50,
+    threshold: 50,
+    onRestoreComplete: () => {
+      setIsScrollRestoring(false)
+    },
+  })
   const [hideHeader, setHideHeader] = useState(false)
+  const [isScrollRestoring, setIsScrollRestoring] = useState(true)
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState(!isPWA && isMobile)
@@ -57,10 +65,16 @@ const ExplorePage = () => {
   }
 
   useEffect(() => {
-    let prevScrollY = listScrollRef.current?.scrollTop ?? 0
+    const element = listScrollRef.current
+    if (!element) return
+
+    let prevScrollY = element.scrollTop
 
     const handleScroll = () => {
-      const currentY = listScrollRef.current?.scrollTop ?? 0
+      // 스크롤 복원 중일 때는 헤더 상태 변경하지 않음
+      if (isScrollRestoring) return
+
+      const currentY = element.scrollTop
       if (currentY > prevScrollY && currentY > 0) {
         setHideHeader(true)
       } else {
@@ -69,9 +83,9 @@ const ExplorePage = () => {
       prevScrollY = currentY
     }
 
-    listScrollRef.current?.addEventListener('scroll', handleScroll)
-    return () => listScrollRef.current?.removeEventListener('scroll', handleScroll)
-  }, [])
+    element.addEventListener('scroll', handleScroll)
+    return () => element.removeEventListener('scroll', handleScroll)
+  }, [isScrollRestoring])
 
   useEffect(() => {
     if ((!isPWA && isMobile) || !isMobile) {
