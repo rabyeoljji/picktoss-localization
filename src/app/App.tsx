@@ -1,11 +1,11 @@
 import { AppRouter } from '@/app/app-router'
 import { Providers } from '@/app/providers'
 
+import { useExternalBrowser } from '@/shared/hooks/use-external-browser'
 import { useInstagramExternal } from '@/shared/hooks/use-instagram-external'
-import { useKakaoExternal } from '@/shared/hooks/use-kakao-external'
 
 function App() {
-  useKakaoExternal()
+  useExternalBrowser()
   useInstagramExternal()
 
   return (
