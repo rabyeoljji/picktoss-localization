@@ -6,6 +6,7 @@ import {
   useQuery,
   useQueryClient,
 } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 import { DOCUMENT_KEYS } from './config'
 import {
@@ -62,7 +63,7 @@ export const useSearchDocument = (
   options?: Omit<UseQueryOptions<SearchDocumentsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) => {
   return useQuery({
-    queryKey: [DOCUMENT_KEYS.searchDocument, params],
+    queryKey: [...DOCUMENT_KEYS.searchDocument, params],
     queryFn: () => searchDocument(params),
     ...options,
   })
@@ -115,7 +116,7 @@ export const useGetAllDocuments = (options?: {
   sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
 }) => {
   return useQuery({
-    queryKey: [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
+    queryKey: [...DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
     queryFn: () => getAllDocuments(options),
   })
 }
@@ -188,7 +189,7 @@ export const useGetIsNotPublicDocuments = (queryOptions?: { enabled: boolean }) 
 
 export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' | 'QUIZ_COUNT' }) => {
   return useQuery({
-    queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments, options?.sortOption],
+    queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments, options?.sortOption],
     queryFn: () => getBookmarkedDocuments(options),
   })
 }
@@ -203,7 +204,7 @@ export const useGetPublicDocuments = ({
   enabled?: boolean
 }) => {
   const query = useInfiniteQuery({
-    queryKey: [DOCUMENT_KEYS.getPublicDocuments, categoryId],
+    queryKey: [...DOCUMENT_KEYS.getPublicDocuments, categoryId],
     queryFn: ({ pageParam = 0 }) => getPublicDocuments({ categoryId, pageSize, page: pageParam }),
     initialPageParam: 0,
     getNextPageParam: (lastPage, allPages) => {
@@ -221,7 +222,7 @@ export const useGetPublicDocuments = ({
 
 export const useGetPublicSingleDocument = (documentId: number, sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY') => {
   return useQuery({
-    queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId), sortOption],
+    queryKey: [...DOCUMENT_KEYS.getPublicSingleDocument(documentId), sortOption],
     queryFn: () => getPublicSingleDocument(documentId, sortOption),
     enabled: !!documentId,
     select: (data) => ({
@@ -237,7 +238,7 @@ export const useSearchPublicDocuments = (
   options?: Omit<UseQueryOptions<SearchPublicDocumentsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) => {
   return useQuery({
-    queryKey: [DOCUMENT_KEYS.searchPublicDocuments, params],
+    queryKey: [...DOCUMENT_KEYS.searchPublicDocuments, params],
     queryFn: () => searchPublicDocuments(params),
     ...options,
   })
@@ -256,146 +257,122 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
   return useMutation({
     mutationFn: async ({ documentId, isBookmarked }: { documentId: number; isBookmarked: boolean }) => {
       if (isBookmarked) {
+        // 현재 북마크 상태가 true면 삭제
         return deleteDocumentBookmark(documentId)
       }
+      // 현재 북마크 상태가 false면 생성
       return createDocumentBookmark(documentId)
     },
     onMutate: async ({ documentId, isBookmarked }) => {
       // 진행 중인 쿼리들 취소
       await Promise.all([
-        queryClient.cancelQueries({ queryKey: [DOCUMENT_KEYS.getBookmarkedDocuments] }),
-        queryClient.cancelQueries({ queryKey: [DOCUMENT_KEYS.getPublicDocuments] }),
-        queryClient.cancelQueries({ queryKey: [DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
-        queryClient.cancelQueries({ queryKey: [DOCUMENT_KEYS.searchPublicDocuments] }),
+        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] }),
+        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] }),
+        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
+        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] }),
       ])
 
-      // 북마크된 문서 목록 낙관적 업데이트
-      const previousBookmarkedDocuments = queryClient.getQueryData([DOCUMENT_KEYS.getBookmarkedDocuments])
+      // 이전 데이터 백업
+      const previousBookmarkedDocuments = queryClient.getQueryData([...DOCUMENT_KEYS.getBookmarkedDocuments])
+      const previousPublicDocumentsMap = new Map(
+        queryClient.getQueriesData({
+          queryKey: [...DOCUMENT_KEYS.getPublicDocuments],
+        }),
+      )
+      const previousSingleDocument = queryClient.getQueryData([...DOCUMENT_KEYS.getPublicSingleDocument(documentId)])
+      const previousSearchDataMap = new Map(
+        queryClient.getQueriesData<SearchPublicDocumentsResponse>({
+          queryKey: [...DOCUMENT_KEYS.searchPublicDocuments],
+        }),
+      )
 
-      if (previousBookmarkedDocuments) {
+      // 낙관적 업데이트: 북마크 문서 목록
+      queryClient.setQueryData<GetBookmarkedDocumentsResponse>([...DOCUMENT_KEYS.getBookmarkedDocuments], (oldData) => {
+        if (!oldData?.documents) return oldData
         if (isBookmarked) {
-          // 북마크 제거 시 - 목록에서 해당 문서 제거
-          queryClient.setQueryData<GetBookmarkedDocumentsResponse>(
-            [DOCUMENT_KEYS.getBookmarkedDocuments],
-            (oldData) => {
-              if (!oldData) return oldData
-              return {
-                ...oldData,
-                documents: oldData.documents?.filter((doc) => doc.id !== documentId) || [],
-              }
-            },
-          )
-        } else {
-          // 북마크 추가 시 - 공개 문서 목록에서 해당 문서를 찾아서 추가
-          const publicDocuments = queryClient.getQueryData<GetPublicDocumentsResponse>([
-            DOCUMENT_KEYS.getPublicDocuments,
-          ])
-          let documentToAdd: GetBookmarkedDocumentsDto | null = null
-
-          // 공개 문서 목록에서 해당 문서 찾기
-          if (publicDocuments?.documents) {
-            const found = publicDocuments.documents.find((doc) => doc.id === documentId)
-            if (found) {
-              documentToAdd = {
-                id: found.id,
-                name: found.name,
-                emoji: found.emoji,
-                previewContent: found.previewContent,
-                tryCount: found.tryCount,
-                bookmarkCount: found.bookmarkCount + 1, // 북마크 추가이므로 +1
-                totalQuizCount: found.totalQuizCount,
-              }
-            }
-          }
-
-          // 검색 결과에서도 찾아보기
-          if (!documentToAdd) {
-            const searchQueries = queryClient.getQueriesData<SearchPublicDocumentsResponse>({
-              queryKey: [DOCUMENT_KEYS.searchPublicDocuments],
-            })
-            for (const [, data] of searchQueries) {
-              const found = data?.publicDocuments?.find((doc) => doc.id === documentId)
-              if (found) {
-                documentToAdd = {
-                  id: found.id,
-                  name: found.name,
-                  emoji: found.emoji,
-                  previewContent: '', // SearchPublicDocumentsDto에는 previewContent가 없으므로 빈 문자열
-                  tryCount: found.tryCount,
-                  bookmarkCount: found.bookmarkCount + 1, // 북마크 추가이므로 +1
-                  totalQuizCount: found.totalQuizCount,
-                }
-                break
-              }
-            }
-          }
-
-          if (documentToAdd) {
-            queryClient.setQueryData<GetBookmarkedDocumentsResponse>(
-              [DOCUMENT_KEYS.getBookmarkedDocuments],
-              (oldData) => {
-                if (!oldData) return { documents: [documentToAdd!] }
-                return {
-                  ...oldData,
-                  documents: [documentToAdd!, ...(oldData.documents || [])],
-                }
-              },
-            )
-          }
-        }
-      }
-
-      // 공개 문서 목록 낙관적 업데이트
-      const previousPublicDocuments = queryClient.getQueryData([DOCUMENT_KEYS.getPublicDocuments])
-
-      if (previousPublicDocuments) {
-        queryClient.setQueryData<GetPublicDocumentsResponse>([DOCUMENT_KEYS.getPublicDocuments], (oldData) => {
-          if (!oldData?.documents) return oldData
+          // 북마크 해제: 목록에서 제거
           return {
             ...oldData,
-            documents: oldData.documents.map((doc) => {
-              if (doc.id === documentId) {
-                return {
-                  ...doc,
-                  isBookmarked: !isBookmarked,
-                  bookmarkCount: isBookmarked ? (doc.bookmarkCount || 1) - 1 : (doc.bookmarkCount || 0) + 1,
-                }
-              }
-              return doc
-            }),
+            documents: oldData.documents.filter((doc: GetBookmarkedDocumentsDto) => doc.id !== documentId),
           }
-        })
-      }
-
-      // 단일 문서 상세 정보 낙관적 업데이트
-      const previousSingleDocument = queryClient.getQueryData<GetPublicSingleDocumentResponse>([
-        DOCUMENT_KEYS.getPublicSingleDocument(documentId),
-      ])
-
-      if (previousSingleDocument) {
-        queryClient.setQueryData<GetPublicSingleDocumentResponse>(
-          [DOCUMENT_KEYS.getPublicSingleDocument(documentId)],
-          (oldData) => {
-            if (!oldData) return oldData
+        } else {
+          // 북마크 추가: 목록에 추가
+          const publicDoc = queryClient
+            .getQueryData<GetPublicDocumentsResponse>([...DOCUMENT_KEYS.getPublicDocuments])
+            ?.documents.find((doc) => doc.id === documentId)
+          if (publicDoc) {
+            const bookmarkedDoc: GetBookmarkedDocumentsDto = {
+              id: publicDoc.id,
+              name: publicDoc.name,
+              emoji: publicDoc.emoji,
+              previewContent: publicDoc.previewContent,
+              tryCount: publicDoc.tryCount,
+              bookmarkCount: (publicDoc.bookmarkCount || 0) + 1,
+              totalQuizCount: publicDoc.totalQuizCount,
+            }
             return {
               ...oldData,
-              isBookmarked: !isBookmarked,
-              bookmarkCount: isBookmarked ? (oldData.bookmarkCount || 1) - 1 : (oldData.bookmarkCount || 0) + 1,
+              documents: [bookmarkedDoc, ...oldData.documents],
             }
-          },
-        )
-      }
-
-      // 검색 결과 낙관적 업데이트
-      const searchQueries = queryClient.getQueriesData<SearchPublicDocumentsResponse>({
-        queryKey: [DOCUMENT_KEYS.searchPublicDocuments],
+          }
+        }
+        return oldData
       })
-      const previousSearchDataMap = new Map()
 
+      // 낙관적 업데이트: 공개 문서 목록 (infinite query 구조)
+      const publicDocumentQueries = queryClient.getQueriesData({
+        queryKey: [...DOCUMENT_KEYS.getPublicDocuments],
+      })
+
+      publicDocumentQueries.forEach(([queryKey, data]) => {
+        if (data && typeof data === 'object' && 'pages' in data && Array.isArray((data as any).pages)) {
+          // infinite query 데이터 구조 업데이트
+          const infiniteData = data as any
+          const updatedData = {
+            ...infiniteData,
+            pages: infiniteData.pages.map((page: any) => {
+              if (page?.documents) {
+                return {
+                  ...page,
+                  documents: page.documents.map((doc: any) => {
+                    if (doc.id === documentId) {
+                      return {
+                        ...doc,
+                        isBookmarked: !isBookmarked,
+                        bookmarkCount: isBookmarked ? (doc.bookmarkCount || 1) - 1 : (doc.bookmarkCount || 0) + 1,
+                      }
+                    }
+                    return doc
+                  }),
+                }
+              }
+              return page
+            }),
+          }
+          queryClient.setQueryData(queryKey, updatedData)
+        }
+      })
+
+      // 낙관적 업데이트: 단일 문서
+      queryClient.setQueryData<GetPublicSingleDocumentResponse>(
+        [...DOCUMENT_KEYS.getPublicSingleDocument(documentId)],
+        (oldData) => {
+          if (!oldData) return oldData
+          return {
+            ...oldData,
+            isBookmarked: !isBookmarked,
+            bookmarkCount: isBookmarked ? (oldData.bookmarkCount || 1) - 1 : (oldData.bookmarkCount || 0) + 1,
+          }
+        },
+      )
+
+      // 낙관적 업데이트: 검색 결과
+      const searchQueries = queryClient.getQueriesData<SearchPublicDocumentsResponse>({
+        queryKey: [...DOCUMENT_KEYS.searchPublicDocuments],
+      })
       searchQueries.forEach(([queryKey, data]) => {
         if (data?.publicDocuments) {
-          previousSearchDataMap.set(queryKey, data)
-          queryClient.setQueryData(queryKey, {
+          const updatedData = {
             ...data,
             publicDocuments: data.publicDocuments.map((doc) => {
               if (doc.id === documentId) {
@@ -407,30 +384,34 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
               }
               return doc
             }),
-          })
+          }
+          queryClient.setQueryData(queryKey, updatedData)
         }
       })
 
       return {
         previousBookmarkedDocuments,
-        previousPublicDocuments,
+        previousPublicDocumentsMap,
         previousSingleDocument,
         previousSearchDataMap,
       }
     },
-    onError: (_, __, context) => {
+    onError: (response: any, _, context) => {
+      if (response?.data?.errorCode === 'CANNOT_BOOKMARK_OWN_DOCUMENT') {
+        toast(response?.data?.message ?? '북마크 추가에 실패했습니다')
+      }
+
       // 에러 발생 시 이전 데이터로 복구
       if (context?.previousBookmarkedDocuments) {
-        queryClient.setQueryData([DOCUMENT_KEYS.getBookmarkedDocuments], context.previousBookmarkedDocuments)
+        queryClient.setQueryData([...DOCUMENT_KEYS.getBookmarkedDocuments], context.previousBookmarkedDocuments)
       }
-      if (context?.previousPublicDocuments) {
-        queryClient.setQueryData([DOCUMENT_KEYS.getPublicDocuments], context.previousPublicDocuments)
+      if (context?.previousPublicDocumentsMap) {
+        context.previousPublicDocumentsMap.forEach((data, queryKey) => {
+          queryClient.setQueryData(queryKey, data)
+        })
       }
       if (context?.previousSingleDocument) {
-        queryClient.setQueryData(
-          [DOCUMENT_KEYS.getPublicSingleDocument(context.previousSingleDocument.id)],
-          context.previousSingleDocument,
-        )
+        queryClient.setQueryData([...DOCUMENT_KEYS.getPublicSingleDocument(documentId)], context.previousSingleDocument)
       }
       if (context?.previousSearchDataMap) {
         context.previousSearchDataMap.forEach((data, queryKey) => {
@@ -439,12 +420,11 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
       }
     },
     onSettled: async () => {
-      // 모든 관련 쿼리 무효화
+      // 북마크 목록과 단일 문서만 invalidate
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments }),
-        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments }),
-        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) }),
-        queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments }),
+        queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] }),
+        queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
+        queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] }),
       ])
     },
   })

@@ -23,7 +23,6 @@ import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
-import { useSessionStorage } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
 
 type ShareCard = {
@@ -151,27 +150,7 @@ const ExploreCard = ({
 
   const router = useRouter()
 
-  const { mutate: handleBookmarkMutate } = useDocumentBookmarkMutation(id)
-
-  const [isBookmarkPending, setIsBookmarkPending] = useState(false)
-  const [localBookmarked, setLocalBookmarked] = useState(isBookmarked)
-  const [localBookmarkCount, setLocalBookmarkCount] = useState(bookmarkCount)
-  const [bookmarkUpdate, setBookmarkUpdate] = useSessionStorage('bookmarkUpdate', null)
-
-  useEffect(() => {
-    if (
-      bookmarkUpdate?.id === id &&
-      bookmarkUpdate?.isUpdated &&
-      bookmarkUpdate.bookmarkCount !== undefined &&
-      bookmarkUpdate.isBookmarked !== undefined
-    ) {
-      setLocalBookmarkCount(bookmarkUpdate.bookmarkCount)
-      setLocalBookmarked(bookmarkUpdate.isBookmarked)
-
-      // 상태 초기화 (중복 반영 방지)
-      setBookmarkUpdate(null)
-    }
-  }, [bookmarkUpdate])
+  const { mutate: handleBookmarkMutate, isPending: isBookmarkPending } = useDocumentBookmarkMutation(id)
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
 
@@ -203,52 +182,29 @@ const ExploreCard = ({
 
     if (isBookmarkPending) return // 중복 방지
 
-    setIsBookmarkPending(true)
-
     const isCurrentlyBookmarked = document.isBookmarked
 
-    // 미리 로컬 상태로 반영 (낙관적 UI)
-    setLocalBookmarked((prev) => !prev)
-    setLocalBookmarkCount((prev) => (isCurrentlyBookmarked ? prev - 1 : prev + 1))
-
-    const rollback = () => {
-      // 실패했을 때 복구
-      setLocalBookmarked(isCurrentlyBookmarked)
-      setLocalBookmarkCount(bookmarkCount)
-    }
-
-    const finish = () => setIsBookmarkPending(false)
-
-    const onError = () => {
-      rollback()
-      finish()
-    }
-
-    const onSuccess = () => {
-      trackEvent('explore_bookmark_click', {
-        location: '미리보기 페이지',
-        state: isCurrentlyBookmarked ? '추가' : '해제',
-      })
-
-      if (!isCurrentlyBookmarked) {
-        toast('퀴즈가 도서관에 저장되었어요', {
-          icon: <IcBookmarkFilled className="size-4" />,
-          action: {
-            label: '보러가기',
-            onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
-          },
-        })
-      } else {
-        toast('북마크가 해제되었어요')
-      }
-      finish()
-    }
-
     handleBookmarkMutate(
-      { documentId: id, isBookmarked: isCurrentlyBookmarked },
+      { documentId: id, isBookmarked },
       {
-        onSuccess,
-        onError,
+        onSuccess: () => {
+          trackEvent('explore_bookmark_click', {
+            location: '미리보기 페이지',
+            state: isCurrentlyBookmarked ? '추가' : '해제',
+          })
+
+          if (!isCurrentlyBookmarked) {
+            toast('퀴즈가 도서관에 저장되었어요', {
+              icon: <IcBookmarkFilled className="size-4" />,
+              action: {
+                label: '보러가기',
+                onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
+              },
+            })
+          } else {
+            toast('북마크가 해제되었어요')
+          }
+        },
       },
     )
   }
@@ -288,9 +244,9 @@ const ExploreCard = ({
         <ExploreQuizCard.Footer
           totalQuizCount={quizzes.length}
           playedCount={tryCount}
-          bookmarkCount={localBookmarkCount}
+          bookmarkCount={bookmarkCount}
           isOwner={isOwner}
-          isBookmarked={localBookmarked}
+          isBookmarked={isBookmarked}
           onClickShare={handleShare}
           onClickBookmark={handleBookmark}
         />
