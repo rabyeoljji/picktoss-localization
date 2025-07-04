@@ -22,6 +22,7 @@ import { PeekingDrawer, PeekingDrawerContent } from '@/shared/components/drawers
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogCTA, DialogContent } from '@/shared/components/ui/dialog'
+import { Spinner } from '@/shared/components/ui/spinner'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
@@ -320,6 +321,8 @@ export const ProgressQuizPage = () => {
             currentQuiz={currentQuiz}
             handleNextQuestion={handleNextQuestion}
             selectedOption={params.selectedOption}
+            isSubmitting={isSubmitting}
+            isLastQuestion={params.quizIndex === quizSetData.quizzes.length - 1}
           />
         )}
 
@@ -432,12 +435,19 @@ const ResultPeekingDrawer = ({
   currentQuiz,
   handleNextQuestion,
   selectedOption,
+  isSubmitting,
+  isLastQuestion,
 }: {
   currentQuiz: GetQuizSetQuizDto
   handleNextQuestion: () => void
   selectedOption: string | null
+  isSubmitting: boolean
+  isLastQuestion: boolean
 }) => {
   const [open, setOpen] = useState(true)
+
+  const buttonText = isLastQuestion ? '완료' : '다음'
+  const isDisabled = isSubmitting && isLastQuestion
 
   return (
     <PeekingDrawer
@@ -445,7 +455,9 @@ const ResultPeekingDrawer = ({
       onOpenChange={setOpen}
       fixedContent={
         <div className="pb-12">
-          <Button onClick={handleNextQuestion}>다음</Button>
+          <Button onClick={handleNextQuestion} disabled={isDisabled}>
+            {isDisabled ? <Spinner className="size-5" /> : buttonText}
+          </Button>
         </div>
       }
       className={cn(open ? (selectedOption === currentQuiz.answer ? 'bg-correct' : 'bg-incorrect') : 'bg-base-1')}
