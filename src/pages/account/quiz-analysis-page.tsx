@@ -16,10 +16,12 @@ import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { ChartConfig, ChartContainer } from '@/shared/components/ui/chart'
 import { Text } from '@/shared/components/ui/text'
-import { useQueryParam } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const QuizAnalysisPage = () => {
+  const router = useRouter()
+
   const today = useMemo(() => new Date(), [])
 
   const [month, setMonth] = useQueryParam('/account/quiz-analysis', 'month')
@@ -114,7 +116,7 @@ const QuizAnalysisPage = () => {
                   </Text>
                 </div>
 
-                <Button size={'md'} className="w-[142px]">
+                <Button size={'md'} className="w-[142px]" onClick={() => router.push('/explore')}>
                   퀴즈 탐험하러 가기
                 </Button>
               </div>
