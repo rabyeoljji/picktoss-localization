@@ -218,7 +218,11 @@ const ExploreCard = ({
       sessionStorage.setItem('scrollY', String(container.scrollTop))
     }
 
-    router.push('/explore/detail/:noteId', { params: [String(id)] })
+    if (document.isOwner) {
+      router.push('/library/:noteId', { params: [String(id)] })
+    } else {
+      router.push('/explore/detail/:noteId', { params: [String(id)] })
+    }
   }
 
   useEffect(() => {
@@ -232,7 +236,7 @@ const ExploreCard = ({
 
   return (
     <>
-      <ExploreQuizCard onClick={() => router.push('/explore/detail/:noteId', { params: [String(id)] })}>
+      <ExploreQuizCard onClick={handleClickMoveToDetailPageBtn}>
         <ExploreQuizCard.Content>
           <ExploreQuizCard.Header emoji={emoji} title={name} creator={creator} />
           <ExploreQuizCard.Quizzes

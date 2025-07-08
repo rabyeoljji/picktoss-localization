@@ -168,16 +168,18 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
     }
   }
 
+  const handleClickMoveToDetailPageBtn = () => {
+    // if (searchItem.isOwner) {
+    //   router.push('/library/:noteId', { params: [String(searchItem.id)] })
+    // } else {
+    //   router.push('/explore/detail/:noteId', { params: [String(searchItem.id)] })
+    // }
+    router.push('/explore/detail/:noteId', { params: [String(searchItem.id)] })
+  }
+
   return (
     <>
-      <BookmarkVerticalCard
-        role="link"
-        onClick={() => {
-          router.push('/explore/detail/:noteId', {
-            params: [String(searchItem.id)],
-          })
-        }}
-      >
+      <BookmarkVerticalCard role="link" onClick={handleClickMoveToDetailPageBtn}>
         <BookmarkVerticalCard.Header
           emoji={searchItem.emoji}
           isOwner={searchItem.isOwner}

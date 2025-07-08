@@ -44,9 +44,6 @@ const ExplorePage = () => {
   const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState(!isPWA && isMobile)
   const [isAppDownloadDrawerOpen, setIsAppDownloadDrawerOpen] = useState(false)
 
-  const scrollRef = useRef<HTMLDivElement>(null)
-  useHorizontalScrollWheel(scrollRef)
-
   const handleAppDownloadBannerClick = () => {
     if (!isMobile) {
       setIsAppDownloadDrawerOpen(true)
