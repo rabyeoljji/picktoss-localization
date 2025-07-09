@@ -1,3 +1,5 @@
+import { useCallback, useState } from 'react'
+
 import { marked } from 'marked'
 import styled from 'styled-components'
 
@@ -19,9 +21,38 @@ const NoteCreatePageFile = () => {
   const { content, fileInfo, changeFileInfo, isProcessing, star, handleCreateDocument } = useCreateNoteContext()
   const { data: user } = useUser()
 
+  const [isDragging, setIsDragging] = useState(false)
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsDragging(false)
+
+    const { files } = e.dataTransfer
+    if (!files || !files.length) return
+
+    // React.ChangeEvent<HTMLInputElement> 형태로 캐스팅
+    const syntheticEvent = {
+      target: { files },
+    } as unknown as React.ChangeEvent<HTMLInputElement>
+
+    changeFileInfo(syntheticEvent)
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault() // drop 가능하게
+    if (!isDragging) setIsDragging(true)
+  }
+
+  const handleDragLeave = () => setIsDragging(false)
+
   if (!fileInfo) {
     return (
-      <div className="flex-1 flex-center pb-[96px]">
+      <div
+        className="flex-1 flex-center pb-[96px]"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
         <div className="flex flex-col gap-[8px]">
           <input
             type="file"
