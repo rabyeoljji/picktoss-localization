@@ -3,9 +3,13 @@ import { isMobile } from 'react-device-detect'
 import { ErrorBoundary } from 'react-error-boundary'
 import { Outlet } from 'react-router'
 
+import { useSideAppDownloadPopup } from '@/features/download/hook/use-side-app-download-popup'
+
 import { cn } from '@/shared/lib/utils'
 
 export const RootLayout = () => {
+  const sideAppDownloadPopup = useSideAppDownloadPopup()
+
   const checkPWA = () => {
     const isIOSStandalone =
       typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
@@ -28,6 +32,8 @@ export const RootLayout = () => {
           <Outlet />
         </Suspense>
       </ErrorBoundary>
+
+      {sideAppDownloadPopup}
     </div>
   )
 }

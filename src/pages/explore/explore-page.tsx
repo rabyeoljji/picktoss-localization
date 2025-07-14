@@ -18,6 +18,7 @@ import { Chip } from '@/shared/components/ui/chip'
 import { Drawer, DrawerContent, DrawerHeader } from '@/shared/components/ui/drawer'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
+import useBreakpoint from '@/shared/hooks/use-breakpoint'
 import { useHorizontalScrollWheel } from '@/shared/hooks/use-horizontal-scroll-wheel'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { useScrollRestoration } from '@/shared/hooks/use-scroll-restoration'
@@ -25,6 +26,8 @@ import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
 const ExplorePage = () => {
+  const { isDesktopSize } = useBreakpoint()
+
   const token = useStore(useAuthStore, (state) => state.token)
 
   const router = useRouter()
@@ -41,7 +44,7 @@ const ExplorePage = () => {
   const [isScrollRestoring, setIsScrollRestoring] = useState(true)
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState(!isPWA && isMobile)
+  const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState((!isPWA && isMobile) || !isDesktopSize)
   const [isAppDownloadDrawerOpen, setIsAppDownloadDrawerOpen] = useState(false)
 
   const handleAppDownloadBannerClick = () => {
@@ -85,13 +88,13 @@ const ExplorePage = () => {
   }, [isScrollRestoring])
 
   useEffect(() => {
-    if ((!isPWA && isMobile) || !isMobile) {
-      // PWA가 아니고 모바일인 경우, 또는 pc 접근일 경우, 앱 다운로드 배너를 열도록 설정
+    if ((!isPWA && isMobile) || !isDesktopSize) {
+      // PWA가 아니고 모바일인 경우, 또는 pc에서 사이드에 qr을 표시하지 못하는 화면 사이즈일 경우, 앱 다운로드 배너를 열도록 설정
       setIsAppDownloadBannerOpen(true)
     } else {
       setIsAppDownloadBannerOpen(false)
     }
-  }, [isPWA, isMobile])
+  }, [isPWA, isMobile, isDesktopSize])
 
   return (
     <>
