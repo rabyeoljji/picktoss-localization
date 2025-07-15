@@ -31,7 +31,7 @@ const ExplorePage = () => {
   const token = useStore(useAuthStore, (state) => state.token)
 
   const router = useRouter()
-  const { isPWA } = usePWA()
+  const { isPWA, isLoading: isPWALoading } = usePWA()
 
   const listScrollRef = useScrollRestoration<HTMLDivElement>('explore-page', {
     restoreDelay: 50,
@@ -44,7 +44,7 @@ const ExplorePage = () => {
   const [isScrollRestoring, setIsScrollRestoring] = useState(true)
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState((!isPWA && isMobile) || !isDesktopSize)
+  const [isAppDownloadBannerOpen, setIsAppDownloadBannerOpen] = useState(false)
   const [isAppDownloadDrawerOpen, setIsAppDownloadDrawerOpen] = useState(false)
 
   const handleAppDownloadBannerClick = () => {
@@ -88,13 +88,15 @@ const ExplorePage = () => {
   }, [isScrollRestoring])
 
   useEffect(() => {
-    if ((!isPWA && isMobile) || !isDesktopSize) {
-      // PWA가 아니고 모바일인 경우, 또는 pc에서 사이드에 qr을 표시하지 못하는 화면 사이즈일 경우, 앱 다운로드 배너를 열도록 설정
+    if (isPWALoading) return
+
+    if (!isPWA && (isMobile || !isDesktopSize)) {
+      // PWA가 아닌 환경에서, 모바일 기기 또는 pc에서 사이드에 qr을 표시하지 못하는 화면 사이즈일 경우, 앱 다운로드 배너를 열도록 설정
       setIsAppDownloadBannerOpen(true)
     } else {
       setIsAppDownloadBannerOpen(false)
     }
-  }, [isPWA, isMobile, isDesktopSize])
+  }, [isPWALoading, isPWA, isMobile, isDesktopSize])
 
   return (
     <>
