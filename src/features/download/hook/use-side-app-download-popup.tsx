@@ -22,7 +22,7 @@ export const useSideAppDownloadPopup = () => {
 
   if (isSideAppDownloadPopupOpen) {
     return (
-      <div className="absolute bottom-[28.33px] right-[59px] z-10 w-[248px] pt-[32px] pb-[8px] border border-outline rounded-[12px] shadow-[var(--shadow-md)]">
+      <div className="fixed bottom-[28.33px] right-[59px] z-10 w-[248px] pt-[32px] pb-[8px] border border-outline rounded-[12px] shadow-[var(--shadow-md)]">
         <IcClose
           onClick={() => setIsSideAppDownloadPopupOpen(false)}
           className="absolute top-[16px] right-[16px] size-[16px] text-icon-secondary cursor-pointer"
