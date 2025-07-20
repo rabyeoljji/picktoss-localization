@@ -9,7 +9,6 @@ import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 
 import { IcChevronRight, IcDisclaimer, IcMy, IcNotification, IcRecord } from '@/shared/assets/icon'
 import { ImgAlarm, ImgGraph, ImgInviteStar, ImgPush, ImgStar } from '@/shared/assets/images'
-import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
@@ -81,8 +80,6 @@ const AccountPage = () => {
   return (
     <>
       <Header
-        left={<BackButton type="close" />}
-        title={'MY'}
         right={
           <div className="flex items-center">
             <Link
@@ -137,7 +134,7 @@ const AccountPage = () => {
                 className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px] border-r border-divider"
               >
                 <Text typo="subtitle-2-bold" color="secondary">
-                  내 퀴즈
+                  생성한 퀴즈
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.totalQuizCount}
@@ -149,7 +146,7 @@ const AccountPage = () => {
                 className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px]"
               >
                 <Text typo="subtitle-2-bold" color="secondary">
-                  북마크
+                  저장한 퀴즈
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.bookmarkCount}
@@ -348,6 +345,11 @@ const AccountPage = () => {
   )
 }
 
+export default withHOC(AccountPage, {
+  backgroundClassName: 'bg-surface-1',
+  activeTab: '마이',
+})
+
 const NotificationDrawer = ({
   open,
   onOpenChange,
@@ -432,7 +434,3 @@ const NotificationSettingInfoDialog = ({
     </Dialog>
   )
 }
-
-export default withHOC(AccountPage, {
-  backgroundClassName: 'bg-surface-1',
-})

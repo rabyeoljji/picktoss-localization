@@ -5,7 +5,7 @@ import { useStore } from 'zustand'
 import { useAuthStore } from '@/features/auth'
 import LoginDialog from '@/features/explore/ui/login-dialog'
 
-import { IcDaily, IcExplore, IcLibrary } from '@/shared/assets/icon'
+import { IcDaily, IcExplore, IcLibrary, IcMy } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { usePWA } from '@/shared/hooks/use-pwa'
@@ -28,6 +28,11 @@ const navItems = [
     label: '도서관',
     to: RoutePath.library,
     icon: <IcLibrary />,
+  },
+  {
+    label: '마이',
+    to: RoutePath.account,
+    icon: <IcMy />,
   },
 ] as const
 
@@ -67,7 +72,12 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
 
   return (
     <>
-      <div className={cn('h-tab-navigation bg-surface-2 fixed bottom-0 w-full max-w-xl', className)}>
+      <div
+        className={cn(
+          'h-tab-navigation bg-surface-2 border-t border-divider fixed bottom-0 w-full max-w-xl',
+          className,
+        )}
+      >
         <div className="mx-auto flex max-w-[500px] justify-between px-[52px] pt-2.5">
           {navItems.map((item) => (
             <NavItem key={item.label} {...item} active={item.label === activeTab} handleNavigation={handleNavigation} />
