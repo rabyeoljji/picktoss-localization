@@ -544,7 +544,7 @@ const HomePage = () => {
           <div className="relative">
             <ImgStar className="size-[120px] mx-auto" />
             <div className="rounded-full px-2 py-[2px] bg-black text-white typo-subtitle-2-bold absolute bottom-2 left-1/2">
-              x100
+              x200
             </div>
           </div>
           <Text typo="h4" className="mt-4 text-center">
