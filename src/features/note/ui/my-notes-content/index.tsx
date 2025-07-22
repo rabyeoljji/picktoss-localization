@@ -1,13 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 
+import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { toast } from 'sonner'
 
 import { extractPlainText } from '@/features/note/lib'
+import EmptyMyNote from '@/features/note/ui/empty-my-note'
 
 import { GetAllDocumentsDocumentDto } from '@/entities/document/api'
 import { useDeleteDocument, useUpdateDocumentIsPublic } from '@/entities/document/api/hooks'
+import { useUser } from '@/entities/member/api/hooks'
 
-import { IcArrange, IcCheck, IcDelete, IcSearch, IcUpload } from '@/shared/assets/icon'
+import { IcArrange, IcCheck, IcDelete, IcUpload } from '@/shared/assets/icon'
 import { SlidableNoteCard } from '@/shared/components/cards/slidable-note-card'
 import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
@@ -19,24 +22,37 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { UseCheckListReturn } from '@/shared/hooks/use-check-list'
-import { Link, useQueryParam, useRouter } from '@/shared/lib/router'
+import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
 
+interface Props {
+  activeTab: 'MY' | 'BOOKMARK'
+  onTabChange: (tab: 'MY' | 'BOOKMARK') => void
+  documents?: GetAllDocumentsDocumentDto[]
+  selectMode: boolean
+  checkList: UseCheckListReturn<GetAllDocumentsDocumentDto>
+  changeSelectMode: (selectMode: boolean) => void
+  isEmptyMyDocuments: boolean
+  isLoading: boolean
+}
+
 const MyNotesContent = ({
+  activeTab,
+  onTabChange,
   documents,
   selectMode,
   checkList,
   changeSelectMode,
-}: {
-  documents: GetAllDocumentsDocumentDto[]
-  selectMode: boolean
-  checkList: UseCheckListReturn<GetAllDocumentsDocumentDto>
-  changeSelectMode: (selectMode: boolean) => void
-}) => {
+  isEmptyMyDocuments,
+  isLoading,
+}: Props) => {
+  type Tab = typeof activeTab
+
   const { trackEvent } = useAmplitude()
   const router = useRouter()
   const [sortOption, setSortOption] = useQueryParam('/library', 'sortOption')
@@ -45,6 +61,8 @@ const MyNotesContent = ({
   const [openRelease, setOpenRelease] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const { mutate: deleteDocument } = useDeleteDocument()
+
+  const { data: user } = useUser()
 
   const { check, unCheck, unCheckAll, isChecked, getCheckedIds, getCheckedList } = checkList
 
@@ -90,18 +108,25 @@ const MyNotesContent = ({
   }, [openRelease])
 
   return (
-    <div className="size-full flex flex-col px-[16px] pt-[16px] overflow-y-auto">
+    <div className="size-full flex flex-col px-[16px] pt-[16px]">
       {!selectMode && (
-        <div className="w-full flex items-center">
-          <Link
-            to={'/library/search'}
-            className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
-          >
-            <IcSearch className="size-[20px] text-icon-secondary" />
-            <Text typo="subtitle-2-medium" color="caption">
-              퀴즈 제목, 내용 검색
-            </Text>
-          </Link>
+        <div className="w-full flex items-center justify-between">
+          <Tabs value={activeTab} onValueChange={(tab) => onTabChange(tab as Tab)}>
+            <TabsList className="flex gap-[8px]">
+              <TabsTrigger
+                className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
+                value={'MY' as Tab}
+              >
+                생성한 {user?.totalQuizCount}
+              </TabsTrigger>
+              <TabsTrigger
+                className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
+                value={'BOOKMARK' as Tab}
+              >
+                저장한 {user?.bookmarkCount}
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild className="size-fit py-[10px] pl-[10px] flex-center cursor-pointer">
@@ -110,18 +135,11 @@ const MyNotesContent = ({
 
             <DropdownMenuContent align="end">
               <DropdownMenuItem
-                onClick={() => setSortOption('WRONG_ANSWER_COUNT')}
-                right={activeSortOption === 'WRONG_ANSWER_COUNT' && <IcCheck className="size-[20px]" />}
-                className="cursor-pointer"
-              >
-                오답 수
-              </DropdownMenuItem>
-              <DropdownMenuItem
                 onClick={() => setSortOption('CREATED_AT')}
                 right={activeSortOption === 'CREATED_AT' && <IcCheck className="size-[20px]" />}
                 className="cursor-pointer"
               >
-                생성한 일자
+                추가된 일자
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setSortOption('NAME')}
@@ -142,79 +160,94 @@ const MyNotesContent = ({
         </div>
       )}
 
-      <div className="py-[16px] h-fit w-full flex flex-col gap-[8px]">
-        {documents.map((document) => (
-          <SlidableNoteCard
-            key={document.id}
-            id={document.id}
-            selectMode={selectMode}
-            changeSelectMode={changeSelectMode}
-            onClick={() => {
-              router.push('/library/:noteId', { params: [String(document.id)] })
-              trackEvent('library_item_click', {
-                location: '내 퀴즈 탭',
-              })
-            }}
-            swipeOptions={[
-              <button
+      {isLoading ? (
+        <>
+          <Loading center />
+          {/* <div className="mt-[16px] pb-[16px] h-full w-full flex flex-col gap-[8px] overflow-y-auto">
+            {Array.from({ length: 10 }).map((_, index) => (
+              <div key={index} className="w-full h-[104px] shrink-0 rounded-[16px] bg-gray-100 animate-pulse"></div>
+            ))}
+          </div> */}
+        </>
+      ) : isEmptyMyDocuments ? (
+        <EmptyMyNote />
+      ) : (
+        documents && (
+          <div className="mt-[16px] pb-[16px] h-full w-full flex flex-col gap-[8px] overflow-y-auto">
+            {documents.map((document) => (
+              <SlidableNoteCard
+                key={document.id}
+                id={document.id}
+                selectMode={selectMode}
+                changeSelectMode={changeSelectMode}
                 onClick={() => {
-                  check(document.id)
+                  router.push('/library/:noteId', { params: [String(document.id)] })
+                  trackEvent('library_item_click', {
+                    location: '내 퀴즈 탭',
+                  })
+                }}
+                swipeOptions={[
+                  <button
+                    onClick={() => {
+                      check(document.id)
 
-                  if (!document.isPublic) {
-                    setOpenRelease(true)
-                  } else {
-                    handleShare(document.id, document.name)
+                      if (!document.isPublic) {
+                        setOpenRelease(true)
+                      } else {
+                        handleShare(document.id, document.name)
+                      }
+                    }}
+                    key={'shareButton'}
+                    className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse"
+                  >
+                    <IcUpload className="size-[20px] mb-[4px] text-inverse" />
+                    <Text typo="body-1-medium" color="inverse" className="size-fit">
+                      공유
+                    </Text>
+                  </button>,
+                  <button
+                    onClick={() => {
+                      check(document.id)
+                      setOpenDelete(true)
+                    }}
+                    key={'deleteButton'}
+                    className="flex-center w-[72px] flex-col bg-critical p-2 text-inverse"
+                  >
+                    <IcDelete className="size-[20px] mb-[4px]" />
+                    <Text typo="body-1-medium" color="inverse" className="size-fit">
+                      삭제
+                    </Text>
+                  </button>,
+                ]}
+              >
+                <SlidableNoteCard.Left
+                  content={document.emoji}
+                  checkBox={
+                    <Checkbox
+                      id={`note_${document.id}`}
+                      checked={isChecked(document.id)}
+                      onCheckedChange={(checked) => (checked ? check(document.id) : unCheck(document.id))}
+                      className="mx-[10px] size-[20px]"
+                    />
                   }
-                }}
-                key={'shareButton'}
-                className="flex-center w-[72px] flex-col bg-orange p-2 text-inverse"
-              >
-                <IcUpload className="size-[20px] mb-[4px] text-inverse" />
-                <Text typo="body-1-medium" color="inverse" className="size-fit">
-                  공유
-                </Text>
-              </button>,
-              <button
-                onClick={() => {
-                  check(document.id)
-                  setOpenDelete(true)
-                }}
-                key={'deleteButton'}
-                className="flex-center w-[72px] flex-col bg-critical p-2 text-inverse"
-              >
-                <IcDelete className="size-[20px] mb-[4px]" />
-                <Text typo="body-1-medium" color="inverse" className="size-fit">
-                  삭제
-                </Text>
-              </button>,
-            ]}
-          >
-            <SlidableNoteCard.Left
-              content={document.emoji}
-              checkBox={
-                <Checkbox
-                  id={`note_${document.id}`}
-                  checked={isChecked(document.id)}
-                  onCheckedChange={(checked) => (checked ? check(document.id) : unCheck(document.id))}
-                  className="mx-[10px] size-[20px]"
+                  selectMode={selectMode}
                 />
-              }
-              selectMode={selectMode}
-            />
 
-            <SlidableNoteCard.Content>
-              <SlidableNoteCard.Header title={document.name} />
-              <SlidableNoteCard.Preview content={extractPlainText(document.previewContent)} />
-              <SlidableNoteCard.Detail
-                quizCount={document.totalQuizCount}
-                playedCount={document.tryCount}
-                bookmarkCount={document.bookmarkCount}
-                isPublic={document.isPublic}
-              />
-            </SlidableNoteCard.Content>
-          </SlidableNoteCard>
-        ))}
-      </div>
+                <SlidableNoteCard.Content>
+                  <SlidableNoteCard.Header title={document.name} />
+                  <SlidableNoteCard.Preview content={extractPlainText(document.previewContent)} />
+                  <SlidableNoteCard.Detail
+                    quizCount={document.totalQuizCount}
+                    playedCount={document.tryCount}
+                    bookmarkCount={document.bookmarkCount}
+                    isPublic={document.isPublic}
+                  />
+                </SlidableNoteCard.Content>
+              </SlidableNoteCard>
+            ))}
+          </div>
+        )
+      )}
 
       {selectMode && (
         <div

@@ -1,20 +1,16 @@
-import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
-
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useNoteList } from '@/features/note/hooks/use-note-list'
 import BookmarkedNotesContent from '@/features/note/ui/bookmarked-notes-content'
-import EmptyBookmarkQuiz from '@/features/note/ui/empty-bookmark-quiz'
-import EmptyMyNote from '@/features/note/ui/empty-my-note'
 import MyNotesContent from '@/features/note/ui/my-notes-content'
 
-import { IcAdd, IcBack, IcProfile } from '@/shared/assets/icon'
+import { IcAdd, IcBack, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
-import Loading from '@/shared/components/ui/loading'
+import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
-import { useRouter } from '@/shared/lib/router'
+import { Link, useRouter } from '@/shared/lib/router'
 
 const LibraryPage = () => {
   const { trackEvent } = useAmplitude()
@@ -41,6 +37,10 @@ const LibraryPage = () => {
 
   const { toggleAll } = myDocsCheckList
 
+  const handleTabChange = (tab: Tab) => {
+    setTab(tab)
+  }
+
   return (
     <>
       {/* selectMode에 따른 헤더 상태 */}
@@ -62,11 +62,6 @@ const LibraryPage = () => {
       ) : (
         <Header
           className="bg-surface-2 px-2"
-          left={
-            <button onClick={() => router.push('/account')} className="size-[40px] flex-center">
-              <IcProfile className="size-[24px]" />
-            </button>
-          }
           right={
             <button
               onClick={() => {
@@ -82,49 +77,44 @@ const LibraryPage = () => {
             </button>
           }
           content={
-            <div className="center">
-              <Tabs value={activeTab} onValueChange={(tab) => setTab(tab as Tab)}>
-                <TabsList>
-                  <TabsTrigger
-                    className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full h-[36px] w-[72px]"
-                    value={'MY' as Tab}
-                  >
-                    내 퀴즈
-                  </TabsTrigger>
-                  <TabsTrigger
-                    className="typo-button-2 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full h-[36px] w-[72px]"
-                    value={'BOOKMARK' as Tab}
-                  >
-                    북마크
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+            <div className="w-[calc(100%-40px)] px-[8px]">
+              <Link
+                to={'/library/search'}
+                className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
+              >
+                <IcSearch className="size-[20px] text-icon-secondary" />
+                <Text typo="subtitle-2-medium" color="caption">
+                  퀴즈 제목, 내용 검색
+                </Text>
+              </Link>
             </div>
           }
         />
       )}
 
-      {/* 로딩과 tab에 따른 메인 영역 컨텐츠 */}
+      {/* tab에 따른 메인 영역 컨텐츠 */}
       <HeaderOffsetLayout className="size-full">
-        {isLoading ? (
-          <Loading center />
-        ) : (
-          <>
-            {activeTab === 'MY' &&
-              (isEmptyMyDocuments ? (
-                <EmptyMyNote />
-              ) : (
-                <MyNotesContent
-                  documents={myDocuments}
-                  selectMode={selectMode}
-                  changeSelectMode={changeSelectMode}
-                  checkList={myDocsCheckList}
-                />
-              ))}
+        {activeTab === 'MY' && (
+          <MyNotesContent
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            isLoading={isLoading}
+            isEmptyMyDocuments={isEmptyMyDocuments}
+            documents={myDocuments}
+            selectMode={selectMode}
+            changeSelectMode={changeSelectMode}
+            checkList={myDocsCheckList}
+          />
+        )}
 
-            {activeTab === 'BOOKMARK' &&
-              (isEmptyBookmarked ? <EmptyBookmarkQuiz /> : <BookmarkedNotesContent documents={bookmarkedDocuments} />)}
-          </>
+        {activeTab === 'BOOKMARK' && (
+          <BookmarkedNotesContent
+            activeTab={activeTab}
+            onTabChange={handleTabChange}
+            isLoading={isLoading}
+            isEmptyBookmarked={isEmptyBookmarked}
+            documents={bookmarkedDocuments}
+          />
         )}
       </HeaderOffsetLayout>
     </>

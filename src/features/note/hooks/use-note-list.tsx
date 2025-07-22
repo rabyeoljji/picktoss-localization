@@ -41,10 +41,14 @@ export const useNoteList = () => {
 
   // 정렬 옵션에 따라 데이터 페칭
   const memoizedOptions = useMemo(() => {
-    return activeTab === 'MY' && sortOption ? { sortOption } : undefined
+    return activeTab !== 'MY' ? { enabled: false } : sortOption ? { sortOption } : undefined
   }, [activeTab, sortOption])
   const memoizedBookmarkOptions = useMemo(() => {
-    return activeTab === 'BOOKMARK' && bookmarkedSortOption ? { sortOption: bookmarkedSortOption } : undefined
+    return activeTab !== 'BOOKMARK'
+      ? { enabled: false }
+      : bookmarkedSortOption
+        ? { sortOption: bookmarkedSortOption }
+        : undefined
   }, [activeTab, bookmarkedSortOption])
 
   const { data: myDocumentsData, isLoading: myDocumentsLoading } = useGetAllDocuments(memoizedOptions)
@@ -53,6 +57,9 @@ export const useNoteList = () => {
 
   // 전체 로딩 상태
   const isLoading = myDocumentsLoading || bookmarkedDocumentsLoading
+
+  // 데이터 페칭 중인지 여부
+  // const isLoading = myDocumentFetching || bookmarkedFetching
 
   // 체크리스트 관리
   const myDocsCheckList = useCheckList(myDocumentsData?.documents ?? [])

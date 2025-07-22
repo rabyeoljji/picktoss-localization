@@ -127,10 +127,10 @@ export interface GetBookmarkedDocumentsResponse {
   documents: GetBookmarkedDocumentsDto[]
 }
 
-export type BookmarkedSortOption = 'CREATED_AT' | 'QUIZ_COUNT'
+export type BookmarkedSortOption = 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT'
 
 export const getBookmarkedDocuments = async (options?: {
-  sortOption?: 'CREATED_AT' | 'QUIZ_COUNT'
+  sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT'
 }): Promise<GetBookmarkedDocumentsResponse> => {
   const params = options?.sortOption ? { 'sort-option': options.sortOption } : undefined
   const response = await client.get<GetBookmarkedDocumentsResponse>(DOCUMENT_ENDPOINTS.getBookmarkedDocuments, {

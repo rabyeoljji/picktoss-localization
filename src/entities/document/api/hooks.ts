@@ -114,10 +114,12 @@ export const useGetDocumentQuizzes = ({
 export const useGetAllDocuments = (options?: {
   directoryId?: number
   sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
+  enabled?: boolean
 }) => {
   return useQuery({
     queryKey: [...DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
     queryFn: () => getAllDocuments(options),
+    enabled: options?.enabled ?? true,
   })
 }
 
@@ -187,10 +189,14 @@ export const useGetIsNotPublicDocuments = (queryOptions?: { enabled: boolean }) 
   })
 }
 
-export const useGetBookmarkedDocuments = (options?: { sortOption?: 'CREATED_AT' | 'QUIZ_COUNT' }) => {
+export const useGetBookmarkedDocuments = (options?: {
+  sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT'
+  enabled?: boolean
+}) => {
   return useQuery({
     queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments, options?.sortOption],
     queryFn: () => getBookmarkedDocuments(options),
+    enabled: options?.enabled ?? true,
   })
 }
 

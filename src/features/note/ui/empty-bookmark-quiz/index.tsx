@@ -12,7 +12,7 @@ const EmptyBookmarkQuiz = () => {
         <ImgBookmarkEmpty className="size-[120px]" />
 
         <div className="flex-center flex-col gap-[8px]">
-          <Text typo="subtitle-1-bold">북마크한 퀴즈가 없어요</Text>
+          <Text typo="subtitle-1-bold">저장한 퀴즈가 없어요</Text>
           <Text typo="body-1-medium" color="sub" className="text-center">
             픽토스에서 사람들이 만든 <br />
             관심분야의 퀴즈를 저장해 보세요
