@@ -1,79 +1,93 @@
-import { useEffect, useState } from 'react'
-
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { ImgDaily1, ImgDaily2, ImgDaily3 } from '@/shared/assets/images'
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from '@/shared/components/ui/carousel'
+import { useUser } from '@/entities/member/api/hooks'
+
+import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
-import { cn } from '@/shared/lib/utils'
+import { useRouter } from '@/shared/lib/router'
 
-export const InfoCarousel = () => {
-  const [api, setApi] = useState<CarouselApi>()
-  const [current, setCurrent] = useState(1)
-  const [count, setCount] = useState(0)
+import { MultipleChoiceOption } from './multiple-choice-option'
 
-  useEffect(() => {
-    if (!api) {
-      return
+export const DailyGuide = () => {
+  const router = useRouter()
+  const { data: user } = useUser()
+
+  const handleOptionClick = (type: string) => {
+    if (type === 'file') {
+      router.push('/note/create', {
+        search: {
+          documentType: 'FILE',
+        },
+      })
     }
-
-    setCount(api.scrollSnapList().length)
-    setCurrent(api.selectedScrollSnap() + 1)
-
-    api.on('select', () => {
-      setCurrent(api.selectedScrollSnap() + 1)
-    })
-  }, [api])
+    if (type === 'text') {
+      router.push('/note/create', {
+        search: {
+          documentType: 'TEXT',
+        },
+      })
+    }
+    if (type === 'interest') {
+      router.push('/explore', {
+        search: {
+          category: user?.category.id,
+        },
+      })
+    }
+    if (type === 'explore') {
+      router.push('/explore')
+    }
+  }
 
   return (
-    <HeaderOffsetLayout className="px-3">
-      <div className="mt-1 shadow-[var(--shadow-md)]shadow-md rounded-[20px] px-5 pt-7 pb-6 bg-surface-1">
-        <Carousel setApi={setApi}>
-          <CarouselContent>
-            <CarouselItem>
-              <ImgDaily1 className="w-full max-w-[400px] mx-auto" />
+    <HeaderOffsetLayout className="px-4">
+      <div className="mt-2 shadow-md rounded-[24px] pt-[38px] px-4 bg-surface-1 min-h-[66svh]">
+        <div className="text-center mb-[26px]">
+          <div className="mb-3">
+            <Tag size="md" className="mx-auto">
+              데일리 이용 가이드
+            </Tag>
+          </div>
+          <Text typo="question">
+            퀴즈를 생성하거나 저장하면
+            <br />
+            여기에 랜덤으로 문제가 나타나요
+          </Text>
+        </div>
 
-              <div className="text-center mt-15">
-                <Text typo="h3">내 퀴즈 생성하기</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  쌓아둔 필기, 메모, 저장한 자료 등<br />
-                  공부한 내용으로 맞춤형 퀴즈를 생성해요
-                </Text>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem>
-              <ImgDaily2 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">관심 퀴즈 저장하기</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  사람들이 만든 다양한 문제를 풀어보고,
-                  <br />
-                  마음에 드는 퀴즈를 북마크해요
-                </Text>
-              </div>
-            </CarouselItem>
-
-            <CarouselItem>
-              <ImgDaily3 className="w-full max-w-[400px] mx-auto" />
-
-              <div className="text-center mt-15">
-                <Text typo="h3">데일리로 기억하기!</Text>
-                <Text as="p" typo="subtitle-2-medium" color="sub" className="mt-2">
-                  내가 생성하거나 북마크한 퀴즈의 문제를
-                  <br />
-                  여기서 랜덤으로 풀어보며 복습해요
-                </Text>
-              </div>
-            </CarouselItem>
-          </CarouselContent>
-        </Carousel>
-
-        <div className="mt-[65px] mx-auto w-fit flex gap-2 items-center">
-          {Array.from({ length: count }).map((_, i) => (
-            <div key={i} className={cn('size-2 rounded-full bg-surface-3', current === i + 1 && 'bg-inverse')} />
-          ))}
+        <div className="space-y-2">
+          <MultipleChoiceOption
+            label="A"
+            option="파일로 퀴즈 생성하기"
+            selectedOption={null}
+            isCorrect={false}
+            animationDelay={0}
+            onClick={() => handleOptionClick('file')}
+          />
+          <MultipleChoiceOption
+            label="B"
+            option="텍스트로 퀴즈 생성하기"
+            selectedOption={null}
+            isCorrect={false}
+            animationDelay={100}
+            onClick={() => handleOptionClick('text')}
+          />
+          <MultipleChoiceOption
+            label="C"
+            option="내 관심분야 퀴즈 보러가기"
+            selectedOption={null}
+            isCorrect={false}
+            animationDelay={200}
+            onClick={() => handleOptionClick('interest')}
+          />
+          <MultipleChoiceOption
+            label="D"
+            option="픽토스 전체 퀴즈 보러가기"
+            selectedOption={null}
+            isCorrect={false}
+            animationDelay={300}
+            onClick={() => handleOptionClick('explore')}
+          />
         </div>
       </div>
     </HeaderOffsetLayout>

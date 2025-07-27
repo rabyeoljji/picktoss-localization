@@ -8,7 +8,7 @@ import OnBoarding from '@/app/on-boarding'
 
 import { useOnboardingStore } from '@/features/onboarding/model/onboarding-store'
 import { usePullToRefresh } from '@/features/quiz/hooks/use-pull-to-refresh'
-import { InfoCarousel } from '@/features/quiz/ui/banner'
+import { DailyGuide } from '@/features/quiz/ui/banner'
 import { DailyQuizTooltip } from '@/features/quiz/ui/daliy-quiz-tooltip'
 import { MultipleChoiceOption } from '@/features/quiz/ui/multiple-choice-option'
 import { OXChoiceOption } from '@/features/quiz/ui/ox-choice-option'
@@ -265,27 +265,29 @@ const HomePage = () => {
     <>
       <Header
         content={
-          <div className="flex items-center">
+          <div className="flex items-center py-[7px] justify-between">
+            <div className="ml-2">
+              <Text typo="subtitle-1-bold" color="secondary">
+                {new Date()
+                  .toLocaleDateString('ko-KR', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    weekday: 'short',
+                  })
+                  .replace(/\s/g, '')}
+              </Text>
+            </div>
             <div className="flex items-center">
-              <button onClick={() => router.push('/account')} className="p-2 flex-center">
-                <IcProfile className="size-6" />
-              </button>
-
               <DailyQuizTooltip
                 consecutiveSolvedDailyQuizDays={consecutiveSolvedDailyQuizDays ?? 0}
                 todaySolvedDailyQuizCount={todaySolvedDailyQuizCount ?? 0}
               />
             </div>
-            <div className="ml-auto">
-              <button onClick={() => router.push('/library/search')} className="p-2 flex-center">
-                <IcSearch className="size-6" />
-              </button>
-            </div>
           </div>
         }
         className="bg-surface-2"
       />
-      {!isLoading && quizzes?.length === 0 && quizData?.quizzes.length === 0 && <InfoCarousel />}
+      {!isLoading && quizzes?.length === 0 && quizData?.quizzes.length === 0 && <DailyGuide />}
       {(quizData?.quizzes.length ?? 0) > 0 && (
         <HeaderOffsetLayout className="px-3">
           {!isRefreshing ? (

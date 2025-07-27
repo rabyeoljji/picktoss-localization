@@ -35,7 +35,7 @@ export const DailyQuizTooltip = ({
           <ImgStar className="size-[28px]" />
         </button>
       </TooltipTrigger>
-      <TooltipContent side="right" color="inverse">
+      <TooltipContent side="left" color="inverse" arrowPosition="right">
         {todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount > 0 ? (
           <Text typo="body-2-medium">
             <span className="text-accent">{10 - todaySolvedDailyQuizCount}문제</span> <span>더 풀면 획득!</span>
