@@ -11,6 +11,12 @@ const AMPLITUDE_API_KEY = import.meta.env.VITE_AMPLITUDE_API_KEY || ''
 /*                           [이벤트별 Props 정의]                             */
 /* -------------------------------------------------------------------------- */
 
+// 로그인/가입
+/** [로그인/가입] onboard_complete_click - 완료 버튼 클릭 */
+export interface OnboardCompleteClickProps {
+  category: '자격증·수험' | '학문·전공' | 'IT·개발' | '재테크·시사' | '언어' | '상식·교양'
+}
+
 // GNB
 /** [GNB] explore_click - 탐험 메뉴 클릭 */
 export interface ExploreClickProps {}
@@ -192,6 +198,8 @@ export interface ShareClickProps {
  * 이벤트 타입 정의
  */
 export type EventName =
+  // 로그입/가입
+  | 'onboard_complete_click'
   // GNB
   | 'explore_click'
   | 'library_click'
@@ -249,6 +257,8 @@ export type EventName =
  * 이벤트별 프로퍼티 타입 매핑
  */
 export type EventPropsMap = {
+  // 로그인/가입
+  onboard_complete_click: OnboardCompleteClickProps
   // GNB
   explore_click: ExploreClickProps
   library_click: LibraryClickProps

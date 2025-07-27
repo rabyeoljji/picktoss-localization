@@ -4,12 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
 import { z } from 'zod'
 
+import { useOnboardingStore } from '@/features/onboarding/model/onboarding-store'
+
 // import { withHOC } from '@/app/hoc/with-page-config'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
 import { useUpdateMemberCategory, useUser } from '@/entities/member/api/hooks'
-
-import { useOnboardingStore } from '@/features/onboarding/model/onboarding-store'
 
 import { SelectCard } from '@/shared/components/cards/select-card'
 import FixedBottom from '@/shared/components/fixed-bottom'
@@ -17,6 +17,7 @@ import { Button } from '@/shared/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/shared/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
+import { OnboardCompleteClickProps, useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
 
 const categorySchema = z.object({
@@ -26,6 +27,8 @@ const categorySchema = z.object({
 type CategoryForm = z.infer<typeof categorySchema>
 
 const OnBoardingPage = () => {
+  const { trackEvent } = useAmplitude()
+
   const router = useRouter()
 
   const { data: user } = useUser()
@@ -52,6 +55,10 @@ const OnBoardingPage = () => {
       { categoryId: Number(data.categoryId) },
       {
         onSuccess: () => {
+          trackEvent('onboard_complete_click', {
+            category: categories?.find((category) => category.id === Number(data.categoryId))
+              ?.name as OnboardCompleteClickProps['category'],
+          })
           setOnboardingCompleted()
           router.replace('/')
         },
@@ -84,10 +91,10 @@ const OnBoardingPage = () => {
                 님,
               </Text>
               <Text typo="h2" className="text-center justify-start leading-9">
-                현재 어떤 분야의 퀴즈에
+                현재 어떤 분야를 주로
               </Text>
               <Text typo="h2" className="text-center justify-start leading-9">
-                관심이 있으세요?
+                공부하고 있나요?
               </Text>
             </div>
             <div className="self-stretch flex flex-col justify-start items-start gap-2">
