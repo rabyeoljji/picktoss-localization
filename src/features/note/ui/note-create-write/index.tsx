@@ -22,6 +22,48 @@ export const NoteCreateWrite = () => {
   const textAreaRef = useRef<HTMLTextAreaElement>(null)
 
   const [canPaste, setCanPaste] = useState(false)
+  const [clipboardPermissionRequested, setClipboardPermissionRequested] = useState(false)
+  const [clipboardPermissionDenied, setClipboardPermissionDenied] = useState(false)
+
+  // 클립보드 권한 요청 함수
+  const requestClipboardPermission = async () => {
+    if (!navigator.permissions || !navigator.clipboard) return false
+
+    try {
+      const permission = await navigator.permissions.query({ name: 'clipboard-read' as PermissionName })
+
+      if (permission.state === 'granted') {
+        return true
+      } else if (permission.state === 'prompt') {
+        // 권한 요청을 위해 실제 clipboard 접근 시도
+        await navigator.clipboard.readText()
+        return true
+      } else if (permission.state === 'denied') {
+        setClipboardPermissionDenied(true)
+        return false
+      }
+
+      return false
+    } catch {
+      setClipboardPermissionDenied(true)
+      return false
+    }
+  }
+
+  // PWA 환경에서 클립보드 권한 확인 및 요청
+  useEffect(() => {
+    handlePointerDown()
+
+    if (isPWA && !clipboardPermissionRequested) {
+      requestClipboardPermission().then((granted) => {
+        setClipboardPermissionRequested(true)
+        if (granted) {
+          // 권한이 허용되면 클립보드 내용 확인
+          handlePointerDown()
+        }
+      })
+    }
+  }, [isPWA, clipboardPermissionRequested])
 
   const handlePointerDown = async () => {
     if (!navigator.clipboard) return
@@ -83,7 +125,7 @@ export const NoteCreateWrite = () => {
           height: textareaHeight,
         }}
       />
-      {canPaste && content.length === 0 && (
+      {canPaste && content.length === 0 && !clipboardPermissionDenied && (
         <Button
           variant="secondary2"
           size="sm"
