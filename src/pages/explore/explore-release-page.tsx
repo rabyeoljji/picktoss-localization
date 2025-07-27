@@ -40,7 +40,7 @@ const ExploreReleasePage = () => {
         {
           onSuccess: () => {
             toast('퀴즈가 공개되었어요')
-            router.replace('/explore/detail/:noteId', { params: [String(selectedId)] })
+            router.replace('/quiz-detail/:noteId', { params: [String(selectedId)] })
           },
         },
       )

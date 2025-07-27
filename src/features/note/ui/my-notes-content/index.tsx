@@ -181,7 +181,7 @@ const MyNotesContent = ({
                 selectMode={selectMode}
                 changeSelectMode={changeSelectMode}
                 onClick={() => {
-                  router.push('/library/:noteId', { params: [String(document.id)] })
+                  router.push('/quiz-detail/:noteId', { params: [String(document.id)] })
                   trackEvent('library_item_click', {
                     location: '내 퀴즈 탭',
                   })
@@ -320,7 +320,7 @@ const NeedReleaseDialog = ({
         { isPublic: true },
         {
           onSuccess: () => {
-            router.push('/explore/detail/:noteId', { params: [String(selectedDocument.id)] })
+            router.push('/quiz-detail/:noteId', { params: [String(selectedDocument.id)] })
           },
           onError: () => {
             toast.error('퀴즈 공개에 실패했어요')
@@ -375,7 +375,7 @@ const NeedReleaseDialog = ({
         confirmLabel="생성하기"
         onConfirm={() => {
           if (!selectedDocument) return
-          router.push('/library/:noteId', { params: [String(selectedDocument.id)] })
+          router.push('/quiz-detail/:noteId', { params: [String(selectedDocument.id)] })
         }}
       />
     </>

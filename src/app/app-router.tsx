@@ -21,15 +21,17 @@ import FeedbackPage from '@/pages/account/feedback-page'
 import MyStarPage from '@/pages/account/my-star-page'
 import StarHistoryPage from '@/pages/account/star-history-page'
 import { LoginPage } from '@/pages/auth'
-import { ExploreComplainPage, ExploreDetailPage, ExplorePage, ExploreSearchPage } from '@/pages/explore'
+import { ExploreComplainPage, ExplorePage, ExploreSearchPage } from '@/pages/explore'
 import ExploreReleasePage from '@/pages/explore/explore-release-page'
 import HomePage from '@/pages/home-page'
 import { InstallGuidePage } from '@/pages/install-guide-page'
 import InviteLoginPage from '@/pages/invite/invite-login-page'
 import InvitePage from '@/pages/invite/invite-page'
-import { LibraryPage, LibrarySearchPage, NoteDetailPage, NoteEditPage, NoteQuizPage } from '@/pages/library'
+import { LibraryPage, LibrarySearchPage, NoteEditPage, NoteQuizPage } from '@/pages/library'
 import { NoteCreatePage } from '@/pages/note-create'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
+import QuizDetailListPage from '@/pages/quiz-detail/quiz-detail-list-page'
+import QuizDetailPage from '@/pages/quiz-detail/quiz-detail-page'
 import SearchPage from '@/pages/search-page'
 
 import { AuthLayout } from '@/app/layout/auth-layout'
@@ -63,7 +65,7 @@ export const AppRouter = () => {
                 <Route path={RoutePath.library}>
                   <Route index element={<LibraryPage />} />
                   <Route path={RoutePath.librarySearch} element={<LibrarySearchPage />} />
-                  <Route path={RoutePath.libraryNoteDetail} element={<NoteDetailPage />} />
+                  <Route path={RoutePath.libraryNoteDetailList} element={<QuizDetailListPage />} />
                   <Route path={RoutePath.libraryNoteQuiz} element={<NoteQuizPage />} />
                   <Route path={RoutePath.libraryNoteEdit} element={<NoteEditPage />} />
                 </Route>
@@ -101,7 +103,6 @@ export const AppRouter = () => {
             <Route path={RoutePath.explore}>
               <Route index element={<ExplorePage />} />
               <Route path={RoutePath.exploreSearch} element={<ExploreSearchPage />} />
-              <Route path={RoutePath.exploreDetail} element={<ExploreDetailPage />} />
 
               <Route element={<AuthLayout />}>
                 <Route element={<PWAOnlyMobileLayout />}>
@@ -110,6 +111,8 @@ export const AppRouter = () => {
                 </Route>
               </Route>
             </Route>
+
+            <Route path={RoutePath.quizDetail} element={<QuizDetailPage />} />
 
             {/* Invite */}
             <Route path={RoutePath.invite} element={<InvitePage />} />

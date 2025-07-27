@@ -32,7 +32,7 @@ export const useRouter = () => {
    * 새 주소로 이동
    *
    * @template T 경로 문자열 리터럴 타입
-   * @param path 이동할 경로 (예: '/account', '/library/:noteId')
+   * @param path 이동할 경로 (예: '/account', '/quiz-detail/:noteId')
    * @param options 이동 옵션 (파라미터가 있는 경로는 필수, 없는 경로는 선택적)
    *
    * @example
@@ -43,7 +43,7 @@ export const useRouter = () => {
    *
    * @example
    * // 파라미터가 있는 경로로 이동 (params는 필수)
-   * router.push('/library/:noteId', { params: ['123'] })
+   * router.push('/quiz-detail/:noteId', { params: ['123'] })
    */
   function push<T extends Pathname>(path: T, ...args: ParamOptions<T>) {
     // buildUrl에 전달할 옵션 객체를 생성
@@ -72,7 +72,7 @@ export const useRouter = () => {
    * 현재 주소를 대체하여 이동 (히스토리에 추가되지 않음)
    *
    * @template T 경로 문자열 리터럴 타입
-   * @param path 이동할 경로 (예: '/account', '/library/:noteId')
+   * @param path 이동할 경로 (예: '/account', '/quiz-detail/:noteId')
    * @param options 이동 옵션 (파라미터가 있는 경로는 필수, 없는 경로는 선택적)
    */
   function replace<T extends Pathname>(path: T, ...args: ParamOptions<T>) {

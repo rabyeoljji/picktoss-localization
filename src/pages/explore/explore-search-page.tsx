@@ -170,9 +170,9 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
 
   const handleClickMoveToDetailPageBtn = () => {
     if (searchItem.isOwner) {
-      router.push('/library/:noteId', { params: [String(searchItem.id)] })
+      router.push('/quiz-detail/:noteId', { params: [String(searchItem.id)] })
     } else {
-      router.push('/explore/detail/:noteId', { params: [String(searchItem.id)] })
+      router.push('/quiz-detail/:noteId', { params: [String(searchItem.id)] })
     }
   }
 

@@ -42,7 +42,7 @@ const ComplainForm = () => {
       {
         onSuccess: () => {
           toast('신고가 완료되었어요')
-          router.replace('/explore/detail/:noteId', {
+          router.replace('/quiz-detail/:noteId', {
             params: [String(noteId)],
           })
         },

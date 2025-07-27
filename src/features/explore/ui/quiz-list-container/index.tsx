@@ -219,9 +219,9 @@ const ExploreCard = ({
     }
 
     if (document.isOwner) {
-      router.push('/library/:noteId', { params: [String(id)] })
+      router.push('/quiz-detail/:noteId', { params: [String(id)] })
     } else {
-      router.push('/explore/detail/:noteId', { params: [String(id)] })
+      router.push('/quiz-detail/:noteId', { params: [String(id)] })
     }
   }
 

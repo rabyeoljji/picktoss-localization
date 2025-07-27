@@ -161,7 +161,7 @@ const BookmarkedCard = ({
   return (
     <BookmarkHorizontalCard
       onClick={() => {
-        router.push('/explore/detail/:noteId', { params: [String(id)] })
+        router.push('/quiz-detail/:noteId', { params: [String(id)] })
         trackEvent('library_item_click', {
           location: '북마크 탭',
         })

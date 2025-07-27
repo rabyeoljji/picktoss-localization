@@ -606,7 +606,7 @@ const IncorrectAnswerBody = ({
 
           <button
             className="flex items-center gap-1"
-            onClick={() => router.push(`/library/:noteId`, { params: [String(currQuiz.documentId)] })}
+            onClick={() => router.push(`/quiz-detail/:noteId`, { params: [String(currQuiz.documentId)] })}
           >
             <Text typo="body-1-medium" color="sub">
               {currQuiz.name}

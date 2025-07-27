@@ -64,8 +64,8 @@ export const RouteConfig = {
       tab: 'MY' as 'MY' | 'BOOKMARK',
     },
   },
-  libraryNoteDetail: {
-    pathname: '/library/:noteId',
+  libraryNoteDetailList: {
+    pathname: '/library/list/:noteId',
     search: {
       quizType: 'ALL' as 'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL',
       showAnswer: false as boolean,
@@ -179,13 +179,6 @@ export const RouteConfig = {
   exploreRelease: {
     pathname: '/explore/release',
   },
-  exploreDetail: {
-    pathname: '/explore/detail/:noteId',
-    search: {
-      quizType: 'ALL' as 'ALL' | 'MIX_UP' | 'MULTIPLE_CHOICE',
-      sort: 'CREATED_AT' as 'CREATED_AT' | 'LOWEST_ACCURACY',
-    },
-  },
   exploreComplain: {
     pathname: '/explore/complain/:noteId',
     search: {
@@ -211,5 +204,9 @@ export const RouteConfig = {
   },
   testOgTags: {
     pathname: '/test-og-tags',
+  },
+
+  quizDetail: {
+    pathname: '/quiz-detail/:noteId',
   },
 } as const

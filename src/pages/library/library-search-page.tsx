@@ -163,7 +163,7 @@ const LibrarySearchResults = ({ tab, documents, keyword }: LibrarySearchResultsP
           return (
             <Link
               key={searchItem.id}
-              to={tab === 'MY' ? '/library/:noteId' : '/explore/detail/:noteId'}
+              to={tab === 'MY' ? '/quiz-detail/:noteId' : '/quiz-detail/:noteId'}
               params={[String(searchItem.id)]}
             >
               <SearchQuizNoteItem

@@ -18,7 +18,7 @@ const stringifySearch = (search: object): string => {
 /**
  * 주어진 경로와 옵션(search, hash, params)을 이용해 최종 URL을 생성
  * @template T 경로 문자열 리터럴 타입
- * @param path 라우트 경로 (예: '/account', '/library/:noteId')
+ * @param path 라우트 경로 (예: '/account', '/quiz-detail/:noteId')
  * @param options URL 생성 옵션 (search, hash, params)
  * @returns 완성된 URL 문자열
  */

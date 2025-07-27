@@ -165,7 +165,7 @@ export const QuizLoadingDrawer = () => {
             <TextButton
               onClick={() => {
                 trackEvent('generate_quiz_later_click')
-                router.replace('/library/:noteId', { params: [String(documentId)] })
+                router.replace('/quiz-detail/:noteId', { params: [String(documentId)] })
               }}
               size="lg"
               className="text-secondary mt-[24px]"
