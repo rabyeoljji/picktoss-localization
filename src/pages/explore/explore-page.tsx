@@ -12,7 +12,7 @@ import QuizListContainer from '@/features/explore/ui/quiz-list-container'
 
 import { useGetCategories } from '@/entities/category/api/hooks'
 
-import { IcClose, IcFile, IcLogo, IcProfile, IcSearch } from '@/shared/assets/icon'
+import { IcClose, IcFile, IcLogo, IcNotification, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
 import { Chip } from '@/shared/components/ui/chip'
 import { Drawer, DrawerContent, DrawerHeader } from '@/shared/components/ui/drawer'
@@ -55,13 +55,13 @@ const ExplorePage = () => {
     router.push('/install-guide')
   }
 
-  const handleProfileClick = () => {
+  const handleNotificationClick = () => {
     if (!token) {
       setIsLoginOpen(true)
       return
     }
 
-    router.push('/account')
+    router.push('/account/notification-config')
   }
 
   useEffect(() => {
@@ -110,18 +110,18 @@ const ExplorePage = () => {
           opacity: hideHeader ? 0 : 1,
         }}
         left={
-          <button onClick={handleProfileClick} className="size-[40px] flex-center">
-            <IcProfile className="size-[24px]" />
-          </button>
+          <div className="pl-[8px]">
+            <IcLogo className="w-[102px] h-[26px]" />
+          </div>
         }
         right={
-          <Link to={'/explore/search'} className="size-[40px] flex-center">
-            <IcSearch className="size-[24px]" />
-          </Link>
-        }
-        content={
-          <div className="center">
-            <IcLogo className="w-[102px] h-[26px]" />
+          <div className="flex">
+            <Link to={'/explore/search'} className="size-[40px] flex-center">
+              <IcSearch className="size-[24px]" />
+            </Link>
+            <button onClick={handleNotificationClick} className="size-[40px] flex-center">
+              <IcNotification className="size-[24px]" />
+            </button>
           </div>
         }
       />
@@ -205,9 +205,8 @@ const CategoryTab = ({ hideHeader }: { hideHeader: boolean }) => {
           {/* 전체 */}
           <Chip
             variant={activeCategory === 0 ? 'selected' : 'darken'}
-            left={activeCategory === 0 ? '💫' : undefined}
             onClick={() => setCategory(0)}
-            className={cn('ml-[16px]')}
+            className={cn('px-[13.5px] ml-[16px]')}
           >
             전체
           </Chip>
@@ -218,7 +217,6 @@ const CategoryTab = ({ hideHeader }: { hideHeader: boolean }) => {
               <Chip
                 key={index}
                 variant={category.id === activeCategory ? 'selected' : 'darken'}
-                left={category.id === activeCategory ? category.emoji : undefined}
                 onClick={() => {
                   setCategory(category.id)
                   trackEvent('explore_category_click', {

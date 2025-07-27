@@ -46,7 +46,6 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
 
   const DATA_PER_PAGE = 20
 
-  // const containerRef = useRef<HTMLDivElement>(null)
   const [categoryId] = useQueryParam('/explore', 'category')
 
   const prevCategoryId = useRef(categoryId)
@@ -59,11 +58,17 @@ const QuizListContainer = ({ scrollRef }: { scrollRef: React.RefObject<HTMLDivEl
   }, [categoryId])
 
   // 데이터 페칭 관련
-  const { documents, isFetching, isInitialFetching, hasNextPage, fetchNextPage, isFetchingNextPage } =
+  const { documents, isFetching, isInitialFetching, hasNextPage, fetchNextPage, isFetchingNextPage, refetch } =
     useGetPublicDocuments({
       categoryId,
       pageSize: DATA_PER_PAGE,
     })
+
+  useEffect(() => {
+    if (token) {
+      refetch()
+    }
+  }, [token])
 
   const { ref } = useInView({
     onChange: (inView) => {
@@ -146,7 +151,7 @@ const ExploreCard = ({
 
   const { trackEvent } = useAmplitude()
 
-  const { id, creator, isBookmarked, isOwner, name, emoji, tryCount, bookmarkCount, quizzes } = document
+  const { id, isBookmarked, isOwner, name, emoji, tryCount, bookmarkCount, quizzes } = document
 
   const router = useRouter()
 
@@ -155,23 +160,23 @@ const ExploreCard = ({
   const [isLoginOpen, setIsLoginOpen] = useState(false)
 
   // 공유하기 핸들러
-  const handleShare = async () => {
-    trackEvent('explore_share_click', { location: '미리보기 페이지' })
+  // const handleShare = async () => {
+  //   trackEvent('explore_share_click', { location: '미리보기 페이지' })
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: name,
-          url: `${window.location.origin}/explore/detail/${id}`,
-        })
-        console.log('공유 성공')
-      } catch (error) {
-        console.error('공유 실패', error)
-      }
-    } else {
-      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.')
-    }
-  }
+  //   if (navigator.share) {
+  //     try {
+  //       await navigator.share({
+  //         title: name,
+  //         url: `${window.location.origin}/explore/detail/${id}`,
+  //       })
+  //       console.log('공유 성공')
+  //     } catch (error) {
+  //       console.error('공유 실패', error)
+  //     }
+  //   } else {
+  //     alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.')
+  //   }
+  // }
 
   // 북마크 핸들러
   const handleBookmark = () => {
@@ -238,22 +243,22 @@ const ExploreCard = ({
     <>
       <ExploreQuizCard onClick={handleClickMoveToDetailPageBtn}>
         <ExploreQuizCard.Content>
-          <ExploreQuizCard.Header emoji={emoji} title={name} creator={creator} />
+          <ExploreQuizCard.Header
+            emoji={emoji}
+            title={name}
+            totalQuizCount={quizzes.length}
+            playedCount={tryCount}
+            bookmarkCount={bookmarkCount}
+            isOwner={isOwner}
+            isBookmarked={isBookmarked}
+            onClickBookmark={handleBookmark}
+          />
           <ExploreQuizCard.Quizzes
             onClickMoveToDetailPageBtn={handleClickMoveToDetailPageBtn}
             quizzes={quizzes}
             isFetching={isFetching}
           />
         </ExploreQuizCard.Content>
-        <ExploreQuizCard.Footer
-          totalQuizCount={quizzes.length}
-          playedCount={tryCount}
-          bookmarkCount={bookmarkCount}
-          isOwner={isOwner}
-          isBookmarked={isBookmarked}
-          onClickShare={handleShare}
-          onClickBookmark={handleBookmark}
-        />
       </ExploreQuizCard>
 
       <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
