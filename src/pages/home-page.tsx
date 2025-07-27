@@ -19,7 +19,7 @@ import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
-import { IcFile, IcPagelink, IcProfile, IcRefresh, IcSearch } from '@/shared/assets/icon'
+import { IcFile, IcPagelink, IcRefresh } from '@/shared/assets/icon'
 import { ImgPush, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
