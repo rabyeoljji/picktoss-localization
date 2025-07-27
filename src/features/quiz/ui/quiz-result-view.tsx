@@ -44,6 +44,11 @@ export const QuizResultView = ({
               퀴즈 완료!
             </Text>
           </div>
+          <div className="text-center mt-2">
+            <Text typo="h2">
+              <span className="text-info">{correctAnswers}</span>/{totalQuizCount}
+            </Text>
+          </div>
           <div className="flex mt-10 items-center justify-around px-[28px]">
             <div className="px-[20px] flex flex-col items-center">
               <ImgSpeechbubble className="w-[32px]" />
