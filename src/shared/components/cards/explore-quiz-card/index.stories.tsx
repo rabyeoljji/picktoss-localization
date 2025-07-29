@@ -55,18 +55,18 @@ export const Default: StoryObj<typeof ExploreQuizCard> = {
       <div className="p-10 flex-center">
         <ExploreQuizCard>
           <ExploreQuizCard.Content>
-            <ExploreQuizCard.Header emoji={'🪶'} title={'인지주의 심리학 관련 퀴즈 모음'} creator="picktoss" />
+            <ExploreQuizCard.Header
+              emoji={'🪶'}
+              title={'인지주의 심리학 관련 퀴즈 모음'}
+              totalQuizCount={25}
+              playedCount={345}
+              bookmarkCount={28}
+              isOwner={false}
+              isBookmarked={false}
+              onClickBookmark={() => {}}
+            />
             <ExploreQuizCard.Quizzes onClickMoveToDetailPageBtn={() => {}} quizzes={quizzes} />
           </ExploreQuizCard.Content>
-          <ExploreQuizCard.Footer
-            totalQuizCount={25}
-            playedCount={345}
-            bookmarkCount={28}
-            isOwner={false}
-            isBookmarked={false}
-            onClickShare={() => {}}
-            onClickBookmark={() => {}}
-          />
         </ExploreQuizCard>
       </div>
     )
@@ -77,18 +77,18 @@ export const Default: StoryObj<typeof ExploreQuizCard> = {
         code: `
         <ExploreQuizCard>
           <ExploreQuizCard.Content>
-            <ExploreQuizCard.Header emoji={'🪶'} title={'인지주의 심리학 관련 퀴즈 모음'} creator="picktoss" />
+            <ExploreQuizCard.Header
+              emoji={'🪶'}
+              title={'인지주의 심리학 관련 퀴즈 모음'}
+              totalQuizCount={25}
+              playedCount={345}
+              bookmarkCount={28}
+              isOwner={false}
+              isBookmarked={false}
+              onClickBookmark={() => {}}
+            />
             <ExploreQuizCard.Quizzes onClickMoveToDetailPageBtn={() => {}} quizzes={quizzes} />
           </ExploreQuizCard.Content>
-          <ExploreQuizCard.Footer
-            totalQuizCount={25}
-            playedCount={345}
-            bookmarkCount={28}
-            isOwner={false}
-            isBookmarked={false}
-            onClickShare={() => {}}
-            onClickBookmark={() => {}}
-          />
         </ExploreQuizCard>
         `,
       },
@@ -102,18 +102,18 @@ export const Bookmarked: StoryObj<typeof ExploreQuizCard> = {
       <div className="p-10 flex-center">
         <ExploreQuizCard>
           <ExploreQuizCard.Content>
-            <ExploreQuizCard.Header emoji={'🪶'} title={'인지주의 심리학 관련 퀴즈 모음'} creator="picktoss" />
+            <ExploreQuizCard.Header
+              emoji={'🪶'}
+              title={'인지주의 심리학 관련 퀴즈 모음'}
+              totalQuizCount={25}
+              playedCount={345}
+              bookmarkCount={28}
+              isOwner={false}
+              isBookmarked={true}
+              onClickBookmark={() => {}}
+            />
             <ExploreQuizCard.Quizzes onClickMoveToDetailPageBtn={() => {}} quizzes={quizzes} />
           </ExploreQuizCard.Content>
-          <ExploreQuizCard.Footer
-            totalQuizCount={25}
-            playedCount={345}
-            bookmarkCount={28}
-            isOwner={false}
-            isBookmarked={true}
-            onClickShare={() => {}}
-            onClickBookmark={() => {}}
-          />
         </ExploreQuizCard>
       </div>
     )
@@ -126,18 +126,18 @@ export const Owner: StoryObj<typeof ExploreQuizCard> = {
       <div className="p-10 flex-center">
         <ExploreQuizCard>
           <ExploreQuizCard.Content>
-            <ExploreQuizCard.Header emoji={'🪶'} title={'인지주의 심리학 관련 퀴즈 모음'} creator="picktoss" />
+            <ExploreQuizCard.Header
+              emoji={'🪶'}
+              title={'인지주의 심리학 관련 퀴즈 모음'}
+              totalQuizCount={25}
+              playedCount={345}
+              bookmarkCount={28}
+              isOwner={true}
+              isBookmarked={false}
+              onClickBookmark={() => {}}
+            />
             <ExploreQuizCard.Quizzes onClickMoveToDetailPageBtn={() => {}} quizzes={quizzes} />
           </ExploreQuizCard.Content>
-          <ExploreQuizCard.Footer
-            totalQuizCount={25}
-            playedCount={345}
-            bookmarkCount={28}
-            isOwner={true}
-            isBookmarked={false}
-            onClickShare={() => {}}
-            onClickBookmark={() => {}}
-          />
         </ExploreQuizCard>
       </div>
     )
