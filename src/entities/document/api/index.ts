@@ -261,13 +261,22 @@ export interface SearchPublicDocumentsDto {
   id: number
   name: string
   emoji: string
-  category: string
-  creatorName: string
-  isOwner: boolean
-  isBookmarked: boolean
   tryCount: number
   bookmarkCount: number
   totalQuizCount: number
+  quizzes: SearchDocumentsQuizDto[]
+  isBookmarked: boolean
+  isOwner: boolean
+  // id: number
+  // name: string
+  // emoji: string
+  // category: string
+  // creatorName: string
+  // isOwner: boolean
+  // isBookmarked: boolean
+  // tryCount: number
+  // bookmarkCount: number
+  // totalQuizCount: number
 }
 
 export interface SearchPublicDocumentsResponse {

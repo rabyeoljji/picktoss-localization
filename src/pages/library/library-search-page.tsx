@@ -9,7 +9,7 @@ import { useSearchDocument } from '@/entities/document/api/hooks'
 
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
-import SearchQuizNoteItem from '@/shared/components/items/search-quiz-note-item'
+import SearchQuizItem from '@/shared/components/items/search-quiz-item'
 import Loading from '@/shared/components/ui/loading'
 import { SearchInput } from '@/shared/components/ui/search-input'
 import { Tabs, TabsList, TabsTrigger } from '@/shared/components/ui/tabs'
@@ -166,7 +166,7 @@ const LibrarySearchResults = ({ tab, documents, keyword }: LibrarySearchResultsP
               to={tab === 'MY' ? '/library/:noteId' : '/explore/detail/:noteId'}
               params={[String(searchItem.id)]}
             >
-              <SearchQuizNoteItem
+              <SearchQuizItem
                 documentTitle={highlightAndTrimText(searchItem.name ?? '', keyword ?? '', 'subtitle-2-bold')}
                 documentEmoji={searchItem.emoji}
                 matchingSentence={

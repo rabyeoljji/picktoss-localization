@@ -4,11 +4,11 @@ import type { Meta, StoryObj } from '@storybook/react'
 
 import { Text } from '@/shared/components/ui/text'
 
-import SearchQuizNoteItem from '.'
+import SearchQuizItem from '.'
 
-const meta: Meta<typeof SearchQuizNoteItem> = {
-  title: 'Item/SearchQuizNoteItem',
-  component: SearchQuizNoteItem,
+const meta: Meta<typeof SearchQuizItem> = {
+  title: 'Item/SearchQuizItem',
+  component: SearchQuizItem,
   decorators: [
     (Story) => (
       <div className="mx-auto max-w-xl">
@@ -29,14 +29,14 @@ const meta: Meta<typeof SearchQuizNoteItem> = {
 }
 
 export default meta
-type Story = StoryObj<typeof SearchQuizNoteItem>
+type Story = StoryObj<typeof SearchQuizItem>
 
 export const Default: Story = {
   render: () => {
     const [{ documentTitle, documentEmoji, quizCount, isPublic, playedCount, bookmarkCount, lastItem }] = useArgs()
 
     return (
-      <SearchQuizNoteItem
+      <SearchQuizItem
         documentTitle={documentTitle ?? '제무제표 분석하기'}
         documentEmoji={documentEmoji ?? '🎯'}
         matchingSentence={
@@ -61,7 +61,7 @@ export const Default: Story = {
 export const PublicNote: Story = {
   render: () => {
     return (
-      <SearchQuizNoteItem
+      <SearchQuizItem
         documentTitle={'최근 이슈'}
         documentEmoji="🎯"
         matchingSentence={
@@ -83,10 +83,62 @@ export const PublicNote: Story = {
   },
 }
 
+export const BookmarkedNote: Story = {
+  render: () => {
+    return (
+      <SearchQuizItem
+        documentTitle={'최근 이슈'}
+        documentEmoji="🎯"
+        matchingSentence={
+          <div>
+            ...제품을 기존 제품과 구별할 수 있어야 하며, 전통적인{' '}
+            <Text typo="body-1-bold" color="accent" className="inline-block size-fit">
+              기초
+            </Text>{' '}
+            육류, 조개류, 소고기 또는 가금류에 알레르기가 있는 사람들이 세포 기반 제품...
+          </div>
+        }
+        quizCount={25}
+        isPublic={true}
+        isBookmarked={true}
+        playedCount={345}
+        bookmarkCount={21}
+        lastItem={false}
+      />
+    )
+  },
+}
+
+export const MyNote: Story = {
+  render: () => {
+    return (
+      <SearchQuizItem
+        documentTitle={'최근 이슈'}
+        documentEmoji="🎯"
+        matchingSentence={
+          <div>
+            ...제품을 기존 제품과 구별할 수 있어야 하며, 전통적인{' '}
+            <Text typo="body-1-bold" color="accent" className="inline-block size-fit">
+              기초
+            </Text>{' '}
+            육류, 조개류, 소고기 또는 가금류에 알레르기가 있는 사람들이 세포 기반 제품...
+          </div>
+        }
+        quizCount={25}
+        isPublic={true}
+        isOwner={true}
+        playedCount={345}
+        bookmarkCount={21}
+        lastItem={false}
+      />
+    )
+  },
+}
+
 export const LastItem: Story = {
   render: () => {
     return (
-      <SearchQuizNoteItem
+      <SearchQuizItem
         documentTitle={'최근 이슈'}
         documentEmoji="🎯"
         matchingSentence={
