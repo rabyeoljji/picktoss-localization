@@ -44,7 +44,7 @@ const ExploreSearchPage = () => {
       enabled: !!queryKeyword && !showRecentKeywords,
     },
   )
-  const searchResults = searchResultsData?.publicDocuments ?? []
+  const searchResults = searchResultsData?.documents ?? []
   const hasSearchResults = searchResults && searchResults.length > 0
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
