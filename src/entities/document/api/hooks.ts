@@ -377,10 +377,10 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
         queryKey: [...DOCUMENT_KEYS.searchPublicDocuments],
       })
       searchQueries.forEach(([queryKey, data]) => {
-        if (data?.publicDocuments) {
+        if (data?.documents) {
           const updatedData = {
             ...data,
-            publicDocuments: data.publicDocuments.map((doc) => {
+            publicDocuments: data.documents.map((doc) => {
               if (doc.id === documentId) {
                 return {
                   ...doc,
