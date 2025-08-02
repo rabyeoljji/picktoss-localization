@@ -65,7 +65,6 @@ export const AppRouter = () => {
                 <Route path={RoutePath.library}>
                   <Route index element={<LibraryPage />} />
                   <Route path={RoutePath.librarySearch} element={<LibrarySearchPage />} />
-                  <Route path={RoutePath.libraryNoteDetailList} element={<QuizDetailListPage />} />
                   <Route path={RoutePath.libraryNoteQuiz} element={<NoteQuizPage />} />
                   <Route path={RoutePath.libraryNoteEdit} element={<NoteEditPage />} />
                 </Route>
@@ -113,6 +112,7 @@ export const AppRouter = () => {
             </Route>
 
             <Route path={RoutePath.quizDetail} element={<QuizDetailPage />} />
+            <Route path={RoutePath.quizDetailList} element={<QuizDetailListPage />} />
 
             {/* Invite */}
             <Route path={RoutePath.invite} element={<InvitePage />} />

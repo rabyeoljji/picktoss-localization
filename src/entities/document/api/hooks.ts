@@ -16,9 +16,8 @@ import {
   GetAllDocumentsDocumentDto,
   GetBookmarkedDocumentsDto,
   GetBookmarkedDocumentsResponse,
+  GetDocumentResponse,
   GetPublicDocumentsResponse,
-  GetPublicSingleDocumentResponse,
-  GetSingleDocumentResponse,
   SearchDocumentsResponse,
   SearchPublicDocumentsResponse,
   UpdateDocumentContentRequest,
@@ -35,12 +34,11 @@ import {
   downloadQuiz,
   getAllDocuments,
   getBookmarkedDocuments,
+  getDocument,
   getDocumentQuizzes,
   getDocumentsNeedingReview,
   getIsNotPublicDocuments,
   getPublicDocuments,
-  getPublicSingleDocument,
-  getSingleDocument,
   moveDocument,
   searchDocument,
   searchPublicDocuments,
@@ -69,20 +67,6 @@ export const useSearchDocument = (
   })
 }
 
-export const useGetSingleDocument = (documentId: number) => {
-  return useQuery({
-    queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
-    queryFn: () => getSingleDocument(documentId),
-    retry: false,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    select: (data) => ({
-      ...data,
-      quizzes: data.quizzes.sort((a, b) => b.id - a.id),
-    }),
-  })
-}
-
 export const useAddQuizzes = () => {
   const queryClient = useQueryClient()
 
@@ -92,7 +76,7 @@ export const useAddQuizzes = () => {
       addQuizzes(documentId, data),
     onSuccess: (_, { documentId }) =>
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
+        queryKey: DOCUMENT_KEYS.getDocument(documentId),
       }),
   })
 }
@@ -137,13 +121,13 @@ export const useUpdateDocumentName = () => {
     mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentNameRequest }) =>
       updateDocumentName(documentId, data),
     onMutate: ({ documentId, data }) => {
-      queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), (oldData: Document) => ({
+      queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), (oldData: Document) => ({
         ...oldData,
         name: data.name,
       }))
     },
     onSuccess: (_, { documentId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
     },
   })
@@ -155,13 +139,13 @@ export const useUpdateDocumentContent = () => {
     mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentContentRequest }) =>
       updateDocumentContent(documentId, data),
     onMutate: ({ documentId, data }) => {
-      queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), (oldData: Document) => ({
+      queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), (oldData: Document) => ({
         ...oldData,
         content: data.file,
       }))
     },
     onSuccess: (_, { documentId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
     },
   })
@@ -200,6 +184,19 @@ export const useGetBookmarkedDocuments = (options?: {
   })
 }
 
+export const useGetDocument = (documentId: number) => {
+  return useQuery({
+    queryKey: DOCUMENT_KEYS.getDocument(documentId),
+    queryFn: () => getDocument(documentId),
+    enabled: !!documentId,
+    select: (data) => ({
+      ...data,
+      quizzes: data.quizzes.sort((a, b) => b.id - a.id),
+    }),
+    placeholderData: keepPreviousData,
+  })
+}
+
 export const useGetPublicDocuments = ({
   categoryId,
   pageSize,
@@ -224,19 +221,6 @@ export const useGetPublicDocuments = ({
     isInitialFetching: !query.data && query.isFetching,
     documents: query?.data?.pages?.flatMap((page) => page?.documents ?? []).flat() ?? [],
   }
-}
-
-export const useGetPublicSingleDocument = (documentId: number, sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY') => {
-  return useQuery({
-    queryKey: [...DOCUMENT_KEYS.getPublicSingleDocument(documentId), sortOption],
-    queryFn: () => getPublicSingleDocument(documentId, sortOption),
-    enabled: !!documentId,
-    select: (data) => ({
-      ...data,
-      quizzes: data.quizzes.sort((a, b) => b.id - a.id),
-    }),
-    placeholderData: keepPreviousData,
-  })
 }
 
 export const useSearchPublicDocuments = (
@@ -274,7 +258,7 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
       await Promise.all([
         queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] }),
         queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] }),
-        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
+        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] }),
         queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] }),
       ])
 
@@ -285,7 +269,7 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
           queryKey: [...DOCUMENT_KEYS.getPublicDocuments],
         }),
       )
-      const previousSingleDocument = queryClient.getQueryData([...DOCUMENT_KEYS.getPublicSingleDocument(documentId)])
+      const previousSingleDocument = queryClient.getQueryData([...DOCUMENT_KEYS.getDocument(documentId)])
       const previousSearchDataMap = new Map(
         queryClient.getQueriesData<SearchPublicDocumentsResponse>({
           queryKey: [...DOCUMENT_KEYS.searchPublicDocuments],
@@ -360,17 +344,14 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
       })
 
       // 낙관적 업데이트: 단일 문서
-      queryClient.setQueryData<GetPublicSingleDocumentResponse>(
-        [...DOCUMENT_KEYS.getPublicSingleDocument(documentId)],
-        (oldData) => {
-          if (!oldData) return oldData
-          return {
-            ...oldData,
-            isBookmarked: !isBookmarked,
-            bookmarkCount: isBookmarked ? (oldData.bookmarkCount || 1) - 1 : (oldData.bookmarkCount || 0) + 1,
-          }
-        },
-      )
+      queryClient.setQueryData<GetDocumentResponse>([...DOCUMENT_KEYS.getDocument(documentId)], (oldData) => {
+        if (!oldData) return oldData
+        return {
+          ...oldData,
+          isBookmarked: !isBookmarked,
+          bookmarkCount: isBookmarked ? (oldData.bookmarkCount || 1) - 1 : (oldData.bookmarkCount || 0) + 1,
+        }
+      })
 
       // 낙관적 업데이트: 검색 결과
       const searchQueries = queryClient.getQueriesData<SearchPublicDocumentsResponse>({
@@ -417,7 +398,7 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
         })
       }
       if (context?.previousSingleDocument) {
-        queryClient.setQueryData([...DOCUMENT_KEYS.getPublicSingleDocument(documentId)], context.previousSingleDocument)
+        queryClient.setQueryData([...DOCUMENT_KEYS.getDocument(documentId)], context.previousSingleDocument)
       }
       if (context?.previousSearchDataMap) {
         context.previousSearchDataMap.forEach((data, queryKey) => {
@@ -429,7 +410,7 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
       // 북마크 목록과 단일 문서만 invalidate
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] }),
-        queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicSingleDocument(documentId)] }),
+        queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] }),
         queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] }),
       ])
     },
@@ -445,7 +426,7 @@ export const useCreateDocumentBookmark = (documentId: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
     },
   })
@@ -460,7 +441,7 @@ export const useDeleteDocumentBookmark = (documentId: number) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
     },
   })
@@ -480,9 +461,8 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
     mutationFn: (data: UpdateDocumentIsPublicRequest) => updateDocumentIsPublic(documentId, data),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
       await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
-      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId) })
     },
   })
 }
@@ -494,13 +474,11 @@ export const useUpdateDocumentEmoji = () => {
     mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentEmojiRequest }) =>
       updateDocumentEmoji(documentId, data),
     onMutate: async ({ documentId, data }) => {
-      await queryClient.cancelQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      await queryClient.cancelQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
 
-      const previousData = queryClient.getQueryData(
-        DOCUMENT_KEYS.getSingleDocument(documentId),
-      ) as GetSingleDocumentResponse
+      const previousData = queryClient.getQueryData(DOCUMENT_KEYS.getDocument(documentId)) as GetDocumentResponse
 
-      queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), {
+      queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), {
         ...previousData,
         emoji: data.emoji,
       })
@@ -509,11 +487,11 @@ export const useUpdateDocumentEmoji = () => {
     },
     onError: (_, { documentId }, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(documentId), context.previousData)
+        queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), context.previousData)
       }
     },
     onSuccess: (_, { documentId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(documentId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
       queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
     },
   })

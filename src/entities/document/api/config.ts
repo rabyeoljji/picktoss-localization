@@ -6,16 +6,14 @@ export const DOCUMENT_ENDPOINTS = {
   // GET
   // 모든 문서 가져오기
   getAllDocuments: `/${DOCUMENTS}`,
-  // 단일 문서 가져오기
-  getSingleDocument: (documentId: number) => `/${DOCUMENTS}/${documentId}`,
+  // 퀴즈 상세 가져오기
+  getDocument: (documentId: number) => `/${DOCUMENTS}/${documentId}`,
   // 사용자의 비공개된 문서 수
   getIsNotPublicDocuments: `/${DOCUMENTS}/not-public`,
   // 북마크된 모든 문서 가져오기
   getBookmarkedDocuments: `/${DOCUMENTS}/bookmarked`,
   // 공개된 문서 탐색
   getPublicDocuments: `/${DOCUMENTS}/public`,
-  // 공개된 문서 정보 조회(+ 상세정보)
-  getPublicSingleDocument: (documentId: number) => `/${DOCUMENTS}/${documentId}/public`,
   // 문서에 해당하는 모든 퀴즈 가져오기
   getDocumentQuizzes: (documentId: number) => `/${DOCUMENTS}/${documentId}/quizzes`,
   // 복습 필요한 문서 가져오기
@@ -64,12 +62,10 @@ export const DOCUMENT_KEYS = {
   root: createKey(DOCUMENTS),
   // GET
   getAllDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getAllDocuments),
-  getSingleDocument: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getSingleDocument(documentId)),
   getIsNotPublicDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getIsNotPublicDocuments),
   getBookmarkedDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getBookmarkedDocuments),
+  getDocument: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocument(documentId)),
   getPublicDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getPublicDocuments),
-  getPublicSingleDocument: (documentId: number) =>
-    createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getPublicSingleDocument(documentId)),
   getDocumentQuizzes: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocumentQuizzes(documentId)),
   getDocumentsNeedingReview: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocumentsNeedingReview),
   downloadQuiz: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.downloadQuiz(documentId)),

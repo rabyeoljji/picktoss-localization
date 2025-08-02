@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { useGetSingleDocument } from '@/entities/document/api/hooks'
+import { useGetDocument } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
 
 // 문서 상태 정의
@@ -54,7 +54,7 @@ export const useQuizGenerationPolling = ({ documentId }: { documentId: number },
   const pollingTimerRef = useRef<NodeJS.Timeout | null>(null)
   const autoCompleteTimerRef = useRef<NodeJS.Timeout | null>(null)
 
-  const { data: document, refetch } = useGetSingleDocument(documentId)
+  const { data: document, refetch } = useGetDocument(documentId)
   const { mutate: createQuizSet } = useCreateQuizSet(documentId)
 
   // 폴링 정지 함수

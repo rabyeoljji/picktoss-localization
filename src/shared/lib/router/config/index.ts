@@ -209,4 +209,12 @@ export const RouteConfig = {
   quizDetail: {
     pathname: '/quiz-detail/:noteId',
   },
+
+  quizDetailList: {
+    pathname: '/quiz-detail/:noteId/list',
+    search: {
+      quizType: 'ALL' as 'MIX_UP' | 'MULTIPLE_CHOICE' | 'ALL',
+      showAnswer: false as boolean,
+    },
+  },
 } as const

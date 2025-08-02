@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { GetSingleDocumentResponse } from '@/entities/document/api'
+import { GetDocumentResponse } from '@/entities/document/api'
 import { DOCUMENT_KEYS } from '@/entities/document/api/config'
 
 import { QUIZ_KEYS } from './config'
@@ -135,13 +135,13 @@ export const useUpdateWrongAnswerConfirm = () => {
     mutationKey: QUIZ_KEYS.updateWrongAnswerConfirm,
     mutationFn: ({ noteId: _, quizId }: { noteId: number; quizId: number }) => updateWrongAnswerConfirm(quizId),
     onMutate: async ({ noteId, quizId }) => {
-      await queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), (oldData: GetSingleDocumentResponse) => ({
+      await queryClient.setQueryData(DOCUMENT_KEYS.getDocument(noteId), (oldData: GetDocumentResponse) => ({
         ...oldData,
         quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, reviewNeeded: false } : quiz)),
       }))
     },
     onSuccess: (_, { noteId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(noteId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(noteId) })
     },
   })
 }
@@ -155,10 +155,10 @@ export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
     mutationFn: (data: UpdateQuizInfoRequest) => updateQuizInfo(quizId, data),
     onMutate: async (data: UpdateQuizInfoRequest) => {
       // 이전 쿼리 데이터를 캐시에서 가져옴
-      const previousData = queryClient.getQueryData<GetSingleDocumentResponse>(DOCUMENT_KEYS.getSingleDocument(noteId))
+      const previousData = queryClient.getQueryData<GetDocumentResponse>(DOCUMENT_KEYS.getDocument(noteId))
 
       // 낙관적 업데이트 실행
-      await queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), (oldData: GetSingleDocumentResponse) => ({
+      await queryClient.setQueryData(DOCUMENT_KEYS.getDocument(noteId), (oldData: GetDocumentResponse) => ({
         ...oldData,
         quizzes: oldData.quizzes.map((quiz) => (quiz.id === quizId ? { ...quiz, ...data } : quiz)),
       }))
@@ -168,12 +168,12 @@ export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
     },
     onSuccess: () => {
       // 성공 시 서버에서 최신 데이터 가져오기
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getSingleDocument(noteId) })
+      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(noteId) })
     },
     onError: (_, __, context) => {
       // 실패 시 이전 상태로 복원
       if (context?.previousData) {
-        queryClient.setQueryData(DOCUMENT_KEYS.getSingleDocument(noteId), context.previousData)
+        queryClient.setQueryData(DOCUMENT_KEYS.getDocument(noteId), context.previousData)
       }
     },
   })
@@ -188,7 +188,7 @@ export const useUpdateQuizResult = (documentId: number, quizSetId: number) => {
     mutationFn: (data: UpdateQuizResultRequest) => updateQuizResult(documentId, quizSetId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
+        queryKey: DOCUMENT_KEYS.getDocument(documentId),
       })
     },
   })
@@ -204,20 +204,14 @@ export const useDeleteQuiz = () => {
     mutationKey: QUIZ_KEYS.deleteQuiz,
     mutationFn: ({ documentId: _, quizId }: { documentId: number; quizId: number }) => deleteQuiz(quizId),
     onMutate: async ({ documentId, quizId }) => {
-      await queryClient.setQueryData(
-        DOCUMENT_KEYS.getSingleDocument(documentId),
-        (oldData: GetSingleDocumentResponse) => ({
-          ...oldData,
-          quizzes: oldData.quizzes.filter((quiz) => quiz.id !== quizId),
-        }),
-      )
+      await queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), (oldData: GetDocumentResponse) => ({
+        ...oldData,
+        quizzes: oldData.quizzes.filter((quiz) => quiz.id !== quizId),
+      }))
     },
     onSuccess: (_, { documentId }) => {
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getSingleDocument(documentId),
-      })
-      queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getPublicSingleDocument(documentId),
+        queryKey: DOCUMENT_KEYS.getDocument(documentId),
       })
       queryClient.invalidateQueries({
         queryKey: DOCUMENT_KEYS.getPublicDocuments,

@@ -6,6 +6,7 @@ import { useStore } from 'zustand'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
+import NotFound from '@/app/not-found'
 
 import { useAuthStore } from '@/features/auth'
 import LoginDialog from '@/features/explore/ui/login-dialog'
@@ -13,8 +14,7 @@ import LoginDialog from '@/features/explore/ui/login-dialog'
 import {
   useDeleteDocument,
   useDocumentBookmarkMutation,
-  useGetPublicSingleDocument,
-  useGetSingleDocument,
+  useGetDocument,
   useUpdateDocumentIsPublic,
 } from '@/entities/document/api/hooks'
 import { useCreateQuizSet } from '@/entities/quiz/api/hooks'
@@ -69,13 +69,9 @@ const QuizDetailPage = () => {
   const router = useRouter()
 
   const { noteId } = useParams()
-  const {
-    data: document,
-    isLoading: isDocumentLoading,
-    refetch: refetchDocument,
-  } = useGetSingleDocument(Number(noteId))
-  const { data: publicDocument, isLoading: isPublicDocumentLoading } = useGetPublicSingleDocument(Number(noteId))
 
+  const { data: document, isLoading: isDocumentLoading, refetch: refetchDocument } = useGetDocument(Number(noteId))
+  console.log(document)
   const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
   const { mutate: deleteDocument } = useDeleteDocument()
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
@@ -105,13 +101,19 @@ const QuizDetailPage = () => {
 
   const { mutate: bookmark } = useDocumentBookmarkMutation(Number(noteId))
 
-  const [isBookmarked, setIsBookmarked] = useState(publicDocument?.isBookmarked)
-  const [bookmarkCount, setBookmarkCount] = useState(document?.bookmarkCount)
+  const [isBookmarked, setIsBookmarked] = useState(false)
+  const [bookmarkCount, setBookmarkCount] = useState(0)
+
+  useEffect(() => {
+    if (!document) return
+    setIsBookmarked(document.isBookmarked)
+    setBookmarkCount(document.bookmarkCount)
+  }, [document])
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
 
   const handleBookmark = () => {
-    if (!publicDocument) return
+    if (!document) return
 
     if (!token) {
       setIsLoginOpen(true)
@@ -122,8 +124,8 @@ const QuizDetailPage = () => {
 
     setIsBookmarkProcessing(true)
 
-    const optimisticIsBookmarked = !publicDocument.isBookmarked
-    const optimisticBookmarkCount = publicDocument.bookmarkCount + (optimisticIsBookmarked ? 1 : -1)
+    const optimisticIsBookmarked = !document.isBookmarked
+    const optimisticBookmarkCount = document.bookmarkCount + (optimisticIsBookmarked ? 1 : -1)
 
     // 즉시 UI 업데이트
     setIsBookmarked(optimisticIsBookmarked)
@@ -132,7 +134,7 @@ const QuizDetailPage = () => {
     bookmark(
       {
         documentId: Number(noteId),
-        isBookmarked: publicDocument.isBookmarked || false,
+        isBookmarked: document.isBookmarked || false,
       },
       {
         onSuccess: () => {
@@ -163,8 +165,8 @@ const QuizDetailPage = () => {
         },
         onError: () => {
           // 실패시 ui 롤백
-          setIsBookmarked(publicDocument.isBookmarked)
-          setBookmarkCount(publicDocument.bookmarkCount)
+          setIsBookmarked(document.isBookmarked)
+          setBookmarkCount(document.bookmarkCount)
         },
         onSettled: () => setIsBookmarkProcessing(false),
       },
@@ -207,7 +209,11 @@ const QuizDetailPage = () => {
     })
   }
 
-  if (isDocumentLoading || isPublicDocumentLoading) return null
+  if (isDocumentLoading) return null
+
+  if (!isDocumentLoading && !document?.isPublic && !document?.isOwner) {
+    return <NotFound />
+  }
 
   return (
     <div className="relative flex flex-col h-screen bg-base-1">
@@ -215,7 +221,7 @@ const QuizDetailPage = () => {
         left={<BackButton type="close" />}
         content={
           <div className="w-fit ml-auto">
-            {publicDocument?.isOwner ? (
+            {document?.isOwner ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="p-2" asChild>
                   <button>
@@ -292,7 +298,7 @@ const QuizDetailPage = () => {
                     <div className="flex justify-start items-center gap-0.5">
                       <IcPlayFilled className="size-[12px] text-icon-sub" />
                       <Text typo="body-1-medium" color="sub">
-                        {publicDocument?.tryCount}
+                        {document?.tryCount}
                       </Text>
                     </div>
                     <div className="size-[4px] bg-gray-100 rounded-full" />
@@ -427,7 +433,9 @@ const QuizDetailPage = () => {
           <button
             className="flex flex-col items-center gap-2 w-[96px]"
             onClick={() => {
-              router.push('/account')
+              router.push('/quiz-detail/:noteId/list', {
+                params: [String(noteId)],
+              })
             }}
           >
             <IcList className="size-6" />
@@ -486,7 +494,7 @@ const QuizDetailPage = () => {
               </Text>
             </button>
           )}
-          {!publicDocument?.isOwner && (
+          {!document?.isOwner && (
             <>
               <div className="w-px h-[48px] bg-gray-100" />
               <button className="flex flex-col items-center gap-2 w-[96px]" onClick={handleBookmark}>

@@ -54,45 +54,6 @@ export const getAllDocuments = async (options?: {
   return response.data
 }
 
-// 단일 문서 가져오기
-export interface GetSingleDocumentQuizDto {
-  id: number
-  question: string
-  answer: string
-  explanation: string
-  options: string[]
-  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
-  reviewNeeded: boolean
-}
-
-export interface GetSingleDocumentResponse {
-  id: number
-  name: string
-  emoji: string
-  content: string
-  category: string
-  isPublic: boolean
-  bookmarkCount: number
-  characterCount: number
-  totalQuizCount: number
-  createdAt: string
-  documentType: 'FILE' | 'TEXT' | 'NOTION'
-  quizGenerationStatus:
-    | 'UNPROCESSED'
-    | 'PROCESSED'
-    | 'PROCESSING'
-    | 'COMPLETELY_FAILED'
-    | 'PARTIAL_SUCCESS'
-    | 'QUIZ_GENERATION_ERROR'
-  quizzes: GetSingleDocumentQuizDto[]
-  reviewNeeded: boolean
-}
-
-export const getSingleDocument = async (documentId: number): Promise<GetSingleDocumentResponse> => {
-  const response = await client.get<GetSingleDocumentResponse>(DOCUMENT_ENDPOINTS.getSingleDocument(documentId))
-  return response.data
-}
-
 // 사용자의 비공개된 모든 문서 가져오기
 export interface GetIsNotPublicDocumentsResponse {
   documents: [
@@ -139,6 +100,48 @@ export const getBookmarkedDocuments = async (options?: {
   return response.data
 }
 
+// 퀴즈 상세
+export interface GetDocumentResponse {
+  id: number
+  creator: string
+  name: string
+  emoji: string
+  category: string
+  tryCount: number
+  bookmarkCount: number
+  totalQuizCount: number
+  isBookmarked: boolean
+  createdAt: string
+  quizzes: GetQuizDto[]
+  isOwner: boolean
+  content: string
+  isPublic: boolean
+  characterCount: number
+  documentType: 'FILE' | 'TEXT' | 'NOTION'
+  quizGenerationStatus:
+    | 'UNPROCESSED'
+    | 'PROCESSED'
+    | 'PROCESSING'
+    | 'COMPLETELY_FAILED'
+    | 'PARTIAL_SUCCESS'
+    | 'QUIZ_GENERATION_ERROR'
+  reviewNeededQuizzes: GetQuizDto[]
+}
+
+export const getDocument = async (documentId: number): Promise<GetDocumentResponse> => {
+  const response = await client.get<GetDocumentResponse>(DOCUMENT_ENDPOINTS.getDocument(documentId))
+  return response.data
+}
+
+export interface GetQuizDto {
+  id: number
+  answer: string
+  question: string
+  explanation: string
+  options: string[]
+  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
+}
+
 // 공개된 문서 탐색
 export interface GetPublicDocumentsDto {
   id: number
@@ -172,44 +175,6 @@ export const getPublicDocuments = async (options?: {
   if (options?.pageSize !== undefined) params['page-size'] = options.pageSize
 
   const response = await client.get<GetPublicDocumentsResponse>(DOCUMENT_ENDPOINTS.getPublicDocuments, { params })
-  return response.data
-}
-
-// 공개된 문서 정보 조회(+ 상세정보)
-export interface GetPublicSingleDocumentQuizDto {
-  id: number
-  answer: string
-  question: string
-  explanation: string
-  options: string[]
-  quizType: 'MIX_UP' | 'MULTIPLE_CHOICE'
-}
-
-export interface GetPublicSingleDocumentResponse {
-  id: number
-  creator: string
-  name: string
-  emoji: string
-  category: string
-  tryCount: number
-  bookmarkCount: number
-  totalQuizCount: number
-  isBookmarked: boolean
-  createdAt: string
-  quizzes: GetPublicSingleDocumentQuizDto[]
-  isOwner: boolean
-}
-
-export const getPublicSingleDocument = async (
-  documentId: number,
-  sortOption?: 'CREATED_AT' | 'LOWEST_ACCURACY',
-): Promise<GetPublicSingleDocumentResponse> => {
-  const params = sortOption ? { 'sort-option': sortOption } : undefined
-
-  const response = await client.get<GetPublicSingleDocumentResponse>(
-    DOCUMENT_ENDPOINTS.getPublicSingleDocument(documentId),
-    { params },
-  )
   return response.data
 }
 
