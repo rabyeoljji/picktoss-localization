@@ -531,7 +531,7 @@ export const useDeleteDocument = (options?: {
   sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
 }) => {
   const queryClient = useQueryClient()
-  const queryKey = [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption]
+  const queryKey = [...DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption]
 
   return useMutation({
     mutationKey: DOCUMENT_KEYS.deleteDocument,
