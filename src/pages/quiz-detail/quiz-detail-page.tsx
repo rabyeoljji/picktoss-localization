@@ -27,7 +27,6 @@ import {
   IcDelete,
   IcKebab,
   IcList,
-  IcNote,
   IcPlayFilled,
   IcUpload,
   IcWarning,
@@ -231,15 +230,6 @@ const QuizDetailPage = () => {
                 <DropdownMenuContent align="end" className="-translate-y-2">
                   {/* TODO: 퀴즈 정보 수정 */}
                   {/* <DropdownMenuItem right={<IcEdit className="size-[20px]" />} onClick={() => {}}></DropdownMenuItem> */}
-                  <DropdownMenuItem
-                    right={<IcNote className="size-[20px]" />}
-                    onClick={() => {
-                      setContentDrawerOpen(true)
-                      trackEvent('library_detail_note_click')
-                    }}
-                  >
-                    원본 문서
-                  </DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-red-500"
                     right={<IcDelete className="text-icon-critical size-[20px]" />}
