@@ -68,17 +68,17 @@ export const NoteCreateWrite = () => {
   const handlePointerDown = async () => {
     if (!navigator.clipboard) return
     try {
-      const text = await navigator.clipboard.readText() // 동기(=제스처) 컨텍스트 유지
+      const text = await navigator.clipboard.readText() // 이 호출이 사용자 제스처 안에서 일어나야 함
       setCanPaste(!!text)
-    } catch {
+      setClipboardPermissionDenied(false)
+    } catch (err: any) {
+      console.warn('clipboard read failed', err)
+      if (err.name === 'NotAllowedError' || err.name === 'SecurityError') {
+        setClipboardPermissionDenied(true)
+      }
       setCanPaste(false)
     }
   }
-
-  useEffect(() => {
-    window.addEventListener('pointerdown', handlePointerDown)
-    return () => window.removeEventListener('pointerdown', handlePointerDown)
-  }, [])
 
   const handlePasteClick = async () => {
     if (!textAreaRef.current) return
