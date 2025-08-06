@@ -16,7 +16,16 @@ import LoginDialog from '@/features/explore/ui/login-dialog'
 import { useDeleteDocument, useDocumentBookmarkMutation, useGetDocument } from '@/entities/document/api/hooks'
 import { useDeleteQuiz, useUpdateQuizInfo, useUpdateWrongAnswerConfirm } from '@/entities/quiz/api/hooks'
 
-import { IcBookmark, IcBookmarkFilled, IcDelete, IcDownload, IcEdit, IcKebab, IcNote } from '@/shared/assets/icon'
+import {
+  IcBookmark,
+  IcBookmarkFilled,
+  IcDelete,
+  IcDownload,
+  IcEdit,
+  IcKebab,
+  IcNote,
+  IcReview,
+} from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
@@ -280,6 +289,17 @@ const NoteDetailPage = () => {
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
       <HeaderOffsetLayout className="flex-1 overflow-auto pt-[54px] relative">
+        {(document?.reviewNeededQuizzes?.length ?? 0) > 0 && (
+          <button
+            className="px-4 py-3 bg-surface-2 flex items-center gap-2 w-full"
+            onClick={() => setReviewPickOpen(true)}
+          >
+            <IcReview className="size-5" />
+            <Text typo="body-1-bold" color="secondary">
+              틀렸던 문제 <span className="text-accent">{document?.reviewNeededQuizzes?.length ?? 0}개</span> 확인하기
+            </Text>
+          </button>
+        )}
         <div className="pt-[16px] sticky top-0 z-[1] bg-base-1 pb-[12px] px-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button
