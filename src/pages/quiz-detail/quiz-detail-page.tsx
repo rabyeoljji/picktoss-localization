@@ -70,7 +70,7 @@ const QuizDetailPage = () => {
   const { noteId } = useParams()
 
   const { data: document, isLoading: isDocumentLoading, refetch: refetchDocument } = useGetDocument(Number(noteId))
-  console.log(document)
+
   const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
   const { mutate: deleteDocument } = useDeleteDocument()
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)

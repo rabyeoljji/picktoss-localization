@@ -1,62 +1,29 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 import html2pdf from 'html2pdf.js'
 import { toast } from 'sonner'
+import { useStore } from 'zustand'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 import NotFound from '@/app/not-found'
 
-import { calculateStar } from '@/features/note/lib'
-import { NoteDetailQuizLoadingDrawer } from '@/features/note/ui/note-detail-quiz-loading-drawer'
+import { useAuthStore } from '@/features/auth'
+import LoginDialog from '@/features/explore/ui/login-dialog'
 
-import { useAddQuizzes, useDeleteDocument, useGetDocument } from '@/entities/document/api/hooks'
-import { useUser } from '@/entities/member/api/hooks'
-import {
-  useCreateQuizSet,
-  useDeleteQuiz,
-  useUpdateQuizInfo,
-  useUpdateWrongAnswerConfirm,
-} from '@/entities/quiz/api/hooks'
+import { useDeleteDocument, useDocumentBookmarkMutation, useGetDocument } from '@/entities/document/api/hooks'
+import { useDeleteQuiz, useUpdateQuizInfo, useUpdateWrongAnswerConfirm } from '@/entities/quiz/api/hooks'
 
-import {
-  IcBookmark,
-  IcDelete,
-  IcDownload,
-  IcEdit,
-  IcKebab,
-  IcNote,
-  IcPlay,
-  IcReview,
-  IcSparkle,
-} from '@/shared/assets/icon'
-import { ImgMultiple, ImgOx, ImgStar } from '@/shared/assets/images'
+import { IcBookmark, IcBookmarkFilled, IcDelete, IcDownload, IcEdit, IcKebab, IcNote } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { QuestionCard } from '@/shared/components/cards/question-card'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
-import { LackingStarDrawer } from '@/shared/components/drawers/lacking-star-drawer'
 import { Header } from '@/shared/components/header'
 import { SystemDialog } from '@/shared/components/system-dialog'
-import { Button } from '@/shared/components/ui/button'
-import {
-  Dialog,
-  DialogCTA,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from '@/shared/components/ui/dialog'
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-} from '@/shared/components/ui/drawer'
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
+import { Drawer, DrawerContent, DrawerDescription, DrawerHeader, DrawerTitle } from '@/shared/components/ui/drawer'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -66,14 +33,11 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import { Slider } from '@/shared/components/ui/slider'
-import { Spinner } from '@/shared/components/ui/spinner'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Switch } from '@/shared/components/ui/switch'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { Textarea } from '@/shared/components/ui/textarea'
-import { useOnceEffect } from '@/shared/hooks'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
@@ -82,16 +46,13 @@ const NoteDetailPage = () => {
   const { trackEvent } = useAmplitude()
   const router = useRouter()
 
-  const { noteId } = useParams()
-  const [quizType, setQuizType] = useQueryParam('/quiz-detail/:noteId/list', 'quizType')
-  const [showAnswer, setShowAnswer] = useQueryParam('/quiz-detail/:noteId/list', 'showAnswer')
-  const {
-    data: document,
-    isLoading: isDocumentLoading,
-    refetch: refetchSingleDocument,
-  } = useGetDocument(Number(noteId))
+  const token = useStore(useAuthStore, (state) => state.token)
 
-  const { data: user } = useUser()
+  const { noteId } = useParams()
+  const [showMultipleChoice, setShowMultipleChoice] = useState(false)
+  const [showMixUp, setShowMixUp] = useState(false)
+  const [showAnswer, setShowAnswer] = useQueryParam('/quiz-detail/:noteId/list', 'showAnswer')
+  const { data: document, isLoading: isDocumentLoading } = useGetDocument(Number(noteId))
 
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
   const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
@@ -99,92 +60,14 @@ const NoteDetailPage = () => {
 
   const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
   const [reviewPickOpen, setReviewPickOpen] = useState(false)
-  const [createQuizDialogOpen, setCreateQuizDialogOpen] = useState(false)
-  const [editTargetQuizId, setEditTargetQuizId] = useState<number | null>(null)
-  const [isCreatingNewQuizzes, setIsCreatingNewQuizzes] = useState(false)
 
-  const [playDrawerOpen, setPlayDrawerOpen] = useState(false)
+  const [editTargetQuizId, setEditTargetQuizId] = useState<number | null>(null)
 
   const { mutate: updateWrongAnswerConfirm } = useUpdateWrongAnswerConfirm()
 
   const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
-  const [selectedQuizCount, setSelectedQuizCount] = useState(0)
-  useEffect(() => {
-    if (!document) return
-
-    if (quizType === 'ALL') {
-      setSelectedQuizCount(document.quizzes.length)
-    } else if (quizType === 'MIX_UP') {
-      setSelectedQuizCount(document.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length)
-    } else {
-      setSelectedQuizCount(document.quizzes.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE').length)
-    }
-  }, [document, quizType])
-
   const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
-
-  // 제목 엘리먼트의 가시성을 감지하기 위한 state와 ref
-  const [_, setShowTitleInHeader] = useState(false)
-  const titleRef = useRef(null)
-
-  const { mutate: createQuizSet, isPending: isCreatingQuizSet } = useCreateQuizSet(Number(noteId))
-
-  const { mutate: addQuizzes } = useAddQuizzes()
-
-  useEffect(() => {
-    const titleEl = titleRef.current
-    if (!titleEl) return
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        // entry.isIntersecting이 false면 제목이 보이지 않으므로 Header에 표시
-        setShowTitleInHeader(!entry.isIntersecting)
-      },
-      { threshold: 0.1 }, // 10% 이하로 보이면 false로 처리
-    )
-
-    observer.observe(titleEl)
-
-    return () => {
-      observer.disconnect()
-    }
-  }, [])
-
-  useOnceEffect(() => {
-    if (!document) return
-
-    const hasMultipleChoiceQuiz = document.quizzes.some((quiz) => quiz.quizType === 'MULTIPLE_CHOICE')
-    const hasMixUpQuiz = document.quizzes.some((quiz) => quiz.quizType === 'MIX_UP')
-
-    if (hasMultipleChoiceQuiz && hasMixUpQuiz) {
-      setQuizType('ALL')
-    } else if (hasMultipleChoiceQuiz) {
-      setQuizType('MULTIPLE_CHOICE')
-    } else if (hasMixUpQuiz) {
-      setQuizType('MIX_UP')
-    }
-  }, [document])
-
-  const handlePlay = (quizCount: number) => {
-    createQuizSet(
-      {
-        quizCount,
-        quizType,
-      },
-      {
-        onSuccess: (data) => {
-          trackEvent('quiz_start_click', { location: '내 퀴즈 상세' })
-          router.push('/progress-quiz/:quizSetId', {
-            params: [String(data.quizSetId)],
-            search: {
-              documentId: Number(noteId ?? 0),
-            },
-          })
-        },
-      },
-    )
-  }
 
   const handleDownloadQuizAsPdf = () => {
     if (!document) return
@@ -204,18 +87,16 @@ const NoteDetailPage = () => {
 
       // quizType에 따른 파일명 설정
       let quizTypeText
-      switch (quizType) {
-        case 'ALL':
-          quizTypeText = '전체'
-          break
-        case 'MULTIPLE_CHOICE':
-          quizTypeText = '객관식'
-          break
-        case 'MIX_UP':
-          quizTypeText = 'OX'
-          break
-        default:
-          quizTypeText = ''
+      if (!showMultipleChoice && !showMixUp) {
+        quizTypeText = '전체'
+      } else if (showMultipleChoice && showMixUp) {
+        quizTypeText = '전체'
+      } else if (showMultipleChoice) {
+        quizTypeText = '객관식'
+      } else if (showMixUp) {
+        quizTypeText = 'OX'
+      } else {
+        quizTypeText = ''
       }
 
       const docName = document.name || '퀴즈'
@@ -254,15 +135,85 @@ const NoteDetailPage = () => {
     }, 500) // 렌더링에 시간 주기
   }
 
-  const quizzes =
-    quizType === 'ALL' ? document?.quizzes : document?.quizzes?.filter((quiz) => quiz.quizType === quizType)
+  const quizzes = document?.quizzes.filter((quiz) => {
+    if (!showMultipleChoice && !showMixUp) {
+      // 둘 다 꺼져있으면 전체 표시
+      return true
+    }
+    if (showMultipleChoice && showMixUp) {
+      return true
+    }
+    if (showMultipleChoice) {
+      return quiz.quizType === 'MULTIPLE_CHOICE'
+    }
+    if (showMixUp) {
+      return quiz.quizType === 'MIX_UP'
+    }
+    return false
+  })
 
-  const maxQuizCount =
-    quizType === 'ALL'
-      ? document?.quizzes.length
-      : quizType === 'MIX_UP'
-        ? document?.quizzes.filter((quiz) => quiz.quizType === 'MIX_UP').length
-        : document?.quizzes.filter((quiz) => quiz.quizType === 'MULTIPLE_CHOICE').length
+  const [isLoginOpen, setIsLoginOpen] = useState(false)
+
+  const [isBookmarked, setIsBookmarked] = useState(false)
+
+  useEffect(() => {
+    if (!document) return
+    setIsBookmarked(document.isBookmarked)
+  }, [document])
+
+  const [isBookmarkProcessing, setIsBookmarkProcessing] = useState(false)
+
+  const { mutate: bookmark } = useDocumentBookmarkMutation(Number(noteId))
+
+  const handleBookmark = () => {
+    if (!document) return
+
+    if (!token) {
+      setIsLoginOpen(true)
+      return
+    }
+
+    if (!document || isBookmarkProcessing) return
+
+    setIsBookmarkProcessing(true)
+
+    const optimisticIsBookmarked = !document.isBookmarked
+
+    // 즉시 UI 업데이트
+    setIsBookmarked(optimisticIsBookmarked)
+
+    bookmark(
+      {
+        documentId: Number(noteId),
+        isBookmarked: document.isBookmarked || false,
+      },
+      {
+        onSuccess: () => {
+          trackEvent('explore_bookmark_click', {
+            location: '상세 페이지',
+            state: optimisticIsBookmarked ? '추가' : '해제',
+          })
+
+          if (optimisticIsBookmarked) {
+            toast('퀴즈가 도서관에 저장되었어요', {
+              icon: <IcBookmarkFilled className="size-4" />,
+              action: {
+                label: '보러가기',
+                onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
+              },
+            })
+          } else {
+            toast('북마크가 해제되었어요')
+          }
+        },
+        onError: () => {
+          // 실패시 ui 롤백
+          setIsBookmarked(document.isBookmarked)
+        },
+        onSettled: () => setIsBookmarkProcessing(false),
+      },
+    )
+  }
 
   if (!isDocumentLoading && !document?.isPublic && !document?.isOwner) {
     return <NotFound />
@@ -283,12 +234,45 @@ const NoteDetailPage = () => {
               </Text>
             </div>
             <div className="ml-auto flex items-center gap-[2px]">
-              <button className="p-2">
-                <IcBookmark className="size-[24px] text-icon-secondary" />
+              <button className="p-2" onClick={handleBookmark}>
+                {isBookmarked ? (
+                  <IcBookmarkFilled className="size-6 text-icon-secondary" />
+                ) : (
+                  <IcBookmark className="size-6 text-icon-secondary" />
+                )}
               </button>
-              <button className="p-2">
-                <IcKebab className="size-[24px] text-icon-secondary" />
-              </button>
+              <DropdownMenu>
+                <DropdownMenuTrigger className="p-2" asChild>
+                  <button className="p-2">
+                    <IcKebab className="size-[24px] text-icon-secondary" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="-translate-y-2">
+                  {document?.isOwner && (
+                    <DropdownMenuItem right={<IcEdit />} onClick={() => {}}>
+                      퀴즈 정보 수정
+                    </DropdownMenuItem>
+                  )}
+                  <DropdownMenuItem right={<IcDownload />} onClick={handleDownloadQuizAsPdf}>
+                    문제 다운로드
+                  </DropdownMenuItem>
+                  <DropdownMenuItem right={<IcNote />} onClick={() => setContentDrawerOpen(true)}>
+                    원본 문서
+                  </DropdownMenuItem>
+                  {document?.isOwner && (
+                    <DropdownMenuItem
+                      className="text-red-500"
+                      right={<IcDelete className="text-icon-critical" />}
+                      onClick={() => {
+                        trackEvent('library_detail_delete_click')
+                        setDeleteDocumentDialogOpen(true)
+                      }}
+                    >
+                      퀴즈 삭제
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </div>
         }
@@ -301,27 +285,18 @@ const NoteDetailPage = () => {
             <button
               className={cn(
                 'border rounded-full px-[10px] py-2 typo-button-4 border-outline text-secondary',
-                quizType === 'ALL' && 'border-accent text-accent',
+                showMultipleChoice && 'border-accent text-accent',
               )}
-              onClick={() => setQuizType('ALL')}
-            >
-              전체
-            </button>
-            <button
-              className={cn(
-                'border rounded-full px-[10px] py-2 typo-button-4 border-outline text-secondary',
-                quizType === 'MULTIPLE_CHOICE' && 'border-accent text-accent',
-              )}
-              onClick={() => setQuizType('MULTIPLE_CHOICE')}
+              onClick={() => setShowMultipleChoice(!showMultipleChoice)}
             >
               객관식
             </button>
             <button
               className={cn(
                 'border rounded-full px-[10px] py-2 typo-button-4 border-outline text-secondary',
-                quizType === 'MIX_UP' && 'border-accent text-accent',
+                showMixUp && 'border-accent text-accent',
               )}
-              onClick={() => setQuizType('MIX_UP')}
+              onClick={() => setShowMixUp(!showMixUp)}
             >
               O/X
             </button>
@@ -365,14 +340,14 @@ const NoteDetailPage = () => {
                             trackEvent('library_quiz_edit_click')
                           }}
                         >
-                          문제 편집
+                          수정
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           className="text-red-500"
                           right={<IcDelete className="text-icon-critical" />}
                           onClick={() => setDeleteTargetQuizId(quiz.id)}
                         >
-                          문제 삭제
+                          삭제
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -399,116 +374,6 @@ const NoteDetailPage = () => {
           </div>
         </div>
       </HeaderOffsetLayout>
-
-      {/* 하단 툴바 */}
-      <div className="fixed bottom-[60px] bg-white right-1/2 translate-1/2 py-2 px-4 shadow-[var(--shadow-md)] flex items-center rounded-[16px]">
-        <div className="flex items-center gap-2 shrink-0">
-          <Text typo="body-2-bold" color="sub">
-            정답
-          </Text>
-          <Switch
-            checked={showAnswer}
-            onCheckedChange={(checked) => {
-              setShowAnswer(checked)
-              trackEvent('library_detail_answer_click', { value: checked })
-            }}
-          />
-        </div>
-
-        <div className="h-[24px] w-px bg-gray-100 mx-[16px] shrink-0" />
-
-        <div className="flex items-center text-icon-secondary">
-          <button
-            className="p-2"
-            onClick={() => {
-              trackEvent('library_detail_p_click')
-              setPlayDrawerOpen(true)
-            }}
-          >
-            <IcPlay className="size-6" />
-          </button>
-          <button
-            className="p-2"
-            onClick={() => {
-              setReviewPickOpen(true)
-              trackEvent('library_detail_review_click')
-            }}
-          >
-            <IcReview className="size-6" />
-          </button>
-          <button
-            className="p-2"
-            onClick={() => {
-              setContentDrawerOpen(true)
-              trackEvent('library_detail_note_click')
-            }}
-          >
-            <IcNote className="size-6" />
-          </button>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="p-2" asChild>
-              <button>
-                <IcKebab className="size-6" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="-translate-y-2">
-              <DropdownMenuItem right={<IcDownload />} onClick={handleDownloadQuizAsPdf}>
-                문제 다운로드
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="text-red-500"
-                right={<IcDelete className="text-icon-critical" />}
-                onClick={() => {
-                  trackEvent('library_detail_delete_click')
-                  setDeleteDocumentDialogOpen(true)
-                }}
-              >
-                퀴즈 삭제
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-
-      {/* 풀 문제 수 drawer */}
-      <Drawer open={playDrawerOpen} onOpenChange={setPlayDrawerOpen}>
-        <DrawerContent height="sm">
-          <div className="py-[20px]">
-            <Text typo="body-1-medium" color="sub" className="text-center">
-              풀 문제 수
-            </Text>
-            <Text typo="h2" color="accent" className="mt-1 text-center">
-              {selectedQuizCount} 문제
-            </Text>
-            {document && (
-              <div className="mt-[32px]">
-                <Slider
-                  min={1}
-                  max={maxQuizCount}
-                  step={1}
-                  defaultValue={[maxQuizCount ?? 0]}
-                  value={[selectedQuizCount]}
-                  onValueChange={(value) => setSelectedQuizCount(value[0])}
-                />
-                <div className="mt-[12px] flex items-center justify-between">
-                  <Text typo="body-2-medium" color="sub">
-                    1 문제
-                  </Text>
-                  <Text typo="body-2-medium" color="sub">
-                    {maxQuizCount} 문제
-                  </Text>
-                </div>
-              </div>
-            )}
-          </div>
-
-          <DrawerFooter className="h-[114px]">
-            <Button onClick={() => handlePlay(selectedQuizCount)} className="mt-[14px]" disabled={isCreatingQuizSet}>
-              {isCreatingQuizSet ? <Spinner className="size-6" /> : '퀴즈 시작하기'}
-            </Button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
 
       {/* 문제 수정 drawer */}
       <AlertDrawer
@@ -884,14 +749,7 @@ const NoteDetailPage = () => {
         }}
       />
 
-      {isCreatingNewQuizzes && (
-        <NoteDetailQuizLoadingDrawer
-          documentName={document?.name ?? ''}
-          documentId={document?.id ?? 0}
-          isLoading={isCreatingNewQuizzes}
-          close={() => setIsCreatingNewQuizzes(false)}
-        />
-      )}
+      <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
     </div>
   )
 }
