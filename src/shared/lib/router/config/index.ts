@@ -210,6 +210,10 @@ export const RouteConfig = {
     pathname: '/quiz-detail/:noteId',
   },
 
+  quizDetailEdit: {
+    pathname: '/quiz-detail/:noteId/edit',
+  },
+
   quizDetailList: {
     pathname: '/quiz-detail/:noteId/list',
     search: {

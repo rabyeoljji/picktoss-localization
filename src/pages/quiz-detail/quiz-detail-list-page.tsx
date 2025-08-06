@@ -258,7 +258,14 @@ const NoteDetailPage = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="-translate-y-2">
                   {document?.isOwner && (
-                    <DropdownMenuItem right={<IcEdit />} onClick={() => {}}>
+                    <DropdownMenuItem
+                      right={<IcEdit />}
+                      onClick={() =>
+                        router.push('/quiz-detail/:noteId/edit', {
+                          params: [String(document.id)],
+                        })
+                      }
+                    >
                       퀴즈 정보 수정
                     </DropdownMenuItem>
                   )}
