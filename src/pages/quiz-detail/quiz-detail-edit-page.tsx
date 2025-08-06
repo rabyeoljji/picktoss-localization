@@ -20,6 +20,7 @@ import {
 import { BackButton } from '@/shared/components/buttons/back-button'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
+import { SystemDialog } from '@/shared/components/system-dialog'
 import { Button } from '@/shared/components/ui/button'
 import { Input } from '@/shared/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
@@ -45,6 +46,7 @@ const QuizDetailEditPage = () => {
   // UI states
   const [showEmojiPicker, setShowEmojiPicker] = useState(false)
   const [categoryDrawerOpen, setCategoryDrawerOpen] = useState(false)
+  const [showPrivateConfirmDialog, setShowPrivateConfirmDialog] = useState(false)
 
   const emojiPickerRef = useRef<HTMLDivElement>(null)
 
@@ -169,12 +171,12 @@ const QuizDetailEditPage = () => {
     }
   }
 
+  const handlePublicToggle = (checked: boolean) => {
+    setIsPublic(checked)
+  }
+
   const isLoading = isUpdatingName || isUpdatingEmoji || isUpdatingCategory || isUpdatingPublic
-  const hasChanges =
-    emoji !== (document?.emoji || '📝') ||
-    title !== (document?.name || '') ||
-    selectedCategoryId !== categories?.find((cat) => cat.name === document?.category)?.id ||
-    isPublic !== (document?.isPublic || false)
+  const hasPublicChange = isPublic !== (document?.isPublic || false)
 
   if (isDocumentLoading) return null
 
@@ -201,7 +203,7 @@ const QuizDetailEditPage = () => {
               *다른 사람들도 퀴즈를 풀어볼 수 있어요
             </Text>
           </div>
-          <Switch checked={isPublic} onCheckedChange={setIsPublic} />
+          <Switch checked={isPublic} onCheckedChange={handlePublicToggle} />
         </div>
 
         <div className="px-4 py-5 flex flex-col gap-[24px]">
@@ -303,11 +305,46 @@ const QuizDetailEditPage = () => {
         </div>
       </HeaderOffsetLayout>
 
+      {/* 비공개 확인 다이얼로그 */}
+      <SystemDialog
+        open={showPrivateConfirmDialog}
+        onOpenChange={setShowPrivateConfirmDialog}
+        title="퀴즈를 비공개로 처리하시겠어요?"
+        content={
+          <Text typo="body-1-medium" color="sub">
+            내 퀴즈 공유가 불가능하며,
+            <br />
+            다른 사람들의 풀이 및 저장 정보가 삭제돼요
+          </Text>
+        }
+        variant="critical"
+        confirmLabel="확인"
+        onConfirm={() => {
+          setShowPrivateConfirmDialog(false)
+          handleSave()
+        }}
+      />
+
       {/* 저장 버튼 */}
       <div className="pb-[40px] bg-base-1">
         <Button
-          onClick={handleSave}
-          disabled={!title.trim() || !selectedCategoryId || isLoading || !hasChanges}
+          onClick={() => {
+            if (hasPublicChange && isPublic === false) {
+              setShowPrivateConfirmDialog(true)
+              return
+            }
+            handleSave()
+          }}
+          disabled={
+            !title.trim() ||
+            !selectedCategoryId ||
+            isDocumentLoading ||
+            isLoading ||
+            isUpdatingName ||
+            isUpdatingEmoji ||
+            isUpdatingCategory ||
+            isUpdatingPublic
+          }
           className="w-full"
         >
           {isLoading ? '저장 중...' : '저장'}
