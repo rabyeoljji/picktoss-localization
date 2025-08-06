@@ -226,17 +226,18 @@ export interface SearchPublicDocumentsDto {
   id: number
   name: string
   emoji: string
-  category: string
-  creatorName: string
-  isOwner: boolean
-  isBookmarked: boolean
+  content: string
   tryCount: number
   bookmarkCount: number
   totalQuizCount: number
+  quizzes: SearchDocumentsQuizDto[]
+  isPublic: boolean
+  isBookmarked: boolean
+  isOwner: boolean
 }
 
 export interface SearchPublicDocumentsResponse {
-  publicDocuments: SearchPublicDocumentsDto[]
+  documents: SearchPublicDocumentsDto[]
 }
 
 export const searchPublicDocuments = async (data: SearchRequest): Promise<SearchPublicDocumentsResponse> => {

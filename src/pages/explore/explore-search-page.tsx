@@ -1,27 +1,19 @@
 import { useState } from 'react'
 import { isMobile } from 'react-device-detect'
 
-import { useStore } from 'zustand'
-
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
-import { useAuthStore } from '@/features/auth'
 import LoginDialog from '@/features/explore/ui/login-dialog'
-import { highlightAndTrimText } from '@/features/search/lib'
+import { formatQAText, highlightAndTrimText } from '@/features/search/lib'
 import { useSearch } from '@/features/search/model/use-search'
 
 import { SearchPublicDocumentsDto } from '@/entities/document/api'
-import {
-  useCreateDocumentBookmark,
-  useDeleteDocumentBookmark,
-  useSearchPublicDocuments,
-} from '@/entities/document/api/hooks'
+import { useSearchPublicDocuments } from '@/entities/document/api/hooks'
 
-import { IcBookmark, IcBookmarkFilled } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
-import { BookmarkVerticalCard } from '@/shared/components/cards/bookmark-vertical-card'
 import { Header } from '@/shared/components/header'
+import SearchQuizItem from '@/shared/components/items/search-quiz-item'
 import Loading from '@/shared/components/ui/loading'
 import { SearchInput } from '@/shared/components/ui/search-input'
 import { Text } from '@/shared/components/ui/text'
@@ -52,7 +44,7 @@ const ExploreSearchPage = () => {
       enabled: !!queryKeyword && !showRecentKeywords,
     },
   )
-  const searchResults = searchResultsData?.publicDocuments ?? []
+  const searchResults = searchResultsData?.documents ?? []
   const hasSearchResults = searchResults && searchResults.length > 0
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -110,17 +102,22 @@ const ExploreSearchPage = () => {
         )}
 
         {!showRecentKeywords && !isLoading && hasSearchResults && (
-          <div className="h-full px-[16px] pt-[20px] flex flex-col gap-[10px] overflow-y-auto">
+          <div className="h-[calc(100%-48px)] flex flex-col px-[16px] pt-[16px] overflow-y-auto">
             <Text typo="body-1-medium">
               결과 <span className="text-accent">{searchResults.length}</span>
             </Text>
 
-            <div className="w-full h-fit pb-[59px]">
-              <div className="h-fit w-full max-w-[342px] sm:max-w-full mx-auto grid grid-cols-[repeat(auto-fit,_minmax(166px,_166px))] gap-x-[10px] gap-y-[16px]">
-                {searchResults.map((searchItem) => {
-                  return <ExploreSearchResultCard key={searchItem.id} searchItem={searchItem} keyword={queryKeyword} />
-                })}
-              </div>
+            <div className="h-fit flex flex-col pb-[16px]">
+              {searchResults.map((searchItem, idx) => {
+                return (
+                  <ExploreSearchResultCard
+                    key={searchItem.id}
+                    searchItem={searchItem}
+                    keyword={queryKeyword}
+                    isLastItem={idx === searchResults.length - 1}
+                  />
+                )
+              })}
             </div>
           </div>
         )}
@@ -132,41 +129,14 @@ const ExploreSearchPage = () => {
 interface ExploreSearchResultsProps {
   searchItem: SearchPublicDocumentsDto
   keyword: string
+  isLastItem?: boolean
 }
 
 /** 내 문서에서 검색 결과가 있을 때 결과들을 보여주는 컴포넌트 */
-const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsProps) => {
-  const token = useStore(useAuthStore, (state) => state.token)
-
+const ExploreSearchResultCard = ({ searchItem, keyword, isLastItem }: ExploreSearchResultsProps) => {
   const router = useRouter()
 
   const [isLoginOpen, setIsLoginOpen] = useState(false)
-
-  const [isBookmarked, setIsBookmarked] = useState(searchItem.isBookmarked)
-
-  const { mutate: bookmark } = useCreateDocumentBookmark(searchItem.id)
-  const { mutate: deleteBookmark } = useDeleteDocumentBookmark(searchItem.id)
-
-  // 낙관적 업데이트 적용한 북마크 핸들러
-  const handleBookmark = () => {
-    if (!token) {
-      setIsLoginOpen(true)
-      return
-    }
-
-    const nextState = !isBookmarked
-    setIsBookmarked(nextState)
-
-    if (nextState) {
-      bookmark(undefined, {
-        onError: () => setIsBookmarked(false),
-      })
-    } else {
-      deleteBookmark(undefined, {
-        onError: () => setIsBookmarked(true),
-      })
-    }
-  }
 
   const handleClickMoveToDetailPageBtn = () => {
     if (searchItem.isOwner) {
@@ -178,39 +148,20 @@ const ExploreSearchResultCard = ({ searchItem, keyword }: ExploreSearchResultsPr
 
   return (
     <>
-      <BookmarkVerticalCard role="link" onClick={handleClickMoveToDetailPageBtn}>
-        <BookmarkVerticalCard.Header
-          emoji={searchItem.emoji}
-          isOwner={searchItem.isOwner}
-          bookmarkBtn={
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-                handleBookmark()
-              }}
-            >
-              {isBookmarked ? (
-                <IcBookmarkFilled className="size-[24px] text-icon-primary" />
-              ) : (
-                <IcBookmark className="size-[24px] text-icon-secondary" />
-              )}
-            </button>
+      <div onClick={handleClickMoveToDetailPageBtn}>
+        <SearchQuizItem
+          documentTitle={highlightAndTrimText(searchItem.name, keyword, 'subtitle-2-bold')}
+          documentEmoji={searchItem.emoji}
+          matchingSentence={
+            searchItem.quizzes && highlightAndTrimText(formatQAText(searchItem.quizzes), keyword ?? '', 'body-1-bold')
           }
-          category={searchItem.category}
-        />
-
-        <BookmarkVerticalCard.Content title={highlightAndTrimText(searchItem.name, keyword, 'subtitle-2-bold')} />
-        <BookmarkVerticalCard.Detail
-          isPublic
           quizCount={searchItem.totalQuizCount}
+          isPublic={true}
           playedCount={searchItem.tryCount}
           bookmarkCount={searchItem.bookmarkCount}
+          lastItem={isLastItem}
         />
-
-        <BookmarkVerticalCard.Footer creator={searchItem.creatorName} />
-      </BookmarkVerticalCard>
+      </div>
 
       {/* 로그인 모달 */}
       <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />

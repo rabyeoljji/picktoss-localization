@@ -190,6 +190,9 @@ export const useUpdateQuizResult = (documentId: number, quizSetId: number) => {
       queryClient.invalidateQueries({
         queryKey: DOCUMENT_KEYS.getDocument(documentId),
       })
+      queryClient.invalidateQueries({
+        queryKey: QUIZ_KEYS.getQuizzesRecords,
+      })
     },
   })
 }

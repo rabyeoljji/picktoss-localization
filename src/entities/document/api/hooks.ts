@@ -358,10 +358,10 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
         queryKey: [...DOCUMENT_KEYS.searchPublicDocuments],
       })
       searchQueries.forEach(([queryKey, data]) => {
-        if (data?.publicDocuments) {
+        if (data?.documents) {
           const updatedData = {
             ...data,
-            publicDocuments: data.publicDocuments.map((doc) => {
+            publicDocuments: data.documents.map((doc) => {
               if (doc.id === documentId) {
                 return {
                   ...doc,
@@ -509,7 +509,7 @@ export const useDeleteDocument = (options?: {
   sortOption?: 'CREATED_AT' | 'NAME' | 'QUIZ_COUNT' | 'WRONG_ANSWER_COUNT'
 }) => {
   const queryClient = useQueryClient()
-  const queryKey = [DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption]
+  const queryKey = [...DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption]
 
   return useMutation({
     mutationKey: DOCUMENT_KEYS.deleteDocument,
