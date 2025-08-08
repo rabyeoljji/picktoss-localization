@@ -183,7 +183,7 @@ const QuizDetailPage = () => {
       try {
         await navigator.share({
           title: document.name,
-          url: `${window.location.origin}/explore/detail/${noteId}`,
+          url: `${window.location.origin}/quiz-detail/${noteId}`,
         })
         console.log('공유 성공')
       } catch (error) {

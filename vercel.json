@@ -1,7 +1,7 @@
 {
   "rewrites": [
     {
-      "source": "/explore/detail/:id",
+      "source": "/quiz-detail/:id",
       "has": [
         {
           "type": "header",
@@ -9,7 +9,7 @@
           "value": "(?i).*(bot|crawler|spider|facebookexternalhit|twitterbot|linkedinbot|whatsapp|telegram|kakaotalk-scrap).*"
         }
       ],
-      "destination": "https://app.picktoss.com/explore/detail/:id"
+      "destination": "https://app.picktoss.com/quiz-detail/:id"
     },
     {
       "source": "/:path((?!api/).*)",

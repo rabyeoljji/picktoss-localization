@@ -167,7 +167,7 @@ const ExploreCard = ({
   //     try {
   //       await navigator.share({
   //         title: name,
-  //         url: `${window.location.origin}/explore/detail/${id}`,
+  //         url: `${window.location.origin}/quiz-detail/${id}`,
   //       })
   //       console.log('공유 성공')
   //     } catch (error) {
