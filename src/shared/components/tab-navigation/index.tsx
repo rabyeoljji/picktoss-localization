@@ -78,7 +78,7 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
           className,
         )}
       >
-        <div className="mx-auto flex max-w-[500px] justify-between px-[52px] pt-2.5">
+        <div className="mx-auto flex max-w-[500px] justify-between px-[32px] pt-2.5">
           {navItems.map((item) => (
             <NavItem key={item.label} {...item} active={item.label === activeTab} handleNavigation={handleNavigation} />
           ))}
@@ -107,7 +107,7 @@ const NavItem = ({ icon, to, label, active = false, handleNavigation }: NavItemP
       )}
     >
       {icon}
-      <Text typo="body-2-medium" color={active ? 'primary' : 'sub'}>
+      <Text typo="caption-medium" color={active ? 'primary' : 'sub'}>
         {label}
       </Text>
     </button>

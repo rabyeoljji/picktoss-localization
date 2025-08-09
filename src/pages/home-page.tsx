@@ -674,4 +674,5 @@ const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChang
 export default withHOC(HomePage, {
   activeTab: '데일리',
   backgroundClassName: 'bg-surface-2',
+  navClassName: 'border-none',
 })

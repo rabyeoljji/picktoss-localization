@@ -191,7 +191,7 @@ const CategoryTab = ({ hideHeader }: { hideHeader: boolean }) => {
     <div
       ref={scrollRef}
       className={cn(
-        'fixed top-[var(--header-height-safe)] left-1/2 -translate-x-1/2 w-full max-w-xl z-10 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)] flex gap-[6px] overflow-x-auto scrollbar-hide px-[8px] py-[8px]',
+        'fixed top-[var(--header-height-safe)] left-1/2 -translate-x-1/2 w-full max-w-xl z-10 bg-[linear-gradient(to_bottom,#F8F8F7_25%,rgba(245,245,245,0)_100%)] flex gap-[6px] overflow-x-auto scrollbar-hide px-[16px] py-[8px]',
         'transition-transform duration-300',
         hideHeader ? '-translate-y-[var(--header-height)]' : 'translate-y-0',
       )}
@@ -206,7 +206,7 @@ const CategoryTab = ({ hideHeader }: { hideHeader: boolean }) => {
           <Chip
             variant={activeCategory === 0 ? 'selected' : 'darken'}
             onClick={() => setCategory(0)}
-            className={cn('px-[13.5px] ml-[16px]')}
+            className={cn('px-[13.5px]')}
           >
             전체
           </Chip>
