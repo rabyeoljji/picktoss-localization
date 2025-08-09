@@ -396,6 +396,10 @@ const QuizDetailPage = () => {
             left={<IcPlayFilled className="size-[20px]" />}
             disabled={isCreatingQuizSet}
             onClick={() => {
+              if (!token) {
+                setIsLoginOpen(true)
+                return
+              }
               createQuizSet(
                 {
                   quizCount: selectedQuizCount,
