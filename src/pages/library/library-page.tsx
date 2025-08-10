@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useNoteList } from '@/features/note/hooks/use-note-list'
+import { useLibrarySearchActions, useLibrarySearchKeyword } from '@/features/note/store/use-library-search-store'
 import BookmarkedNotesContent from '@/features/note/ui/bookmarked-notes-content'
 import MyNotesContent from '@/features/note/ui/my-notes-content'
 
@@ -38,7 +39,9 @@ const LibraryPage = () => {
   const isEmptyMyDocuments = !myDocuments || myDocuments.length === 0
   const isEmptyBookmarked = !bookmarkedDocuments || bookmarkedDocuments.length === 0
 
-  const [keyword, setKeyword] = useState('')
+  const keyword = useLibrarySearchKeyword()
+  const { setKeyword, clearKeyword } = useLibrarySearchActions()
+
   const debouncedKeyword = useDebounceValue(keyword, 200)
 
   const onChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,6 +118,7 @@ const LibraryPage = () => {
                 <SearchInput
                   value={keyword}
                   onChange={onChangeKeyword}
+                  clearKeyword={clearKeyword}
                   placeholder="퀴즈 제목, 내용 검색"
                   className="bg-base-3 placeholder:text-caption"
                 />
