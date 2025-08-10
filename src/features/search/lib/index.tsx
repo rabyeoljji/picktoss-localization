@@ -3,6 +3,7 @@ import { JSX } from 'react'
 import { extractPlainText } from '@/features/note/lib'
 
 import { Text, Typo } from '@/shared/components/ui/text'
+import { cn } from '@/shared/lib/utils'
 
 type Quiz = {
   question: string
@@ -29,24 +30,33 @@ export const MarkdownProcessor = ({
   markdownText,
   keyword,
   typo,
+  displayCharCount = 80,
+  truncate,
 }: {
   markdownText: string
   keyword: string
   typo: Typo
+  displayCharCount?: number
+  truncate?: boolean
 }) => {
   const plainText = extractPlainText(markdownText)
-  const highlightedText = highlightAndTrimText(plainText, keyword, typo)
+  const highlightedText = highlightAndTrimText(plainText, keyword, typo, displayCharCount)
 
-  return <div>{highlightedText}</div>
+  return <div className={cn('w-full', truncate && 'truncate')}>{highlightedText}</div>
 }
 
 /**
  * 텍스트에서 키워드를 강조하는 함수
  */
-export function highlightAndTrimText(text: string, keyword: string, typo: Typo): JSX.Element | string {
+export function highlightAndTrimText(
+  text: string,
+  keyword: string,
+  typo: Typo,
+  displayCharCount?: number,
+): JSX.Element | string {
   if (!text) return text
 
-  const totalLength = 80
+  const totalLength = displayCharCount ?? 80
   const regex = new RegExp(`(${keyword})`, 'gi') // RegExp로 정규표현식 생성
   const match = text.match(regex)
 
@@ -58,12 +68,11 @@ export function highlightAndTrimText(text: string, keyword: string, typo: Typo):
 
   // 첫 번째 매칭된 키워드의 위치
   const keywordIndex = text.toLowerCase().indexOf(keyword.toLowerCase())
-  const keywordLength = keyword.length
 
-  // 키워드 기준 앞뒤로 잘라낼 텍스트 길이 계산
-  const surroundingLength = Math.floor((totalLength - keywordLength) / 2)
+  // 키워드의 살짝 앞에서부터 잘라서 표시 (현재 설정 : 5글자 앞에서부터 표시)
+  const prevCharCount = 5
 
-  const start = Math.max(0, keywordIndex - surroundingLength)
+  const start = Math.max(0, keywordIndex - prevCharCount)
   const end = Math.min(text.length, start + totalLength)
 
   const trimmedText = text.slice(start, end)

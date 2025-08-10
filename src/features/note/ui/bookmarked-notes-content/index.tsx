@@ -1,9 +1,9 @@
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
-import { extractPlainText } from '@/features/note/lib'
 import EmptyBookmarkQuiz from '@/features/note/ui/empty-bookmark-quiz'
+import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/lib'
 
-import { GetBookmarkedDocumentsDto } from '@/entities/document/api'
+import { GetBookmarkedDocumentsDto, SearchDocumentsDto } from '@/entities/document/api'
 import { useUser } from '@/entities/member/api/hooks'
 
 import { IcArrange, IcCheck } from '@/shared/assets/icon'
@@ -23,16 +23,28 @@ interface Props {
   onTabChange: (tab: 'MY' | 'BOOKMARK') => void
   isLoading: boolean
   isEmptyBookmarked: boolean
-  documents?: GetBookmarkedDocumentsDto[]
+  documents?: GetBookmarkedDocumentsDto[] | SearchDocumentsDto[]
+  keyword?: string
 }
 
-const BookmarkedNotesContent = ({ activeTab, onTabChange, isLoading, isEmptyBookmarked, documents }: Props) => {
+const BookmarkedNotesContent = ({
+  activeTab,
+  onTabChange,
+  isLoading,
+  isEmptyBookmarked,
+  documents,
+  keyword,
+}: Props) => {
   type Tab = typeof activeTab
 
   const { data: user } = useUser()
 
   const [sortOption, setSortOption] = useQueryParam('/library', 'bookmarkedSortOption')
   const activeSortOption = sortOption ?? 'CREATED_AT'
+
+  const isSearchDocType = (doc: GetBookmarkedDocumentsDto | SearchDocumentsDto): doc is SearchDocumentsDto => {
+    return (doc as SearchDocumentsDto).isBookmarked !== undefined
+  }
 
   return (
     <div className="size-full flex flex-col px-[16px] pt-[16px]">
@@ -104,8 +116,20 @@ const BookmarkedNotesContent = ({ activeTab, onTabChange, isLoading, isEmptyBook
                 key={document.id}
                 id={document.id}
                 emoji={document.emoji}
-                name={document.name}
-                previewContent={document.previewContent}
+                name={highlightAndTrimText(document.name ?? '', keyword ?? '', 'subtitle-2-bold')}
+                previewContent={
+                  isSearchDocType(document) ? (
+                    <MarkdownProcessor
+                      markdownText={document.content}
+                      keyword={keyword ?? ''}
+                      typo="body-1-regular"
+                      displayCharCount={40}
+                      truncate
+                    />
+                  ) : (
+                    document.previewContent
+                  )
+                }
                 totalQuizCount={document.totalQuizCount}
                 playedCount={document.tryCount}
                 bookmarkCount={document.bookmarkCount}
@@ -123,8 +147,8 @@ export default BookmarkedNotesContent
 interface BookmarkedCardProps {
   id: number
   emoji: string
-  name: string
-  previewContent: string
+  name: React.ReactNode
+  previewContent: React.ReactNode
   totalQuizCount: number
   playedCount: number
   bookmarkCount: number
@@ -172,7 +196,7 @@ const BookmarkedCard = ({
 
       <BookmarkHorizontalCard.Content>
         <BookmarkHorizontalCard.Header title={name} />
-        <BookmarkHorizontalCard.Preview content={extractPlainText(previewContent)} />
+        <BookmarkHorizontalCard.Preview content={previewContent} />
         <BookmarkHorizontalCard.Detail
           quizCount={totalQuizCount}
           playedCount={playedCount}

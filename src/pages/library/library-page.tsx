@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -5,12 +7,15 @@ import { useNoteList } from '@/features/note/hooks/use-note-list'
 import BookmarkedNotesContent from '@/features/note/ui/bookmarked-notes-content'
 import MyNotesContent from '@/features/note/ui/my-notes-content'
 
+import { useSearchDocument } from '@/entities/document/api/hooks'
+
 import { IcAdd, IcBack, IcSearch } from '@/shared/assets/icon'
 import { Header } from '@/shared/components/header'
-import { Text } from '@/shared/components/ui/text'
+import { SearchInput } from '@/shared/components/ui/search-input'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
-import { Link, useRouter } from '@/shared/lib/router'
+import { useDebounceValue } from '@/shared/hooks/use-debounce-value'
+import { useRouter } from '@/shared/lib/router'
 
 const LibraryPage = () => {
   const { trackEvent } = useAmplitude()
@@ -25,13 +30,40 @@ const LibraryPage = () => {
 
     myDocsCheckList,
 
-    isLoading,
+    isLoading: isLoadingMyDocs,
     myDocuments,
     bookmarkedDocuments,
   } = useNoteList()
 
   const isEmptyMyDocuments = !myDocuments || myDocuments.length === 0
   const isEmptyBookmarked = !bookmarkedDocuments || bookmarkedDocuments.length === 0
+
+  const [keyword, setKeyword] = useState('')
+  const debouncedKeyword = useDebounceValue(keyword, 200)
+
+  const onChangeKeyword = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setKeyword(e.target.value)
+  }
+
+  const { data: searchResultsData, isFetching: isFetchingSearchDocs } = useSearchDocument(
+    { keyword: debouncedKeyword },
+    {
+      enabled: !!debouncedKeyword,
+    },
+  )
+  const searchResultsMyDocs = useMemo(
+    () => searchResultsData?.documents.filter((doc) => !doc.isBookmarked) ?? [],
+    [searchResultsData],
+  )
+  const searchResultsBookmarks = useMemo(
+    () => searchResultsData?.documents.filter((doc) => doc.isBookmarked) ?? [],
+    [searchResultsData],
+  )
+
+  const myDocumentResults = keyword ? searchResultsMyDocs : myDocuments
+  const bookmarkedDocumentResults = keyword ? searchResultsBookmarks : bookmarkedDocuments
+
+  const isLoading = isLoadingMyDocs || isFetchingSearchDocs
 
   type Tab = typeof activeTab
 
@@ -78,15 +110,15 @@ const LibraryPage = () => {
           }
           content={
             <div className="w-[calc(100%-40px)] px-[8px]">
-              <Link
-                to={'/library/search'}
-                className="h-[40px] flex-1 bg-base-3 py-[8px] px-[10px] flex items-center gap-[4px] rounded-full"
-              >
-                <IcSearch className="size-[20px] text-icon-secondary" />
-                <Text typo="subtitle-2-medium" color="caption">
-                  퀴즈 제목, 내용 검색
-                </Text>
-              </Link>
+              <div className="relative">
+                <IcSearch className="absolute left-[10px] top-[50%] -translate-y-[50%] size-[20px] text-icon-secondary" />
+                <SearchInput
+                  value={keyword}
+                  onChange={onChangeKeyword}
+                  placeholder="퀴즈 제목, 내용 검색"
+                  className="bg-base-3 placeholder:text-caption"
+                />
+              </div>
             </div>
           }
         />
@@ -100,10 +132,11 @@ const LibraryPage = () => {
             onTabChange={handleTabChange}
             isLoading={isLoading}
             isEmptyMyDocuments={isEmptyMyDocuments}
-            documents={myDocuments}
+            documents={myDocumentResults}
             selectMode={selectMode}
             changeSelectMode={changeSelectMode}
             checkList={myDocsCheckList}
+            keyword={debouncedKeyword}
           />
         )}
 
@@ -113,7 +146,8 @@ const LibraryPage = () => {
             onTabChange={handleTabChange}
             isLoading={isLoading}
             isEmptyBookmarked={isEmptyBookmarked}
-            documents={bookmarkedDocuments}
+            documents={bookmarkedDocumentResults}
+            keyword={debouncedKeyword}
           />
         )}
       </HeaderOffsetLayout>
