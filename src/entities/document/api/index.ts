@@ -195,6 +195,7 @@ export interface SearchDocumentsDto {
   emoji: string
   content: string
   isPublic: boolean
+  isBookmarked: boolean
   tryCount: number
   bookmarkCount: number
   totalQuizCount: number

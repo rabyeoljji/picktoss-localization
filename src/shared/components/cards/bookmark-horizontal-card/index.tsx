@@ -41,7 +41,7 @@ const BookmarkHorizontalCardContent = ({ children }: { children: React.ReactNode
   )
 }
 
-const BookmarkHorizontalCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
+const BookmarkHorizontalCardHeader = ({ title, tag }: { title: React.ReactNode; tag?: React.ReactNode }) => {
   return (
     <div className="relative mb-[2px] flex items-center gap-[8px]">
       <Text as="h4" typo="subtitle-2-bold" className="w-fit max-w-[calc(100%-100px)] overflow-x-hidden truncate">
@@ -53,7 +53,7 @@ const BookmarkHorizontalCardHeader = ({ title, tag }: { title: string; tag?: Rea
   )
 }
 
-const BookmarkHorizontalCardPreview = ({ content }: { content: string }) => {
+const BookmarkHorizontalCardPreview = ({ content }: { content: React.ReactNode }) => {
   return (
     <Text typo="body-1-regular" color="sub" className="w-[calc(100%-40px)] truncate text-nowrap break-all">
       {content}

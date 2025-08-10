@@ -1,6 +1,7 @@
 import { forwardRef, useEffect, useRef, useState } from 'react'
 
 import { IcClear, IcSearch } from '@/shared/assets/icon'
+import { cn } from '@/shared/lib/utils'
 
 import { Input } from '../input'
 
@@ -9,7 +10,7 @@ interface SearchInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ value, onChange, clearKeyword, ...props }: SearchInputProps, ref) => {
+  ({ value, onChange, clearKeyword, className, ...props }: SearchInputProps, ref) => {
     const [internalValue, setValue] = useState(value)
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -35,12 +36,12 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     }
 
     return (
-      <div className="bg-base-2 flex items-center rounded-full overflow-hidden">
+      <div className={cn('bg-base-2 flex items-center rounded-full overflow-hidden', className)}>
         <IcSearch className="size-[20px] shrink-0 ml-[10px] text-icon-secondary" />
         <Input
           ref={mergedRef}
           value={internalValue}
-          className="h-[40px] border-none bg-base-2 pl-1 focus:border-none placeholder:text-caption"
+          className={cn('h-[40px] border-none bg-base-2 pl-1 focus:border-none placeholder:text-caption', className)}
           placeholder="검색어를 입력해주세요"
           right={
             internalValue && (
