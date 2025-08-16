@@ -4,7 +4,7 @@ import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { toast } from 'sonner'
 
 import EmptyMyNote from '@/features/note/ui/empty-my-note'
-import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/lib'
+import { MarkdownProcessor, formatQAText, highlightAndTrimText } from '@/features/search/lib'
 
 import { GetAllDocumentsDocumentDto, SearchDocumentsDto } from '@/entities/document/api'
 import { useDeleteDocument, useUpdateDocumentIsPublic } from '@/entities/document/api/hooks'
@@ -247,7 +247,7 @@ const MyNotesContent = ({
                     content={
                       isSearchDocType(document) ? (
                         <MarkdownProcessor
-                          markdownText={document.content}
+                          markdownText={formatQAText(document.quizzes)}
                           keyword={keyword ?? ''}
                           typo="body-1-regular"
                           displayCharCount={40}
