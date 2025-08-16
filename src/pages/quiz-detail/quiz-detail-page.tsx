@@ -25,6 +25,7 @@ import {
   IcCheck,
   IcChevronDown,
   IcDelete,
+  IcEdit,
   IcKebab,
   IcList,
   IcPlayFilled,
@@ -228,8 +229,18 @@ const QuizDetailPage = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="-translate-y-2">
-                  {/* TODO: 퀴즈 정보 수정 */}
-                  {/* <DropdownMenuItem right={<IcEdit className="size-[20px]" />} onClick={() => {}}></DropdownMenuItem> */}
+                {document?.isOwner && (
+                    <DropdownMenuItem
+                      right={<IcEdit />}
+                      onClick={() =>
+                        router.push('/quiz-detail/:noteId/edit', {
+                          params: [String(document.id)],
+                        })
+                      }
+                    >
+                      퀴즈 정보 수정
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem
                     className="text-red-500"
                     right={<IcDelete className="text-icon-critical size-[20px]" />}
@@ -330,6 +341,7 @@ const QuizDetailPage = () => {
                           const totalQuizCount = document?.quizzes?.length || 0
                           const isAvailable = count <= totalQuizCount
 
+                          if (count === totalQuizCount) return null
                           if (!isAvailable) return null
 
                           return (
@@ -390,10 +402,11 @@ const QuizDetailPage = () => {
           </div>
         </div>
 
-        <div className="px-5 mt-5">
+        <div className="px-5 mt-5 flex-center">
           <Button
             size="lg"
             left={<IcPlayFilled className="size-[20px]" />}
+            className='max-w-[400px]'
             disabled={isCreatingQuizSet}
             onClick={() => {
               if (!token) {
@@ -425,7 +438,7 @@ const QuizDetailPage = () => {
 
         <div className="mt-[40px] mx-auto w-fit flex items-center justify-between">
           <button
-            className="flex flex-col items-center gap-2 w-[96px]"
+            className="flex flex-col items-center gap-2 px-5"
             onClick={() => {
               router.push('/quiz-detail/:noteId/list', {
                 params: [String(noteId)],
@@ -446,7 +459,7 @@ const QuizDetailPage = () => {
                   trackEvent('library_share_click')
                 }}
               >
-                <button className="flex flex-col items-center gap-2 w-[96px]">
+                <button className="flex flex-col items-center gap-2 px-5">
                   <IcUpload className="size-6" />
                   <Text typo="body-2-bold" color="sub">
                     공유하기
@@ -481,7 +494,7 @@ const QuizDetailPage = () => {
               </DialogContent>
             </Dialog>
           ) : (
-            <button className="flex flex-col items-center gap-2 w-[96px]" onClick={() => handleShare()}>
+            <button className="flex flex-col items-center gap-2 px-5" onClick={() => handleShare()}>
               <IcUpload className="size-6" />
               <Text typo="body-2-bold" color="sub">
                 공유하기
@@ -491,7 +504,7 @@ const QuizDetailPage = () => {
           {!document?.isOwner && (
             <>
               <div className="w-px h-[48px] bg-gray-100" />
-              <button className="flex flex-col items-center gap-2 w-[96px]" onClick={handleBookmark}>
+              <button className="flex flex-col items-center gap-2 px-5" onClick={handleBookmark}>
                 {isBookmarked ? <IcBookmarkFilled className="size-6" /> : <IcBookmark className="size-6" />}
                 <Text typo="body-2-bold" color="sub">
                   저장하기
