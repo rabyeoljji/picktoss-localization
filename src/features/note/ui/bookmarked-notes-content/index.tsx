@@ -1,7 +1,7 @@
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 
 import EmptyBookmarkQuiz from '@/features/note/ui/empty-bookmark-quiz'
-import { MarkdownProcessor, highlightAndTrimText } from '@/features/search/lib'
+import { MarkdownProcessor, formatQAText, highlightAndTrimText } from '@/features/search/lib'
 
 import { GetBookmarkedDocumentsDto, SearchDocumentsDto } from '@/entities/document/api'
 import { useUser } from '@/entities/member/api/hooks'
@@ -120,7 +120,7 @@ const BookmarkedNotesContent = ({
                 previewContent={
                   isSearchDocType(document) ? (
                     <MarkdownProcessor
-                      markdownText={document.content}
+                      markdownText={formatQAText(document.quizzes)}
                       keyword={keyword ?? ''}
                       typo="body-1-regular"
                       displayCharCount={40}
