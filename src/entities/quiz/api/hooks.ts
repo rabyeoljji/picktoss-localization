@@ -112,7 +112,7 @@ export const useGetSingleDailyQuizRecord = (dailyQuizRecordId: number) => {
 
 // 데일리 퀴즈 풀기
 export const useCreateDailyQuizRecord = () => {
-  const today = new Date()
+  const today = format(new Date(), 'yyyy-MM-dd')
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -121,7 +121,7 @@ export const useCreateDailyQuizRecord = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [...QUIZ_KEYS.getConsecutiveSolvedDailyQuiz] })
       queryClient.invalidateQueries({
-        queryKey: [...QUIZ_KEYS.getConsecutiveSolvedQuizSetDates(format(today, 'yyyy-MM-dd'))],
+        queryKey: [...QUIZ_KEYS.getConsecutiveSolvedQuizSetDates(today)],
       })
     },
   })

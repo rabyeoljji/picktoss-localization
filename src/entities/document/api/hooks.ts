@@ -50,9 +50,15 @@ import {
 } from './index'
 
 export const useCreateDocument = () => {
+  const queryClient = useQueryClient()
+
   return useMutation({
     mutationKey: DOCUMENT_KEYS.createDocument,
     mutationFn: (data: CreateDocumentPayload) => createDocument(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getAllDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
+    },
   })
 }
 
