@@ -58,7 +58,7 @@ export const QUIZ_KEYS = {
     createKey(QUIZ, QUIZ_ENDPOINTS.getSingleDailyQuizRecord(dailyQuizRecordId)),
 
   // POST
-  createDailyQuizRecord: () => createKey(QUIZ, QUIZ_ENDPOINTS.createDailyQuizRecord),
+  createDailyQuizRecord: createKey(QUIZ, QUIZ_ENDPOINTS.createDailyQuizRecord),
   createQuizSet: (documentId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.createQuizSet(documentId)),
 
   // PATCH

@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { format } from 'date-fns'
 
 import { GetDocumentResponse } from '@/entities/document/api'
 import { DOCUMENT_KEYS } from '@/entities/document/api/config'
@@ -111,9 +112,18 @@ export const useGetSingleDailyQuizRecord = (dailyQuizRecordId: number) => {
 
 // 데일리 퀴즈 풀기
 export const useCreateDailyQuizRecord = () => {
+  const today = new Date()
+  const queryClient = useQueryClient()
+
   return useMutation({
-    mutationKey: QUIZ_KEYS.createDailyQuizRecord(),
+    mutationKey: QUIZ_KEYS.createDailyQuizRecord,
     mutationFn: (data: Parameters<typeof createDailyQuizRecord>[0]) => createDailyQuizRecord(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [...QUIZ_KEYS.getConsecutiveSolvedDailyQuiz] })
+      queryClient.invalidateQueries({
+        queryKey: [...QUIZ_KEYS.getConsecutiveSolvedQuizSetDates(format(today, 'yyyy-MM-dd'))],
+      })
+    },
   })
 }
 
