@@ -66,7 +66,8 @@ export const DOCUMENT_KEYS = {
   getBookmarkedDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getBookmarkedDocuments),
   getDocument: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocument(documentId)),
   getPublicDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getPublicDocuments),
-  getDocumentQuizzes: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocumentQuizzes(documentId)),
+  getDocumentQuizzes: (documentId: number, quizType?: 'MIX_UP' | 'MULTIPLE_CHOICE') =>
+    createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocumentQuizzes(documentId), quizType),
   getDocumentsNeedingReview: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.getDocumentsNeedingReview),
   downloadQuiz: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.downloadQuiz(documentId)),
 
@@ -81,7 +82,7 @@ export const DOCUMENT_KEYS = {
     createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.createDocumentBookmark(documentId)),
   addQuizzes: createKey(DOCUMENTS, 'addQuizzes'),
   createQuizSet: (documentId: number) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.createQuizSet(documentId)),
-  searchDocument: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.searchDocument),
+  searchDocument: (params: { keyword: string }) => createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.searchDocument, params),
   searchPublicDocuments: createKey(DOCUMENTS, DOCUMENT_ENDPOINTS.searchPublicDocuments),
 
   // PATCH

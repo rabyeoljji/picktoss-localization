@@ -48,7 +48,7 @@ export const QUIZ_KEYS = {
   getQuizzes: createKey(QUIZ, QUIZ_ENDPOINTS.getQuizzes),
   getQuizzesRecords: createKey(QUIZ, QUIZ_ENDPOINTS.getQuizzesRecords),
   getQuizWeeklyAnalysis: createKey(QUIZ, QUIZ_ENDPOINTS.getQuizWeeklyAnalysis),
-  getQuizMonthlyAnalysis: createKey(QUIZ, QUIZ_ENDPOINTS.getQuizMonthlyAnalysis),
+  getQuizMonthlyAnalysis: (month?: string) => createKey(QUIZ, QUIZ_ENDPOINTS.getQuizMonthlyAnalysis, month),
   getQuizSet: (quizSetId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.getQuizSet(quizSetId)),
   getSingleQuizSetRecord: (quizSetId: number) => createKey(QUIZ, QUIZ_ENDPOINTS.getSingleQuizSetRecord(quizSetId)),
   getConsecutiveSolvedDailyQuiz: createKey(QUIZ, QUIZ_ENDPOINTS.getConsecutiveSolvedDailyQuiz),

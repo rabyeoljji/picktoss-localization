@@ -59,7 +59,7 @@ export const useGetQuizWeeklyAnalysis = (startDate?: string, endDate?: string) =
 // 퀴즈 월단위 분석
 export const useGetQuizMonthlyAnalysis = (month?: string) => {
   return useQuery({
-    queryKey: [QUIZ_KEYS.getQuizMonthlyAnalysis, month],
+    queryKey: QUIZ_KEYS.getQuizMonthlyAnalysis(month),
     queryFn: () => getQuizMonthlyAnalysis(month),
   })
 }
@@ -141,7 +141,7 @@ export const useUpdateWrongAnswerConfirm = () => {
       }))
     },
     onSuccess: (_, { noteId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(noteId) })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(noteId)] })
     },
   })
 }
@@ -168,7 +168,7 @@ export const useUpdateQuizInfo = (quizId: number, noteId: number) => {
     },
     onSuccess: () => {
       // 성공 시 서버에서 최신 데이터 가져오기
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(noteId) })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(noteId)] })
     },
     onError: (_, __, context) => {
       // 실패 시 이전 상태로 복원
@@ -188,10 +188,10 @@ export const useUpdateQuizResult = (documentId: number, quizSetId: number) => {
     mutationFn: (data: UpdateQuizResultRequest) => updateQuizResult(documentId, quizSetId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getDocument(documentId),
+        queryKey: [...DOCUMENT_KEYS.getDocument(documentId)],
       })
       queryClient.invalidateQueries({
-        queryKey: QUIZ_KEYS.getQuizzesRecords,
+        queryKey: [...QUIZ_KEYS.getQuizzesRecords],
       })
     },
   })
@@ -214,10 +214,10 @@ export const useDeleteQuiz = () => {
     },
     onSuccess: (_, { documentId }) => {
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getDocument(documentId),
+        queryKey: [...DOCUMENT_KEYS.getDocument(documentId)],
       })
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getPublicDocuments,
+        queryKey: [...DOCUMENT_KEYS.getPublicDocuments],
       })
     },
   })

@@ -61,7 +61,7 @@ export const useSearchDocument = (
   options?: Omit<UseQueryOptions<SearchDocumentsResponse, Error>, 'queryKey' | 'queryFn'>,
 ) => {
   return useQuery({
-    queryKey: [...DOCUMENT_KEYS.searchDocument, params],
+    queryKey: DOCUMENT_KEYS.searchDocument(params),
     queryFn: () => searchDocument(params),
     ...options,
   })
@@ -76,7 +76,7 @@ export const useAddQuizzes = () => {
       addQuizzes(documentId, data),
     onSuccess: (_, { documentId }) =>
       queryClient.invalidateQueries({
-        queryKey: DOCUMENT_KEYS.getDocument(documentId),
+        queryKey: [...DOCUMENT_KEYS.getDocument(documentId)],
       }),
   })
 }
@@ -89,7 +89,7 @@ export const useGetDocumentQuizzes = ({
   quizType?: 'MIX_UP' | 'MULTIPLE_CHOICE'
 }) => {
   return useQuery({
-    queryKey: [...DOCUMENT_KEYS.getDocumentQuizzes(documentId), quizType],
+    queryKey: DOCUMENT_KEYS.getDocumentQuizzes(documentId, quizType),
     queryFn: () => getDocumentQuizzes(documentId, quizType),
     select: (data) => data.quizzes.sort((a, b) => b.id - a.id),
   })
@@ -127,8 +127,8 @@ export const useUpdateDocumentName = () => {
       }))
     },
     onSuccess: (_, { documentId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getAllDocuments] })
     },
   })
 }
@@ -145,8 +145,8 @@ export const useUpdateDocumentContent = () => {
       }))
     },
     onSuccess: (_, { documentId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getAllDocuments] })
     },
   })
 }
@@ -424,10 +424,10 @@ export const useCreateDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.createDocumentBookmark(documentId),
     mutationFn: () => createDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] })
     },
   })
 }
@@ -439,10 +439,10 @@ export const useDeleteDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.deleteDocumentBookmark(documentId),
     mutationFn: () => deleteDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getBookmarkedDocuments })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.searchPublicDocuments })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] })
     },
   })
 }
@@ -461,8 +461,8 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.updateDocumentIsPublic(documentId),
     mutationFn: (data: UpdateDocumentIsPublicRequest) => updateDocumentIsPublic(documentId, data),
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
-      await queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getPublicDocuments })
+      await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
+      await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
     },
   })
 }
@@ -474,11 +474,11 @@ export const useUpdateDocumentEmoji = () => {
     mutationFn: ({ documentId, data }: { documentId: number; data: UpdateDocumentEmojiRequest }) =>
       updateDocumentEmoji(documentId, data),
     onMutate: async ({ documentId, data }) => {
-      await queryClient.cancelQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
+      await queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
 
-      const previousData = queryClient.getQueryData(DOCUMENT_KEYS.getDocument(documentId)) as GetDocumentResponse
+      const previousData = queryClient.getQueryData([...DOCUMENT_KEYS.getDocument(documentId)]) as GetDocumentResponse
 
-      queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), {
+      queryClient.setQueryData([...DOCUMENT_KEYS.getDocument(documentId)], {
         ...previousData,
         emoji: data.emoji,
       })
@@ -487,12 +487,12 @@ export const useUpdateDocumentEmoji = () => {
     },
     onError: (_, { documentId }, context) => {
       if (context?.previousData) {
-        queryClient.setQueryData(DOCUMENT_KEYS.getDocument(documentId), context.previousData)
+        queryClient.setQueryData([...DOCUMENT_KEYS.getDocument(documentId)], context.previousData)
       }
     },
     onSuccess: (_, { documentId }) => {
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getDocument(documentId) })
-      queryClient.invalidateQueries({ queryKey: DOCUMENT_KEYS.getAllDocuments })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getAllDocuments] })
     },
   })
 }

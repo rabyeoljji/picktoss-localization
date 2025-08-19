@@ -33,7 +33,7 @@ export const useRewardForInviteCode = () => {
     mutationKey: AUTH_KEYS.postAuthInviteReward,
     mutationFn: ({ data }: { data: { inviteCode: string } }) => rewardForInviteCode({ data }),
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: MEMBER_KEYS.getMemberInfo })
+      queryClient.invalidateQueries({ queryKey: [...MEMBER_KEYS.getMemberInfo] })
     },
   })
 }
