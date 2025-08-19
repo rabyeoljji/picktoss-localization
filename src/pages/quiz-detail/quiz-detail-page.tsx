@@ -274,7 +274,7 @@ const QuizDetailPage = () => {
               </div>
               <div className="flex flex-col justify-start items-center gap-2">
                 <Text typo="body-2-medium" color="sub">
-                  @picktosschang
+                  {document?.creator}
                 </Text>
                 <Text typo="h3" color="primary">
                   {document?.name}
