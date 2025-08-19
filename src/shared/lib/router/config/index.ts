@@ -58,12 +58,6 @@ export const RouteConfig = {
       bookmarkedSortOption: null as BookmarkedSortOption | null,
     },
   },
-  librarySearch: {
-    pathname: '/library/search',
-    search: {
-      tab: 'MY' as 'MY' | 'BOOKMARK',
-    },
-  },
   libraryNoteDetailList: {
     pathname: '/library/list/:noteId',
     search: {

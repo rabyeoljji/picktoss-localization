@@ -86,7 +86,7 @@ const OnBoardingPage = () => {
         >
           <div className="w-full max-w-[324px] inline-flex flex-col justify-start items-start gap-3">
             <div className="flex flex-col justify-start items-start gap-1">
-              <Text typo="h2" color="caption" className="flex-center text-center justify-start leading-9">
+              <Text typo="h2" color="sub" className="flex-center text-center justify-start leading-9">
                 <div className="inline-block max-w-[160px] truncate">{user?.name}</div>
                 님,
               </Text>

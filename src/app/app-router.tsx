@@ -27,7 +27,7 @@ import HomePage from '@/pages/home-page'
 import { InstallGuidePage } from '@/pages/install-guide-page'
 import InviteLoginPage from '@/pages/invite/invite-login-page'
 import InvitePage from '@/pages/invite/invite-page'
-import { LibraryPage, LibrarySearchPage, NoteEditPage, NoteQuizPage } from '@/pages/library'
+import { LibraryPage, NoteEditPage, NoteQuizPage } from '@/pages/library'
 import { NoteCreatePage } from '@/pages/note-create'
 import { ProgressQuizPage } from '@/pages/progress-quiz-page'
 import QuizDetailEditPage from '@/pages/quiz-detail/quiz-detail-edit-page'
@@ -65,7 +65,6 @@ export const AppRouter = () => {
                 {/* Library */}
                 <Route path={RoutePath.library}>
                   <Route index element={<LibraryPage />} />
-                  <Route path={RoutePath.librarySearch} element={<LibrarySearchPage />} />
                   <Route path={RoutePath.libraryNoteQuiz} element={<NoteQuizPage />} />
                   <Route path={RoutePath.libraryNoteEdit} element={<NoteEditPage />} />
                 </Route>

@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
 import html2pdf from 'html2pdf.js'
@@ -17,6 +17,7 @@ import { useDeleteDocument, useDocumentBookmarkMutation, useGetDocument } from '
 import { useDeleteQuiz, useUpdateQuizInfo, useUpdateWrongAnswerConfirm } from '@/entities/quiz/api/hooks'
 
 import {
+  IcArrowUp,
   IcBookmark,
   IcBookmarkFilled,
   IcDelete,
@@ -50,6 +51,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/shared/components/ui/tooltip'
 
 const NoteDetailPage = () => {
   const { trackEvent } = useAmplitude()
@@ -77,6 +79,62 @@ const NoteDetailPage = () => {
   const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
   const [explanationOpenStates, setExplanationOpenStates] = useState<{ [key: number]: boolean }>({})
+
+  // 스크롤 가능 여부 상태
+  const [canScroll, setCanScroll] = useState(false)
+
+  // 스크롤 컨테이너 ref
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  // 최상단 여부 상태 (스크롤이 내려갔을 때만 버튼 보이게)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  // 북마크 안내 툴팁 자동 노출 상태
+  const [showSaveTip, setShowSaveTip] = useState(false)
+
+  // 스크롤 가능 여부 체크 함수
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el) return
+
+    const checkScrollable = () => {
+      setCanScroll(el.scrollHeight > el.clientHeight)
+    }
+
+    const handleScroll = () => {
+      setIsScrolled(el.scrollTop > 0)
+    }
+
+    // 초기 체크
+    checkScrollable()
+    handleScroll()
+
+    // 컨테이너 사이즈/콘텐츠 변경 감지
+    const ro = new ResizeObserver(() => checkScrollable())
+    ro.observe(el)
+
+    // 윈도우 리사이즈 시에도 재체크
+    const onResize = () => checkScrollable()
+    window.addEventListener('resize', onResize)
+
+    // 스크롤 이벤트 리스너
+    el.addEventListener('scroll', handleScroll)
+
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', onResize)
+      el.removeEventListener('scroll', handleScroll)
+    }
+  }, [document, showMultipleChoice, showMixUp])
+
+  // 스크롤 다운 시 툴팁 1회 노출 후 5초 뒤 자동 숨김
+  useEffect(() => {
+    if (isScrolled && !document?.isOwner) {
+      setShowSaveTip(true)
+      const t = setTimeout(() => setShowSaveTip(false), 5000)
+      return () => clearTimeout(t)
+    }
+  }, [isScrolled, document?.isOwner])
 
   const handleDownloadQuizAsPdf = () => {
     if (!document) return
@@ -243,13 +301,22 @@ const NoteDetailPage = () => {
               </Text>
             </div>
             <div className="ml-auto flex items-center gap-[2px]">
-              <button className="p-2" onClick={handleBookmark}>
-                {isBookmarked ? (
-                  <IcBookmarkFilled className="size-6 text-icon-secondary" />
-                ) : (
-                  <IcBookmark className="size-6 text-icon-secondary" />
-                )}
-              </button>
+              <Tooltip open={showSaveTip} onOpenChange={setShowSaveTip}>
+                <TooltipTrigger asChild>
+                  {!document?.isOwner && (
+                    <button className="p-2" onClick={handleBookmark}>
+                      {isBookmarked ? (
+                        <IcBookmarkFilled className="size-6 text-icon-primary" />
+                      ) : (
+                        <IcBookmark className="size-6 text-icon-secondary" />
+                      )}
+                    </button>
+                  )}
+                </TooltipTrigger>
+                <TooltipContent align="end" side="bottom" color='inverse'>
+                  데일리에서 매일 풀 수 있어요
+                </TooltipContent>
+              </Tooltip>
               <DropdownMenu>
                 <DropdownMenuTrigger className="p-2" asChild>
                   <button className="p-2">
@@ -272,10 +339,11 @@ const NoteDetailPage = () => {
                   <DropdownMenuItem right={<IcDownload />} onClick={handleDownloadQuizAsPdf}>
                     문제 다운로드
                   </DropdownMenuItem>
+                  {document?.isOwner && (
+                    <>
                   <DropdownMenuItem right={<IcNote />} onClick={() => setContentDrawerOpen(true)}>
                     원본 문서
                   </DropdownMenuItem>
-                  {document?.isOwner && (
                     <DropdownMenuItem
                       className="text-red-500"
                       right={<IcDelete className="text-icon-critical" />}
@@ -286,6 +354,7 @@ const NoteDetailPage = () => {
                     >
                       퀴즈 삭제
                     </DropdownMenuItem>
+                    </>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -295,7 +364,7 @@ const NoteDetailPage = () => {
       />
 
       {/* 2. 스크롤 가능한 메인 영역 (헤더 높이만큼 패딩 처리) */}
-      <HeaderOffsetLayout className="flex-1 overflow-auto pt-[54px] relative">
+      <HeaderOffsetLayout ref={scrollRef} className="flex-1 overflow-auto pt-[54px] relative scrollbar-hide">
         {(document?.reviewNeededQuizzes?.length ?? 0) > 0 && (
           <button
             className="px-4 py-3 bg-surface-2 flex items-center gap-2 w-full"
@@ -400,7 +469,22 @@ const NoteDetailPage = () => {
             ))}
           </div>
         </div>
+
       </HeaderOffsetLayout>
+        {isScrolled && (
+          <button
+            onClick={() => {
+              scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+            }}
+            disabled={!canScroll}
+            className={cn(
+              'shadow-md border border-outline bg-base-1 text-icon-secondary rounded-full size-[40px] absolute z-50 flex-center right-[20px] bottom-[65px]',
+              !canScroll && 'opacity-50 pointer-events-none'
+            )}
+          >
+            <IcArrowUp className='size-5' />
+          </button>
+        )}
 
       {/* 문제 수정 drawer */}
       <AlertDrawer

@@ -193,8 +193,8 @@ export interface SearchDocumentsDto {
   id: number
   name: string
   emoji: string
-  content: string
   isPublic: boolean
+  isBookmarked: boolean
   tryCount: number
   bookmarkCount: number
   totalQuizCount: number
@@ -226,7 +226,6 @@ export interface SearchPublicDocumentsDto {
   id: number
   name: string
   emoji: string
-  content: string
   tryCount: number
   bookmarkCount: number
   totalQuizCount: number

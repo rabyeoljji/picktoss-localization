@@ -3,10 +3,10 @@ import { useEffect, useMemo, useState } from 'react'
 import { Tabs, TabsList, TabsTrigger } from '@radix-ui/react-tabs'
 import { toast } from 'sonner'
 
-import { extractPlainText } from '@/features/note/lib'
 import EmptyMyNote from '@/features/note/ui/empty-my-note'
+import { MarkdownProcessor, formatQAText, highlightAndTrimText } from '@/features/search/lib'
 
-import { GetAllDocumentsDocumentDto } from '@/entities/document/api'
+import { GetAllDocumentsDocumentDto, SearchDocumentsDto } from '@/entities/document/api'
 import { useDeleteDocument, useUpdateDocumentIsPublic } from '@/entities/document/api/hooks'
 import { useUser } from '@/entities/member/api/hooks'
 
@@ -33,12 +33,13 @@ import { cn } from '@/shared/lib/utils'
 interface Props {
   activeTab: 'MY' | 'BOOKMARK'
   onTabChange: (tab: 'MY' | 'BOOKMARK') => void
-  documents?: GetAllDocumentsDocumentDto[]
+  documents?: GetAllDocumentsDocumentDto[] | SearchDocumentsDto[]
   selectMode: boolean
   checkList: UseCheckListReturn<GetAllDocumentsDocumentDto>
   changeSelectMode: (selectMode: boolean) => void
   isEmptyMyDocuments: boolean
   isLoading: boolean
+  keyword?: string
 }
 
 const MyNotesContent = ({
@@ -50,6 +51,7 @@ const MyNotesContent = ({
   changeSelectMode,
   isEmptyMyDocuments,
   isLoading,
+  keyword,
 }: Props) => {
   type Tab = typeof activeTab
 
@@ -70,6 +72,10 @@ const MyNotesContent = ({
     () => getCheckedList().reduce((acc, cur) => acc + cur.totalQuizCount, 0),
     [getCheckedList()],
   )
+
+  const isSearchDocType = (doc: GetAllDocumentsDocumentDto | SearchDocumentsDto): doc is SearchDocumentsDto => {
+    return (doc as SearchDocumentsDto).isBookmarked !== undefined
+  }
 
   // 공유하기 핸들러
   const handleShare = async (id: number, name: string) => {
@@ -234,8 +240,25 @@ const MyNotesContent = ({
                 />
 
                 <SlidableNoteCard.Content>
-                  <SlidableNoteCard.Header title={document.name} />
-                  <SlidableNoteCard.Preview content={extractPlainText(document.previewContent)} />
+                  <SlidableNoteCard.Header
+                    title={highlightAndTrimText(document.name ?? '', keyword ?? '', 'subtitle-2-bold')}
+                  />
+                  <SlidableNoteCard.Preview
+                    content={
+                      isSearchDocType(document) ? (
+                        <MarkdownProcessor
+                          markdownText={formatQAText(document.quizzes)}
+                          keyword={keyword ?? ''}
+                          typo="body-1-regular"
+                          displayCharCount={40}
+                          truncate
+                        />
+                      ) : (
+                        document.previewContent
+                      )
+                    }
+                  />
+
                   <SlidableNoteCard.Detail
                     quizCount={document.totalQuizCount}
                     playedCount={document.tryCount}

@@ -169,7 +169,7 @@ const SlidableNoteCardContent = ({ children }: { children: React.ReactNode }) =>
   return <div className="ml-[12px] flex w-[calc(100%-55px)] flex-col">{children}</div>
 }
 
-const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.ReactNode }) => {
+const SlidableNoteCardHeader = ({ title, tag }: { title: React.ReactNode; tag?: React.ReactNode }) => {
   return (
     <div className="mb-[2px] flex items-center gap-[8px]">
       <Text as="h4" typo="subtitle-2-bold" className="w-fit max-w-[calc(100%-100px)] overflow-x-hidden truncate">
@@ -181,7 +181,7 @@ const SlidableNoteCardHeader = ({ title, tag }: { title: string; tag?: React.Rea
   )
 }
 
-const SlidableNoteCardPreview = ({ content }: { content: string }) => {
+const SlidableNoteCardPreview = ({ content }: { content: React.ReactNode }) => {
   return (
     <Text typo="body-1-regular" color="sub" className="w-[calc(100%-40px)] truncate text-nowrap break-all">
       {content}
