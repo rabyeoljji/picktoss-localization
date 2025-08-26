@@ -1,6 +1,7 @@
 'use client'
 
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 
@@ -20,6 +21,7 @@ import { Textarea } from '@/shared/components/ui/textarea'
 import { useRouter } from '@/shared/lib/router'
 
 const WithdrawForm = () => {
+  const { t } = useTranslation()
   const router = useRouter()
 
   const { clearToken } = useAuthStore()
@@ -87,7 +89,7 @@ const WithdrawForm = () => {
 
         <div className="px-[16px]">
           <Text typo="body-1-bold" color="sub">
-            상세내용
+            {t('profile.상세내용')}
           </Text>
 
           {/* 상세 내용 */}
@@ -99,7 +101,7 @@ const WithdrawForm = () => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="선택하신 이유에 관한 자세한 내용을 남겨주세요"
+                    placeholder={t('profile.선택하신_이유에_관한_자세한_내용을_남겨주세요')}
                     className="input-basic my-[8px] h-[256px] w-full resize-none"
                     maxLength={500}
                   />
@@ -109,7 +111,7 @@ const WithdrawForm = () => {
           />
 
           <Text typo="body-2-medium" color="caption" className="mb-[32px]">
-            {`500자 이내로 입력해주세요 (${watch('content')?.length || 0}/500)`}
+            {`${t('profile.500자_이내로_입력해주세요')} (${watch('content')?.length || 0}/500)`}
           </Text>
         </div>
 
@@ -127,7 +129,7 @@ const WithdrawForm = () => {
                 </FormControl>
                 <label htmlFor="checkNotification">
                   <Text typo="body-2-medium" color="primary">
-                    저장한 데이터는 모두 삭제되며 복구할 수 없음을 확인했습니다
+                    {t('profile.저장한_데이터는_모두_삭제되며_복구할_수_없음을_확인했습니다')}
                   </Text>
                 </label>
               </FormItem>
@@ -138,21 +140,20 @@ const WithdrawForm = () => {
           <SystemDialog
             trigger={
               <Button disabled={isPending || !form.getValues().confirmNotification} className="w-full">
-                {isPending ? '제출 중...' : '탈퇴하기'}
+                {isPending ? t('profile.제출_중') : t('profile.탈퇴하기')}
               </Button>
             }
-            title="계정을 삭제하시겠어요?"
+            title={t('profile.계정을_삭제하시겠어요')}
             content={
               <Text typo="body-1-medium" color="sub">
-                픽토스에서 만든{' '}
+                {t('profile.픽토스에서_만든')}{' '}
                 <Text as="span" typo="body-1-medium" color="critical">
-                  {user?.totalQuizCount ?? 0}개의 문제
+                  {t('profile.개의_문제', { count: user?.totalQuizCount ?? 0 })}
                 </Text>
-                가 <br />
-                모두 삭제됩니다
+                {t('profile.가')} <br /> {t('profile.모두_삭제됩니다')}
               </Text>
             }
-            confirmLabel="계정 삭제"
+            confirmLabel={t('profile.계정_삭제')}
             onConfirm={handleSubmit(handleClickDeleteAccount)}
             variant="critical"
           />

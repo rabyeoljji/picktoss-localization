@@ -17,9 +17,11 @@ import { TextButton } from '@/shared/components/ui/text-button'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useDebounceValue } from '@/shared/hooks/use-debounce-value'
 import { useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const LibraryPage = () => {
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
   const router = useRouter()
 
   const {
@@ -87,10 +89,10 @@ const LibraryPage = () => {
               <IcBack className="size-[24px] text-icon-primary" />
             </button>
           }
-          content={<div className="center">퀴즈 선택</div>}
+          content={<div className="center">{t('library.퀴즈_선택')}</div>}
           right={
             <TextButton onClick={() => toggleAll()} variant={'primary'} size={'sm'}>
-              전체 선택
+              {t('library.전체_선택')}
             </TextButton>
           }
         />
@@ -119,7 +121,7 @@ const LibraryPage = () => {
                   value={keyword}
                   onChange={onChangeKeyword}
                   clearKeyword={clearKeyword}
-                  placeholder="퀴즈 제목, 내용 검색"
+                  placeholder={t('library.퀴즈_제목_내용_검색')}
                   className="bg-base-3 placeholder:text-caption"
                 />
               </div>
@@ -160,7 +162,7 @@ const LibraryPage = () => {
 }
 
 export default withHOC(LibraryPage, {
-  activeTab: '도서관',
+  activeTab: 'LIBRARY',
   navClassName: 'border-t border-divider',
   backgroundClassName: 'bg-surface-2',
 })

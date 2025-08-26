@@ -4,6 +4,7 @@ import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
 
 import { ShadcnCalendar } from '@/shared/components/ui/calendar'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface Props {
   selectedDate?: Date
@@ -45,6 +46,7 @@ export const Calendar = ({
   noSelectMode,
 }: Props) => {
   const today = useMemo(() => new Date(), [])
+  const { t } = useTranslation()
   // const selectedDateString = format(selectedDate, 'yyyy-MM-dd')
 
   // const router = useRouter()
@@ -153,9 +155,17 @@ export const Calendar = ({
         today={today}
         mode="single"
         formatters={{
-          formatCaption: (Date: Date) => `${format(Date, 'M')}월`,
+          formatCaption: (Date: Date) => `${format(Date, 'M')}${t('profile.월')}`,
           formatWeekdayName: (Date: Date) => {
-            const weekdays = ['일', '월', '화', '수', '목', '금', '토']
+            const weekdays = [
+              t('profile.요일_일'),
+              t('profile.요일_월'),
+              t('profile.요일_화'),
+              t('profile.요일_수'),
+              t('profile.요일_목'),
+              t('profile.요일_금'),
+              t('profile.요일_토'),
+            ]
             return weekdays[Date.getDay()]
           },
         }}

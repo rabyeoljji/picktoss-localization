@@ -63,10 +63,12 @@ import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
 import { useSessionStorage } from '@/shared/lib/storage'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const QuizDetailPage = () => {
   const { trackEvent } = useAmplitude()
   const router = useRouter()
+  const { t } = useTranslation()
 
   const { noteId } = useParams()
 
@@ -152,15 +154,15 @@ const QuizDetailPage = () => {
           })
 
           if (optimisticIsBookmarked) {
-            toast('퀴즈가 도서관에 저장되었어요', {
+            toast(t('quizDetail.퀴즈가_도서관에_저장되었어요'), {
               icon: <IcBookmarkFilled className="size-4" />,
               action: {
-                label: '보러가기',
+                label: t('quizDetail.보러가기'),
                 onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
               },
             })
           } else {
-            toast('북마크가 해제되었어요')
+            toast(t('quizDetail.북마크가_해제되었어요'))
           }
         },
         onError: () => {
@@ -191,7 +193,7 @@ const QuizDetailPage = () => {
         console.error('공유 실패', error)
       }
     } else {
-      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.')
+      alert(t('quizDetail.이_브라우저에서는_공유_기능을_지원하지_않습니다'))
     }
   }
 
@@ -229,7 +231,7 @@ const QuizDetailPage = () => {
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="-translate-y-2">
-                {document?.isOwner && (
+                  {document?.isOwner && (
                     <DropdownMenuItem
                       right={<IcEdit />}
                       onClick={() =>
@@ -238,7 +240,7 @@ const QuizDetailPage = () => {
                         })
                       }
                     >
-                      퀴즈 정보 수정
+                      {t('quizDetail.퀴즈_정보_수정')}
                     </DropdownMenuItem>
                   )}
                   <DropdownMenuItem
@@ -249,7 +251,7 @@ const QuizDetailPage = () => {
                       setDeleteDocumentDialogOpen(true)
                     }}
                   >
-                    퀴즈 삭제
+                    {t('quizDetail.퀴즈_삭제')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -266,7 +268,7 @@ const QuizDetailPage = () => {
                     right={<IcWarning className="text-icon-critical size-[20px]" />}
                     onClick={handleComplain}
                   >
-                    퀴즈 신고
+                    {t('quizDetail.퀴즈_신고')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -320,21 +322,22 @@ const QuizDetailPage = () => {
             <div className="flex flex-col justify-start items-center gap-3">
               <div className="w-56 flex flex-col justify-start items-center gap-3">
                 <Text typo="body-1-bold" color="secondary">
-                  풀 문제 수
+                  {t('quizDetail.풀_문제_수')}
                 </Text>
                 <Drawer>
                   <DrawerTrigger asChild>
                     <button className="h-[48px] w-[231px] px-4 py-[15px] bg-base-1 rounded-lg border border-outline">
                       <div className="flex-1 flex justify-between items-center">
                         <Text typo="button-2" className="text-gray-800">
-                          {selectedQuizCount}문제
+                          {selectedQuizCount}
+                          {t('quizDetail.문제')}
                         </Text>
                         <IcChevronDown className="size-[16px] text-icon-secondary" />
                       </div>
                     </button>
                   </DrawerTrigger>
                   <DrawerContent className="px-[20px]!">
-                    <DrawerTitle>문제 수 선택</DrawerTitle>
+                    <DrawerTitle>{t('quizDetail.문제_수_선택')}</DrawerTitle>
                     <div className="mt-[22px]">
                       <div className="flex flex-col">
                         {[5, 10, 20, 30, 50, 100].map((count) => {
@@ -357,7 +360,8 @@ const QuizDetailPage = () => {
                                   typo="subtitle-2-medium"
                                   color={selectedQuizCount === count ? 'accent' : 'primary'}
                                 >
-                                  {count}문제
+                                  {count}
+                                  {t('quizDetail.문제')}
                                 </Text>
                                 {selectedQuizCount === count && <IcCheck className="size-[24px] text-icon-accent" />}
                               </button>
@@ -377,7 +381,7 @@ const QuizDetailPage = () => {
                               typo="subtitle-2-medium"
                               color={selectedQuizCount === (document?.quizzes?.length || 0) ? 'accent' : 'primary'}
                             >
-                              최대
+                              {t('quizDetail.최대')}
                             </Text>
                             {selectedQuizCount === (document?.quizzes?.length || 0) && (
                               <IcCheck className="size-[24px] text-icon-accent" />
@@ -391,11 +395,13 @@ const QuizDetailPage = () => {
               </div>
               {document?.quizzes.length === selectedQuizCount ? (
                 <Text typo="body-1-medium" color="sub">
-                  모든 문제가 출제돼요
+                  {t('quizDetail.모든_문제가_출제돼요')}
                 </Text>
               ) : (
                 <Text typo="body-1-medium" color="sub">
-                  총 {document?.quizzes.length}문제 중 {selectedQuizCount}문제가 무작위로 출제돼요
+                  {t('quizDetail.총')} {document?.quizzes.length}
+                  {t('quizDetail.문제_중')} {selectedQuizCount}
+                  {t('quizDetail.문제가_무작위로_출제돼요')}
                 </Text>
               )}
             </div>
@@ -406,7 +412,7 @@ const QuizDetailPage = () => {
           <Button
             size="lg"
             left={<IcPlayFilled className="size-[20px]" />}
-            className='max-w-[400px]'
+            className="max-w-[400px]"
             disabled={isCreatingQuizSet}
             onClick={() => {
               if (!token) {
@@ -432,7 +438,7 @@ const QuizDetailPage = () => {
               )
             }}
           >
-            퀴즈 시작
+            {t('quizDetail.퀴즈_시작')}
           </Button>
         </div>
 
@@ -447,7 +453,7 @@ const QuizDetailPage = () => {
           >
             <IcList className="size-6" />
             <Text typo="body-2-bold" color="sub">
-              문제보기
+              {t('quizDetail.문제보기')}
             </Text>
           </button>
           <div className="w-px h-[48px] bg-gray-100" />
@@ -462,25 +468,25 @@ const QuizDetailPage = () => {
                 <button className="flex flex-col items-center gap-2 px-5">
                   <IcUpload className="size-6" />
                   <Text typo="body-2-bold" color="sub">
-                    공유하기
+                    {t('quizDetail.공유하기')}
                   </Text>
                 </button>
               </DialogTrigger>
               <DialogContent>
-                <DialogHeader className="typo-h4">퀴즈를 공개하시겠어요?</DialogHeader>
+                <DialogHeader className="typo-h4">{t('quizDetail.퀴즈를_공개하시겠어요')}</DialogHeader>
                 <DialogDescription className="text-center mt-2 text-sub">
-                  픽토스에 퀴즈가 공개된 상태여야
+                  {t('quizDetail.픽토스에_퀴즈가_공개된_상태여야')}
                   <br />
-                  공유할 수 있어요
+                  {t('quizDetail.공유할_수_있어요')}
                 </DialogDescription>
                 <DialogCTA
-                  label="퀴즈 공개하기"
+                  label={t('quizDetail.퀴즈_공개하기')}
                   onClick={() =>
                     updateDocumentIsPublic(
                       { isPublic: true },
                       {
                         onSuccess: async () => {
-                          toast('퀴즈가 공개되었어요')
+                          toast(t('quizDetail.퀴즈가_공개되었어요'))
                           await refetchDocument()
                           setIsShareDialogOpen(false)
                         },
@@ -507,7 +513,7 @@ const QuizDetailPage = () => {
               <button className="flex flex-col items-center gap-2 px-5" onClick={handleBookmark}>
                 {isBookmarked ? <IcBookmarkFilled className="size-6" /> : <IcBookmark className="size-6" />}
                 <Text typo="body-2-bold" color="sub">
-                  저장하기
+                  {t('quizDetail.저장하기')}
                 </Text>
               </button>
             </>
@@ -520,9 +526,11 @@ const QuizDetailPage = () => {
       <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
         <DrawerContent height="full">
           <DrawerHeader>
-            <DrawerTitle>원본 노트</DrawerTitle>
+            <DrawerTitle>{t('quizDetail.원본_노트')}</DrawerTitle>
             <DrawerDescription>
-              {document?.createdAt.split('T')[0].split('-').join('.')} 등록 / {document?.content?.length}자
+              {document?.createdAt.split('T')[0].split('-').join('.')} {t('quizDetail.등록')} /{' '}
+              {document?.content?.length}
+              {t('quizDetail.자')}
             </DrawerDescription>
           </DrawerHeader>
           <div className="mt-5 flex-1 overflow-y-scroll pb-10">
@@ -535,22 +543,22 @@ const QuizDetailPage = () => {
       <SystemDialog
         open={deleteDocumentDialogOpen}
         onOpenChange={setDeleteDocumentDialogOpen}
-        title="퀴즈를 삭제하시겠어요?"
+        title={t('quizDetail.퀴즈를_삭제하시겠어요')}
         content={
           <Text typo="body-1-medium" color="sub">
-            선택한 퀴즈와{' '}
+            {t('quizDetail.선택한_퀴즈와')}{' '}
             <Text as="span" typo="body-1-medium" color="incorrect">
-              {`${document?.quizzes.length}개의 문제`}
+              {t('quizDetail.개의_문제', { count: document?.quizzes.length })}
             </Text>
-            가 모두 삭제되며, 복구할 수 없어요
+            {t('quizDetail.가_모두_삭제되며_복구할_수_없어요')}
           </Text>
         }
         variant="critical"
-        confirmLabel="삭제"
+        confirmLabel={t('quizDetail.삭제')}
         onConfirm={() => {
           deleteDocument({ documentIds: [Number(noteId)] })
           router.replace('/library')
-          toast('퀴즈가 삭제되었습니다.')
+          toast(t('quizDetail.퀴즈가_삭제되었습니다'))
         }}
       />
 

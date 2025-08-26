@@ -14,10 +14,12 @@ import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const InvitePage = () => {
   const { inviteCode } = useParams()
   const router = useRouter()
+  const { t } = useTranslation()
 
   const [verifyCode, setVerifyCode] = useState(false)
 
@@ -52,7 +54,7 @@ const InvitePage = () => {
         right={
           <a href="https://picktoss.framer.website" target="_blank" rel="noopener noreferrer" className="p-[8px]">
             <TextButton size={'md'} variant={'sub'}>
-              서비스 소개
+              {t('profile.서비스_소개')}
             </TextButton>
           </a>
         }
@@ -71,20 +73,20 @@ const InvitePage = () => {
               <div className="flex-center flex-col gap-[12px]">
                 <div className="flex-center flex-col gap-[8px]">
                   <Text typo="h3" color="sub">
-                    {inviteUserData?.name}님이 보내신
+                    {t('profile.님이_보내신', { name: inviteUserData?.name })}
                   </Text>
                   <Text typo="h2">
-                    픽토스 초대와{' '}
+                    {t('profile.픽토스_초대와')}{' '}
                     <Text as={'span'} typo="h2" color="accent">
-                      별 50개!
+                      {t('profile.별_50개')}
                     </Text>
                   </Text>
                 </div>
 
                 <Text typo="body-1-medium" color="sub" className="text-center">
-                  매일 간단한 퀴즈로 배운 것을 기억하세요. <br />
-                  픽토스에선 별을 사용해 노트필기, 저장한 자료 등 <br />
-                  모든 걸 퀴즈로 만들 수 있어요
+                  {t('profile.매일_간단한_퀴즈로_배운_것을_기억하세요')} <br />
+                  {t('profile.픽토스에선_별을_사용해_노트필기_저장한_자료_등')} <br />
+                  {t('profile.모든_걸_퀴즈로_만들_수_있어요')}
                 </Text>
               </div>
             </div>
@@ -93,7 +95,7 @@ const InvitePage = () => {
               onClick={() => router.replace('/invite/login', { search: { inviteCode } })}
               className="max-w-[260px]"
             >
-              바로 받기
+              {t('profile.바로_받기')}
             </Button>
           </div>
         )}
@@ -104,6 +106,7 @@ const InvitePage = () => {
 
 const ExpiredInvite = () => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   return (
     <div className="mt-[88.5px] px-[16px] flex-center flex-col gap-[44px]">
@@ -113,21 +116,21 @@ const ExpiredInvite = () => {
         <div className="flex-center flex-col gap-[12px]">
           <div className="flex-center flex-col gap-[8px]">
             <Text typo="h3" color="sub">
-              이런!
+              {t('profile.이런')}
             </Text>
-            <Text typo="h2">초대장이 사라졌어요</Text>
+            <Text typo="h2">{t('profile.초대장이_사라졌어요')}</Text>
           </div>
 
           <Text typo="body-1-medium" color="sub" className="text-center">
-            유효기간이 만료되어 새로운 초대 링크가 필요해요 <br />
-            퀴즈를 만들 수 있는 별을 더 받고 싶다면 <br />
-            친구에게 링크를 다시 요청해보세요
+            {t('profile.유효기간이_만료되어_새로운_초대_링크가_필요해요')} <br />
+            {t('profile.퀴즈를_만들_수_있는_별을_더_받고_싶다면')} <br />
+            {t('profile.친구에게_링크를_다시_요청해보세요')}
           </Text>
         </div>
       </div>
 
       <Button onClick={() => router.replace('/invite/login')} className="max-w-[260px]">
-        그냥 바로 가입하기
+        {t('profile.그냥_바로_가입하기')}
       </Button>
     </div>
   )

@@ -16,12 +16,13 @@ import { Input } from '@/shared/components/ui/input'
 import { SquareButton } from '@/shared/components/ui/square-button'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 // TODO: 내용 수정
 const inviteText = {
   title: '지금 가입하고 별 50개 더 받으세요!',
   description:
-    '픽토스에서는 AI퀴즈로 매일 간단하게 내가 배운 걸 기억할 수 있어요. 이 초대권을 통해 픽토스에 가입하실 경우 두 분 모두에게 퀴즈를 만들 수 있는 별 50를 추가로 드려요!',
+    '픽토스에서는 AI퀴즈로 매일 간단하게 내가 배운 걸 기억할 수 있어요. 이 초대권을 통해 픽토스에 가입하실 경우 두 분 모두에게 퀴즈를 만들 수 있는 별 50개를 추가로 드려요!',
 }
 
 interface Props {
@@ -32,6 +33,7 @@ interface Props {
 
 const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
 
   // 외부 제어 여부 확인 (controlled vs uncontrolled)
   const isControlled = open !== undefined
@@ -68,7 +70,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
       const imageUrl = `${window.location.origin}images/kakao-share-thumbnail.png`
 
       await shareToKakao({
-        title: inviteText.title,
+        title: t('profile.지금_가입하고_별_50개_더_받으세요'),
         description: inviteText.description,
         imageUrl: imageUrl,
         inviteLinkUrl: inviteLink,
@@ -100,7 +102,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
     try {
       await navigator.clipboard.writeText(inviteLink)
 
-      toast('링크가 복사되었어요')
+      toast(t('profile.링크가_복사되었어요'))
     } catch (error) {
       console.error(error)
     }
@@ -131,13 +133,14 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
             <div className="flex flex-col items-center gap-[8px]">
               <div className="relative">
                 <DrawerTitle>
-                  <Text typo="h3">초대할 때마다 별 50개!</Text>
+                  <Text typo="h3">{t('profile.초대할_때마다_별_50개')}</Text>
                 </DrawerTitle>
               </div>
 
               <Text typo="body-1-medium" color="sub" className="text-center">
-                친구, 가족, 지인들에게 픽토스를 공유해주세요 <br />
-                그분이 해당 링크를 통해 픽토스에 가입하실 경우 <br />두 분 모두에게 별 50개를 드려요!
+                {t('profile.친구_가족_지인들에게_픽토스를_공유해주세요')} <br />
+                {t('profile.그분이_해당_링크를_통해_픽토스에_가입하실_경우')} <br />
+                {t('profile.두_분_모두에게_별_50개를_드려요')}
               </Text>
             </div>
           </DrawerHeader>
@@ -145,11 +148,11 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
           <div className="w-full max-w-[300px] flex-center flex-col gap-[24px]">
             <div className="relative max-w-[260px]">
               <Input
-                label="내 링크"
+                label={t('profile.내_링크')}
                 value={inviteLink}
                 right={
                   <SquareButton size={'sm'} variant={'tertiary'} onClick={handleCopy}>
-                    복사
+                    {t('profile.복사')}
                   </SquareButton>
                 }
                 disabled
@@ -173,7 +176,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                 className="w-full bg-[var(--color-yellow)] text-primary hover:bg-[var(--color-yellow)]"
                 left={<ImgRoundKakao width={32} height={32} />}
               >
-                카카오톡에 공유하기
+                {t('profile.카카오톡에_공유하기')}
               </Button>
 
               <Button
@@ -182,7 +185,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                 className="w-full"
                 left={<IcUpload className="size-[20px]" />}
               >
-                링크 공유하기
+                {t('profile.링크_공유하기')}
               </Button>
             </div>
           </div>

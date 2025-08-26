@@ -14,8 +14,10 @@ import { ButtonSolidIcon } from '@/shared/components/ui/button-solid-icon'
 import Loading from '@/shared/components/ui/loading'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const QuizRecordDailyDetailPage = () => {
+  const { t } = useTranslation()
   const params = useParams()
   const [searchParams] = useSearchParams()
   const solvedDate = searchParams.get('solvedDate') || ''
@@ -105,7 +107,7 @@ const QuizRecordDailyDetailPage = () => {
 
       <HeaderOffsetLayout ref={scrollContainerRef} className="h-full overflow-y-auto">
         <div className="p-[16px] flex flex-col items-center gap-[8px]">
-          <Text typo="h4">데일리 퀴즈</Text>
+          <Text typo="h4">{t('profile.데일리_퀴즈')}</Text>
           <Text typo="subtitle-2-medium" color="sub">
             {solvedDate}
           </Text>
@@ -120,11 +122,11 @@ const QuizRecordDailyDetailPage = () => {
                   right={
                     question.isAnswer ? (
                       <Tag size="md" color="green">
-                        정답
+                        {t('profile.정답')}
                       </Tag>
                     ) : (
                       <Tag size="md" color="red">
-                        오답
+                        {t('profile.오답')}
                       </Tag>
                     )
                   }

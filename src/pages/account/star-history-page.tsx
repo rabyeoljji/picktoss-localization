@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { format } from 'date-fns'
 
 import { withHOC } from '@/app/hoc/with-page-config'
@@ -23,19 +25,21 @@ type SortOption = 'ALL' | 'WITHDRAWAL' | 'DEPOSIT'
 const sortOption = [
   {
     key: 'ALL',
-    label: '전체',
+    label: 'profile.전체',
   },
   {
     key: 'WITHDRAWAL',
-    label: '사용',
+    label: 'profile.사용',
   },
   {
     key: 'DEPOSIT',
-    label: '획득',
+    label: 'profile.획득',
   },
 ]
 
 const StarHistoryPage = () => {
+  const { t } = useTranslation()
+
   const [sort, setSort] = useQueryParam('/account/star-history', 'sort')
 
   const { data: starHistoryData, isLoading } = useGetStarHistory(sort === 'ALL' ? undefined : sort)
@@ -50,7 +54,7 @@ const StarHistoryPage = () => {
             <DropdownMenuTrigger asChild>
               <button type="button" className="h-fit w-[56px] flex items-center gap-1 cursor-pointer">
                 <Text typo="subtitle-2-bold" color="secondary">
-                  {sortOption.find((option) => option.key === sort)?.label}
+                  {t(sortOption.find((option) => option.key === sort)?.label ?? 'profile.전체')}
                 </Text>
                 <IcChevronDown className="size-[16px] text-icon-sub" />
               </button>
@@ -63,7 +67,7 @@ const StarHistoryPage = () => {
                   right={sort === option.key && <IcCheck className="size-[20px]" />}
                   className="cursor-pointer"
                 >
-                  {option.label}
+                  {t(option.label)}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -104,6 +108,8 @@ const StarHistoryItem = ({
   description: string
   amount: number
 }) => {
+  const { t } = useTranslation()
+
   return (
     <div className="py-[12px] flex items-center justify-between">
       <div className="flex items-center gap-[20px]">
@@ -115,7 +121,7 @@ const StarHistoryItem = ({
 
       <Text typo="subtitle-1-bold" color={type === 'DEPOSIT' ? 'accent' : 'secondary'}>
         {type === 'WITHDRAWAL' && '-'}
-        {amount} 개
+        {t('profile._개', { count: amount })}
       </Text>
     </div>
   )

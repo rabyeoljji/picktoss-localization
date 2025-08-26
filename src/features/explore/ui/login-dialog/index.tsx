@@ -2,9 +2,11 @@ import { ImgSymbol } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
 import { useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const LoginDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -15,20 +17,20 @@ const LoginDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">로그인하고 전부 이용해요!</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">{t('explore.로그인하고_전부_이용해요')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              픽토스 회원은 나만의 퀴즈를 <br />
-              간편하게 만들고 저장할 수 있어요
+              {t('explore.픽토스_회원은_나만의_퀴즈를')} <br />
+              {t('explore.간편하게_만들고_저장할_수_있어요')}
             </DialogDescription>
           </div>
         </div>
 
         <div className="w-full flex flex-col gap-[24px]">
           <Button onClick={() => router.push('/login')} className="w-full">
-            로그인
+            {t('explore.로그인')}
           </Button>
           <DialogClose asChild>
-            <button className=" text-sub">닫기</button>
+            <button className=" text-sub">{t('explore.닫기')}</button>
           </DialogClose>
         </div>
       </DialogContent>

@@ -17,12 +17,14 @@ import { TextButton } from '@/shared/components/ui/text-button'
 import { useOnceEffect } from '@/shared/hooks'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 // 예상 로딩 시간 (ms) - 이 값에 따라 프로그레스바 속도가 조절됨
 const ESTIMATED_LOADING_TIME = 40000 // 40초
 
 export const QuizLoadingDrawer = () => {
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
   const router = useRouter()
 
   // 로딩 상태를 queryParam으로 관리
@@ -81,7 +83,7 @@ export const QuizLoadingDrawer = () => {
       completeAnimation()
       setTimeout(() => {
         setComplete(true)
-        toast.success('문서가 생성되었습니다.')
+        toast.success(`${t('createQuiz.문서가_생성되었습니다')}.`)
       }, 500)
     }
   }, [quizSetId])
@@ -100,23 +102,23 @@ export const QuizLoadingDrawer = () => {
           <div className="flex-center flex-col">
             <ImgQuizEmpty className="w-[120px]" />
             <Text typo="subtitle-1-bold" color="primary" className="mt-4">
-              퀴즈를 만드는 중 문제가 생겼어요
+              {t('createQuiz.퀴즈를_만드는_중_문제가_생겼어요')}
             </Text>
             <Text typo="body-1-medium" color="sub" className="mt-1">
-              아래 내용을 확인하신 후 다시 시도해보세요
+              {t('createQuiz.아래_내용을_확인하신_후_다시_시도해보세요')}
             </Text>
           </div>
 
           <div className="my-8 py-6 px-5 bg-surface-2 rounded-[12px]">
             <Text typo="body-1-bold" color="secondary">
-              좋은 퀴즈를 위한 노트 Tip
+              {t('createQuiz.좋은_퀴즈를_위한_노트_Tip')}
             </Text>
             <ul className="mt-2.5 list-disc pl-5">
               <Text as="li" typo="body-1-medium" color="sub">
-                충분한 정보가 있는지 확인해주세요
+                {t('createQuiz.충분한_정보가_있는지_확인해주세요')}
               </Text>
               <Text as="li" typo="body-1-medium" color="sub">
-                같은 내용이 반복되지 않도록 해주세요
+                {t('createQuiz.같은_내용이_반복되지_않도록_해주세요')}
               </Text>
             </ul>
           </div>
@@ -128,7 +130,7 @@ export const QuizLoadingDrawer = () => {
               resetProgressAnimation()
             }}
           >
-            노트 수정하러 가기
+            {t('createQuiz.노트_수정하러_가기')}
           </Button>
         </div>
       )
@@ -140,10 +142,10 @@ export const QuizLoadingDrawer = () => {
           <div className="flex-center flex-col">
             <ImgQuizcard className="w-[120px]" />
             <Text typo="h4" color="primary" className="mt-4">
-              퀴즈 생성 완료!
+              {t('createQuiz.퀴즈_생성_완료')}!
             </Text>
             <Text typo="subtitle-2-medium" color="sub" className="mt-2">
-              새로 생긴 문제를 지금 확인해보세요
+              {t('createQuiz.새로_생긴_문제를_지금_확인해보세요')}
             </Text>
           </div>
 
@@ -160,7 +162,7 @@ export const QuizLoadingDrawer = () => {
                 })
               }}
             >
-              시작하기
+              {t('createQuiz.시작하기')}
             </Button>
             <TextButton
               onClick={() => {
@@ -170,7 +172,7 @@ export const QuizLoadingDrawer = () => {
               size="lg"
               className="text-secondary mt-[24px]"
             >
-              다음에
+              {t('createQuiz.다음에')}
             </TextButton>
           </div>
         </div>
@@ -186,10 +188,10 @@ export const QuizLoadingDrawer = () => {
             progressOverride={progress}
             text={
               progress < 20
-                ? '내용을 읽고 있어요'
+                ? t('createQuiz.내용을_읽고_있어요')
                 : progress < 60
-                  ? '퀴즈로 만들 내용을 고르고 있어요'
-                  : '질문을 만들고 있어요'
+                  ? t('createQuiz.퀴즈로_만들_내용을_고르고_있어요')
+                  : t('createQuiz.질문을_만들고_있어요')
             }
           />
         </div>

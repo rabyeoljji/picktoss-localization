@@ -29,3 +29,6 @@ dist-ssr
 # env
 .env
 .vercel
+
+# google service account key
+picktoss-455407-978771846215.json

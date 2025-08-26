@@ -17,8 +17,10 @@ import { ButtonSolidIcon } from '@/shared/components/ui/button-solid-icon'
 import Loading from '@/shared/components/ui/loading'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const QuizRecordSetDetailPage = () => {
+  const { t } = useTranslation()
   const params = useParams()
   const dailyQuizRecordId = Number(params.quizSetId)
 
@@ -141,10 +143,10 @@ const QuizRecordSetDetailPage = () => {
                 <ImgSpeechbubble className="size-[32px]" />
               </div>
               <Text typo="subtitle-2-bold" className="mb-[2px]">
-                {quizSetRecordData?.totalQuizCount}문제
+                {t('profile.문제', { count: quizSetRecordData?.totalQuizCount })}
               </Text>
               <Text typo="body-2-medium" color="sub">
-                문제 수
+                {t('profile.문제_수')}
               </Text>
             </div>
             <div className="flex-center flex-col border-x border-divider px-[30px]">
@@ -155,7 +157,7 @@ const QuizRecordSetDetailPage = () => {
                 {formatDuration(quizSetRecordData?.totalElapsedTimeMs || 0)}
               </Text>
               <Text typo="body-2-medium" color="sub">
-                소요시간
+                {t('profile.소요시간')}
               </Text>
             </div>
             <div className="flex-center flex-col px-[30px]">
@@ -166,7 +168,7 @@ const QuizRecordSetDetailPage = () => {
                 {Math.round(quizSetRecordData?.averageCorrectAnswerRate ?? 0)}%
               </Text>
               <Text typo="body-2-medium" color="sub">
-                정답률
+                {t('profile.정답률')}
               </Text>
             </div>
           </div>
@@ -181,11 +183,11 @@ const QuizRecordSetDetailPage = () => {
                   right={
                     question.isAnswer ? (
                       <Tag size="md" color="green">
-                        정답
+                        {t('profile.정답')}
                       </Tag>
                     ) : (
                       <Tag size="md" color="red">
-                        오답
+                        {t('profile.오답')}
                       </Tag>
                     )
                   }

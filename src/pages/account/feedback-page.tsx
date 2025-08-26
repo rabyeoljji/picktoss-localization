@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -9,6 +11,7 @@ import { SystemDialog } from '@/shared/components/system-dialog'
 import { useRouter } from '@/shared/lib/router'
 
 const FeedbackPage = () => {
+  const { t } = useTranslation()
   const router = useRouter()
 
   return (
@@ -21,14 +24,14 @@ const FeedbackPage = () => {
                 <IcBack />
               </button>
             }
-            title="문의에서 나가시겠어요?"
-            content="지금까지 작성한 내용은 저장되지 않습니다."
-            cancelLabel="취소"
-            confirmLabel="확인"
+            title={t('profile.문의에서_나가시겠어요')}
+            content={t('profile.지금까지_작성한_내용은_저장되지_않습니다')}
+            cancelLabel={t('profile.취소')}
+            confirmLabel={t('profile.확인')}
             onConfirm={() => router.back()}
           />
         }
-        title="문의하기"
+        title={t('profile.문의하기')}
       />
 
       <HeaderOffsetLayout>

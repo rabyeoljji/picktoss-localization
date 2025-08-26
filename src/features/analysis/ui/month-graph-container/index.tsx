@@ -6,6 +6,7 @@ import { QuizAnswerRateAnalysisDto } from '@/entities/quiz/api'
 
 import { Text } from '@/shared/components/ui/text'
 import { isAdjacentDate } from '@/shared/lib/date'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 import MonthGraphItem from '../month-graph-item'
 
@@ -15,6 +16,7 @@ interface Props {
 }
 
 const MonthGraphContainer = ({ quizDataList, today }: Props) => {
+  const { t } = useTranslation()
   const todayDateString = format(today, 'yyyy-MM-dd')
 
   const maxTotalCount = useMemo(() => {
@@ -34,13 +36,13 @@ const MonthGraphContainer = ({ quizDataList, today }: Props) => {
           <div className="flex items-center gap-[4px]">
             <div className="size-[12px] bg-base-3 rounded-[4px]" />
             <Text as={'span'} typo="caption-medium" color="sub">
-              문제
+              {t('profile.문제')}
             </Text>
           </div>
           <div className="flex items-center gap-[4px]">
             <div className="size-[12px] bg-orange rounded-[4px]" />
             <Text as={'span'} typo="caption-medium" color="sub">
-              정답
+              {t('profile.정답')}
             </Text>
           </div>
         </div>
@@ -56,7 +58,11 @@ const MonthGraphContainer = ({ quizDataList, today }: Props) => {
             const rightHeight = notSolved ? 0 : (data.correctAnswerCount / data.totalQuizCount) * 100
 
             const renderDateText =
-              data.date === todayDateString ? '오늘' : isAdjacentDate(data.date) ? '' : format(data.date, 'M.d')
+              data.date === todayDateString
+                ? t('profile.오늘')
+                : isAdjacentDate(data.date)
+                  ? ''
+                  : format(data.date, 'M.d')
 
             if (new Date(data.date).getTime() > new Date(todayDateString).getTime()) {
               return null

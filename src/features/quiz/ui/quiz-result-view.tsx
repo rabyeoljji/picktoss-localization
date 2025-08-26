@@ -10,6 +10,7 @@ import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 export const QuizResultView = ({
   totalElapsedTime,
@@ -19,6 +20,7 @@ export const QuizResultView = ({
   quizWithResultData: QuizResultCardData[]
 }) => {
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
   useEffect(() => {
     trackEvent('quiz_complete_view')
   }, [])
@@ -41,7 +43,7 @@ export const QuizResultView = ({
           <div>
             <ImgMedal className="w-[160px] mx-auto pt-[70px]" />
             <Text typo="h2" color="primary" className="text-center">
-              퀴즈 완료!
+              {t('progressQuiz.퀴즈_완료')}!
             </Text>
           </div>
           <div className="text-center mt-2">
@@ -53,10 +55,11 @@ export const QuizResultView = ({
             <div className="px-[20px] flex flex-col items-center">
               <ImgSpeechbubble className="w-[32px]" />
               <Text typo="subtitle-2-bold" className="mt-1">
-                {totalQuizCount}문제
+                {totalQuizCount}
+                {t('progressQuiz.문제')}
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                문제 수
+                {t('progressQuiz.문제_수')}
               </Text>
             </div>
             <div className="h-[80px] w-px bg-[#E3E9EF]" />
@@ -66,7 +69,7 @@ export const QuizResultView = ({
                 {Math.ceil(totalElapsedTime / 1000 / 60)}분
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                소요시간
+                {t('progressQuiz.소요시간')}
               </Text>
             </div>
             <div className="h-[80px] w-px bg-[#E3E9EF]" />
@@ -76,7 +79,7 @@ export const QuizResultView = ({
                 {correctAnswerRate}%
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                정답률
+                {t('progressQuiz.정답률')}
               </Text>
             </div>
           </div>
@@ -114,7 +117,7 @@ export const QuizResultView = ({
                   order={index + 1}
                   right={
                     <Tag size="md" color={quizWithResult.isCorrect ? 'green' : 'red'}>
-                      {quizWithResult.isCorrect ? '정답' : '오답'}
+                      {quizWithResult.isCorrect ? t('progressQuiz.정답') : t('progressQuiz.오답')}
                     </Tag>
                   }
                 />
@@ -145,7 +148,9 @@ export const QuizResultView = ({
       </div>
 
       <FixedBottom className="bg-surface-2 h-[114px]">
-        <Button onClick={() => (prevUrl ? router.replace(prevUrl as any, {}) : router.back())}>확인</Button>
+        <Button onClick={() => (prevUrl ? router.replace(prevUrl as any, {}) : router.back())}>
+          {t('progressQuiz.확인')}
+        </Button>
       </FixedBottom>
     </div>
   )

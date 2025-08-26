@@ -1,4 +1,5 @@
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
@@ -21,14 +22,14 @@ import { OnboardCompleteClickProps, useAmplitude } from '@/shared/hooks/use-ampl
 import { useRouter } from '@/shared/lib/router'
 
 const categorySchema = z.object({
-  categoryId: z.string().nonempty('카테고리를 선택해주세요.'),
+  categoryId: z.string().nonempty(''),
 })
 
 type CategoryForm = z.infer<typeof categorySchema>
 
 const OnBoardingPage = () => {
   const { trackEvent } = useAmplitude()
-
+  const { t } = useTranslation()
   const router = useRouter()
 
   const { data: user } = useUser()
@@ -87,19 +88,18 @@ const OnBoardingPage = () => {
           <div className="w-full max-w-[324px] inline-flex flex-col justify-start items-start gap-3">
             <div className="flex flex-col justify-start items-start gap-1">
               <Text typo="h2" color="sub" className="flex-center text-center justify-start leading-9">
-                <div className="inline-block max-w-[160px] truncate">{user?.name}</div>
-                님,
+                {t('daily.님', { name: user?.name })}
               </Text>
               <Text typo="h2" className="text-center justify-start leading-9">
-                현재 어떤 분야를 주로
+                {t('daily.현재_어떤_분야를_주로')}
               </Text>
               <Text typo="h2" className="text-center justify-start leading-9">
-                공부하고 있나요?
+                {t('daily.공부하고_있나요')}
               </Text>
             </div>
             <div className="self-stretch flex flex-col justify-start items-start gap-2">
               <Text typo="subtitle-2-medium" color="sub" className="self-stretch justify-start leading-normal">
-                가장 자주 풀고 싶은 분야를 선택해주세요
+                {t('daily.가장_자주_풀고_싶은_분야를_선택해주세요')}
               </Text>
             </div>
           </div>
@@ -153,7 +153,7 @@ const OnBoardingPage = () => {
           <FixedBottom className="bg-surface-2">
             <div className="pb-[24px]">
               <Button type="submit" disabled={!isValid}>
-                완료
+                {t('daily.완료')}
               </Button>
             </div>
           </FixedBottom>

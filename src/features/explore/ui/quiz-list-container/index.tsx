@@ -24,6 +24,7 @@ import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 type ShareCard = {
   id: 'SHARE'
@@ -147,6 +148,8 @@ const ExploreCard = ({
   document: GetPublicDocumentsDto
   isFetching: boolean
 }) => {
+  const { t } = useTranslation()
+
   const token = useStore(useAuthStore, (state) => state.token)
 
   const { trackEvent } = useAmplitude()
@@ -199,15 +202,15 @@ const ExploreCard = ({
           })
 
           if (!isCurrentlyBookmarked) {
-            toast('퀴즈가 도서관에 저장되었어요', {
+            toast(t('explore.퀴즈가_도서관에_저장되었어요'), {
               icon: <IcBookmarkFilled className="size-4" />,
               action: {
-                label: '보러가기',
+                label: t('explore.보러가기'),
                 onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
               },
             })
           } else {
-            toast('북마크가 해제되었어요')
+            toast(t('explore.북마크가_해제되었어요'))
           }
         },
       },
@@ -269,6 +272,7 @@ const ExploreCard = ({
 // 비공개 문서가 있을 경우 노출 될 공개 권유 카드
 const ShareCard = ({ notPublicCount }: { notPublicCount: number }) => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   return (
     <div
@@ -280,15 +284,15 @@ const ShareCard = ({ notPublicCount }: { notPublicCount: number }) => {
 
       <div className="flex-center flex-col">
         <Text typo="h4" className="text-center">
-          사람들과 나의 지식을 공유해보세요
+          {t('explore.사람들과_나의_지식을_공유해보세요')}
         </Text>
 
         <Text typo="subtitle-2-medium" color="secondary" className="">
-          공개할 수 있는 퀴즈가{' '}
+          {t('explore.공개할_수_있는_퀴즈가')}{' '}
           <Text as={'span'} typo="body-1-medium" color="accent">
-            {notPublicCount}개
+            {t('explore.개', { count: notPublicCount })}
           </Text>{' '}
-          있어요
+          {t('explore.있어요')}
         </Text>
       </div>
 
@@ -298,7 +302,7 @@ const ShareCard = ({ notPublicCount }: { notPublicCount: number }) => {
         variant={'tertiary'}
         className="max-w-[140px] h-fit px-[31.5px] py-[15px]"
       >
-        확인하기
+        {t('explore.확인하기')}
       </Button>
     </div>
   )

@@ -9,47 +9,53 @@ import { IcDaily, IcExplore, IcLibrary, IcMy } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { usePWA } from '@/shared/hooks/use-pwa'
-import { RoutePath } from '@/shared/lib/router'
+import { Pathname, RoutePath } from '@/shared/lib/router'
 import { useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
-
-const navItems = [
-  {
-    label: '데일리',
-    to: RoutePath.root,
-    icon: <IcDaily />,
-  },
-  {
-    label: '탐험',
-    to: RoutePath.explore,
-    icon: <IcExplore />,
-  },
-  {
-    label: '도서관',
-    to: RoutePath.library,
-    icon: <IcLibrary />,
-  },
-  {
-    label: '마이',
-    to: RoutePath.account,
-    icon: <IcMy />,
-  },
-] as const
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface TabNavigationProps {
-  activeTab: (typeof navItems)[number]['label']
+  activeTab: 'DAILY' | 'EXPLORE' | 'LIBRARY' | 'MY'
   className?: HTMLElement['className']
 }
 
-export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigationProps) => {
+export const TabNavigation = ({ activeTab = 'DAILY', className }: TabNavigationProps) => {
   const token = useStore(useAuthStore, (state) => state.token)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
 
   const router = useRouter()
   const { isPWA } = usePWA()
 
-  const handleNavigation = (to: (typeof navItems)[number]['to']) => {
+  const navItems = [
+    {
+      enum: 'DAILY',
+      label: t('etc.데일리'),
+      to: RoutePath.root,
+      icon: <IcDaily />,
+    },
+    {
+      enum: 'EXPLORE',
+      label: t('etc.탐험'),
+      to: RoutePath.explore,
+      icon: <IcExplore />,
+    },
+    {
+      enum: 'LIBRARY',
+      label: t('etc.도서관'),
+      to: RoutePath.library,
+      icon: <IcLibrary />,
+    },
+    {
+      enum: 'MY',
+      label: t('etc.마이'),
+      to: RoutePath.account,
+      icon: <IcMy />,
+    },
+  ] as const
+
+  const handleNavigation = (to: Pathname) => {
     if (!token) {
       setIsLoginOpen(true)
       return
@@ -64,9 +70,9 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
     }
 
     if (isPWA) {
-      router.replace(to)
+      router.replace(to, {})
     } else {
-      router.push(to)
+      router.push(to, {})
     }
   }
 
@@ -79,8 +85,8 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
         )}
       >
         <div className="mx-auto flex max-w-[500px] justify-between px-[32px] pt-2.5">
-          {navItems.map((item) => (
-            <NavItem key={item.label} {...item} active={item.label === activeTab} handleNavigation={handleNavigation} />
+          {navItems.map((item, index) => (
+            <NavItem key={index} {...item} active={item.enum === activeTab} handleNavigation={handleNavigation} />
           ))}
         </div>
       </div>
@@ -91,10 +97,10 @@ export const TabNavigation = ({ activeTab = '데일리', className }: TabNavigat
 
 interface NavItemProps {
   label: string
-  to: (typeof navItems)[number]['to']
+  to: Pathname
   icon: React.ReactNode
   active?: boolean
-  handleNavigation: (to: (typeof navItems)[number]['to']) => void
+  handleNavigation: (to: Pathname) => void
 }
 
 const NavItem = ({ icon, to, label, active = false, handleNavigation }: NavItemProps) => {

@@ -4,6 +4,7 @@ import { useUser } from '@/entities/member/api/hooks'
 
 import { ImgInviteStar, ImgStarEmpty } from '@/shared/assets/images'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 import { Button } from '../ui/button'
 import { DialogClose, DialogFooter } from '../ui/dialog'
@@ -19,6 +20,7 @@ interface LackingStarDrawerProps {
 
 export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: LackingStarDrawerProps) => {
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
   const { data: user } = useUser()
 
   const myStars = Number(user?.star)
@@ -29,33 +31,33 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
       <DrawerContent height="lg">
         <div className="flex flex-col gap-4 text-center">
           <ImgStarEmpty className="size-[100px] mx-auto" />
-          <Text typo="h4">별이 부족해요</Text>
+          <Text typo="h4">{t('createQuiz.별이_부족해요')}</Text>
           <Text typo="body-1-medium" color="sub">
-            퀴즈를 생성할 때 사용되는 별이 더 필요해요
+            {t('createQuiz.퀴즈를_생성할_때_사용되는_별이_더_필요해요')}
             <br />
-            하루에 데일리 퀴즈를 10문제 이상 풀거나,
+            {t('createQuiz.하루에_데일리_퀴즈를_10문제_이상_풀거나')},
             <br />
-            픽토스에 친구를 초대하면 별을 더 받을 수 있어요
+            {t('createQuiz.픽토스에_친구를_초대하면_별을_더_받을_수_있어요')}
           </Text>
         </div>
         <div className="mt-[24px] flex items-center justify-around">
           <div className="flex flex-col items-center gap-[2px]">
             <Text typo="body-2-medium" color="sub">
-              필요한 별
+              {t('createQuiz.필요한_별')}
             </Text>
             <Text typo="subtitle-1-bold">{needStars}</Text>
           </div>
           <div className="w-[1px] h-[48px] bg-gray-100" />
           <div className="flex flex-col items-center gap-[2px]">
             <Text typo="body-2-medium" color="sub">
-              보유한 별
+              {t('createQuiz.보유한_별')}
             </Text>
             <Text typo="subtitle-1-bold">{myStars}</Text>
           </div>
           <div className="w-[1px] h-[48px] bg-gray-100" />
           <div className="flex flex-col items-center gap-[2px]">
             <Text typo="body-2-medium" color="sub">
-              부족한 별
+              {t('createQuiz.부족한_별')}
             </Text>
             <Text typo="subtitle-1-bold" color="accent">
               {needStars - myStars}
@@ -73,14 +75,14 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
               >
                 <div className="flex flex-col gap-[4px]">
                   <Text typo="body-1-medium" color="secondary">
-                    픽토스 초대장 보내기
+                    {t('createQuiz.픽토스_초대장_보내기')}
                   </Text>
                   <Text typo="subtitle-1-bold">
-                    초대할 때마다{' '}
+                    {t('createQuiz.초대할_때마다')}{' '}
                     <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                      별 50개
+                      {t('createQuiz.별_50개')}
                     </Text>{' '}
-                    받아요!
+                    {t('createQuiz.받아요')}!
                   </Text>
                 </div>
                 <ImgInviteStar width={56} height={56} />
@@ -90,7 +92,7 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
         </div>
         <DialogFooter className="h-[114px] absolute bottom-0 w-[calc(100%-32px)]">
           <DialogClose asChild>
-            <Button className="mt-[14px]">확인</Button>
+            <Button className="mt-[14px]">{t('createQuiz.확인')}</Button>
           </DialogClose>
         </DialogFooter>
       </DrawerContent>

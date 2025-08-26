@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -23,6 +24,7 @@ import { checkNotificationPermission } from '@/shared/lib/notification'
 import { Link, useRouter } from '@/shared/lib/router'
 
 const AccountPage = () => {
+  const { t } = useTranslation()
   const { trackEvent } = useAmplitude()
   const router = useRouter()
 
@@ -134,7 +136,7 @@ const AccountPage = () => {
                 className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px] border-r border-divider"
               >
                 <Text typo="subtitle-2-bold" color="secondary">
-                  생성한 퀴즈
+                  {t('profile.생성한_퀴즈')}
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.totalQuizCount}
@@ -146,7 +148,7 @@ const AccountPage = () => {
                 className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px]"
               >
                 <Text typo="subtitle-2-bold" color="secondary">
-                  저장한 퀴즈
+                  {t('profile.저장한_퀴즈')}
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.bookmarkCount}
@@ -161,9 +163,9 @@ const AccountPage = () => {
 
                   <div className="flex flex-col">
                     <Text typo="body-2-medium" color="sub">
-                      이번 달 푼 퀴즈
+                      {t('profile.이번_달_푼_퀴즈')}
                     </Text>
-                    <Text typo="subtitle-1-bold">{user?.monthlySolvedQuizCount} 문제</Text>
+                    <Text typo="subtitle-1-bold">{t('profile.문제', { count: user?.monthlySolvedQuizCount })}</Text>
                   </div>
                 </div>
 
@@ -175,7 +177,7 @@ const AccountPage = () => {
                   size={'sm'}
                   variant={'tertiary'}
                 >
-                  분석 보기
+                  {t('profile.분석_보기')}
                 </Button>
               </div>
 
@@ -183,14 +185,15 @@ const AccountPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-[4px]">
                     <ImgStar width={24} height={24} />
-                    <Text typo="subtitle-2-bold">나의 별</Text>
+                    <Text typo="subtitle-2-bold">{t('profile.나의_별')}</Text>
                     <Disclaimer>
                       <DisclaimerTrigger asChild className="cursor-pointer">
                         <IcDisclaimer className="size-[16px] text-icon-sub" />
                       </DisclaimerTrigger>
                       <DisclaimerContent side="bottom" sideOffset={7} align="start" alignOffset={-7}>
-                        퀴즈를 생성하기 위해 필요한 재화로, 매일 <br /> 데일리에서 10문제 이상 풀거나 이벤트에 <br />{' '}
-                        참여하면 받을 수 있어요
+                        {t('profile.퀴즈를_생성하기_위해_필요한_재화로_매일')} <br />
+                        {t('profile.데일리에서_10문제_이상_풀거나_이벤트에')} <br />
+                        {t('profile.참여하면_받을_수_있어요')}
                       </DisclaimerContent>
                     </Disclaimer>
                   </div>
@@ -203,7 +206,7 @@ const AccountPage = () => {
                       trackEvent('my_star_click')
                     }}
                   >
-                    <Text typo="subtitle-2-bold">{user?.star}개</Text>
+                    <Text typo="subtitle-2-bold">{t('profile.개', { count: user?.star })}</Text>
                     <IcChevronRight className="size-[16px] text-icon-sub" />
                   </Link>
                 </div>
@@ -218,12 +221,12 @@ const AccountPage = () => {
                     >
                       <div className="flex-1 flex flex-col gap-[4px]">
                         <Text typo="body-1-medium" color="secondary">
-                          픽토스 초대장 보내기
+                          {t('profile.픽토스_초대장_보내기')}
                         </Text>
                         <Text typo="subtitle-1-bold">
-                          초대할 때마다{' '}
+                          {t('profile.초대할_때마다')}{' '}
                           <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                            별 50개!
+                            {t('profile.별_50개')}
                           </Text>
                         </Text>
                       </div>
@@ -242,16 +245,16 @@ const AccountPage = () => {
         <div className="py-[24px] px-[16px] flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[16px]">
             <Text typo="body-1-medium" color="caption">
-              설정
+              {t('profile.설정')}
             </Text>
             <div className="flex flex-col gap-[20px]">
               <Link to="/account/info" className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">계정 정보</Text>
+                <Text typo="subtitle-2-medium">{t('profile.계정_정보')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
               <div className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">푸시 알림</Text>
+                <Text typo="subtitle-2-medium">{t('profile.푸시_알림')}</Text>
                 <Switch size="md" checked={notificationEnabled} onCheckedChange={handleNotification} />
               </div>
 
@@ -272,11 +275,11 @@ const AccountPage = () => {
 
           <div className="border-t border-divider pt-[16px] flex flex-col gap-[16px]">
             <Text typo="body-1-medium" color="caption">
-              도움말 & 지원
+              {t('profile.도움말_지원')}
             </Text>
             <div className="flex flex-col gap-[20px]">
               <Link to="/account/feedback" className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">문의하기</Text>
+                <Text typo="subtitle-2-medium">{t('profile.문의하기')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
@@ -286,12 +289,12 @@ const AccountPage = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-between"
               >
-                <Text typo="subtitle-2-medium">이용 가이드</Text>
+                <Text typo="subtitle-2-medium">{t('profile.이용_가이드')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </a>
 
               <Link to="/account/notice" className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">공지사항</Text>
+                <Text typo="subtitle-2-medium">{t('profile.공지사항')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
@@ -301,7 +304,7 @@ const AccountPage = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-between"
               >
-                <Text typo="subtitle-2-medium">서비스 소개</Text>
+                <Text typo="subtitle-2-medium">{t('profile.서비스_소개')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </a>
             </div>
@@ -316,7 +319,7 @@ const AccountPage = () => {
               rel="noopener noreferrer"
             >
               <Text typo="body-1-medium" color="sub">
-                개인정보 처리방침
+                {t('profile.개인정보_처리방침')}
               </Text>
             </a>
             <a
@@ -325,18 +328,19 @@ const AccountPage = () => {
               rel="noopener noreferrer"
             >
               <Text typo="body-1-medium" color="sub">
-                서비스 이용약관
+                {t('profile.서비스_이용약관')}
               </Text>
             </a>
           </div>
 
           <div className="flex flex-col gap-[16px]">
             <Text typo="body-2-medium" color="caption">
-              사업자등록번호 120-20-02237 | 070-7954-1774 | 대표자명 : 이유민 <br /> 서울특별시 서대문구 연희로41가길 5,
-              B1층 D72호(홍은동)
+              {t(
+                'profile.사업자등록번호_120_20_02237_070_7954_1774_대표자명_이유민_서울특별시_서대문구_연희로41가길_5_B1층_D72호_홍은동',
+              )}
             </Text>
             <Text typo="body-2-medium" color="caption">
-              ⓒ 2024. picktoss all rights reserved
+              {t('profile.2024_picktoss_all_rights_reserved')}
             </Text>
           </div>
         </footer>
@@ -347,7 +351,7 @@ const AccountPage = () => {
 
 export default withHOC(AccountPage, {
   backgroundClassName: 'bg-surface-1',
-  activeTab: '마이',
+  activeTab: 'MY',
 })
 
 const NotificationDrawer = ({
@@ -359,6 +363,7 @@ const NotificationDrawer = ({
   onOpenChange: (value: boolean) => void
   onServiceNotificationChange: (value: boolean) => void
 }) => {
+  const { t } = useTranslation()
   const { setupMessaging, isReadyNotification } = useMessaging()
   const { mutate: updateNotification } = useUpdateQuizNotification()
 
@@ -380,19 +385,18 @@ const NotificationDrawer = ({
       <DrawerContent height="md" hasHandle={false} className="flex flex-col items-center">
         <DrawerHeader className="w-full flex-center flex-col gap-[8px] py-[10px]">
           <Text typo="h4" className="text-center">
-            푸시 알림 허용 안내
+            {t('profile.푸시_알림_허용_안내')}
           </Text>
           <Text typo="subtitle-2-medium" color="sub" className="text-center">
-            다음 단계에서 알림을 허용하시면
-            <br />
-            매일 잊지 않고 퀴즈를 풀 수 있어요
+            {t('profile.다음_단계에서_알림을_허용하시면')} <br />
+            {t('profile.매일_잊지_않고_퀴즈를_풀_수_있어요')}
           </Text>
         </DrawerHeader>
 
         <ImgPush height={200} width={301.25} />
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
-          <Button onClick={clickNotification}>설정하기</Button>
+          <Button onClick={clickNotification}>{t('profile.설정하기')}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
@@ -406,6 +410,7 @@ const NotificationSettingInfoDialog = ({
   open: boolean
   onOpenChange: (open: boolean) => void
 }) => {
+  const { t } = useTranslation()
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="pt-[32px] px-[24px] pb-[20px] w-[308px] flex flex-col gap-[32px]">
@@ -415,19 +420,18 @@ const NotificationSettingInfoDialog = ({
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">푸시 알림 설정 안내</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">{t('profile.푸시_알림_설정_안내')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              퀴즈 알림을 다시 받아보고 싶다면,
-              <br />
-              디바이스의 설정&gt;앱&gt;picktoss를 선택 후 <br />
-              알림을 [허용]으로 변경해주세요
+              {t('profile.퀴즈_알림을_다시_받아보고_싶다면')} <br />
+              {t('profile.디바이스의_설정앱picktoss를_선택_후')} <br />
+              {t('profile.알림을_허용으로_변경해주세요')}
             </DialogDescription>
           </div>
         </div>
 
         <div className="w-full flex flex-col gap-[24px]">
           <Button onClick={() => onOpenChange(false)} className="w-full">
-            확인
+            {t('profile.확인')}
           </Button>
         </div>
       </DialogContent>

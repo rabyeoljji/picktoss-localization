@@ -14,9 +14,11 @@ import FixedBottom from '@/shared/components/fixed-bottom'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const NoteCreatePageFile = () => {
   const { trackEvent } = useAmplitude()
+  const { t } = useTranslation()
 
   const { content, fileInfo, changeFileInfo, isProcessing, star, handleCreateDocument } = useCreateNoteContext()
   const { data: user } = useUser()
@@ -67,10 +69,10 @@ const NoteCreatePageFile = () => {
             className="px-[16px] py-[15px] max-w-[210px] h-[91px] bg-base-2 border-2 border-dashed border-outline flex-center gap-[8px] rounded-[12px] typo-button-2 text-secondary cursor-pointer"
           >
             <IcFile className="size-[20px] text-icon-secondary" />
-            파일 추가하기
+            {t('createQuiz.파일_추가하기')}
           </label>
           <Text typo="body-1-medium" color="caption">
-            *pdf, txt, docx, 3MB 이상 12MB 미만
+            {t('createQuiz.pdf_txt_docx_3mb_이상_12mb_미만')}
           </Text>
         </div>
       </div>
@@ -80,7 +82,7 @@ const NoteCreatePageFile = () => {
   if (isProcessing) {
     return (
       <div className="h-[calc(var(--viewport-height,100vh)-(var(--header-height))-81px)] flex-center flex-col pb-[96px]">
-        파일 처리 중...
+        {t('createQuiz.파일_처리_중')}...
       </div>
     )
   }
@@ -123,7 +125,7 @@ const NoteCreatePageFile = () => {
           className="cursor-pointer ml-auto relative gap-0.5 inline-flex items-center rounded-full justify-center border border-gray-100 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 h-[28px] w-[60px] disabled:pointer-events-none shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200"
         >
           <IcChange className="size-[16px]" />
-          <Text typo="button-5">변경</Text>
+          <Text typo="button-5">{t('createQuiz.변경')}</Text>
         </label>
       </div>
 
@@ -131,10 +133,11 @@ const NoteCreatePageFile = () => {
         <div className="flex items-center gap-2 w-full">
           <div className="shrink-0">
             <Text typo="body-2-medium" color="sub">
-              사용 가능 별
+              {t('createQuiz.사용_가능_별')}
             </Text>
             <Text typo="body-1-medium" color="primary">
-              {user?.star.toLocaleString('ko-kr')}개
+              {user?.star.toLocaleString('ko-kr')}
+              {t('createQuiz.개')}
             </Text>
           </div>
           <div className="flex-1">
@@ -156,7 +159,7 @@ const NoteCreatePageFile = () => {
                 })
               }}
             >
-              생성하기
+              {t('createQuiz.생성하기')}
             </Button>
           </div>
         </div>

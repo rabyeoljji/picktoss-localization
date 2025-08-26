@@ -1,10 +1,12 @@
 import { useRewardForInviteCode } from '@/entities/auth/api/hooks'
+import { useUser } from '@/entities/member/api/hooks'
 
 import { ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
 import { Text } from '@/shared/components/ui/text'
 import { removeLocalStorageItem } from '@/shared/lib/storage/lib'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const RewardDialogForInvitee = ({
   open,
@@ -15,7 +17,9 @@ const RewardDialogForInvitee = ({
   onOpenChange: (open: boolean) => void
   inviteCode: string
 }) => {
+  const { data: user } = useUser()
   const { mutate: rewardForInviteCode } = useRewardForInviteCode()
+  const { t } = useTranslation()
 
   const handleReward = () => {
     rewardForInviteCode(
@@ -50,19 +54,20 @@ const RewardDialogForInvitee = ({
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">추가 별 지급</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">{t('profile.추가_별_지급')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              초대장을 받으신 픽토스님께 <br />별{' '}
+              {t('profile.초대장을_받으신_님께', { name: user?.name })} <br />
+              {t('profile.별')}{' '}
               <Text as={'span'} typo="subtitle-2-medium" color="accent">
-                50개
+                {t('profile.개', { count: 50 })}
               </Text>
-              를 추가로 드려요
+              {t('profile.를_추가로_드려요')}
             </DialogDescription>
           </div>
         </div>
 
         <Button onClick={handleReward} className="w-full">
-          받기
+          {t('profile.받기')}
         </Button>
       </DialogContent>
     </Dialog>

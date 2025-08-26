@@ -16,17 +16,19 @@ import { Header } from '@/shared/components/header'
 import QuestionBox from '@/shared/components/items/question-box-item'
 import { Text } from '@/shared/components/ui/text'
 import { useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const exampleQuestions = [
-  { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
-  { emoji: '👠', question: '프로세스는 무엇인가요?' },
-  { emoji: '💡', question: '롤스는 무엇을 주장했나요?' },
-  { emoji: '🚩', question: '미토콘드리아에 대한 설명 중 틀린 것은?' },
-  { emoji: '🧠', question: '참여가 늘어나는 이유는 무엇인가요?' },
+  { emoji: '🪶', question: '숏_전략은_매수하는_전략이다' },
+  { emoji: '👠', question: '프로세스는_무엇인가요' },
+  { emoji: '💡', question: '롤스는_무엇을_주장했나요' },
+  { emoji: '🚩', question: '미토콘드리아에_대한_설명_중_틀린_것은' },
+  { emoji: '🧠', question: '참여가_늘어나는_이유는_무엇인가요' },
 ]
 
 const LoginPage = () => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   const token = useStore(useAuthStore, (state) => state.token)
 
@@ -88,7 +90,7 @@ const LoginPage = () => {
                     <QuestionBox
                       key={index}
                       emoji={item.emoji}
-                      question={item.question}
+                      question={t(item.question)}
                       color="dark"
                       className="mr-[8px]"
                     />
@@ -99,7 +101,7 @@ const LoginPage = () => {
                     <QuestionBox
                       key={index}
                       emoji={item.emoji}
-                      question={item.question}
+                      question={t(item.question)}
                       color="dark"
                       className="mr-[8px]"
                     />
@@ -116,25 +118,25 @@ const LoginPage = () => {
 
               <div className="text-center">
                 <Text typo="caption-medium" color="caption">
-                  로그인 시{' '}
+                  {t('etc.로그인_시')}{' '}
                   <ReactRouterLink
                     to="https://picktoss.notion.site/1209d818f56080fbb469e82def758e9c?pvs=4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
                   >
-                    개인정보보호 정책
+                    {t('etc.개인정보보호_정책')}
                   </ReactRouterLink>{' '}
-                  및{' '}
+                  {t('etc.및')}{' '}
                   <ReactRouterLink
                     to="https://picktoss.notion.site/1209d818f560809aad11c5b64020d735?pvs=4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
                   >
-                    서비스 이용약관
+                    {t('etc.서비스_이용약관')}
                   </ReactRouterLink>
-                  에 동의하는 것으로 <br /> 간주하며, 서비스 이용을 위해 이메일과 이름을 수집합니다.
+                  {t('etc.에_동의하는_것으로')} <br /> {t('etc.간주하며_서비스_이용을_위해_이메일과_이름을_수집합니다')}
                 </Text>
               </div>
             </div>
@@ -146,17 +148,21 @@ const LoginPage = () => {
 }
 
 const LoadingSpinner = () => {
+  const { t } = useTranslation()
+
   return (
     <div className="flex flex-col items-center justify-center">
       <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
       <Text typo="body-1-medium" color="sub" className="mt-4">
-        로그인 중...
+        {t('etc.로그인_중')}
       </Text>
     </div>
   )
 }
 
 const GoogleLoginButton = ({ ...props }) => {
+  const { t } = useTranslation()
+
   return (
     <button
       className="h-[48px] relative rounded-full border flex-center bg-white border-gray-100 active:bg-gray-50"
@@ -164,18 +170,20 @@ const GoogleLoginButton = ({ ...props }) => {
     >
       <ImgRoundGoogle className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
-        Google로 시작하기
+        {t('etc.Google로_시작하기')}
       </Text>
     </button>
   )
 }
 
 const KakaoLoginButton = ({ ...props }) => {
+  const { t } = useTranslation()
+
   return (
     <button className="h-[48px] relative rounded-full flex-center bg-[#FFE45F] active:opacity-90" {...props}>
       <ImgRoundKakao className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
-        카카오로 시작하기
+        {t('etc.카카오로_시작하기')}
       </Text>
     </button>
   )

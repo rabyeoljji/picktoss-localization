@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { Text } from '@/shared/components/ui/text'
 
@@ -6,7 +7,7 @@ export interface QuizLoadingProgressBarProps {
   initialSpeed?: number // 초기 진행 속도 (0-100 범위에서 ms당 증가하는 양)
   minSpeed?: number // 최소 진행 속도
   onComplete?: () => void // 100%에 도달했을 때 호출할 콜백
-  text?: string // 표시할 텍스트
+  text?: string // 표시할 텍스트 (번역 키 값)
   completed?: boolean // 외부에서 완료 상태를 제어하는 prop
   progressOverride?: number // 외부에서 진행 상태를 직접 제어하는 prop (0-100)
 }
@@ -15,10 +16,12 @@ export const QuizLoadingProgressBar = ({
   initialSpeed = 0.15,
   minSpeed = 0.02,
   onComplete,
-  text = '퀴즈 생성 중...',
+  text,
   completed = false,
   progressOverride,
 }: QuizLoadingProgressBarProps) => {
+  const { t } = useTranslation()
+
   // 진행률 상태 (0-100%)
   const [progress, setProgress] = useState(0)
   // 현재 속도 상태
@@ -87,7 +90,7 @@ export const QuizLoadingProgressBar = ({
 
       <div className="flex justify-between mt-2">
         <Text typo="body-2-medium" color="sub">
-          {text}
+          {t(text ?? 'progressQuiz.퀴즈_생성_중')}
         </Text>
         <Text typo="body-2-bold" color="sub">
           {progressText}

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 import { toast } from 'sonner'
 
@@ -21,6 +22,7 @@ import { TextButton } from '@/shared/components/ui/text-button'
 import { RoutePath, useRouter } from '@/shared/lib/router'
 
 const AccountInfoPage = () => {
+  const { t } = useTranslation()
   const router = useRouter()
 
   const { clearToken } = useAuthStore()
@@ -63,7 +65,7 @@ const AccountInfoPage = () => {
       { name: newName },
       {
         onSuccess: () => {
-          toast('닉네임이 변경되었어요')
+          toast(t('profile.닉네임이_변경되었어요'))
           setNameDialogOpen(false)
           setNewName(user?.name ?? '')
         },
@@ -95,13 +97,13 @@ const AccountInfoPage = () => {
         {
           onSuccess: () => {
             if (!prevState) {
-              toast('프로필 사진이 등록되었어요')
+              toast(t('profile.프로필_사진이_등록되었어요'))
             } else {
-              toast('프로필 사진이 변경되었어요')
+              toast(t('profile.프로필_사진이_변경되었어요'))
             }
           },
           onError: (error) => {
-            console.error('이미지 변환 실패:', error)
+            console.error(t('profile.이미지_변환_실패'), error)
             setImageUrl(user?.image) // 기존 이미지로 되돌림
           },
         },
@@ -111,7 +113,7 @@ const AccountInfoPage = () => {
 
   return (
     <>
-      <Header left={<BackButton />} title="계정 정보" />
+      <Header left={<BackButton />} title={t('profile.계정_정보')} />
 
       <HeaderOffsetLayout className="h-full flex flex-col overflow-x-hidden px-[16px] justify-between">
         <div className="w-full flex flex-col">
@@ -150,7 +152,7 @@ const AccountInfoPage = () => {
             >
               <div className="flex flex-col items-start gap-[4px]">
                 <Text typo="body-1-medium" color="sub">
-                  닉네임
+                  {t('profile.닉네임')}
                 </Text>
 
                 <Text typo="subtitle-2-medium">{user?.name}</Text>
@@ -160,8 +162,8 @@ const AccountInfoPage = () => {
             <SystemDialog
               open={nameDialogOpen}
               onOpenChange={handleSetNameDialogOpen}
-              title="닉네임 변경"
-              description="새로 사용할 이름을 입력해주세요"
+              title={t('profile.닉네임_변경')}
+              description={t('profile.새로_사용할_이름을_입력해주세요')}
               preventClose={isPending}
               content={
                 <>
@@ -175,7 +177,7 @@ const AccountInfoPage = () => {
                       max={10}
                       hasClear
                       onClearClick={() => setNewName('')}
-                      helperText={`10자 이내로 입력해주세요 (${newName.length}/10)`}
+                      helperText={`${t('profile.10자_이내로_입력해주세요')} (${newName.length}/10)`}
                     />
                   )}
                 </>
@@ -189,11 +191,11 @@ const AccountInfoPage = () => {
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-col items-start gap-[4px]">
                 <Text typo="body-1-medium" color="sub">
-                  이메일
+                  {t('profile.이메일')}
                 </Text>
 
                 <Text typo="subtitle-2-medium" color="primary">
-                  {user?.email ? user.email : '이메일 주소를 등록해주세요'}
+                  {user?.email ? user.email : t('profile.이메일_주소를_등록해주세요')}
                 </Text>
               </div>
             </div>
@@ -201,18 +203,18 @@ const AccountInfoPage = () => {
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-col items-start gap-[4px]">
                 <Text typo="body-1-medium" color="sub">
-                  로그인 정보
+                  {t('profile.로그인_정보')}
                 </Text>
                 <div className="flex items-center gap-[8px]">
                   {user?.socialPlatform === 'KAKAO' ? (
                     <>
                       <ImgRoundKakao className="size-[20px]" />
-                      <Text typo="subtitle-2-medium">카카오 로그인</Text>
+                      <Text typo="subtitle-2-medium">{t('profile.카카오_로그인')}</Text>
                     </>
                   ) : (
                     <>
                       <ImgRoundGoogle className="size-[20px]" />
-                      <Text typo="subtitle-2-medium">구글 로그인</Text>
+                      <Text typo="subtitle-2-medium">{t('profile.구글_로그인')}</Text>
                     </>
                   )}
                 </div>
@@ -228,14 +230,14 @@ const AccountInfoPage = () => {
             size={'sm'}
             className="pr-[16px] border-r border-divider"
           >
-            로그아웃
+            {t('profile.로그아웃')}
           </TextButton>
           <SystemDialog
             open={logoutDialogOpen}
             onOpenChange={setLogoutDialogOpen}
-            title="로그아웃 하시겠어요?"
-            cancelLabel="취소"
-            confirmLabel="로그아웃"
+            title={t('profile.로그아웃_하시겠어요')}
+            cancelLabel={t('profile.취소')}
+            confirmLabel={t('profile.로그아웃')}
             variant="critical"
             onConfirm={handleLogout}
           />
@@ -245,7 +247,7 @@ const AccountInfoPage = () => {
             size={'sm'}
             className="pl-[16px]"
           >
-            탈퇴하기
+            {t('profile.탈퇴하기')}
           </TextButton>
         </div>
       </HeaderOffsetLayout>

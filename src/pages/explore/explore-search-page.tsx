@@ -21,9 +21,11 @@ import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
 import { StorageKey } from '@/shared/lib/storage'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const ExploreSearchPage = () => {
   const { isPWA } = usePWA()
+  const { t } = useTranslation()
 
   const {
     inputValue,
@@ -79,7 +81,7 @@ const ExploreSearchPage = () => {
                 value={inputValue}
                 onChange={onChangeKeyword}
                 clearKeyword={handleClearKeyword}
-                placeholder="퀴즈 제목, 내용 검색"
+                placeholder={t('explore.퀴즈_제목_내용_검색')}
               />
             </form>
 
@@ -94,9 +96,9 @@ const ExploreSearchPage = () => {
 
         {!showRecentKeywords && !isLoading && !hasSearchResults && !!queryKeyword && (
           <div className="size-full flex-center flex-col gap-[8px] pb-[108px]">
-            <Text typo="subtitle-1-bold">검색 결과가 없어요</Text>
+            <Text typo="subtitle-1-bold">{t('explore.검색_결과가_없어요')}</Text>
             <Text typo="body-1-medium" color="sub">
-              다른 키워드를 입력해보세요
+              {t('explore.다른_키워드를_입력해보세요')}
             </Text>
           </div>
         )}
@@ -104,7 +106,7 @@ const ExploreSearchPage = () => {
         {!showRecentKeywords && !isLoading && hasSearchResults && (
           <div className="h-[calc(100%-48px)] flex flex-col px-[16px] pt-[16px] overflow-y-auto">
             <Text typo="body-1-medium">
-              결과 <span className="text-accent">{searchResults.length}</span>
+              {t('explore.결과')} <span className="text-accent">{searchResults.length}</span>
             </Text>
 
             <div className="h-fit flex flex-col pb-[16px]">

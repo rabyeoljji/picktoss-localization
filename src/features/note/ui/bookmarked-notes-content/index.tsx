@@ -17,6 +17,7 @@ import {
 import Loading from '@/shared/components/ui/loading'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface Props {
   activeTab: 'MY' | 'BOOKMARK'
@@ -38,6 +39,7 @@ const BookmarkedNotesContent = ({
   type Tab = typeof activeTab
 
   const { data: user } = useUser()
+  const { t } = useTranslation()
 
   const [sortOption, setSortOption] = useQueryParam('/library', 'bookmarkedSortOption')
   const activeSortOption = sortOption ?? 'CREATED_AT'
@@ -55,13 +57,13 @@ const BookmarkedNotesContent = ({
               className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
               value={'MY' as Tab}
             >
-              생성한 {user?.totalQuizCount}
+              {t('library.생성한')} {user?.totalQuizCount}
             </TabsTrigger>
             <TabsTrigger
               className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
               value={'BOOKMARK' as Tab}
             >
-              저장한 {user?.bookmarkCount}
+              {t('library.저장한')} {user?.bookmarkCount}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -77,21 +79,21 @@ const BookmarkedNotesContent = ({
               right={activeSortOption === 'CREATED_AT' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              추가된 일자
+              {t('library.추가된_일자')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setSortOption('NAME')}
               right={activeSortOption === 'NAME' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              이름
+              {t('library.이름')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setSortOption('QUIZ_COUNT')}
               right={activeSortOption === 'QUIZ_COUNT' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              문제 수
+              {t('library.문제_수')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

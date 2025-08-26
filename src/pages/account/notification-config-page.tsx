@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -45,11 +47,12 @@ const NotificationConfigPage = () => {
 }
 
 const EmptyNotification = () => {
+  const { t } = useTranslation()
   return (
     <div className="flex-center size-full flex-col gap-[16px] pb-[107px]">
       <ImgMegaphoneEmpty width={120} height={120} />
       <Text typo="body-1-medium" color="sub">
-        아직 받은 알림이 없어요
+        {t('profile.아직_받은_알림이_없어요')}
       </Text>
     </div>
   )

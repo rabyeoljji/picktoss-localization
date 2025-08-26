@@ -15,9 +15,11 @@ import { Selectbox } from '@/shared/components/ui/selectbox'
 import { Text } from '@/shared/components/ui/text'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const ComplainForm = () => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   const { noteId } = useParams()
 
@@ -41,7 +43,7 @@ const ComplainForm = () => {
       },
       {
         onSuccess: () => {
-          toast('신고가 완료되었어요')
+          toast(t('explore.신고가_완료되었어요'))
           router.replace('/quiz-detail/:noteId', {
             params: [String(noteId)],
           })
@@ -56,7 +58,7 @@ const ComplainForm = () => {
         {/* 신고 사유 */}
         <div>
           <Text typo="body-1-bold" color="sub" className="mb-[12px]">
-            신고 사유 선택 <span className="text-accent">*</span>
+            {t('explore.신고_사유_선택')} <span className="text-accent">*</span>
           </Text>
 
           <FormField
@@ -87,7 +89,7 @@ const ComplainForm = () => {
         {/* 상세 내용 */}
         <div>
           <Text typo="body-1-bold" color="sub">
-            상세내용
+            {t('explore.상세내용')}
           </Text>
 
           <FormField
@@ -98,7 +100,7 @@ const ComplainForm = () => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder="신고할 내용을 구체적으로 작성해주세요"
+                    placeholder={t('explore.신고할_내용을_구체적으로_작성해주세요')}
                     className="input-basic my-[8px] h-[256px] w-full resize-none"
                     maxLength={500}
                   />
@@ -108,7 +110,7 @@ const ComplainForm = () => {
           />
 
           <Text typo="body-2-medium" color="caption" className="mb-[32px]">
-            {`500자 이내로 입력해주세요 (${watch('content')?.length || 0}/500)`}
+            {`${t('explore.500자_이내로_입력해주세요')} (${watch('content')?.length || 0}/500)`}
           </Text>
         </div>
 
@@ -118,7 +120,7 @@ const ComplainForm = () => {
             data-state={(isPending || formState.isSubmitting) && 'loading'}
             disabled={!formState.isValid}
           >
-            신고하기
+            {t('explore.신고하기')}
           </Button>
         </div>
       </form>

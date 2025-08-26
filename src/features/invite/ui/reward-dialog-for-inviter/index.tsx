@@ -2,15 +2,19 @@ import { useQueryClient } from '@tanstack/react-query'
 
 import { useConfirmInviteCodeBySignUp } from '@/entities/auth/api/hooks'
 import { MEMBER_KEYS } from '@/entities/member/api/config'
+import { useUser } from '@/entities/member/api/hooks'
 
 import { ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
 import { Text } from '@/shared/components/ui/text'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const RewardDialogForInviter = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
   const queryClient = useQueryClient()
+  const { data: user } = useUser()
   const { mutate: confirmInvite } = useConfirmInviteCodeBySignUp()
+  const { t } = useTranslation()
 
   const handleReward = () => {
     confirmInvite()
@@ -36,20 +40,20 @@ const RewardDialogForInviter = ({ open, onOpenChange }: { open: boolean; onOpenC
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">친구 초대 보상 도착</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">{t('profile.친구_초대_보상_도착')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              초대해주신 픽토스님께 <br />
-              보상으로 별{' '}
+              {t('profile.초대해주신_님께', { name: user?.name })} <br />
+              {t('profile.보상으로_별')}{' '}
               <Text as={'span'} typo="subtitle-2-medium" color="accent">
-                50개
+                {t('profile.개', { count: 50 })}
               </Text>
-              를 드려요
+              {t('profile.를_드려요')}
             </DialogDescription>
           </div>
         </div>
 
         <Button onClick={handleReward} className="w-full">
-          받기
+          {t('profile.받기')}
         </Button>
       </DialogContent>
     </Dialog>

@@ -18,9 +18,11 @@ import { ChartConfig, ChartContainer } from '@/shared/components/ui/chart'
 import { Text } from '@/shared/components/ui/text'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const QuizAnalysisPage = () => {
   const router = useRouter()
+  const { t } = useTranslation()
 
   const today = useMemo(() => new Date(), [])
 
@@ -45,7 +47,7 @@ const QuizAnalysisPage = () => {
 
   const chartConfig = {
     multiple: {
-      label: '객관식',
+      label: t('profile.객관식'),
       color: 'var(--color-orange-400)',
     },
     mixup: {
@@ -66,7 +68,7 @@ const QuizAnalysisPage = () => {
   const superiorQuizType =
     (monthlyAnalysisData?.quizTypes.mixUpQuizCount ?? 0) > (monthlyAnalysisData?.quizTypes.multipleChoiceQuizCount ?? 0)
       ? 'O/X'
-      : '객관식'
+      : t('profile.객관식')
 
   return (
     <>
@@ -78,8 +80,8 @@ const QuizAnalysisPage = () => {
             <button onClick={() => setMonth(format(subMonths(dateMonth, 1), 'yyyy-MM'))}>
               <IcDatePrevious className="size-[16px]" />
             </button>
-            <Text typo="h4" className="w-[44px] text-center">
-              {Number(month.split('-')[1])}월
+            <Text typo="h4" className="w-fit text-center">
+              {t(`profile.${Number(month.split('-')[1])}월`)}
             </Text>
             <button
               onClick={() => setMonth(format(addMonths(dateMonth, 1), 'yyyy-MM'))}
@@ -98,11 +100,13 @@ const QuizAnalysisPage = () => {
             <div className="flex items-baseline gap-1.5">
               <Text typo="h1">{totalQuizCount}</Text>
               <Text typo="h4" color="sub">
-                문제
+                {t('profile.문제')}
               </Text>
             </div>
             <Text typo="subtitle-2-medium" color="sub" className="px-1">
-              {totalQuizCount === 0 ? '푼 퀴즈가 없어요' : '내가 푼 퀴즈에 대한 분석을 확인해보세요'}
+              {totalQuizCount === 0
+                ? t('profile.푼_퀴즈가_없어요')
+                : t('profile.내가_푼_퀴즈에_대한_분석을_확인해보세요')}
             </Text>
           </div>
 
@@ -110,14 +114,15 @@ const QuizAnalysisPage = () => {
             {!isLoading && !isPrevMonth && totalQuizCount === 0 && (
               <div className="bg-base-1 rounded-[16px] px-[16px] py-[32px] flex-center flex-col gap-[32px]">
                 <div className="flex flex-col gap-[8px]">
-                  <Text typo="subtitle-1-bold">픽토스의 다양한 퀴즈를 풀어보세요!</Text>
+                  <Text typo="subtitle-1-bold">{t('profile.픽토스의_다양한_퀴즈를_풀어보세요')}</Text>
                   <Text typo="body-1-medium" color="sub" className="text-center">
-                    픽토스에서 퀴즈를 풀고 나면 <br />내 학습에 대한 분석을 확인할 수 있어요
+                    {t('profile.픽토스에서_퀴즈를_풀고_나면')} <br />
+                    {t('profile.내_학습에_대한_분석을_확인할_수_있어요')}
                   </Text>
                 </div>
 
                 <Button size={'md'} className="w-[142px]" onClick={() => router.push('/explore')}>
-                  퀴즈 탐험하러 가기
+                  {t('profile.퀴즈_탐험하러_가기')}
                 </Button>
               </div>
             )}
@@ -125,16 +130,16 @@ const QuizAnalysisPage = () => {
             <div className="bg-base-1 rounded-[16px] p-[16px] pb-[20px] flex flex-col gap-[16px]">
               <div className="flex flex-col gap-[8px]">
                 <Text typo="body-1-bold" color="sub">
-                  학습량
+                  {t('profile.학습량')}
                 </Text>
                 {totalQuizCount === 0 ? (
                   <Text typo="h4" color="caption">
-                    분석할 문제가 없어요
+                    {t('profile.분석할_문제가_없어요')}
                   </Text>
                 ) : (
                   <Text typo="h4">
-                    하루에 {monthlyAnalysisData?.averageDailyQuizCount}문제 정도{' '}
-                    {isPrevMonth ? '풀었어요' : '풀고 있어요'}
+                    {t('profile.하루에_문제_정도', { count: monthlyAnalysisData?.averageDailyQuizCount })}{' '}
+                    {isPrevMonth ? t('profile.풀었어요') : t('profile.풀고_있어요')}
                   </Text>
                 )}
               </div>
@@ -146,19 +151,21 @@ const QuizAnalysisPage = () => {
                 <div className="w-full bg-surface-2 rounded-[12px] py-[12px] flex items-center">
                   <div className="flex-1/2 border-r border-divider flex-center flex-col gap-[2px]">
                     <Text typo="body-2-medium" color="sub">
-                      가장 많이 푼 날
+                      {t('profile.가장_많이_푼_날')}
                     </Text>
                     {totalQuizCount === 0 ? (
                       <Text typo="subtitle-2-bold" color="sub">
                         ?
                       </Text>
                     ) : (
-                      <Text typo="subtitle-2-bold">{monthlyAnalysisData?.maxSolvedQuizCount} 문제</Text>
+                      <Text typo="subtitle-2-bold">
+                        {t('profile.문제', { count: monthlyAnalysisData?.maxSolvedQuizCount })}
+                      </Text>
                     )}
                   </div>
                   <div className="flex-1/2 flex-center flex-col gap-[2px]">
                     <Text typo="body-2-medium" color="sub">
-                      평균 정답률
+                      {t('profile.평균_정답률')}
                     </Text>
                     {totalQuizCount === 0 ? (
                       <Text typo="subtitle-2-bold" color="sub">
@@ -177,18 +184,18 @@ const QuizAnalysisPage = () => {
             <div className="bg-base-1 rounded-[16px] px-[16px] pt-[20px] pb-[32px] flex flex-col gap-[20px]">
               <div className="flex flex-col gap-[8px]">
                 <Text typo="body-1-bold" color="sub">
-                  카테고리
+                  {t('profile.카테고리')}
                 </Text>
                 {totalQuizCount === 0 ? (
                   <Text typo="h4" color="caption">
-                    분석할 문제가 없어요
+                    {t('profile.분석할_문제가_없어요')}
                   </Text>
                 ) : (
                   <Text typo="h4">
                     <Text as={'span'} typo="h4" style={{ color: '#' + (maxCategory && maxCategory.categoryColor) }}>
                       {maxCategory && maxCategory.categoryName}
                     </Text>
-                    에 가장 {isPrevMonth ? '집중했어요' : '집중하고 있어요'}
+                    {t('profile.에_가장')} {isPrevMonth ? t('profile.집중했어요') : t('profile.집중하고_있어요')}
                   </Text>
                 )}
               </div>
@@ -250,15 +257,16 @@ const QuizAnalysisPage = () => {
             <div className="bg-base-1 rounded-[16px] px-[16px] pt-[20px] pb-[32px] flex-center flex-col gap-[24px]">
               <div className="w-full flex flex-col gap-[4px]">
                 <Text typo="body-1-bold" color="sub">
-                  유형
+                  {t('profile.유형')}
                 </Text>
                 {totalQuizCount === 0 ? (
                   <Text typo="h4" color="caption">
-                    분석할 문제가 없어요
+                    {t('profile.분석할_문제가_없어요')}
                   </Text>
                 ) : (
                   <Text typo="h4">
-                    {superiorQuizType} 문제 위주로 {isPrevMonth ? '풀었어요' : '푸는 편이에요'}
+                    {t('profile.유형_문제_위주로', { type: superiorQuizType })}{' '}
+                    {isPrevMonth ? t('profile.풀었어요') : t('profile.푸는_편이에요')}
                   </Text>
                 )}
               </div>
@@ -278,7 +286,7 @@ const QuizAnalysisPage = () => {
                         color={totalQuizCount === 0 ? 'caption' : 'secondary'}
                         className="w-[72px]"
                       >
-                        객관식
+                        {t('profile.객관식')}
                       </Text>
                     </div>
 
@@ -299,7 +307,7 @@ const QuizAnalysisPage = () => {
                         color={totalQuizCount === 0 ? 'caption' : 'secondary'}
                         className="w-[72px]"
                       >
-                        O/X
+                        {'O/X'}
                       </Text>
                     </div>
 

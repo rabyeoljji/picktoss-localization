@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useRef, useState } from 'react'
 
 import { IcClear, IcSearch } from '@/shared/assets/icon'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 import { Input } from '../input'
 
@@ -13,6 +14,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
   ({ value, onChange, clearKeyword, className, ...props }: SearchInputProps, ref) => {
     const [internalValue, setValue] = useState(value)
     const inputRef = useRef<HTMLInputElement>(null)
+    const { t } = useTranslation()
 
     const mergedRef = useMergedRef(ref, inputRef)
 
@@ -42,7 +44,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           ref={mergedRef}
           value={internalValue}
           className={cn('h-[40px] border-none bg-base-2 pl-1 focus:border-none placeholder:text-caption', className)}
-          placeholder="검색어를 입력해주세요"
+          placeholder={t('library.검색어를_입력해주세요')}
           right={
             internalValue && (
               <IcClear

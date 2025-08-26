@@ -11,6 +11,7 @@ import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { Link } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 type CombinedRecord =
   | {
@@ -31,26 +32,27 @@ type CombinedRecord =
 
 const QuizRecordPage = () => {
   const { data: recordData } = useGetQuizzesRecords()
+  const { t, currentLanguage } = useTranslation()
 
   const isEmpty = recordData?.quizRecords.length === 0
 
   return (
     <>
-      <Header className="bg-surface-2" left={<BackButton />} title="퀴즈 기록" />
+      <Header className="bg-surface-2" left={<BackButton />} title={t('profile.퀴즈_기록')} />
 
       <HeaderOffsetLayout className="px-[16px] h-full overflow-y-auto">
         {isEmpty ? (
           <div className="size-full pb-[108px] flex-center flex-col gap-[8px]">
-            <Text typo="subtitle-1-bold">아직 푼 퀴즈가 없어요</Text>
+            <Text typo="subtitle-1-bold">{t('profile.아직_푼_퀴즈가_없어요')}</Text>
             <Text typo="body-1-medium" color="sub">
-              내가 풀었던 퀴즈들이 여기에 기록돼요
+              {t('profile.내가_풀었던_퀴즈들이_여기에_기록돼요')}
             </Text>
           </div>
         ) : (
           <div className="pt-[28px] flex flex-col gap-[40px]">
             {recordData?.quizRecords.map((record) => {
               const date = new Date(record.solvedDate)
-              const formattedDate = format(date, 'M월 d일')
+              const formattedDate = format(date, currentLanguage === 'ko-KR' ? 'M월 d일' : 'MMMM do')
 
               // record.quizSets과 record.dailyQuizRecords를 CombinedRecord 타입으로 변환
               const combinedRecords: CombinedRecord[] = [
@@ -126,6 +128,8 @@ const DailyRecordItem = ({
   solvedDate: string
   quizCount: number
 }) => {
+  const { t } = useTranslation()
+
   return (
     <Link
       to="/account/quiz-record/daily/:dailyQuizRecordId"
@@ -135,7 +139,8 @@ const DailyRecordItem = ({
     >
       <IcDaily className="size-[24px] text-icon-secondary" />
       <Button size={'sm'} variant={'secondary2'} className="pointer-events-none">
-        {quizCount}문제
+        {quizCount}
+        {t('profile.문제')}
       </Button>
     </Link>
   )
@@ -154,6 +159,8 @@ const QuizSetRecordItem = ({
   totalQuizCount: number
   correctAnswerCount: number
 }) => {
+  const { t } = useTranslation()
+
   return (
     <Link
       to="/account/quiz-record/set/:quizSetId"
@@ -168,7 +175,10 @@ const QuizSetRecordItem = ({
         <Text typo="subtitle-2-bold">{name}</Text>
 
         <Text typo="body-1-medium" color="sub" className="flex items-center">
-          <span>{totalQuizCount}문제</span>
+          <span>
+            {totalQuizCount}
+            {t('profile.문제')}
+          </span>
 
           <div className="inline-block size-[4px] mx-[8px] bg-gray-100 rounded-full" />
 

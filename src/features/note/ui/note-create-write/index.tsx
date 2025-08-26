@@ -8,12 +8,14 @@ import { Text } from '@/shared/components/ui/text'
 import { Textarea } from '@/shared/components/ui/textarea'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 import { DOCUMENT_CONSTRAINTS } from '../../config'
 import { useCreateNoteContext } from '../../model/create-note-context'
 import './style.css'
 
 export const NoteCreateWrite = () => {
+  const { t } = useTranslation()
   const { content, setContent } = useCreateNoteContext()
   const { isKeyboardVisible } = useKeyboard()
   const [textareaHeight, setTextareaHeight] = useState(300)
@@ -118,7 +120,7 @@ export const NoteCreateWrite = () => {
     <div className="flex-1 relative">
       <Textarea
         ref={textAreaRef}
-        placeholder="여기를 탭하여 입력을 시작하세요"
+        placeholder={t('createQuiz.여기를_탭하여_입력을_시작하세요')}
         className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-top)]')}
         onChange={(e) => handleTextareaChange(e.target.value)}
         style={{
@@ -133,7 +135,7 @@ export const NoteCreateWrite = () => {
           onClick={handlePasteClick}
           className="absolute left-[16px] top-[77px]"
         >
-          복사한 텍스트 붙여넣기
+          {t('createQuiz.복사한_텍스트_붙여넣기')}
         </Button>
       )}
 
@@ -142,7 +144,7 @@ export const NoteCreateWrite = () => {
           <div className="flex items-center gap-1">
             <IcInfo className="size-4 text-icon-sub" />
             <Text typo="body-1-medium" color="caption">
-              최소 {DOCUMENT_CONSTRAINTS.CONTENT.MIN}자 이상 입력해주세요
+              {t('createQuiz.최소_자_이상_입력해주세요', { count: DOCUMENT_CONSTRAINTS.CONTENT.MIN })}
             </Text>
           </div>
           <Text typo="body-1-medium" color="sub">
