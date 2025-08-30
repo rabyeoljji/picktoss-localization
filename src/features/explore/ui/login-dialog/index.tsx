@@ -17,20 +17,20 @@ const LoginDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">{t('explore.로그인하고_전부_이용해요')}</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">{t('explore.login_dialog.title')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              {t('explore.픽토스_회원은_나만의_퀴즈를')} <br />
-              {t('explore.간편하게_만들고_저장할_수_있어요')}
+              {t('explore.login_dialog.message1')} <br />
+              {t('explore.login_dialog.message2')}
             </DialogDescription>
           </div>
         </div>
 
         <div className="w-full flex flex-col gap-[24px]">
           <Button onClick={() => router.push('/login')} className="w-full">
-            {t('explore.로그인')}
+            {t('explore.login_dialog.login_button')}
           </Button>
           <DialogClose asChild>
-            <button className=" text-sub">{t('explore.닫기')}</button>
+            <button className=" text-sub">{t('explore.login_dialog.close_button')}</button>
           </DialogClose>
         </div>
       </DialogContent>

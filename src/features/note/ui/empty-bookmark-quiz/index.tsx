@@ -14,16 +14,16 @@ const EmptyBookmarkQuiz = () => {
         <ImgBookmarkEmpty className="size-[120px]" />
 
         <div className="flex-center flex-col gap-[8px]">
-          <Text typo="subtitle-1-bold">{t('library.저장한_퀴즈가_없어요')}</Text>
+          <Text typo="subtitle-1-bold">{t('library.empty_bookmark_quiz.title')}</Text>
           <Text typo="body-1-medium" color="sub" className="text-center">
-            {t('library.픽토스에서_사람들이_만든')} <br />
-            {t('library.관심분야의_퀴즈를_저장해_보세요')}
+            {t('library.empty_bookmark_quiz.description')} <br />
+            {t('library.empty_bookmark_quiz.action')}
           </Text>
         </div>
       </div>
 
       <Button size={'md'} className="size-fit" onClick={() => router.replace('/explore')}>
-        {t('library.퀴즈_보러가기')}
+        {t('library.empty_bookmark_quiz.view_button')}
       </Button>
     </div>
   )

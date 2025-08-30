@@ -83,7 +83,7 @@ export const QuizLoadingDrawer = () => {
       completeAnimation()
       setTimeout(() => {
         setComplete(true)
-        toast.success(`${t('createQuiz.문서가_생성되었습니다')}.`)
+        toast.success(`${t('createQuiz.document_created_message')}.`)
       }, 500)
     }
   }, [quizSetId])
@@ -102,23 +102,23 @@ export const QuizLoadingDrawer = () => {
           <div className="flex-center flex-col">
             <ImgQuizEmpty className="w-[120px]" />
             <Text typo="subtitle-1-bold" color="primary" className="mt-4">
-              {t('createQuiz.퀴즈를_만드는_중_문제가_생겼어요')}
+              {t('createQuiz.quiz_loading_drawer.error_title')}
             </Text>
             <Text typo="body-1-medium" color="sub" className="mt-1">
-              {t('createQuiz.아래_내용을_확인하신_후_다시_시도해보세요')}
+              {t('createQuiz.quiz_loading_drawer.error_description')}
             </Text>
           </div>
 
           <div className="my-8 py-6 px-5 bg-surface-2 rounded-[12px]">
             <Text typo="body-1-bold" color="secondary">
-              {t('createQuiz.좋은_퀴즈를_위한_노트_Tip')}
+              {t('createQuiz.quiz_loading_drawer.tip_title')}
             </Text>
             <ul className="mt-2.5 list-disc pl-5">
               <Text as="li" typo="body-1-medium" color="sub">
-                {t('createQuiz.충분한_정보가_있는지_확인해주세요')}
+                {t('createQuiz.quiz_loading_drawer.tip_check_info')}
               </Text>
               <Text as="li" typo="body-1-medium" color="sub">
-                {t('createQuiz.같은_내용이_반복되지_않도록_해주세요')}
+                {t('createQuiz.quiz_loading_drawer.tip_avoid_repeat')}
               </Text>
             </ul>
           </div>
@@ -130,7 +130,7 @@ export const QuizLoadingDrawer = () => {
               resetProgressAnimation()
             }}
           >
-            {t('createQuiz.노트_수정하러_가기')}
+            {t('createQuiz.quiz_loading_drawer.edit_note_button')}
           </Button>
         </div>
       )
@@ -142,10 +142,10 @@ export const QuizLoadingDrawer = () => {
           <div className="flex-center flex-col">
             <ImgQuizcard className="w-[120px]" />
             <Text typo="h4" color="primary" className="mt-4">
-              {t('createQuiz.퀴즈_생성_완료')}!
+              {t('createQuiz.quiz_loading_drawer.complete_title')}!
             </Text>
             <Text typo="subtitle-2-medium" color="sub" className="mt-2">
-              {t('createQuiz.새로_생긴_문제를_지금_확인해보세요')}
+              {t('createQuiz.quiz_loading_drawer.complete_description')}
             </Text>
           </div>
 
@@ -162,7 +162,7 @@ export const QuizLoadingDrawer = () => {
                 })
               }}
             >
-              {t('createQuiz.시작하기')}
+              {t('createQuiz.quiz_loading_drawer.start_button')}
             </Button>
             <TextButton
               onClick={() => {
@@ -172,7 +172,7 @@ export const QuizLoadingDrawer = () => {
               size="lg"
               className="text-secondary mt-[24px]"
             >
-              {t('createQuiz.다음에')}
+              {t('createQuiz.quiz_loading_drawer.later_button')}
             </TextButton>
           </div>
         </div>
@@ -188,10 +188,10 @@ export const QuizLoadingDrawer = () => {
             progressOverride={progress}
             text={
               progress < 20
-                ? t('createQuiz.내용을_읽고_있어요')
+                ? t('createQuiz.quiz_loading_drawer.progress_reading')
                 : progress < 60
-                  ? t('createQuiz.퀴즈로_만들_내용을_고르고_있어요')
-                  : t('createQuiz.질문을_만들고_있어요')
+                  ? t('createQuiz.quiz_loading_drawer.progress_selecting')
+                  : t('createQuiz.quiz_loading_drawer.progress_creating')
             }
           />
         </div>

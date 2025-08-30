@@ -298,7 +298,7 @@ const HomePage = () => {
               color="sub"
               className="absolute right-1/2 translate-x-1/2 pt-[16px] whitespace-nowrap"
             >
-              {t('daily.당겨서_새_문제_가져오기')}
+              {t('daily.home_page.pull_to_refresh')}
             </Text>
           ) : (
             <div className="absolute right-1/2 translate-x-1/2 pt-[16px] flex items-center gap-2">
@@ -409,9 +409,9 @@ const HomePage = () => {
                 onOpenChange={setSettingDrawerOpen}
               />
               <Text typo="h4" color="sub" className="flex-center">
-                {t('daily.조건을_만족하는_퀴즈가_없습니다')}.
+                {t('daily.home_page.no_quizzes_message')}.
                 <br />
-                {t('daily.다른_조건으로_다시_시도해보세요')}.
+                {t('daily.home_page.try_different_conditions')}.
               </Text>
             </div>
           )}
@@ -435,7 +435,7 @@ const HomePage = () => {
           }}
         >
           <Text typo="subtitle-2-medium" color="sub" className="center">
-            {t('daily.새로운_퀴즈_만들기')}
+            {t('daily.home_page.create_quiz_button')}
           </Text>
           <button
             onClick={(e) => {
@@ -464,17 +464,17 @@ const HomePage = () => {
           <div className="pt-5">
             <ImgStar className="size-[120px] mx-auto" />
             <Text typo="h2" className="mt-4 text-center">
-              {t('daily.연속')}{' '}
+              {t('daily.alert_drawer.title1')}{' '}
               <span className="text-accent">
-                {t('daily.일', { count: dailyQuizRecord?.consecutiveSolvedDailyQuizDays })}
+                {t('daily.alert_drawer.title2', { count: dailyQuizRecord?.consecutiveSolvedDailyQuizDays })}
               </span>{' '}
-              {t('daily.완료')}
+              {t('daily.alert_drawer.title3')}
             </Text>
             <div className="mt-2 pb-[32px] border-b border-divider">
               <Text typo="body-1-medium" color="sub" className="text-center">
-                {t('daily.매일_잊지_않고_퀴즈를_풀_수_있어요')}
+                {t('daily.alert_drawer.description1')}
                 <br />
-                {t('daily.5일_연속_완료할_때마다_20개')}
+                {t('daily.alert_drawer.description2')}
               </Text>
             </div>
             {dailyQuizRecord?.consecutiveSolvedDailyQuizDays !== 0 && (
@@ -528,7 +528,9 @@ const HomePage = () => {
                     </div>
 
                     <Text typo="body-1-bold" color="caption">
-                      {index === 4 ? t('daily.개', { count: 20 }) : t('daily.개', { count: 5 })}
+                      {index === 4
+                        ? t('daily.alert_drawer.star_count', { count: 20 })
+                        : t('daily.alert_drawer.star_count', { count: 5 })}
                     </Text>
                   </div>
                 ))}
@@ -540,7 +542,7 @@ const HomePage = () => {
                   setRewardDrawerOpen(false)
                 }}
               >
-                {t('daily.확인')}
+                {t('daily.alert_drawer.confirm_button')}
               </Button>
             </div>
           </div>
@@ -556,16 +558,17 @@ const HomePage = () => {
             </div>
           </div>
           <Text typo="h4" className="mt-4 text-center">
-            {t('daily.환영해요')}, {t('daily.님', { name: user?.name })}
+            {t('daily.home_page.welcome_message')}, {t('daily.home_page.user_name', { name: user?.name })}
           </Text>
           <Text typo="subtitle-2-medium" color="sub" className="text-center mt-2">
-            {t('daily.가입_기념으로_퀴즈를')}
+            {t('daily.home_page.signup_gift_message')}
             <br />
-            {t('daily.생성할_수_있는_별을')} <span className="text-accent">{t('daily.개', { count: 200 })}</span>{' '}
-            {t('daily.드려요')}
+            {t('daily.home_page.available_stars_message')}{' '}
+            <span className="text-accent">{t('daily.home_page.stars_unit', { count: 200 })}</span>{' '}
+            {t('daily.home_page.gift_message')}
           </Text>
           <Button onClick={() => setShouldShowOnboardingReward(false)} className="mt-[32px]">
-            {t('daily.받기')}
+            {t('daily.home_page.receive_button')}
           </Button>
         </DialogContent>
       </Dialog>
@@ -590,7 +593,7 @@ const IncorrectAnswerBody = ({
       <div className="flex items-center justify-start gap-3 w-fit">
         <ImgRoundIncorrect className="size-[48px]" />
         <Text typo="h2" color="incorrect">
-          {t('daily.오답')}
+          {t('daily.home_page.incorrect_answer')}
         </Text>
       </div>
 
@@ -600,7 +603,7 @@ const IncorrectAnswerBody = ({
 
       <div className="grid gap-3">
         <Text typo="subtitle-1-bold">
-          {t('daily.정답')}:{' '}
+          {t('daily.home_page.correct_answer')}:{' '}
           {currQuiz.quizType === 'MULTIPLE_CHOICE' ? currQuiz.answer : currQuiz.answer === 'correct' ? 'O' : 'X'}
         </Text>
         <Text typo="body-1-medium" as="p" color="secondary">
@@ -608,7 +611,7 @@ const IncorrectAnswerBody = ({
         </Text>
         <div className="mt-[24px] flex items-center">
           <Text typo="body-1-medium" color="sub">
-            {t('daily.출처')}
+            {t('daily.home_page.source')}
           </Text>
 
           <div className="h-[12px] w-px bg-gray-100 mx-2" />
@@ -634,7 +637,7 @@ const IncorrectAnswerBody = ({
           moveToNextQuiz(currQuiz!)
         }}
       >
-        {t('daily.문제_전환')}
+        {t('daily.home_page.switch_question')}
       </Button>
     </>
   )
@@ -662,19 +665,19 @@ const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChang
       <DrawerContent height="md" hasHandle={false} className="flex flex-col items-center">
         <DrawerHeader className="w-full flex-center flex-col gap-[8px] py-[10px]">
           <Text typo="h4" className="text-center">
-            {t('daily.푸시_알림_허용_안내')}
+            {t('daily.home_page.notification_permission_guide')}
           </Text>
           <Text typo="subtitle-2-medium" color="sub" className="text-center">
-            {t('daily.다음_단계에서_알림을_허용하시면')}
+            {t('daily.home_page.notification_permission_message')}
             <br />
-            {t('daily.매일_잊지_않고_퀴즈를_풀_수_있어요')}
+            {t('daily.alert_drawer.description1')}
           </Text>
         </DrawerHeader>
 
         <ImgPush height={200} width={301.25} />
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
-          <Button onClick={clickNotification}>{t('daily.설정하기')}</Button>
+          <Button onClick={clickNotification}>{t('daily.home_page.setup_button')}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>

@@ -36,13 +36,13 @@ const MonthGraphContainer = ({ quizDataList, today }: Props) => {
           <div className="flex items-center gap-[4px]">
             <div className="size-[12px] bg-base-3 rounded-[4px]" />
             <Text as={'span'} typo="caption-medium" color="sub">
-              {t('profile.문제')}
+              {t('profile.month_graph_container.problem')}
             </Text>
           </div>
           <div className="flex items-center gap-[4px]">
             <div className="size-[12px] bg-orange rounded-[4px]" />
             <Text as={'span'} typo="caption-medium" color="sub">
-              {t('profile.정답')}
+              {t('profile.month_graph_container.correct_answer')}
             </Text>
           </div>
         </div>
@@ -59,7 +59,7 @@ const MonthGraphContainer = ({ quizDataList, today }: Props) => {
 
             const renderDateText =
               data.date === todayDateString
-                ? t('profile.오늘')
+                ? t('profile.month_graph_container.today')
                 : isAdjacentDate(data.date)
                   ? ''
                   : format(data.date, 'M.d')

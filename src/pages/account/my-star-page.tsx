@@ -47,7 +47,7 @@ const MyStarPage = () => {
 
   return (
     <>
-      <Header left={<BackButton />} title={t('profile.나의_별')} className="bg-surface-2" />
+      <Header left={<BackButton />} title={t('profile.my_star_page.my_star')} className="bg-surface-2" />
 
       <HeaderOffsetLayout className="h-full overflow-y-auto pb-[100px]">
         <div className="pt-[20px] px-[16px]">
@@ -56,18 +56,18 @@ const MyStarPage = () => {
               <div className="flex items-center justify-between">
                 <div className="flex flex-col gap-[4px]">
                   <Text typo="h1" color="accent">
-                    {t('profile.일', { count: consecutiveDailyQuiz })}
+                    {t('profile.my_star_page.days', { count: consecutiveDailyQuiz })}
                   </Text>
                   <Text typo="subtitle-2-bold" color="secondary">
-                    {t('profile.연속으로_별_획득_중')}
+                    {t('profile.my_star_page.consecutive_star_earning')}
                   </Text>
                 </div>
                 <ImgStar width={80} height={80} />
               </div>
 
               <Text typo="body-1-medium" color="sub">
-                {t('profile.매일_데일리_퀴즈를_10문제_풀면_별을_5개_받아요')} <br />
-                {t('profile.5일_연속_완료할_때마다_20개')}
+                {t('profile.my_star_page.daily_quiz_reward_description1')} <br />
+                {t('profile.my_star_page.daily_quiz_reward_description2')}
               </Text>
             </div>
 
@@ -75,9 +75,9 @@ const MyStarPage = () => {
               <div className="py-[10.5px] px-[16px] bg-surface-3 text-secondary rounded-[12px] flex items-center justify-between">
                 <div className="flex items-center gap-[4px]">
                   <ImgStar width={20} height={20} />
-                  <Text typo="body-1-bold">{t('profile.현재_사용_가능한_별')}</Text>
+                  <Text typo="body-1-bold">{t('profile.my_star_page.current_available_stars')}</Text>
                 </div>
-                <Text typo="subtitle-2-bold">{t('profile.개', { count: user?.star })}</Text>
+                <Text typo="subtitle-2-bold">{t('profile.my_star_page.star_count', { count: user?.star })}</Text>
               </div>
 
               <div className="flex-center flex-col gap-[24px]">
@@ -93,22 +93,26 @@ const MyStarPage = () => {
 
                 <div className="w-full bg-surface-1 rounded-[16px] py-[16px] flex-center flex-col gap-[16px]">
                   <Text typo="subtitle-1-bold" color="secondary">
-                    {t('profile.보너스_보상까지')}{' '}
+                    {t('profile.my_star_page.bonus_reward_until')}{' '}
                     <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                      {t('profile.일', { count: 5 - (checkRewardConsecutive === 5 ? 0 : checkRewardConsecutive) })}
+                      {t('profile.my_star_page.days', {
+                        count: 5 - (checkRewardConsecutive === 5 ? 0 : checkRewardConsecutive),
+                      })}
                     </Text>
                   </Text>
 
                   <div className="flex items-center gap-[20px]">
                     {Array.from({ length: 5 }).map((_, index) => (
-                      <div className="flex-center flex-col gap-[4px]">
+                      <div key={index} className="flex-center flex-col gap-[4px]">
                         {index + 1 <= checkRewardConsecutive ? (
                           <ImgStreakChecked width={40} height={40} />
                         ) : (
                           <ImgStreakMono1 width={40} height={40} />
                         )}
                         <Text typo="body-1-bold" color="sub">
-                          {index === 4 ? t('profile.개', { count: 20 }) : t('profile.개', { count: 5 })}
+                          {index === 4
+                            ? t('profile.my_star_page.star_count', { count: 20 })
+                            : t('profile.my_star_page.star_count', { count: 5 })}
                         </Text>
                       </div>
                     ))}
@@ -126,14 +130,14 @@ const MyStarPage = () => {
                   >
                     <div className="flex flex-col gap-[4px]">
                       <Text typo="body-1-medium" color="secondary">
-                        {t('profile.픽토스_초대장_보내기')}
+                        {t('profile.my_star_page.send_invitation')}
                       </Text>
                       <Text typo="subtitle-1-bold">
-                        {t('profile.초대할_때마다')}{' '}
+                        {t('profile.my_star_page.every_invitation')}{' '}
                         <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                          {t('profile.별_50개')}
+                          {t('profile.my_star_page.star_50')}
                         </Text>{' '}
-                        {t('profile.받아요')}
+                        {t('profile.my_star_page.receive')}
                       </Text>
                     </div>
                     <ImgInviteStar width={56} height={56} />
@@ -148,7 +152,7 @@ const MyStarPage = () => {
         <Link to="/account/star-history" className="w-full p-[16px] mt-[16px] flex items-center justify-between">
           <div className="flex items-center gap-[8px]">
             <IcList className="size-[20px]" />
-            <Text typo="subtitle-2-medium">{t('profile.별_내역')}</Text>
+            <Text typo="subtitle-2-medium">{t('profile.my_star_page.star_history')}</Text>
           </div>
           <IcChevronRight className="size-[16px]" />
         </Link>

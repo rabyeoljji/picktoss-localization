@@ -25,15 +25,15 @@ type SortOption = 'ALL' | 'WITHDRAWAL' | 'DEPOSIT'
 const sortOption = [
   {
     key: 'ALL',
-    label: 'profile.전체',
+    label: 'profile.star_history_page.all',
   },
   {
     key: 'WITHDRAWAL',
-    label: 'profile.사용',
+    label: 'profile.star_history_page.used',
   },
   {
     key: 'DEPOSIT',
-    label: 'profile.획득',
+    label: 'profile.star_history_page.earned',
   },
 ]
 
@@ -54,7 +54,7 @@ const StarHistoryPage = () => {
             <DropdownMenuTrigger asChild>
               <button type="button" className="h-fit w-[56px] flex items-center gap-1 cursor-pointer">
                 <Text typo="subtitle-2-bold" color="secondary">
-                  {t(sortOption.find((option) => option.key === sort)?.label ?? 'profile.전체')}
+                  {t(sortOption.find((option) => option.key === sort)?.label ?? 'profile.star_history_page.all')}
                 </Text>
                 <IcChevronDown className="size-[16px] text-icon-sub" />
               </button>
@@ -121,7 +121,7 @@ const StarHistoryItem = ({
 
       <Text typo="subtitle-1-bold" color={type === 'DEPOSIT' ? 'accent' : 'secondary'}>
         {type === 'WITHDRAWAL' && '-'}
-        {t('profile._개', { count: amount })}
+        {t('profile.star_history_page.star_count', { count: amount })}
       </Text>
     </div>
   )

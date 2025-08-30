@@ -194,7 +194,7 @@ export const ProgressQuizPage = () => {
         submitQuizResults()
       } else {
         // 마지막 문제의 결과가 없는 경우 - 이 경우는 발생하지 않아야 함
-        console.warn(t('progressQuiz.마지막_문제의_결과가_없습니다'))
+        console.warn('마지막 문제의 결과가 없습니다')
       }
       return
     }
@@ -245,14 +245,14 @@ export const ProgressQuizPage = () => {
       setQuizResultCardDatas(quizResultCardDatas)
     } catch (error) {
       console.error('퀴즈 결과 제출 실패:', error)
-      alert(t('progressQuiz.퀴즈_결과_제출에_실패했습니다'))
+      alert(t('progressQuiz.result_error'))
     } finally {
       setIsSubmitting(false)
     }
   }
 
   if (!quizSetData?.quizzes) {
-    return <div className="center">{t('progressQuiz.Loading')}...</div>
+    return <div className="center">{t('progressQuiz.loading')}...</div>
   }
 
   const currentQuiz = quizSetData.quizzes[params.quizIndex]
@@ -400,14 +400,14 @@ const QuizSettingDrawer = ({
       open={isOpen}
       onOpenChange={handleOpenChange}
       trigger={<IcControl role="button" className="size-6 ml-auto cursor-pointer" />}
-      title={t('progressQuiz.퀴즈_설정')}
+      title={t('progressQuiz.quiz_settings_drawer.title')}
       hasClose={false}
       height="md"
       body={
         <div className="py-8 grid gap-5">
           <div className="flex items-center justify-between">
             <Text typo="subtitle-2-medium" color="primary">
-              {t('progressQuiz.문제_바로_넘기기')}
+              {t('progressQuiz.quiz_settings_drawer.skip_question')}
             </Text>
             <Switch
               checked={tempSettings.autoNext}
@@ -416,7 +416,7 @@ const QuizSettingDrawer = ({
           </div>
           <div className="flex items-center justify-between">
             <Text typo="subtitle-2-medium" color="primary">
-              {t('progressQuiz.소요시간_숨기기')}
+              {t('progressQuiz.quiz_settings_drawer.hide_time')}
             </Text>
             <Switch
               checked={tempSettings.hideTimeSpent}
@@ -427,7 +427,7 @@ const QuizSettingDrawer = ({
       }
       footer={
         <div className="h-[114px] pt-[14px]">
-          <Button onClick={applySettings}>{t('progressQuiz.적용하기')}</Button>
+          <Button onClick={applySettings}>{t('progressQuiz.quiz_settings_drawer.apply_button')}</Button>
         </div>
       }
     />
@@ -450,7 +450,9 @@ const ResultPeekingDrawer = ({
   const [open, setOpen] = useState(true)
   const { t } = useTranslation()
 
-  const buttonText = isLastQuestion ? t('progressQuiz.완료') : t('progressQuiz.다음')
+  const buttonText = isLastQuestion
+    ? t('progressQuiz.quiz_page.complete_button')
+    : t('progressQuiz.quiz_page.next_button')
   const isDisabled = isSubmitting && isLastQuestion
 
   return (
@@ -472,12 +474,12 @@ const ResultPeekingDrawer = ({
             <div className="flex items-center gap-3">
               <ImgRoundCorrect className="size-[48px]" />
               <Text typo="h2" color="correct">
-                {t('progressQuiz.정답')}
+                {t('progressQuiz.quiz_page.correct_answer')}
               </Text>
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                {t('progressQuiz.정답')}:{' '}
+                {t('progressQuiz.quiz_page.correct_answer')}:{' '}
                 {currentQuiz.quizType === 'MULTIPLE_CHOICE'
                   ? currentQuiz.answer
                   : currentQuiz.answer === 'correct'
@@ -494,12 +496,12 @@ const ResultPeekingDrawer = ({
             <div className="flex items-center gap-3">
               <ImgRoundIncorrect className="size-[48px]" />
               <Text typo="h2" color="incorrect">
-                {t('progressQuiz.오답')}
+                {t('progressQuiz.quiz_page.incorrect_answer')}
               </Text>
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                {t('progressQuiz.정답')}:{' '}
+                {t('progressQuiz.quiz_page.correct_answer')}:{' '}
                 {currentQuiz.quizType === 'MULTIPLE_CHOICE'
                   ? currentQuiz.answer
                   : currentQuiz.answer === 'correct'
@@ -536,10 +538,10 @@ const ExitDialog = ({
           <ImgExit className="size-[120px]" />
           <div className="grid gap-2">
             <Text typo="h4" color="primary">
-              {t('progressQuiz.퀴즈에서_나가시겠어요')}?
+              {t('progressQuiz.quiz_page.exit_confirm_title')}
             </Text>
             <Text typo="subtitle-2-medium" color="sub">
-              {t('progressQuiz.현재까지_푼_퀴즈는_기록되지_않아요')}
+              {t('progressQuiz.quiz_page.exit_confirm_message')}
             </Text>
           </div>
         </div>
@@ -556,8 +558,8 @@ const ExitDialog = ({
             }
           }}
           onSecondaryButtonClick={() => setExitDialogOpen(false)}
-          primaryButtonLabel={t('progressQuiz.나가기')}
-          secondaryButtonLabel={t('progressQuiz.계속하기')}
+          primaryButtonLabel={t('progressQuiz.quiz_page.exit_button')}
+          secondaryButtonLabel={t('progressQuiz.quiz_page.continue_button')}
         />
       </DialogContent>
     </Dialog>

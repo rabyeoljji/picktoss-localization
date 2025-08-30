@@ -88,18 +88,18 @@ const OnBoardingPage = () => {
           <div className="w-full max-w-[324px] inline-flex flex-col justify-start items-start gap-3">
             <div className="flex flex-col justify-start items-start gap-1">
               <Text typo="h2" color="sub" className="flex-center text-center justify-start leading-9">
-                {t('daily.님', { name: user?.name })}
+                {t('etc.onboarding.user_name', { name: user?.name })}
               </Text>
               <Text typo="h2" className="text-center justify-start leading-9">
-                {t('daily.현재_어떤_분야를_주로')}
+                {t('etc.onboarding.current_field_message')}
               </Text>
               <Text typo="h2" className="text-center justify-start leading-9">
-                {t('daily.공부하고_있나요')}
+                {t('etc.onboarding.studying_message')}
               </Text>
             </div>
             <div className="self-stretch flex flex-col justify-start items-start gap-2">
               <Text typo="subtitle-2-medium" color="sub" className="self-stretch justify-start leading-normal">
-                {t('daily.가장_자주_풀고_싶은_분야를_선택해주세요')}
+                {t('etc.onboarding.select_field_message')}
               </Text>
             </div>
           </div>
@@ -153,7 +153,7 @@ const OnBoardingPage = () => {
           <FixedBottom className="bg-surface-2">
             <div className="pb-[24px]">
               <Button type="submit" disabled={!isValid}>
-                {t('daily.완료')}
+                {t('etc.onboarding.complete_button')}
               </Button>
             </div>
           </FixedBottom>

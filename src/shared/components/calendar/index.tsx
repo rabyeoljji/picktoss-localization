@@ -155,16 +155,16 @@ export const Calendar = ({
         today={today}
         mode="single"
         formatters={{
-          formatCaption: (Date: Date) => `${format(Date, 'M')}${t('profile.월')}`,
+          formatCaption: (Date: Date) => t(`profile.calendar.month.${format(Date, 'M')}`),
           formatWeekdayName: (Date: Date) => {
             const weekdays = [
-              t('profile.요일_일'),
-              t('profile.요일_월'),
-              t('profile.요일_화'),
-              t('profile.요일_수'),
-              t('profile.요일_목'),
-              t('profile.요일_금'),
-              t('profile.요일_토'),
+              t('profile.calendar.sunday'),
+              t('profile.calendar.monday'),
+              t('profile.calendar.tuesday'),
+              t('profile.calendar.wednesday'),
+              t('profile.calendar.thursday'),
+              t('profile.calendar.friday'),
+              t('profile.calendar.saturday'),
             ]
             return weekdays[Date.getDay()]
           },

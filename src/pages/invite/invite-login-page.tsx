@@ -21,11 +21,11 @@ import { setLocalStorageItem } from '@/shared/lib/storage/lib'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 const exampleQuestions = [
-  { emoji: '🪶', question: '숏 전략은 매수하는 전략이다' },
-  { emoji: '👠', question: '프로세스는 무엇인가요?' },
-  { emoji: '💡', question: '롤스는 무엇을 주장했나요?' },
-  { emoji: '🚩', question: '미토콘드리아에 대한 설명 중 틀린 것은?' },
-  { emoji: '🧠', question: '참여가 늘어나는 이유는 무엇인가요?' },
+  { emoji: '🪶', question: 'etc.login_page.short_strategy_question' },
+  { emoji: '👠', question: 'etc.login_page.process_question' },
+  { emoji: '💡', question: 'etc.login_page.rawls_question' },
+  { emoji: '🚩', question: 'etc.login_page.mitochondria_question' },
+  { emoji: '🧠', question: 'etc.login_page.participation_question' },
 ]
 
 const InviteLoginPage = () => {
@@ -109,7 +109,7 @@ const InviteLoginPage = () => {
                     <QuestionBox
                       key={index}
                       emoji={item.emoji}
-                      question={item.question}
+                      question={t(item.question)}
                       color="dark"
                       className="mr-[8px]"
                     />
@@ -120,7 +120,7 @@ const InviteLoginPage = () => {
                     <QuestionBox
                       key={index}
                       emoji={item.emoji}
-                      question={item.question}
+                      question={t(item.question)}
                       color="dark"
                       className="mr-[8px]"
                     />
@@ -137,25 +137,25 @@ const InviteLoginPage = () => {
 
               <div className="text-center">
                 <Text typo="caption-medium" color="caption">
-                  {t('profile.로그인_시')}{' '}
+                  {t('etc.login_page.login_message')}{' '}
                   <ReactRouterLink
                     to="https://picktoss.notion.site/1209d818f56080fbb469e82def758e9c?pvs=4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
                   >
-                    {t('profile.개인정보보호_정책')}
+                    {t('etc.login_page.privacy_policy')}
                   </ReactRouterLink>{' '}
-                  {t('profile.및')}{' '}
+                  {t('etc.login_page.and')}{' '}
                   <ReactRouterLink
                     to="https://picktoss.notion.site/1209d818f560809aad11c5b64020d735?pvs=4"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
                   >
-                    {t('profile.서비스_이용약관')}
+                    {t('etc.login_page.terms_of_service')}
                   </ReactRouterLink>
-                  {t('profile.에_동의하는_것으로_간주하며_서비스_이용을_위해_이메일과_이름을_수집합니다')}
+                  {t('etc.login_page.agreement_message')} <br /> {t('etc.login_page.agreement_description')}
                 </Text>
               </div>
             </div>
@@ -172,7 +172,7 @@ const LoadingSpinner = () => {
     <div className="size-full flex-center flex-col">
       <div className="w-12 h-12 border-4 border-gray-200 border-t-primary rounded-full animate-spin"></div>
       <Text typo="body-1-medium" color="sub" className="mt-4">
-        {t('profile.로그인_중')}
+        {t('etc.login_page.logging_in_message')}
       </Text>
     </div>
   )
@@ -187,7 +187,7 @@ const GoogleLoginButton = ({ ...props }) => {
     >
       <ImgRoundGoogle className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
-        {t('profile.Google로_시작하기')}
+        {t('etc.login_page.google_start_button')}
       </Text>
     </button>
   )
@@ -199,7 +199,7 @@ const KakaoLoginButton = ({ ...props }) => {
     <button className="h-[48px] relative rounded-full flex-center bg-[#FFE45F] active:opacity-90" {...props}>
       <ImgRoundKakao className="absolute size-[36px] left-2 bottom-1/2 translate-y-1/2" />
       <Text typo="button-3" color="gray-800">
-        {t('profile.카카오로_시작하기')}
+        {t('etc.login_page.kakao_start_button')}
       </Text>
     </button>
   )

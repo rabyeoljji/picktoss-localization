@@ -31,25 +31,25 @@ export const TabNavigation = ({ activeTab = 'DAILY', className }: TabNavigationP
   const navItems = [
     {
       enum: 'DAILY',
-      label: t('etc.데일리'),
+      label: t('etc.tab_navigation.daily_label'),
       to: RoutePath.root,
       icon: <IcDaily />,
     },
     {
       enum: 'EXPLORE',
-      label: t('etc.탐험'),
+      label: t('etc.tab_navigation.explore_label'),
       to: RoutePath.explore,
       icon: <IcExplore />,
     },
     {
       enum: 'LIBRARY',
-      label: t('etc.도서관'),
+      label: t('etc.tab_navigation.library_label'),
       to: RoutePath.library,
       icon: <IcLibrary />,
     },
     {
       enum: 'MY',
-      label: t('etc.마이'),
+      label: t('etc.tab_navigation.my_label'),
       to: RoutePath.account,
       icon: <IcMy />,
     },

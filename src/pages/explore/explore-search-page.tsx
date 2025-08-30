@@ -81,7 +81,7 @@ const ExploreSearchPage = () => {
                 value={inputValue}
                 onChange={onChangeKeyword}
                 clearKeyword={handleClearKeyword}
-                placeholder={t('explore.퀴즈_제목_내용_검색')}
+                placeholder={t('explore.explore_search_page.search_placeholder')}
               />
             </form>
 
@@ -96,9 +96,9 @@ const ExploreSearchPage = () => {
 
         {!showRecentKeywords && !isLoading && !hasSearchResults && !!queryKeyword && (
           <div className="size-full flex-center flex-col gap-[8px] pb-[108px]">
-            <Text typo="subtitle-1-bold">{t('explore.검색_결과가_없어요')}</Text>
+            <Text typo="subtitle-1-bold">{t('explore.explore_search_page.no_results_title')}</Text>
             <Text typo="body-1-medium" color="sub">
-              {t('explore.다른_키워드를_입력해보세요')}
+              {t('explore.explore_search_page.try_different_keywords')}
             </Text>
           </div>
         )}
@@ -106,7 +106,8 @@ const ExploreSearchPage = () => {
         {!showRecentKeywords && !isLoading && hasSearchResults && (
           <div className="h-[calc(100%-48px)] flex flex-col px-[16px] pt-[16px] overflow-y-auto">
             <Text typo="body-1-medium">
-              {t('explore.결과')} <span className="text-accent">{searchResults.length}</span>
+              {t('explore.explore_search_page.results_count')}{' '}
+              <span className="text-accent">{searchResults.length}</span>
             </Text>
 
             <div className="h-fit flex flex-col pb-[16px]">

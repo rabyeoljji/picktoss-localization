@@ -52,7 +52,7 @@ const EmptyNotification = () => {
     <div className="flex-center size-full flex-col gap-[16px] pb-[107px]">
       <ImgMegaphoneEmpty width={120} height={120} />
       <Text typo="body-1-medium" color="sub">
-        {t('profile.아직_받은_알림이_없어요')}
+        {t('profile.notification_config_page.no_notifications')}
       </Text>
     </div>
   )

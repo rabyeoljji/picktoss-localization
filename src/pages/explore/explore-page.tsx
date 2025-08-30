@@ -210,7 +210,7 @@ const CategoryTab = ({ hideHeader }: { hideHeader: boolean }) => {
             onClick={() => setCategory(0)}
             className={cn('px-[13.5px]')}
           >
-            {t('explore.전체')}
+            {t('explore.explore_page.all_button')}
           </Chip>
 
           {/* Chip 요소들 */}
@@ -277,7 +277,7 @@ const CreateQuizButton = ({ hide }: { hide: boolean }) => {
       }}
     >
       <Text typo="subtitle-2-medium" color="sub" className="center">
-        {t('explore.새로운_퀴즈_만들기')}
+        {t('explore.explore_page.create_quiz_button')}
       </Text>
       <button
         onClick={(e) => {
@@ -357,9 +357,9 @@ const AppDownloadBanner = ({
         </svg>
         <div>
           <Text typo="body-2-medium" color="sub">
-            {t('explore.앱에서_매일_간편하게_퀴즈를_풀어보세요')}
+            {t('explore.explore_page.app_download_message')}
           </Text>
-          <Text typo="subtitle-2-bold">{t('explore.픽토스_앱_다운로드')}</Text>
+          <Text typo="subtitle-2-bold">{t('explore.explore_page.app_download_title')}</Text>
         </div>
       </div>
       <button
@@ -388,17 +388,17 @@ const DesktopDownloadQRDrawer = ({ open, onOpenChange }: { open: boolean; onOpen
 
         <DrawerHeader className="flex-center flex-col gap-[8px]">
           <Text typo="subtitle-1-bold" color="sub" className="text-center">
-            {t('explore.픽토스_앱_다운로드')}
+            {t('explore.explore_page.app_download_button')}
           </Text>
           <Text typo="h3" className="text-center">
-            {t('explore.스토어_방문_없이_3초만에')} <br />
-            {t('explore.픽토스에서_매일_성장해보세요')}
+            {t('explore.explore_page.quick_start_message')} <br />
+            {t('explore.explore_page.growth_message')}
           </Text>
         </DrawerHeader>
 
         <div className="flex-center pt-[20px] pb-[32px]">
           <Text typo="subtitle-2-medium" color="accent">
-            {t('explore.휴대폰으로_QR코드를_촬영해주세요')}
+            {t('explore.explore_page.qr_scan_message')}
           </Text>
         </div>
 

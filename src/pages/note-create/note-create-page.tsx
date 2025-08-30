@@ -51,8 +51,8 @@ const NoteCreateHeader = () => {
         <div className="center">
           <Tabs value={documentType} onValueChange={(documentType) => setDocumentType(documentType as DocumentType)}>
             <TabsList className="w-[210px]">
-              <TabsTrigger value="FILE">{t('createQuiz.파일')}</TabsTrigger>
-              <TabsTrigger value="TEXT">{t('createQuiz.텍스트')}</TabsTrigger>
+              <TabsTrigger value="FILE">{t('createQuiz.note_create_page.file_tab')}</TabsTrigger>
+              <TabsTrigger value="TEXT">{t('createQuiz.note_create_page.text_tab')}</TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
@@ -78,12 +78,12 @@ const NoteCreateContent = () => {
       <div className="h-[48px] bg-surface-2 flex items-center justify-between px-4 sticky top-[54px]">
         <div className="flex gap-1 items-end">
           <Text typo="body-1-medium" color="secondary">
-            {t('createQuiz.퀴즈_공개')}
+            {t('createQuiz.note_create_page.quiz_public_switch')}
           </Text>
           <Text typo="body-2-medium" color="caption">
             {isPublic
-              ? t('createQuiz.다른_사람들도_퀴즈를_풀어볼_수_있어요')
-              : t('createQuiz.이_퀴즈를_나만_볼_수_있어요')}
+              ? t('createQuiz.note_create_page.public_description')
+              : t('createQuiz.note_create_page.private_description')}
           </Text>
         </div>
         <Switch checked={isPublic} onCheckedChange={setIsPublic} />
@@ -102,11 +102,11 @@ const NoteCreateContent = () => {
             <div className="flex items-center gap-2 w-full">
               <div className="shrink-0">
                 <Text typo="body-2-medium" color="sub">
-                  {t('createQuiz.사용_가능_별')}
+                  {t('createQuiz.note_create_page.available_stars')}
                 </Text>
                 <Text typo="subtitle-2-bold" color="primary">
                   {user?.star.toLocaleString('ko-kr')}
-                  {t('createQuiz.개')}
+                  {t('createQuiz.note_create_page.stars_unit')}
                 </Text>
               </div>
               <div className="flex-1">
@@ -132,7 +132,7 @@ const NoteCreateContent = () => {
                     })
                   }}
                 >
-                  {t('createQuiz.생성하기')}
+                  {t('createQuiz.note_create_page.create_button')}
                 </Button>
               </div>
               <LackingStarDrawer
@@ -147,11 +147,11 @@ const NoteCreateContent = () => {
                 <IcInfo className="size-4 text-icon-sub" />
                 {content.length < DOCUMENT_CONSTRAINTS.CONTENT.MIN ? (
                   <Text typo="body-1-medium" color="caption">
-                    {t('createQuiz.최소_자_이상_입력해주세요', { count: DOCUMENT_CONSTRAINTS.CONTENT.MIN })}
+                    {t('createQuiz.note_create_page.min_length_error', { count: DOCUMENT_CONSTRAINTS.CONTENT.MIN })}
                   </Text>
                 ) : (
                   <Text typo="body-1-medium" color="caption">
-                    {t('createQuiz.퀴즈를_만들_수_있어요')}
+                    {t('createQuiz.note_create_page.can_create_message')}
                   </Text>
                 )}
               </div>

@@ -17,8 +17,8 @@
     "svg": "pnpm modify-svg && pnpm generate-icons",
     "generate-images": "node src/shared/config/scripts/generate-images.cjs",
     "img": "pnpm generate-images",
-    "upload:i18n": "node src/shared/locales/scripts/upload.cjs",
-    "download:i18n": "node src/shared/locales/scripts/download.cjs"
+    "upload-translation": "node src/shared/locales/scripts/upload.cjs",
+    "download-translation": "node src/shared/locales/scripts/download.cjs"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "^2.17.6",

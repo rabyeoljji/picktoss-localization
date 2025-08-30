@@ -202,15 +202,15 @@ const ExploreCard = ({
           })
 
           if (!isCurrentlyBookmarked) {
-            toast(t('explore.퀴즈가_도서관에_저장되었어요'), {
+            toast(t('explore.quiz_list_container.bookmark_success_message'), {
               icon: <IcBookmarkFilled className="size-4" />,
               action: {
-                label: t('explore.보러가기'),
+                label: t('explore.quiz_list_container.view_button'),
                 onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
               },
             })
           } else {
-            toast(t('explore.북마크가_해제되었어요'))
+            toast(t('explore.quiz_list_container.bookmark_removed_message'))
           }
         },
       },
@@ -284,15 +284,15 @@ const ShareCard = ({ notPublicCount }: { notPublicCount: number }) => {
 
       <div className="flex-center flex-col">
         <Text typo="h4" className="text-center">
-          {t('explore.사람들과_나의_지식을_공유해보세요')}
+          {t('explore.quiz_list_container.share_knowledge_message')}
         </Text>
 
         <Text typo="subtitle-2-medium" color="secondary" className="">
-          {t('explore.공개할_수_있는_퀴즈가')}{' '}
+          {t('explore.quiz_list_container.available_quizzes_message')}{' '}
           <Text as={'span'} typo="body-1-medium" color="accent">
-            {t('explore.개', { count: notPublicCount })}
+            {t('explore.quiz_list_container.available_quizzes_count', { count: notPublicCount })}
           </Text>{' '}
-          {t('explore.있어요')}
+          {t('explore.quiz_list_container.exists_message')}
         </Text>
       </div>
 
@@ -302,7 +302,7 @@ const ShareCard = ({ notPublicCount }: { notPublicCount: number }) => {
         variant={'tertiary'}
         className="max-w-[140px] h-fit px-[31.5px] py-[15px]"
       >
-        {t('explore.확인하기')}
+        {t('explore.quiz_list_container.check_button')}
       </Button>
     </div>
   )

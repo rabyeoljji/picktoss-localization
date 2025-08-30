@@ -38,14 +38,14 @@ const QuizRecordPage = () => {
 
   return (
     <>
-      <Header className="bg-surface-2" left={<BackButton />} title={t('profile.퀴즈_기록')} />
+      <Header className="bg-surface-2" left={<BackButton />} title={t('profile.quiz_record_page.quiz_record')} />
 
       <HeaderOffsetLayout className="px-[16px] h-full overflow-y-auto">
         {isEmpty ? (
           <div className="size-full pb-[108px] flex-center flex-col gap-[8px]">
-            <Text typo="subtitle-1-bold">{t('profile.아직_푼_퀴즈가_없어요')}</Text>
+            <Text typo="subtitle-1-bold">{t('profile.quiz_record_page.no_solved_quiz')}</Text>
             <Text typo="body-1-medium" color="sub">
-              {t('profile.내가_풀었던_퀴즈들이_여기에_기록돼요')}
+              {t('profile.quiz_record_page.record_description')}
             </Text>
           </div>
         ) : (
@@ -140,7 +140,7 @@ const DailyRecordItem = ({
       <IcDaily className="size-[24px] text-icon-secondary" />
       <Button size={'sm'} variant={'secondary2'} className="pointer-events-none">
         {quizCount}
-        {t('profile.문제')}
+        {t('profile.quiz_record_page.problem')}
       </Button>
     </Link>
   )
@@ -177,7 +177,7 @@ const QuizSetRecordItem = ({
         <Text typo="body-1-medium" color="sub" className="flex items-center">
           <span>
             {totalQuizCount}
-            {t('profile.문제')}
+            {t('profile.quiz_record_page.problem')}
           </span>
 
           <div className="inline-block size-[4px] mx-[8px] bg-gray-100 rounded-full" />

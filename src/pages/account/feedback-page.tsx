@@ -24,14 +24,14 @@ const FeedbackPage = () => {
                 <IcBack />
               </button>
             }
-            title={t('profile.문의에서_나가시겠어요')}
-            content={t('profile.지금까지_작성한_내용은_저장되지_않습니다')}
-            cancelLabel={t('profile.취소')}
-            confirmLabel={t('profile.확인')}
+            title={t('profile.feedback_form.exit_confirm_title')}
+            content={t('profile.feedback_form.exit_confirm_message')}
+            cancelLabel={t('profile.feedback_form.cancel_button')}
+            confirmLabel={t('profile.feedback_form.confirm_button')}
             onConfirm={() => router.back()}
           />
         }
-        title={t('profile.문의하기')}
+        title={t('profile.feedback_form.inquiry_title')}
       />
 
       <HeaderOffsetLayout>

@@ -70,7 +70,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
       const imageUrl = `${window.location.origin}images/kakao-share-thumbnail.png`
 
       await shareToKakao({
-        title: t('profile.지금_가입하고_별_50개_더_받으세요'),
+        title: t('profile.invite_drawer.register_and_get_stars'),
         description: inviteText.description,
         imageUrl: imageUrl,
         inviteLinkUrl: inviteLink,
@@ -102,7 +102,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
     try {
       await navigator.clipboard.writeText(inviteLink)
 
-      toast(t('profile.링크가_복사되었어요'))
+      toast(t('profile.invite_drawer.link_copied'))
     } catch (error) {
       console.error(error)
     }
@@ -133,14 +133,14 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
             <div className="flex flex-col items-center gap-[8px]">
               <div className="relative">
                 <DrawerTitle>
-                  <Text typo="h3">{t('profile.초대할_때마다_별_50개')}</Text>
+                  <Text typo="h3">{t('profile.invite_drawer.stars_for_every_invitation')}</Text>
                 </DrawerTitle>
               </div>
 
               <Text typo="body-1-medium" color="sub" className="text-center">
-                {t('profile.친구_가족_지인들에게_픽토스를_공유해주세요')} <br />
-                {t('profile.그분이_해당_링크를_통해_픽토스에_가입하실_경우')} <br />
-                {t('profile.두_분_모두에게_별_50개를_드려요')}
+                {t('profile.invite_drawer.share_with_friends')} <br />
+                {t('profile.invite_drawer.when_they_register')} <br />
+                {t('profile.invite_drawer.both_get_stars')}
               </Text>
             </div>
           </DrawerHeader>
@@ -148,11 +148,11 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
           <div className="w-full max-w-[300px] flex-center flex-col gap-[24px]">
             <div className="relative max-w-[260px]">
               <Input
-                label={t('profile.내_링크')}
+                label={t('profile.invite_drawer.my_link')}
                 value={inviteLink}
                 right={
                   <SquareButton size={'sm'} variant={'tertiary'} onClick={handleCopy}>
-                    {t('profile.복사')}
+                    {t('profile.invite_drawer.copy')}
                   </SquareButton>
                 }
                 disabled
@@ -176,7 +176,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                 className="w-full bg-[var(--color-yellow)] text-primary hover:bg-[var(--color-yellow)]"
                 left={<ImgRoundKakao width={32} height={32} />}
               >
-                {t('profile.카카오톡에_공유하기')}
+                {t('profile.invite_drawer.share_to_kakao')}
               </Button>
 
               <Button
@@ -185,7 +185,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                 className="w-full"
                 left={<IcUpload className="size-[20px]" />}
               >
-                {t('profile.링크_공유하기')}
+                {t('profile.invite_drawer.share_link')}
               </Button>
             </div>
           </div>

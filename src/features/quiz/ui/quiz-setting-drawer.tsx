@@ -32,7 +32,7 @@ export const QuizSettingDrawer = ({
           <IcControl className="size-4 text-icon-secondary" />
         </button>
       }
-      title={t('daily.데일리_퀴즈_설정')}
+      title={t('daily.quiz_setting_drawer.title')}
       hasClose
       height="lg"
       body={
@@ -53,14 +53,14 @@ export const QuizSettingDrawer = ({
           >
             <div className="grid gap-2">
               <Text typo="subtitle-2-bold" color="secondary">
-                {t('daily.문제_유형')}
+                {t('daily.quiz_setting_drawer.question_type')}
               </Text>
               <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
                 <RadioGroup name="quizType" defaultValue={param.displayQuizType}>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
                     <RadioGroupItem value="ALL" />
                     <Text typo="subtitle-2-medium" color="primary">
-                      {t('daily.전체')}
+                      {t('daily.quiz_setting_drawer.all')}
                     </Text>
                   </Label>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
@@ -69,7 +69,7 @@ export const QuizSettingDrawer = ({
                       disabled={quizzes?.every((quiz) => quiz.quizType !== 'MULTIPLE_CHOICE')}
                     />
                     <Text typo="subtitle-2-medium" color="primary">
-                      {t('daily.객관식')}
+                      {t('daily.quiz_setting_drawer.multiple_choice')}
                     </Text>
                   </Label>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
@@ -83,27 +83,27 @@ export const QuizSettingDrawer = ({
             </div>
             <div className="grid gap-2 mt-[40px]">
               <Text typo="subtitle-2-bold" color="secondary">
-                {t('daily.문제_범위')}
+                {t('daily.quiz_setting_drawer.question_scope')}
               </Text>
               <div className="bg-surface-1 rounded-[12px] py-[10px] px-4">
                 <RadioGroup name="quizScope" defaultValue={param.displayQuizScope}>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
                     <RadioGroupItem value="ALL" />
                     <Text typo="subtitle-2-medium" color="primary">
-                      {t('daily.전체')}
+                      {t('daily.quiz_setting_drawer.all')}
                     </Text>
                   </Label>
                   <Label className="flex items-center gap-3 w-full py-[10px]">
                     <RadioGroupItem value="MY" disabled={quizzes?.every((quiz) => quiz.isBookmarked)} />
                     <Text typo="subtitle-2-medium" color="primary">
-                      {t('daily.내가_생성한_퀴즈만')}
+                      {t('daily.quiz_setting_drawer.my_created_quizzes')}
                     </Text>
                   </Label>
 
                   <Label className="flex items-center gap-3 w-full py-[10px]">
                     <RadioGroupItem value="BOOKMARK" disabled={quizzes?.every((quiz) => !quiz.isBookmarked)} />
                     <Text typo="subtitle-2-medium" color="primary">
-                      {t('daily.북마크한_퀴즈만')}
+                      {t('daily.quiz_setting_drawer.bookmarked_quizzes')}
                     </Text>
                   </Label>
                 </RadioGroup>
@@ -115,7 +115,7 @@ export const QuizSettingDrawer = ({
       footer={
         <div className="h-[114px] pt-[14px]">
           <Button type="submit" form="quiz-settings-form">
-            {t('daily.적용하기')}
+            {t('daily.quiz_setting_drawer.apply_button')}
           </Button>
         </div>
       }

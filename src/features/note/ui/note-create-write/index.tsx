@@ -120,7 +120,7 @@ export const NoteCreateWrite = () => {
     <div className="flex-1 relative">
       <Textarea
         ref={textAreaRef}
-        placeholder={t('createQuiz.여기를_탭하여_입력을_시작하세요')}
+        placeholder={t('createQuiz.note_create_write.placeholder')}
         className={cn('border-none px-4', isPWA && 'pb-[env(safe-area-inset-top)]')}
         onChange={(e) => handleTextareaChange(e.target.value)}
         style={{
@@ -135,7 +135,7 @@ export const NoteCreateWrite = () => {
           onClick={handlePasteClick}
           className="absolute left-[16px] top-[77px]"
         >
-          {t('createQuiz.복사한_텍스트_붙여넣기')}
+          {t('createQuiz.note_create_write.paste_button')}
         </Button>
       )}
 
@@ -144,7 +144,7 @@ export const NoteCreateWrite = () => {
           <div className="flex items-center gap-1">
             <IcInfo className="size-4 text-icon-sub" />
             <Text typo="body-1-medium" color="caption">
-              {t('createQuiz.최소_자_이상_입력해주세요', { count: DOCUMENT_CONSTRAINTS.CONTENT.MIN })}
+              {t('createQuiz.note_create_write.min_length_error', { count: DOCUMENT_CONSTRAINTS.CONTENT.MIN })}
             </Text>
           </div>
           <Text typo="body-1-medium" color="sub">

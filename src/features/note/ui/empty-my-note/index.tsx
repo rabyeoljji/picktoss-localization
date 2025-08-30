@@ -14,10 +14,10 @@ const EmptyMyNote = () => {
         <ImgNoteEmpty className="size-[120px]" />
 
         <div className="flex-center flex-col gap-[8px]">
-          <Text typo="subtitle-1-bold">{t('library.생성한_퀴즈가_없어요')}</Text>
+          <Text typo="subtitle-1-bold">{t('library.empty_my_note.title')}</Text>
           <Text typo="body-1-medium" color="sub" className="text-center">
-            {t('library.내가_공부하는_노트에서')} <br />
-            {t('library.간편하게_퀴즈를_만들어_보세요')}
+            {t('library.empty_my_note.description')} <br />
+            {t('library.empty_my_note.action')}
           </Text>
         </div>
       </div>
@@ -33,7 +33,7 @@ const EmptyMyNote = () => {
           })
         }
       >
-        {t('library.퀴즈_생성하기')}
+        {t('library.empty_my_note.create_button')}
       </Button>
     </div>
   )

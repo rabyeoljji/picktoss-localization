@@ -43,7 +43,7 @@ const ComplainForm = () => {
       },
       {
         onSuccess: () => {
-          toast(t('explore.신고가_완료되었어요'))
+          toast(t('explore.complain_form.report_complete_message'))
           router.replace('/quiz-detail/:noteId', {
             params: [String(noteId)],
           })
@@ -58,7 +58,7 @@ const ComplainForm = () => {
         {/* 신고 사유 */}
         <div>
           <Text typo="body-1-bold" color="sub" className="mb-[12px]">
-            {t('explore.신고_사유_선택')} <span className="text-accent">*</span>
+            {t('explore.complain_form.select_reason_title')} <span className="text-accent">*</span>
           </Text>
 
           <FormField
@@ -89,7 +89,7 @@ const ComplainForm = () => {
         {/* 상세 내용 */}
         <div>
           <Text typo="body-1-bold" color="sub">
-            {t('explore.상세내용')}
+            {t('explore.complain_form.details_label')}
           </Text>
 
           <FormField
@@ -100,7 +100,7 @@ const ComplainForm = () => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder={t('explore.신고할_내용을_구체적으로_작성해주세요')}
+                    placeholder={t('explore.complain_form.details_placeholder')}
                     className="input-basic my-[8px] h-[256px] w-full resize-none"
                     maxLength={500}
                   />
@@ -110,7 +110,7 @@ const ComplainForm = () => {
           />
 
           <Text typo="body-2-medium" color="caption" className="mb-[32px]">
-            {`${t('explore.500자_이내로_입력해주세요')} (${watch('content')?.length || 0}/500)`}
+            {`${t('explore.complain_form.character_limit')} (${watch('content')?.length || 0}/500)`}
           </Text>
         </div>
 
@@ -120,7 +120,7 @@ const ComplainForm = () => {
             data-state={(isPending || formState.isSubmitting) && 'loading'}
             disabled={!formState.isValid}
           >
-            {t('explore.신고하기')}
+            {t('explore.complain_form.report_button')}
           </Button>
         </div>
       </form>

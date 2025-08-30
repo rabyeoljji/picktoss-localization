@@ -65,7 +65,7 @@ const AccountInfoPage = () => {
       { name: newName },
       {
         onSuccess: () => {
-          toast(t('profile.닉네임이_변경되었어요'))
+          toast(t('profile.account_info_page.nickname_changed'))
           setNameDialogOpen(false)
           setNewName(user?.name ?? '')
         },
@@ -97,13 +97,13 @@ const AccountInfoPage = () => {
         {
           onSuccess: () => {
             if (!prevState) {
-              toast(t('profile.프로필_사진이_등록되었어요'))
+              toast(t('profile.account_info_page.profile_image_registered'))
             } else {
-              toast(t('profile.프로필_사진이_변경되었어요'))
+              toast(t('profile.account_info_page.profile_image_changed'))
             }
           },
           onError: (error) => {
-            console.error(t('profile.이미지_변환_실패'), error)
+            console.error(t('profile.account_info_page.image_conversion_failed'), error)
             setImageUrl(user?.image) // 기존 이미지로 되돌림
           },
         },
@@ -113,7 +113,7 @@ const AccountInfoPage = () => {
 
   return (
     <>
-      <Header left={<BackButton />} title={t('profile.계정_정보')} />
+      <Header left={<BackButton />} title={t('profile.account_info_page.account_info')} />
 
       <HeaderOffsetLayout className="h-full flex flex-col overflow-x-hidden px-[16px] justify-between">
         <div className="w-full flex flex-col">
@@ -152,7 +152,7 @@ const AccountInfoPage = () => {
             >
               <div className="flex flex-col items-start gap-[4px]">
                 <Text typo="body-1-medium" color="sub">
-                  {t('profile.닉네임')}
+                  {t('profile.account_info_page.nickname')}
                 </Text>
 
                 <Text typo="subtitle-2-medium">{user?.name}</Text>
@@ -162,8 +162,8 @@ const AccountInfoPage = () => {
             <SystemDialog
               open={nameDialogOpen}
               onOpenChange={handleSetNameDialogOpen}
-              title={t('profile.닉네임_변경')}
-              description={t('profile.새로_사용할_이름을_입력해주세요')}
+              title={t('profile.account_info_page.change_nickname')}
+              description={t('profile.account_info_page.enter_new_name')}
               preventClose={isPending}
               content={
                 <>
@@ -177,7 +177,7 @@ const AccountInfoPage = () => {
                       max={10}
                       hasClear
                       onClearClick={() => setNewName('')}
-                      helperText={`${t('profile.10자_이내로_입력해주세요')} (${newName.length}/10)`}
+                      helperText={`${t('profile.account_info_page.enter_within_10_chars')} (${newName.length}/10)`}
                     />
                   )}
                 </>
@@ -191,11 +191,11 @@ const AccountInfoPage = () => {
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-col items-start gap-[4px]">
                 <Text typo="body-1-medium" color="sub">
-                  {t('profile.이메일')}
+                  {t('profile.account_info_page.email')}
                 </Text>
 
                 <Text typo="subtitle-2-medium" color="primary">
-                  {user?.email ? user.email : t('profile.이메일_주소를_등록해주세요')}
+                  {user?.email ? user.email : t('profile.account_info_page.register_email')}
                 </Text>
               </div>
             </div>
@@ -203,18 +203,18 @@ const AccountInfoPage = () => {
             <div className="flex w-full items-center justify-between">
               <div className="flex flex-col items-start gap-[4px]">
                 <Text typo="body-1-medium" color="sub">
-                  {t('profile.로그인_정보')}
+                  {t('profile.account_info_page.login_info')}
                 </Text>
                 <div className="flex items-center gap-[8px]">
                   {user?.socialPlatform === 'KAKAO' ? (
                     <>
                       <ImgRoundKakao className="size-[20px]" />
-                      <Text typo="subtitle-2-medium">{t('profile.카카오_로그인')}</Text>
+                      <Text typo="subtitle-2-medium">{t('profile.account_info_page.kakao_login')}</Text>
                     </>
                   ) : (
                     <>
                       <ImgRoundGoogle className="size-[20px]" />
-                      <Text typo="subtitle-2-medium">{t('profile.구글_로그인')}</Text>
+                      <Text typo="subtitle-2-medium">{t('profile.account_info_page.google_login')}</Text>
                     </>
                   )}
                 </div>
@@ -230,14 +230,14 @@ const AccountInfoPage = () => {
             size={'sm'}
             className="pr-[16px] border-r border-divider"
           >
-            {t('profile.로그아웃')}
+            {t('profile.account_info_page.logout')}
           </TextButton>
           <SystemDialog
             open={logoutDialogOpen}
             onOpenChange={setLogoutDialogOpen}
-            title={t('profile.로그아웃_하시겠어요')}
-            cancelLabel={t('profile.취소')}
-            confirmLabel={t('profile.로그아웃')}
+            title={t('profile.account_info_page.confirm_logout')}
+            cancelLabel={t('profile.account_info_page.cancel')}
+            confirmLabel={t('profile.account_info_page.logout')}
             variant="critical"
             onConfirm={handleLogout}
           />
@@ -247,7 +247,7 @@ const AccountInfoPage = () => {
             size={'sm'}
             className="pl-[16px]"
           >
-            {t('profile.탈퇴하기')}
+            {t('profile.account_info_page.withdraw')}
           </TextButton>
         </div>
       </HeaderOffsetLayout>

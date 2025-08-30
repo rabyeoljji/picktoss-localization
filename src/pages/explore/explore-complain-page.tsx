@@ -24,13 +24,13 @@ const ExploreComplainPage = () => {
 
   return (
     <>
-      <Header left={<BackButton />} title={t('explore.퀴즈_신고')} />
+      <Header left={<BackButton />} title={t('explore.complain_form.report_quiz_title')} />
 
       <HeaderOffsetLayout>
         <div className="pt-[20px] px-[16px] flex flex-col gap-[40px]">
           <div className="flex flex-col gap-[8px]">
             <Text typo="body-1-bold" color="sub">
-              {t('explore.신고할_퀴즈')}
+              {t('explore.complain_form.report_quiz_label')}
             </Text>
             <Text typo="subtitle-1-bold">{name}</Text>
           </div>

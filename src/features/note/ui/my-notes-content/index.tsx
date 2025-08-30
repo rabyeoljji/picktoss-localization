@@ -100,7 +100,7 @@ const MyNotesContent = ({
 
   const handleDelete = (documentIds: number[]) => {
     deleteDocument({ documentIds })
-    toast.success(t('library.퀴즈가_삭제되었어요'))
+    toast.success(t('library.my_notes_content.delete_success_message'))
   }
 
   useEffect(() => {
@@ -125,13 +125,13 @@ const MyNotesContent = ({
                 className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
                 value={'MY' as Tab}
               >
-                {t('library.생성한')} {user?.totalQuizCount}
+                {t('library.my_notes_content.created_count')} {user?.totalQuizCount}
               </TabsTrigger>
               <TabsTrigger
                 className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
                 value={'BOOKMARK' as Tab}
               >
-                {t('library.저장한')} {user?.bookmarkCount}
+                {t('library.my_notes_content.saved_count')} {user?.bookmarkCount}
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -147,21 +147,21 @@ const MyNotesContent = ({
                 right={activeSortOption === 'CREATED_AT' && <IcCheck className="size-[20px]" />}
                 className="cursor-pointer"
               >
-                {t('library.추가된_일자')}
+                {t('library.my_notes_content.date_added')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setSortOption('NAME')}
                 right={activeSortOption === 'NAME' && <IcCheck className="size-[20px]" />}
                 className="cursor-pointer"
               >
-                {t('library.이름')}
+                {t('library.my_notes_content.name')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setSortOption('QUIZ_COUNT')}
                 right={activeSortOption === 'QUIZ_COUNT' && <IcCheck className="size-[20px]" />}
                 className="cursor-pointer"
               >
-                {t('library.문제_수')}
+                {t('library.my_notes_content.question_count')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -210,7 +210,7 @@ const MyNotesContent = ({
                   >
                     <IcUpload className="size-[20px] mb-[4px] text-inverse" />
                     <Text typo="body-1-medium" color="inverse" className="size-fit">
-                      {t('library.공유')}
+                      {t('library.my_notes_content.share_button')}
                     </Text>
                   </button>,
                   <button
@@ -223,7 +223,7 @@ const MyNotesContent = ({
                   >
                     <IcDelete className="size-[20px] mb-[4px]" />
                     <Text typo="body-1-medium" color="inverse" className="size-fit">
-                      {t('library.삭제')}
+                      {t('library.my_notes_content.delete_button')}
                     </Text>
                   </button>,
                 ]}
@@ -288,7 +288,7 @@ const MyNotesContent = ({
             variant={'critical'}
             size={'lg'}
           >
-            {t('library.선택_삭제')}
+            {t('library.my_notes_content.select_delete_button')}
           </TextButton>
         </div>
       )}
@@ -296,18 +296,18 @@ const MyNotesContent = ({
       <SystemDialog
         open={openDelete}
         onOpenChange={setOpenDelete}
-        title={t('library.퀴즈를_삭제하시겠어요')}
+        title={t('library.my_notes_content.delete_confirm_title')}
         content={
           <Text typo="body-1-medium" color="sub">
-            {t('library.선택한_퀴즈와')}{' '}
+            {t('library.my_notes_content.delete_confirm_message')}{' '}
             <Text as="span" typo="body-1-medium" color="incorrect">
-              {t('library.개의_문제', { count: selectedTotalQuizCount })}
+              {t('library.my_notes_content.delete_confirm_count', { count: selectedTotalQuizCount })}
             </Text>
-            {t('library.가_모두_삭제되며_복구할_수_없어요')}
+            {t('library.my_notes_content.delete_confirm_warning')}
           </Text>
         }
         variant="critical"
-        confirmLabel={t('library.삭제')}
+        confirmLabel={t('library.my_notes_content.delete_confirm_button')}
         onConfirm={() => {
           handleDelete(getCheckedIds().map((id) => Number(id)))
           setOpenDelete(false)
@@ -349,7 +349,7 @@ const NeedReleaseDialog = ({
             router.push('/quiz-detail/:noteId', { params: [String(selectedDocument.id)] })
           },
           onError: () => {
-            toast.error(t('library.퀴즈_공개에_실패했어요'))
+            toast.error(t('library.my_notes_content.public_failed_message'))
           },
           onSettled: () => {
             onOpenChange(false)
@@ -365,22 +365,22 @@ const NeedReleaseDialog = ({
         <DialogContent className="px-[24px] pt-[32px] pb-[20px] w-[308px] flex items-center flex-col gap-[32px]">
           <DialogHeader className="w-full flex-center flex-col gap-[8px]">
             <DialogTitle>
-              <Text typo="h4">{t('library.퀴즈_공개가_필요해요')}</Text>
+              <Text typo="h4">{t('library.my_notes_content.public_required_title')}</Text>
             </DialogTitle>
             <Text typo="subtitle-2-medium" color="sub">
-              {t('library.픽토스에_퀴즈가_공개된_상태여야')} <br />
-              {t('library.공유할_수_있어요')}
+              {t('library.my_notes_content.public_required_message')} <br />
+              {t('library.my_notes_content.public_required_action')}
             </Text>
           </DialogHeader>
 
           <div className="w-full flex-center flex-col gap-[24px]">
             <Button onClick={handleRelease} data-state={isPending && 'loading'} className="w-full">
-              {t('library.퀴즈_공개하기')}
+              {t('library.my_notes_content.make_public_button')}
             </Button>
 
             <DialogClose>
               <TextButton size={'lg'} className="text-sub">
-                {t('library.닫기')}
+                {t('library.my_notes_content.close_button')}
               </TextButton>
             </DialogClose>
           </div>
@@ -390,15 +390,15 @@ const NeedReleaseDialog = ({
       <SystemDialog
         open={openNeedMoreQuiz}
         onOpenChange={setOpenNeedMoreQuiz}
-        title={t('library.문제를_더_생성해주세요')}
+        title={t('library.my_notes_content.more_questions_title')}
         content={
           <>
-            {t('library.퀴즈에_포함된_문제가')} <br />
-            {t('library.5개_이상이어야_공유할_수_있어요')}
+            {t('library.my_notes_content.description1')} <br />
+            {t('library.my_notes_content.description2')}
           </>
         }
-        cancelLabel={t('library.취소하기')}
-        confirmLabel={t('library.생성하기')}
+        cancelLabel={t('library.my_notes_content.cancel_button')}
+        confirmLabel={t('library.my_notes_content.create_button')}
         onConfirm={() => {
           if (!selectedDocument) return
           router.push('/quiz-detail/:noteId', { params: [String(selectedDocument.id)] })

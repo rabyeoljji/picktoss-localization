@@ -43,14 +43,16 @@ export const DailyQuizTooltip = ({
           <Text typo="body-2-medium">
             <span className="text-accent">
               {10 - todaySolvedDailyQuizCount}
-              {t('daily.문제')}
+              {t('daily.quiz_tooltip.question')}
             </span>{' '}
-            <span>{t('daily.더_풀면_획득')}!</span>
+            <span>{t('daily.quiz_tooltip.solve_more_message')}!</span>
           </Text>
         ) : (
           <>
             {consecutiveSolvedDailyQuizDays && (
-              <Text typo="body-2-medium">{t('daily.연속_일_완료', { count: consecutiveSolvedDailyQuizDays })}</Text>
+              <Text typo="body-2-medium">
+                {t('daily.quiz_tooltip.consecutive_days_complete', { count: consecutiveSolvedDailyQuizDays })}
+              </Text>
             )}
           </>
         )}

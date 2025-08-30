@@ -43,7 +43,7 @@ export const QuizResultView = ({
           <div>
             <ImgMedal className="w-[160px] mx-auto pt-[70px]" />
             <Text typo="h2" color="primary" className="text-center">
-              {t('progressQuiz.퀴즈_완료')}!
+              {t('progressQuiz.quiz_result_view.complete_title')}
             </Text>
           </div>
           <div className="text-center mt-2">
@@ -56,10 +56,10 @@ export const QuizResultView = ({
               <ImgSpeechbubble className="w-[32px]" />
               <Text typo="subtitle-2-bold" className="mt-1">
                 {totalQuizCount}
-                {t('progressQuiz.문제')}
+                {t('progressQuiz.quiz_result_view.question_count')}
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                {t('progressQuiz.문제_수')}
+                {t('progressQuiz.quiz_result_view.question_count')}
               </Text>
             </div>
             <div className="h-[80px] w-px bg-[#E3E9EF]" />
@@ -69,7 +69,7 @@ export const QuizResultView = ({
                 {Math.ceil(totalElapsedTime / 1000 / 60)}분
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                {t('progressQuiz.소요시간')}
+                {t('progressQuiz.quiz_result_view.time_spent')}
               </Text>
             </div>
             <div className="h-[80px] w-px bg-[#E3E9EF]" />
@@ -79,7 +79,7 @@ export const QuizResultView = ({
                 {correctAnswerRate}%
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                {t('progressQuiz.정답률')}
+                {t('progressQuiz.quiz_result_view.accuracy_rate')}
               </Text>
             </div>
           </div>
@@ -117,7 +117,9 @@ export const QuizResultView = ({
                   order={index + 1}
                   right={
                     <Tag size="md" color={quizWithResult.isCorrect ? 'green' : 'red'}>
-                      {quizWithResult.isCorrect ? t('progressQuiz.정답') : t('progressQuiz.오답')}
+                      {quizWithResult.isCorrect
+                        ? t('progressQuiz.quiz_page.correct_answer')
+                        : t('progressQuiz.quiz_page.incorrect_answer')}
                     </Tag>
                   }
                 />
@@ -148,8 +150,9 @@ export const QuizResultView = ({
       </div>
 
       <FixedBottom className="bg-surface-2 h-[114px]">
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <Button onClick={() => (prevUrl ? router.replace(prevUrl as any, {}) : router.back())}>
-          {t('progressQuiz.확인')}
+          {t('progressQuiz.quiz_result_view.confirm_button')}
         </Button>
       </FixedBottom>
     </div>

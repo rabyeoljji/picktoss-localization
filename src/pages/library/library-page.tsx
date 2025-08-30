@@ -89,10 +89,10 @@ const LibraryPage = () => {
               <IcBack className="size-[24px] text-icon-primary" />
             </button>
           }
-          content={<div className="center">{t('library.퀴즈_선택')}</div>}
+          content={<div className="center">{t('library.library_page.select_quiz_message')}</div>}
           right={
             <TextButton onClick={() => toggleAll()} variant={'primary'} size={'sm'}>
-              {t('library.전체_선택')}
+              {t('library.library_page.select_all_button')}
             </TextButton>
           }
         />
@@ -121,7 +121,7 @@ const LibraryPage = () => {
                   value={keyword}
                   onChange={onChangeKeyword}
                   clearKeyword={clearKeyword}
-                  placeholder={t('library.퀴즈_제목_내용_검색')}
+                  placeholder={t('library.library_page.search_placeholder')}
                   className="bg-base-3 placeholder:text-caption"
                 />
               </div>

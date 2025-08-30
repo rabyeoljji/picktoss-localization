@@ -13,7 +13,7 @@ export const FeedbackCompletePage = () => {
     <div className="center flex-center flex-col">
       <ImgConfirm className="w-[100px]" />
       <Text typo="subtitle-1-bold" color="primary" className="mt-4">
-        {t('profile.문의가_전송되었어요')}
+        {t('profile.feedback_form.inquiry_sent_message')}
       </Text>
       <Text typo="body-1-medium" color="sub" className="text-center mt-2">
         {t('profile.조금만_기다려주시면')}

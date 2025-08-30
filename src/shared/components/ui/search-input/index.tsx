@@ -44,7 +44,7 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
           ref={mergedRef}
           value={internalValue}
           className={cn('h-[40px] border-none bg-base-2 pl-1 focus:border-none placeholder:text-caption', className)}
-          placeholder={t('library.검색어를_입력해주세요')}
+          placeholder={t('library.search_input.placeholder')}
           right={
             internalValue && (
               <IcClear

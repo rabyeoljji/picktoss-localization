@@ -31,33 +31,33 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
       <DrawerContent height="lg">
         <div className="flex flex-col gap-4 text-center">
           <ImgStarEmpty className="size-[100px] mx-auto" />
-          <Text typo="h4">{t('createQuiz.별이_부족해요')}</Text>
+          <Text typo="h4">{t('createQuiz.lacking_star_drawer.title')}</Text>
           <Text typo="body-1-medium" color="sub">
-            {t('createQuiz.퀴즈를_생성할_때_사용되는_별이_더_필요해요')}
+            {t('createQuiz.lacking_star_drawer.description')}
             <br />
-            {t('createQuiz.하루에_데일리_퀴즈를_10문제_이상_풀거나')},
+            {t('createQuiz.lacking_star_drawer.earn_method1')},
             <br />
-            {t('createQuiz.픽토스에_친구를_초대하면_별을_더_받을_수_있어요')}
+            {t('createQuiz.lacking_star_drawer.earn_method2')}
           </Text>
         </div>
         <div className="mt-[24px] flex items-center justify-around">
           <div className="flex flex-col items-center gap-[2px]">
             <Text typo="body-2-medium" color="sub">
-              {t('createQuiz.필요한_별')}
+              {t('createQuiz.lacking_star_drawer.required_stars')}
             </Text>
             <Text typo="subtitle-1-bold">{needStars}</Text>
           </div>
           <div className="w-[1px] h-[48px] bg-gray-100" />
           <div className="flex flex-col items-center gap-[2px]">
             <Text typo="body-2-medium" color="sub">
-              {t('createQuiz.보유한_별')}
+              {t('createQuiz.lacking_star_drawer.owned_stars')}
             </Text>
             <Text typo="subtitle-1-bold">{myStars}</Text>
           </div>
           <div className="w-[1px] h-[48px] bg-gray-100" />
           <div className="flex flex-col items-center gap-[2px]">
             <Text typo="body-2-medium" color="sub">
-              {t('createQuiz.부족한_별')}
+              {t('createQuiz.lacking_star_drawer.missing_stars')}
             </Text>
             <Text typo="subtitle-1-bold" color="accent">
               {needStars - myStars}
@@ -75,14 +75,14 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
               >
                 <div className="flex flex-col gap-[4px]">
                   <Text typo="body-1-medium" color="secondary">
-                    {t('createQuiz.픽토스_초대장_보내기')}
+                    {t('createQuiz.lacking_star_drawer.invite_title')}
                   </Text>
                   <Text typo="subtitle-1-bold">
-                    {t('createQuiz.초대할_때마다')}{' '}
+                    {t('createQuiz.lacking_star_drawer.invite_description')}{' '}
                     <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                      {t('createQuiz.별_50개')}
+                      {t('createQuiz.lacking_star_drawer.invite_reward')}
                     </Text>{' '}
-                    {t('createQuiz.받아요')}!
+                    {t('createQuiz.lacking_star_drawer.invite_receive')}!
                   </Text>
                 </div>
                 <ImgInviteStar width={56} height={56} />
@@ -92,7 +92,7 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
         </div>
         <DialogFooter className="h-[114px] absolute bottom-0 w-[calc(100%-32px)]">
           <DialogClose asChild>
-            <Button className="mt-[14px]">{t('createQuiz.확인')}</Button>
+            <Button className="mt-[14px]">{t('createQuiz.confirm_button')}</Button>
           </DialogClose>
         </DialogFooter>
       </DrawerContent>

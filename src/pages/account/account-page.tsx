@@ -136,7 +136,7 @@ const AccountPage = () => {
                 className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px] border-r border-divider"
               >
                 <Text typo="subtitle-2-bold" color="secondary">
-                  {t('profile.생성한_퀴즈')}
+                  {t('profile.main_page.created_quiz')}
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.totalQuizCount}
@@ -148,7 +148,7 @@ const AccountPage = () => {
                 className="flex-1/2 h-full px-[16px] py-[12px] flex-center gap-[8px]"
               >
                 <Text typo="subtitle-2-bold" color="secondary">
-                  {t('profile.저장한_퀴즈')}
+                  {t('profile.main_page.saved_quiz')}
                 </Text>
                 <Text typo="subtitle-2-bold" color="accent">
                   {user?.bookmarkCount}
@@ -163,9 +163,11 @@ const AccountPage = () => {
 
                   <div className="flex flex-col">
                     <Text typo="body-2-medium" color="sub">
-                      {t('profile.이번_달_푼_퀴즈')}
+                      {t('profile.main_page.this_month_solved_quiz')}
                     </Text>
-                    <Text typo="subtitle-1-bold">{t('profile.문제', { count: user?.monthlySolvedQuizCount })}</Text>
+                    <Text typo="subtitle-1-bold">
+                      {t('profile.main_page.problem_count', { count: user?.monthlySolvedQuizCount })}
+                    </Text>
                   </div>
                 </div>
 
@@ -177,7 +179,7 @@ const AccountPage = () => {
                   size={'sm'}
                   variant={'tertiary'}
                 >
-                  {t('profile.분석_보기')}
+                  {t('profile.main_page.view_analysis')}
                 </Button>
               </div>
 
@@ -185,15 +187,15 @@ const AccountPage = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-[4px]">
                     <ImgStar width={24} height={24} />
-                    <Text typo="subtitle-2-bold">{t('profile.나의_별')}</Text>
+                    <Text typo="subtitle-2-bold">{t('profile.main_page.my_star')}</Text>
                     <Disclaimer>
                       <DisclaimerTrigger asChild className="cursor-pointer">
                         <IcDisclaimer className="size-[16px] text-icon-sub" />
                       </DisclaimerTrigger>
                       <DisclaimerContent side="bottom" sideOffset={7} align="start" alignOffset={-7}>
-                        {t('profile.퀴즈를_생성하기_위해_필요한_재화로_매일')} <br />
-                        {t('profile.데일리에서_10문제_이상_풀거나_이벤트에')} <br />
-                        {t('profile.참여하면_받을_수_있어요')}
+                        {t('profile.main_page.star_description1')} <br />
+                        {t('profile.main_page.star_description2')} <br />
+                        {t('profile.main_page.star_description3')}
                       </DisclaimerContent>
                     </Disclaimer>
                   </div>
@@ -206,7 +208,7 @@ const AccountPage = () => {
                       trackEvent('my_star_click')
                     }}
                   >
-                    <Text typo="subtitle-2-bold">{t('profile.개', { count: user?.star })}</Text>
+                    <Text typo="subtitle-2-bold">{t('profile.main_page.star_count', { count: user?.star })}</Text>
                     <IcChevronRight className="size-[16px] text-icon-sub" />
                   </Link>
                 </div>
@@ -221,12 +223,12 @@ const AccountPage = () => {
                     >
                       <div className="flex-1 flex flex-col gap-[4px]">
                         <Text typo="body-1-medium" color="secondary">
-                          {t('profile.픽토스_초대장_보내기')}
+                          {t('profile.main_page.send_invitation')}
                         </Text>
                         <Text typo="subtitle-1-bold">
-                          {t('profile.초대할_때마다')}{' '}
+                          {t('profile.main_page.every_invitation')}{' '}
                           <Text as={'span'} typo="subtitle-1-bold" color="accent">
-                            {t('profile.별_50개')}
+                            {t('profile.main_page.star_50')}
                           </Text>
                         </Text>
                       </div>
@@ -245,16 +247,16 @@ const AccountPage = () => {
         <div className="py-[24px] px-[16px] flex flex-col gap-[24px]">
           <div className="flex flex-col gap-[16px]">
             <Text typo="body-1-medium" color="caption">
-              {t('profile.설정')}
+              {t('profile.main_page.settings')}
             </Text>
             <div className="flex flex-col gap-[20px]">
               <Link to="/account/info" className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">{t('profile.계정_정보')}</Text>
+                <Text typo="subtitle-2-medium">{t('profile.main_page.account_info')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
               <div className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">{t('profile.푸시_알림')}</Text>
+                <Text typo="subtitle-2-medium">{t('profile.main_page.push_notification')}</Text>
                 <Switch size="md" checked={notificationEnabled} onCheckedChange={handleNotification} />
               </div>
 
@@ -275,11 +277,11 @@ const AccountPage = () => {
 
           <div className="border-t border-divider pt-[16px] flex flex-col gap-[16px]">
             <Text typo="body-1-medium" color="caption">
-              {t('profile.도움말_지원')}
+              {t('profile.main_page.help_support')}
             </Text>
             <div className="flex flex-col gap-[20px]">
               <Link to="/account/feedback" className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">{t('profile.문의하기')}</Text>
+                <Text typo="subtitle-2-medium">{t('profile.feedback_form.inquiry_title')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
@@ -289,12 +291,12 @@ const AccountPage = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-between"
               >
-                <Text typo="subtitle-2-medium">{t('profile.이용_가이드')}</Text>
+                <Text typo="subtitle-2-medium">{t('profile.main_page.usage_guide')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </a>
 
               <Link to="/account/notice" className="flex items-center justify-between">
-                <Text typo="subtitle-2-medium">{t('profile.공지사항')}</Text>
+                <Text typo="subtitle-2-medium">{t('profile.main_page.notice')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
@@ -304,7 +306,7 @@ const AccountPage = () => {
                 rel="noopener noreferrer"
                 className="flex items-center justify-between"
               >
-                <Text typo="subtitle-2-medium">{t('profile.서비스_소개')}</Text>
+                <Text typo="subtitle-2-medium">{t('profile.main_page.service_introduction')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </a>
             </div>
@@ -319,7 +321,7 @@ const AccountPage = () => {
               rel="noopener noreferrer"
             >
               <Text typo="body-1-medium" color="sub">
-                {t('profile.개인정보_처리방침')}
+                {t('profile.main_page.privacy_policy')}
               </Text>
             </a>
             <a
@@ -328,19 +330,17 @@ const AccountPage = () => {
               rel="noopener noreferrer"
             >
               <Text typo="body-1-medium" color="sub">
-                {t('profile.서비스_이용약관')}
+                {t('profile.main_page.terms_of_service')}
               </Text>
             </a>
           </div>
 
           <div className="flex flex-col gap-[16px]">
             <Text typo="body-2-medium" color="caption">
-              {t(
-                'profile.사업자등록번호_120_20_02237_070_7954_1774_대표자명_이유민_서울특별시_서대문구_연희로41가길_5_B1층_D72호_홍은동',
-              )}
+              {t('profile.main_page.company_info')}
             </Text>
             <Text typo="body-2-medium" color="caption">
-              {t('profile.2024_picktoss_all_rights_reserved')}
+              {t('profile.main_page.copyright')}
             </Text>
           </div>
         </footer>
@@ -385,18 +385,18 @@ const NotificationDrawer = ({
       <DrawerContent height="md" hasHandle={false} className="flex flex-col items-center">
         <DrawerHeader className="w-full flex-center flex-col gap-[8px] py-[10px]">
           <Text typo="h4" className="text-center">
-            {t('profile.푸시_알림_허용_안내')}
+            {t('profile.main_page.push_notification_guide')}
           </Text>
           <Text typo="subtitle-2-medium" color="sub" className="text-center">
-            {t('profile.다음_단계에서_알림을_허용하시면')} <br />
-            {t('profile.매일_잊지_않고_퀴즈를_풀_수_있어요')}
+            {t('profile.main_page.notification_permission_message1')} <br />
+            {t('profile.main_page.notification_permission_message2')}
           </Text>
         </DrawerHeader>
 
         <ImgPush height={200} width={301.25} />
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
-          <Button onClick={clickNotification}>{t('profile.설정하기')}</Button>
+          <Button onClick={clickNotification}>{t('profile.main_page.setup_button')}</Button>
         </DrawerFooter>
       </DrawerContent>
     </Drawer>
@@ -420,18 +420,20 @@ const NotificationSettingInfoDialog = ({
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">{t('profile.푸시_알림_설정_안내')}</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">
+              {t('profile.main_page.push_notification_setting_guide')}
+            </DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              {t('profile.퀴즈_알림을_다시_받아보고_싶다면')} <br />
-              {t('profile.디바이스의_설정앱picktoss를_선택_후')} <br />
-              {t('profile.알림을_허용으로_변경해주세요')}
+              {t('profile.main_page.notification_restart_message1')} <br />
+              {t('profile.main_page.notification_restart_message2')} <br />
+              {t('profile.main_page.notification_restart_message3')}
             </DialogDescription>
           </div>
         </div>
 
         <div className="w-full flex flex-col gap-[24px]">
           <Button onClick={() => onOpenChange(false)} className="w-full">
-            {t('profile.확인')}
+            {t('profile.main_page.confirm_button')}
           </Button>
         </div>
       </DialogContent>

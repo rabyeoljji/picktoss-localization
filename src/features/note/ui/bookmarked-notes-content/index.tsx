@@ -57,13 +57,13 @@ const BookmarkedNotesContent = ({
               className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
               value={'MY' as Tab}
             >
-              {t('library.생성한')} {user?.totalQuizCount}
+              {t('library.bookmarked_notes_content.created_count')} {user?.totalQuizCount}
             </TabsTrigger>
             <TabsTrigger
               className="bg-base-3 typo-button-3 text-secondary data-[state=active]:bg-inverse data-[state=active]:text-inverse rounded-full px-[14px] py-[11px]"
               value={'BOOKMARK' as Tab}
             >
-              {t('library.저장한')} {user?.bookmarkCount}
+              {t('library.bookmarked_notes_content.saved_count')} {user?.bookmarkCount}
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -79,21 +79,21 @@ const BookmarkedNotesContent = ({
               right={activeSortOption === 'CREATED_AT' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              {t('library.추가된_일자')}
+              {t('library.bookmarked_notes_content.date_added')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setSortOption('NAME')}
               right={activeSortOption === 'NAME' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              {t('library.이름')}
+              {t('library.bookmarked_notes_content.name')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setSortOption('QUIZ_COUNT')}
               right={activeSortOption === 'QUIZ_COUNT' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              {t('library.문제_수')}
+              {t('library.bookmarked_notes_content.question_count')}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

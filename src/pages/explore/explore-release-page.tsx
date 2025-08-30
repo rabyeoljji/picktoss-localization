@@ -41,7 +41,7 @@ const ExploreReleasePage = () => {
         { isPublic: true },
         {
           onSuccess: () => {
-            toast(t('explore.퀴즈가_공개되었어요'))
+            toast(t('explore.release_page.public_success_message'))
             router.replace('/quiz-detail/:noteId', { params: [String(selectedId)] })
           },
         },
@@ -51,13 +51,17 @@ const ExploreReleasePage = () => {
 
   return (
     <>
-      <Header className={'bg-surface-2 py-[7px] px-[8px]'} left={<BackButton />} title={t('explore.퀴즈_공개')} />
+      <Header
+        className={'bg-surface-2 py-[7px] px-[8px]'}
+        left={<BackButton />}
+        title={t('explore.release_page.title')}
+      />
 
       <HeaderOffsetLayout className="flex flex-col pb-[calc(env(safe-area-inset-bottom)+90px)] h-full">
         <div className="flex flex-col gap-[8px] w-full p-[16px] pb-[12px]">
-          <Text typo="h4">{t('explore.공개할_퀴즈를_선택해주세요')}</Text>
+          <Text typo="h4">{t('explore.release_page.select_quiz_title')}</Text>
           <Text typo="body-1-medium" color="sub">
-            {t('explore.내가_만든_퀴즈를_다른_사람들이_풀거나_저장할_수_있어요')}
+            {t('explore.release_page.select_quiz_message')}
           </Text>
         </div>
 
@@ -80,7 +84,7 @@ const ExploreReleasePage = () => {
 
         <FixedBottom className="bg-surface-2">
           <Button disabled={!selectedId} onClick={handleRelease}>
-            {t('explore.완료')}
+            {t('explore.release_page.complete_button')}
           </Button>
         </FixedBottom>
       </HeaderOffsetLayout>
