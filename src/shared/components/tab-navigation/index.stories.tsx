@@ -19,5 +19,5 @@ const meta: Meta<typeof TabNavigation> = {
 export default meta
 
 export const Default: StoryObj<typeof TabNavigation> = {
-  render: () => <TabNavigation activeTab="데일리" />,
+  render: () => <TabNavigation activeTab="DAILY" />,
 }
