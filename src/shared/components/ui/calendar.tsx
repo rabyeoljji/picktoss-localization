@@ -38,15 +38,15 @@ function Calendar({
         months: 'flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0',
         month: 'space-y-4',
         caption: 'w-full flex-center pt-1 relative',
-        caption_label: 'typo-h4',
+        caption_label: 'w-fit typo-h4',
         nav: 'space-x-1 flex items-center',
         nav_button: cn(
           // buttonVariants({ variant: 'mediumIcon' }),
           'h-7 w-7 bg-transparent p-0 disabled:text-icon-disabled disabled:cursor-not-allowed',
         ),
-        nav_button_previous: 'center !translate-x-[calc(50%-65px)] !translate-y-[-12px]',
+        nav_button_previous: 'center !translate-x-[calc(50%-85px)] !translate-y-[-12px]',
         nav_button_next: cn(
-          'center !translate-x-[calc(50%+22px)] !translate-y-[-12px]',
+          'center !translate-x-[calc(50%+42px)] !translate-y-[-12px]',
           selectedMonth &&
             isCurrentMonth(selectedMonth) &&
             'opacity-100 text-icon-disabled cursor-not-allowed pointer-events-none',
