@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 
 import { IcClose } from '@/shared/assets/icon'
@@ -20,6 +21,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
   const router = useRouter()
   const [searchParams] = useSearchParams()
   const [queryParams] = useQueryParam(location.pathname as RouteNames)
+  const { t } = useTranslation()
 
   // 스토리지와 연결된 최신 검색어
   const { recentKeywords, addKeyword, removeKeyword, clearAllKeywords } = useRecentSearches(storageKey)
@@ -123,10 +125,10 @@ export const useSearch = (storageKey: StorageKeyType) => {
             <div className="flex flex-col bg-surface-1 px-4 py-[20px]">
               <div className="mb-[14px] flex items-center justify-between">
                 <Text typo="body-1-bold" className="text-secondary">
-                  최근 검색어
+                  {t('explore.explore_search_page.recent_keyword')}
                 </Text>
                 <button className="typo-button-4 text-caption" onClick={clearAllKeywords}>
-                  전체삭제
+                  {t('explore.explore_search_page.delete_all')}
                 </button>
               </div>
 
@@ -157,7 +159,7 @@ export const useSearch = (storageKey: StorageKeyType) => {
           ) : (
             <div className="h-[96px] bg-surface-1 flex-center">
               <Text typo="body-1-bold" color="sub">
-                최근 검색 내역이 없어요
+                {t('explore.explore_search_page.no_results_recent')}
               </Text>
             </div>
           ))}

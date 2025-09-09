@@ -542,7 +542,7 @@ const HomePage = () => {
                   setRewardDrawerOpen(false)
                 }}
               >
-                {t('daily.alert_drawer.confirm_button')}
+                {t('common.confirm')}
               </Button>
             </div>
           </div>

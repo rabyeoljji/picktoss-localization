@@ -154,7 +154,7 @@ const MyNotesContent = ({
                 right={activeSortOption === 'NAME' && <IcCheck className="size-[20px]" />}
                 className="cursor-pointer"
               >
-                {t('library.my_notes_content.name')}
+                {t('common.name')}
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => setSortOption('QUIZ_COUNT')}
@@ -223,7 +223,7 @@ const MyNotesContent = ({
                   >
                     <IcDelete className="size-[20px] mb-[4px]" />
                     <Text typo="body-1-medium" color="inverse" className="size-fit">
-                      {t('library.my_notes_content.delete_button')}
+                      {t('common.delete')}
                     </Text>
                   </button>,
                 ]}

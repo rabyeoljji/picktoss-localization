@@ -433,7 +433,7 @@ const NotificationSettingInfoDialog = ({
 
         <div className="w-full flex flex-col gap-[24px]">
           <Button onClick={() => onOpenChange(false)} className="w-full">
-            {t('profile.main_page.confirm_button')}
+            {t('common.confirm')}
           </Button>
         </div>
       </DialogContent>

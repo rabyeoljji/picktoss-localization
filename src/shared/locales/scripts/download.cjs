@@ -104,8 +104,10 @@ const fetchAllTranslations = async () => {
   const allTranslations = {}
   const docId = ids.docId
 
-  // 시트와 기대 네임스페이스 매핑 (daily를 마지막에 처리)
+  // 시트와 기대 네임스페이스 매핑 (common을 첫 번째로, daily를 마지막에 처리)
   const sheetConfigs = [
+    { id: ids.common, ns: 'common' },
+    { id: ids.daily, ns: 'daily' },
     { id: ids.createQuiz, ns: 'createQuiz' },
     { id: ids.progressQuiz, ns: 'progressQuiz' },
     { id: ids.library, ns: 'library' },
@@ -113,7 +115,6 @@ const fetchAllTranslations = async () => {
     { id: ids.quizDetail, ns: 'quizDetail' },
     { id: ids.profile, ns: 'profile' },
     { id: ids.etc, ns: 'etc' },
-    { id: ids.daily, ns: 'daily' },
   ]
 
   console.log('Downloading translations from Google Sheets...')
@@ -151,7 +152,17 @@ const saveTranslationsToJson = async (translations) => {
     .map(([key]) => key)
 
   // 정렬을 위해 공통 정렬 로직 구성
-  const namespaceOrder = ['daily', 'createQuiz', 'progressQuiz', 'library', 'explore', 'quizDetail', 'profile', 'etc']
+  const namespaceOrder = [
+    'common',
+    'daily',
+    'createQuiz',
+    'progressQuiz',
+    'library',
+    'explore',
+    'quizDetail',
+    'profile',
+    'etc',
+  ]
   const orderMap = new Map(namespaceOrder.map((ns, idx) => [ns, idx]))
 
   const sortedKeys = [...baseKeys].sort((ka, kb) => {

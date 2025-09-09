@@ -92,7 +92,7 @@ export const LackingStarDrawer = ({ trigger, open, onOpenChange, needStars }: La
         </div>
         <DialogFooter className="h-[114px] absolute bottom-0 w-[calc(100%-32px)]">
           <DialogClose asChild>
-            <Button className="mt-[14px]">{t('createQuiz.confirm_button')}</Button>
+            <Button className="mt-[14px]">{t('common.confirm')}</Button>
           </DialogClose>
         </DialogFooter>
       </DrawerContent>

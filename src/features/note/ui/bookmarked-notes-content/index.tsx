@@ -86,7 +86,7 @@ const BookmarkedNotesContent = ({
               right={activeSortOption === 'NAME' && <IcCheck className="size-[20px]" />}
               className="cursor-pointer"
             >
-              {t('library.bookmarked_notes_content.name')}
+              {t('common.name')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => setSortOption('QUIZ_COUNT')}

@@ -324,7 +324,7 @@ const QuizDetailEditPage = () => {
           </Text>
         }
         variant="critical"
-        confirmLabel={t('quizDetail.quiz_detail_edit_page.make_private_confirm_button')}
+        confirmLabel={t('common.confirm')}
         onConfirm={() => {
           setShowPrivateConfirmDialog(false)
           handleSave()

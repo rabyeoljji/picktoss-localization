@@ -128,6 +128,9 @@ const main = async () => {
 
       // 네임스페이스에 따른 시트 ID 결정
       switch (namespace) {
+        case 'common':
+          sheetId = ids.common
+          break
         case 'daily':
           sheetId = ids.daily
           break

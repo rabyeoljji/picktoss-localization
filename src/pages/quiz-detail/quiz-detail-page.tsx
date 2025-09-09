@@ -552,7 +552,7 @@ const QuizDetailPage = () => {
           </Text>
         }
         variant="critical"
-        confirmLabel={t('quizDetail.quiz_detail_page.delete_confirm_button')}
+        confirmLabel={t('common.delete')}
         onConfirm={() => {
           deleteDocument({ documentIds: [Number(noteId)] })
           router.replace('/library')

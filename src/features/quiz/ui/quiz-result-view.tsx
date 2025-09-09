@@ -152,7 +152,7 @@ export const QuizResultView = ({
       <FixedBottom className="bg-surface-2 h-[114px]">
         {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <Button onClick={() => (prevUrl ? router.replace(prevUrl as any, {}) : router.back())}>
-          {t('progressQuiz.quiz_result_view.confirm_button')}
+          {t('common.confirm')}
         </Button>
       </FixedBottom>
     </div>

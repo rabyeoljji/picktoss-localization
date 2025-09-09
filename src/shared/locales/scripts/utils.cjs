@@ -15,6 +15,7 @@ const getSpreadsheetIds = () => {
     daily: '0',
     progressQuiz: '569607710',
     etc: '1693238403',
+    common: '1010847238',
   }
 }
 

@@ -452,7 +452,7 @@ const NoteDetailPage = () => {
                           right={<IcDelete className="text-icon-critical" />}
                           onClick={() => setDeleteTargetQuizId(quiz.id)}
                         >
-                          {t('quizDetail.quiz_detail_list_page.delete_button')}
+                          {t('common.delete')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -854,7 +854,7 @@ const NoteDetailPage = () => {
                   setDeleteTargetQuizId(null)
                 }}
               >
-                {t('quizDetail.quiz_detail_list_page.delete_button')}
+                {t('common.delete')}
               </button>
             </div>
           </DialogContent>
@@ -876,7 +876,7 @@ const NoteDetailPage = () => {
           </Text>
         }
         variant="critical"
-        confirmLabel={t('quizDetail.quiz_detail_list_page.delete_quiz_confirm_button')}
+        confirmLabel={t('common.delete')}
         onConfirm={() => {
           deleteDocument({ documentIds: [Number(noteId)] })
           router.replace('/library')
