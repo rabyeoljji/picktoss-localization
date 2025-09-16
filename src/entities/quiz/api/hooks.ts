@@ -46,6 +46,8 @@ export const useGetQuizzesRecords = () => {
   return useQuery({
     queryKey: QUIZ_KEYS.getQuizzesRecords,
     queryFn: () => getQuizzesRecords(),
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   })
 }
 

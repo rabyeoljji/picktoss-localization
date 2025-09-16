@@ -11,11 +11,24 @@ export const RootLayout = () => {
   const sideAppDownloadPopup = useSideAppDownloadPopup()
 
   const checkPWA = () => {
-    const isIOSStandalone =
-      typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
-    const isStandaloneMedia = window.matchMedia('(display-mode: standalone)').matches
+    try {
+      const isIOSStandalone =
+        typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
+      
+      let isStandaloneMedia = false
+      if (typeof window !== 'undefined' && window.matchMedia) {
+        try {
+          isStandaloneMedia = window.matchMedia('(display-mode: standalone)').matches
+        } catch (error) {
+          console.warn('matchMedia not supported or failed:', error)
+        }
+      }
 
-    return isIOSStandalone || isStandaloneMedia
+      return isIOSStandalone || isStandaloneMedia
+    } catch (error) {
+      console.error('PWA check failed:', error)
+      return false
+    }
   }
 
   const accessMobileWeb = !checkPWA() && isMobile

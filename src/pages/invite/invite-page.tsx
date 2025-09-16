@@ -17,6 +17,9 @@ import { useRouter } from '@/shared/lib/router'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 const InvitePage = () => {
+  const INVITE_REWARD = 50
+  const SPECIAL_REWARD = 1000
+
   const { inviteCode } = useParams()
   const router = useRouter()
   const { t } = useTranslation()
@@ -25,6 +28,8 @@ const InvitePage = () => {
 
   const { data: inviteUserData } = useGetInviteMemberInfo(inviteCode ?? '')
   const { mutate: verifyInviteCode, isPending } = useVerifyInviteCode()
+
+  const isSpecial = inviteCode === 'KONKUK' || inviteCode === 'SANGMYUNG'
 
   useEffect(() => {
     if (!inviteCode) return
@@ -73,20 +78,20 @@ const InvitePage = () => {
               <div className="flex-center flex-col gap-[12px]">
                 <div className="flex-center flex-col gap-[8px]">
                   <Text typo="h3" color="sub">
-                    {t('profile.님이_보내신', { name: inviteUserData?.name })}
+                    {t('profile.invite_page.invite_message1', { name: inviteUserData?.name })}
                   </Text>
                   <Text typo="h2">
-                    {t('profile.픽토스_초대와')}{' '}
+                    {t('profile.invite_page.invite_message2')}{' '}
                     <Text as={'span'} typo="h2" color="accent">
-                      {t('profile.별_50개')}
+                      {t('profile.invite_page.star_count', { count: isSpecial ? SPECIAL_REWARD : INVITE_REWARD })}
                     </Text>
                   </Text>
                 </div>
 
                 <Text typo="body-1-medium" color="sub" className="text-center">
-                  {t('profile.매일_간단한_퀴즈로_배운_것을_기억하세요')} <br />
-                  {t('profile.픽토스에선_별을_사용해_노트필기_저장한_자료_등')} <br />
-                  {t('profile.모든_걸_퀴즈로_만들_수_있어요')}
+                  {t('profile.invite_page.daily_quiz_message')} <br />
+                  {t('profile.invite_page.star_usage1')} <br />
+                  {t('profile.invite_page.star_usage2')}
                 </Text>
               </div>
             </div>
@@ -95,7 +100,7 @@ const InvitePage = () => {
               onClick={() => router.replace('/invite/login', { search: { inviteCode } })}
               className="max-w-[260px]"
             >
-              {t('profile.바로_받기')}
+              {t('profile.invite_page.receive_button')}
             </Button>
           </div>
         )}
@@ -116,21 +121,21 @@ const ExpiredInvite = () => {
         <div className="flex-center flex-col gap-[12px]">
           <div className="flex-center flex-col gap-[8px]">
             <Text typo="h3" color="sub">
-              {t('profile.이런')}
+              {t('profile.invite_page.expired_oops')}
             </Text>
-            <Text typo="h2">{t('profile.초대장이_사라졌어요')}</Text>
+            <Text typo="h2">{t('profile.invite_page.expired_title')}</Text>
           </div>
 
           <Text typo="body-1-medium" color="sub" className="text-center">
-            {t('profile.유효기간이_만료되어_새로운_초대_링크가_필요해요')} <br />
-            {t('profile.퀴즈를_만들_수_있는_별을_더_받고_싶다면')} <br />
-            {t('profile.친구에게_링크를_다시_요청해보세요')}
+            {t('profile.invite_page.expired_message')} <br />
+            {t('profile.invite_page.more_stars_message')} <br />
+            {t('profile.invite_page.request_link_message')}
           </Text>
         </div>
       </div>
 
       <Button onClick={() => router.replace('/invite/login')} className="max-w-[260px]">
-        {t('profile.그냥_바로_가입하기')}
+        {t('profile.invite_page.signup_button')}
       </Button>
     </div>
   )

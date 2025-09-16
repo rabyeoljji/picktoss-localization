@@ -19,8 +19,8 @@ import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities/quiz/api'
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
-import { IcFile, IcPagelink, IcRefresh } from '@/shared/assets/icon'
-import { ImgPush, ImgRoundIncorrect, ImgStar } from '@/shared/assets/images'
+import { IcClose, IcFile, IcPagelink, IcRefresh } from '@/shared/assets/icon'
+import { ImgPush, ImgRoundIncorrect, ImgStar, ImgTutorialRefresh } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
@@ -34,6 +34,8 @@ import { useMessaging } from '@/shared/hooks/use-messaging'
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { checkNotificationPermission } from '@/shared/lib/notification'
 import { useQueryParam, useRouter } from '@/shared/lib/router'
+import { StorageKey } from '@/shared/lib/storage'
+import { useLocalStorage } from '@/shared/lib/storage/model/use-storage'
 import { cn } from '@/shared/lib/utils'
 import { useTranslation } from '@/shared/locales/use-translation'
 
@@ -41,6 +43,7 @@ type Quiz = GetAllQuizzesResponse['quizzes'][number]
 
 const HomePage = () => {
   const router = useRouter()
+  const [redirectUrl, _, removeRedirectUrl] = useLocalStorage(StorageKey.redirectUrl, '')
   const { trackEvent } = useAmplitude()
   const { t, currentLanguage } = useTranslation()
 
@@ -57,6 +60,9 @@ const HomePage = () => {
   const [quizzes, setQuizzes] = useState<Quiz[]>()
   // 백그라운드 퀴즈 캐시 (리페치된 퀴즈를 임시 저장)
   const backgroundQuizzesRef = useRef<Quiz[]>([])
+
+  // 튜토리얼 새로고침 표시 여부 관리
+  const [tutorialRefreshShown, setTutorialRefreshShown] = useLocalStorage(StorageKey.tutorialRefreshShown, false)
 
   const [displayQuizType] = useQueryParam('/', 'displayQuizType')
   const [displayQuizScope] = useQueryParam('/', 'displayQuizScope')
@@ -253,6 +259,19 @@ const HomePage = () => {
       setUserLoaded(true)
     }
   }, [userLoaded, refetchUser])
+
+  useEffect(() => {
+    if (!userLoaded || user) {
+      return
+    }
+
+    if (redirectUrl) {
+      removeRedirectUrl()
+      router.replace(redirectUrl as any, {
+        params: [],
+      })
+    }
+  }, [userLoaded, user])
 
   if (!user) {
     return null
@@ -572,7 +591,30 @@ const HomePage = () => {
           </Button>
         </DialogContent>
       </Dialog>
+
+      {quizzes && quizzes.length > 0 && !tutorialRefreshShown && (
+        <TutorialRefresh onClose={() => setTutorialRefreshShown(true)} />
+      )}
     </>
+  )
+}
+
+const TutorialRefresh = ({ onClose }: { onClose: () => void }) => {
+  return (
+    <div className="absolute inset-0 bg-black/70 z-50 flex-center flex-col">
+      <Text typo="subtitle-1-bold" color="inverse" className="text-center">
+        문제를 바꾸고 싶다면
+        <br />
+        카드를 <span className="text-accent">아래로</span> 당겨보세요
+      </Text>
+      <div className="mt-[32px] mb-[40px]">
+        <ImgTutorialRefresh className="size-[200px]" />
+      </div>
+      <button onClick={onClose} className="flex items-center gap-2 text-inverse">
+        <IcClose className="size-[20px]" />
+        <Text typo="button-1">닫기</Text>
+      </button>
+    </div>
   )
 }
 

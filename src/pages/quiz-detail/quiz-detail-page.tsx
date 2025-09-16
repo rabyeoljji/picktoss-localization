@@ -44,15 +44,7 @@ import {
   DialogHeader,
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from '@/shared/components/ui/drawer'
+import { Drawer, DrawerClose, DrawerContent, DrawerTitle, DrawerTrigger } from '@/shared/components/ui/drawer'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -62,12 +54,14 @@ import {
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
-import { useSessionStorage } from '@/shared/lib/storage'
+import { StorageKey, useLocalStorage, useSessionStorage } from '@/shared/lib/storage'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 const QuizDetailPage = () => {
   const { trackEvent } = useAmplitude()
   const router = useRouter()
+
+  const [_, setRedirectUrl] = useLocalStorage(StorageKey.redirectUrl, '')
   const { t } = useTranslation()
 
   const { noteId } = useParams()
@@ -76,7 +70,6 @@ const QuizDetailPage = () => {
 
   const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
   const { mutate: deleteDocument } = useDeleteDocument()
-  const [contentDrawerOpen, setContentDrawerOpen] = useState(false)
 
   const [selectedQuizCount, setSelectedQuizCount] = useState(20)
 
@@ -170,7 +163,9 @@ const QuizDetailPage = () => {
           setIsBookmarked(document.isBookmarked)
           setBookmarkCount(document.bookmarkCount)
         },
-        onSettled: () => setIsBookmarkProcessing(false),
+        onSettled: () => {
+          setIsBookmarkProcessing(false)
+        },
       },
     )
   }
@@ -519,24 +514,6 @@ const QuizDetailPage = () => {
         </div>
       </HeaderOffsetLayout>
 
-      {/* TODO: Markdown Viewer */}
-      {/* 원본 노트 drawer */}
-      <Drawer open={contentDrawerOpen} onOpenChange={setContentDrawerOpen}>
-        <DrawerContent height="full">
-          <DrawerHeader>
-            <DrawerTitle>{t('quizDetail.quiz_detail_page.original_note_title')}</DrawerTitle>
-            <DrawerDescription>
-              {document?.createdAt.split('T')[0].split('-').join('.')}{' '}
-              {t('quizDetail.quiz_detail_page.registered_date')} / {document?.content?.length}
-              {t('quizDetail.quiz_detail_page.characters')}
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="mt-5 flex-1 overflow-y-scroll pb-10">
-            <p>{document?.content}</p>
-          </div>
-        </DrawerContent>
-      </Drawer>
-
       {/* 문서 삭제 confirm 모달 */}
       <SystemDialog
         open={deleteDocumentDialogOpen}
@@ -560,7 +537,16 @@ const QuizDetailPage = () => {
         }}
       />
 
-      <LoginDialog open={isLoginOpen} onOpenChange={setIsLoginOpen} />
+      <LoginDialog
+        open={isLoginOpen}
+        onOpenChange={setIsLoginOpen}
+        onClickLogin={() => {
+          if (!token) {
+            setRedirectUrl(window.location.pathname + window.location.search)
+          }
+          router.push('/login')
+        }}
+      />
     </div>
   )
 }

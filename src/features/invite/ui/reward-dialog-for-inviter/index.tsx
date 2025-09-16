@@ -2,7 +2,6 @@ import { useQueryClient } from '@tanstack/react-query'
 
 import { useConfirmInviteCodeBySignUp } from '@/entities/auth/api/hooks'
 import { MEMBER_KEYS } from '@/entities/member/api/config'
-import { useUser } from '@/entities/member/api/hooks'
 
 import { ImgStar } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
@@ -10,9 +9,16 @@ import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/
 import { Text } from '@/shared/components/ui/text'
 import { useTranslation } from '@/shared/locales/use-translation'
 
-const RewardDialogForInviter = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+const RewardDialogForInviter = ({
+  open,
+  onOpenChange,
+  userName,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  userName: string
+}) => {
   const queryClient = useQueryClient()
-  const { data: user } = useUser()
   const { mutate: confirmInvite } = useConfirmInviteCodeBySignUp()
   const { t } = useTranslation()
 
@@ -42,18 +48,19 @@ const RewardDialogForInviter = ({ open, onOpenChange }: { open: boolean; onOpenC
           <div className="flex flex-col gap-[8px]">
             <DialogTitle className="typo-h4 text-center">{t('profile.친구_초대_보상_도착')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
-              {t('profile.초대해주신_님께', { name: user?.name })} <br />
-              {t('profile.보상으로_별')}{' '}
+              {t('profile.inviter_reward_dialog.invite_reward_message1')}{' '}
+              {t('profile.invite_reward_dialog.dear_name', { name: userName })} <br />
+              {t('profile.inviter_reward_dialog.invite_reward_message2')} {t('profile.invite_reward_dialog.star_unit')}{' '}
               <Text as={'span'} typo="subtitle-2-medium" color="accent">
-                {t('profile.개', { count: 50 })}
+                {t('profile.invite_reward_dialog.star_count', { count: 50 })}
               </Text>
-              {t('profile.를_드려요')}
+              {t('profile.inviter_reward_dialog.invite_reward_message3')}
             </DialogDescription>
           </div>
         </div>
 
         <Button onClick={handleReward} className="w-full">
-          {t('profile.받기')}
+          {t('profile.inviter_reward_dialog.receive_button')}
         </Button>
       </DialogContent>
     </Dialog>

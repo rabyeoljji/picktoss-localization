@@ -34,7 +34,7 @@ const QuestionCardHeader = ({
   right,
   className,
 }: {
-  order: number
+  order?: number
   right?: React.ReactNode
   className?: string
 }) => {

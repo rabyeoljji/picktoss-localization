@@ -30,9 +30,8 @@ export const useMessaging = () => {
         try {
           await requestNotificationPermission()
 
-          callbackAfterPermission?.(Notification.permission === 'granted')
-
-          const isGranted = Notification.permission === 'granted'
+          const isGranted = typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'granted'
+          callbackAfterPermission?.(isGranted)
 
           // 로그인 상태(토큰 여부)고, 알림 허용 상태일 때만 진행
           if (!accessToken || !isGranted) {

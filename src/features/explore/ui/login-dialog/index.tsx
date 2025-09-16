@@ -4,7 +4,15 @@ import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } fr
 import { useRouter } from '@/shared/lib/router'
 import { useTranslation } from '@/shared/locales/use-translation'
 
-const LoginDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (open: boolean) => void }) => {
+const LoginDialog = ({
+  open,
+  onOpenChange,
+  onClickLogin,
+}: {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  onClickLogin?: () => void
+}) => {
   const router = useRouter()
   const { t } = useTranslation()
 
@@ -26,7 +34,13 @@ const LoginDialog = ({ open, onOpenChange }: { open: boolean; onOpenChange: (ope
         </div>
 
         <div className="w-full flex flex-col gap-[24px]">
-          <Button onClick={() => router.push('/login')} className="w-full">
+          <Button
+            onClick={() => {
+              onClickLogin?.()
+              router.push('/login')
+            }}
+            className="w-full"
+          >
             {t('explore.login_dialog.login_button')}
           </Button>
           <DialogClose asChild>

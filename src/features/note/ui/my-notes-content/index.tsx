@@ -298,7 +298,7 @@ const MyNotesContent = ({
         onOpenChange={setOpenDelete}
         title={t('library.my_notes_content.delete_confirm_title')}
         content={
-          <Text typo="body-1-medium" color="sub">
+          <Text typo="body-1-medium" color="sub" className="break-normal whitespace-pre-line">
             {t('library.my_notes_content.delete_confirm_message')}{' '}
             <Text as="span" typo="body-1-medium" color="incorrect">
               {t('library.my_notes_content.delete_confirm_count', { count: selectedTotalQuizCount })}
@@ -367,7 +367,7 @@ const NeedReleaseDialog = ({
             <DialogTitle>
               <Text typo="h4">{t('library.my_notes_content.public_required_title')}</Text>
             </DialogTitle>
-            <Text typo="subtitle-2-medium" color="sub">
+            <Text typo="subtitle-2-medium" color="sub" className="break-words text-center">
               {t('library.my_notes_content.public_required_message')} <br />
               {t('library.my_notes_content.public_required_action')}
             </Text>
@@ -392,10 +392,10 @@ const NeedReleaseDialog = ({
         onOpenChange={setOpenNeedMoreQuiz}
         title={t('library.my_notes_content.more_questions_title')}
         content={
-          <>
+          <div className="break-words text-center">
             {t('library.my_notes_content.description1')} <br />
             {t('library.my_notes_content.description2')}
-          </>
+          </div>
         }
         cancelLabel={t('library.my_notes_content.cancel_button')}
         confirmLabel={t('library.my_notes_content.create_button')}

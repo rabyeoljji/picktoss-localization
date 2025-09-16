@@ -14,7 +14,7 @@ import { useAuthStore } from '@/features/auth'
 import LoginDialog from '@/features/explore/ui/login-dialog'
 
 import { useDeleteDocument, useDocumentBookmarkMutation, useGetDocument } from '@/entities/document/api/hooks'
-import { useDeleteQuiz, useUpdateQuizInfo, useUpdateWrongAnswerConfirm } from '@/entities/quiz/api/hooks'
+import { useDeleteQuiz, useUpdateQuizInfo } from '@/entities/quiz/api/hooks'
 
 import {
   IcArrowUp,
@@ -24,7 +24,6 @@ import {
   IcDownload,
   IcEdit,
   IcKebab,
-  IcNote,
   IcReview,
 } from '@/shared/assets/icon'
 import { BackButton } from '@/shared/components/buttons/back-button'
@@ -43,8 +42,8 @@ import {
 import { Input } from '@/shared/components/ui/input'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Skeleton } from '@/shared/components/ui/skeleton'
-import { SquareButton } from '@/shared/components/ui/square-button'
 import { Switch } from '@/shared/components/ui/switch'
+import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { TextButton } from '@/shared/components/ui/text-button'
 import { Textarea } from '@/shared/components/ui/textarea'
@@ -75,8 +74,6 @@ const NoteDetailPage = () => {
   const [reviewPickOpen, setReviewPickOpen] = useState(false)
 
   const [editTargetQuizId, setEditTargetQuizId] = useState<number | null>(null)
-
-  const { mutate: updateWrongAnswerConfirm } = useUpdateWrongAnswerConfirm()
 
   const { mutate: deleteSingleQuiz } = useDeleteQuiz()
 
@@ -344,9 +341,9 @@ const NoteDetailPage = () => {
                   </DropdownMenuItem>
                   {document?.isOwner && (
                     <>
-                      <DropdownMenuItem right={<IcNote />} onClick={() => setContentDrawerOpen(true)}>
-                        {t('quizDetail.quiz_detail_list_page.original_document_button')}
-                      </DropdownMenuItem>
+                      {/* <DropdownMenuItem right={<IcNote />} onClick={() => setContentDrawerOpen(true)}>
+                    {t('quizDetail.quiz_detail_list_page.original_document_button')}
+                  </DropdownMenuItem> */}
                       <DropdownMenuItem
                         className="text-red-500"
                         right={<IcDelete className="text-icon-critical" />}
@@ -759,44 +756,32 @@ const NoteDetailPage = () => {
         <DrawerContent height="full" className="pb-[40px]">
           <DrawerHeader>
             <DrawerTitle>{t('quizDetail.quiz_detail_list_page.review_pick_title')}</DrawerTitle>
-            <DrawerDescription>{t('quizDetail.quiz_detail_list_page.review_pick_description')}</DrawerDescription>
           </DrawerHeader>
-          <div className="overflow-y-scroll">
-            {document?.reviewNeededQuizzes.map((quiz, index) => (
+          <div className="overflow-y-scroll mt-[20px] flex flex-col gap-2">
+            {document?.reviewNeededQuizzes.map((quiz) => (
               <div key={quiz.id}>
-                <QuestionCard key={quiz.id} className="border-none">
-                  <QuestionCard.Header order={index + 1} className="px-0" />
-                  <QuestionCard.Question className="px-0">{quiz.question}</QuestionCard.Question>
+                <QuestionCard key={quiz.id} className="border border-outline">
+                  <QuestionCard.Header
+                    right={
+                      <Tag size="md" color="red">
+                        {t('common.incorrect')}
+                      </Tag>
+                    }
+                  />
+                  <QuestionCard.Question>{quiz.question}</QuestionCard.Question>
                   {quiz.quizType === 'MIX_UP' ? (
-                    <QuestionCard.OX
-                      answerIndex={quiz.answer === 'correct' ? 0 : 1}
-                      showAnswer={true}
-                      className="px-0"
-                    />
+                    <QuestionCard.OX answerIndex={quiz.answer === 'correct' ? 0 : 1} showAnswer={true} />
                   ) : (
                     <QuestionCard.Multiple
                       options={quiz.options}
                       answerIndex={quiz.options.indexOf(quiz.answer)}
                       showAnswer={true}
-                      className="px-0"
                     />
                   )}
-                  <QuestionCard.Explanation hideToggle open={true} className="px-0">
+                  <QuestionCard.Explanation hideToggle open={true}>
                     {quiz.explanation}
                   </QuestionCard.Explanation>
                 </QuestionCard>
-                <SquareButton
-                  variant="secondary"
-                  className="w-full mt-4"
-                  onClick={() =>
-                    updateWrongAnswerConfirm({
-                      noteId: Number(noteId),
-                      quizId: quiz.id,
-                    })
-                  }
-                >
-                  {t('quizDetail.quiz_detail_list_page.understand_button')}
-                </SquareButton>
               </div>
             ))}
           </div>
@@ -867,7 +852,7 @@ const NoteDetailPage = () => {
         onOpenChange={setDeleteDocumentDialogOpen}
         title={t('quizDetail.quiz_detail_list_page.delete_quiz_confirm_title')}
         content={
-          <Text typo="body-1-medium" color="sub">
+          <Text typo="body-1-medium" color="sub" className="break-normal whitespace-pre-line">
             {t('quizDetail.quiz_detail_list_page.delete_quiz_confirm_message')}{' '}
             <Text as="span" typo="body-1-medium" color="incorrect">
               {t('quizDetail.quiz_detail_list_page.delete_quiz_confirm_count', { count: document?.quizzes.length })}

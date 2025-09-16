@@ -10,9 +10,18 @@ import { StorageKey } from '@/shared/lib/storage'
 // }
 /** 알림 권한이 설정되었는지 확인 (iOS 대응) */
 export const checkNotificationPermission = (): boolean => {
-  return (
-    Notification.permission !== 'default' || localStorage.getItem(StorageKey.notificationPermissionComplete) === 'true'
-  )
+  try {
+    if (typeof window === 'undefined' || !('Notification' in window)) {
+      return false
+    }
+    
+    return (
+      Notification.permission !== 'default' || localStorage.getItem(StorageKey.notificationPermissionComplete) === 'true'
+    )
+  } catch (error) {
+    console.error('checkNotificationPermission failed:', error)
+    return false
+  }
 }
 
 /** 범용 알림 권한 요청 함수 (iOS 대응 포함) */

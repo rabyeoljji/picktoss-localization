@@ -12,7 +12,7 @@
       "destination": "https://app.picktoss.com/quiz-detail/:id"
     },
     {
-      "source": "/:path((?!api/).*)",
+      "source": "/:path((?!api/|ads\\.txt).*)",
       "destination": "/index.html"
     }
   ]

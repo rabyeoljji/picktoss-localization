@@ -21,6 +21,12 @@ export const StorageKey = {
   notificationPermissionComplete: 'notificationPermissionComplete',
   /** 초대코드로 회원가입 시 */
   inviteCode: 'inviteCode',
+  /** 튜토리얼 새로고침 표시 여부 */
+  tutorialRefreshShown: 'tutorialRefreshShown',
+  /** 보상 표시 여부 - 회원가입 시 true */
+  checkRewardDialog: 'checkRewardDialog',
+  /** 로그인 전 현재 페이지 URL */
+  redirectUrl: 'redirectUrl',
 } as const
 
 /**
@@ -44,4 +50,7 @@ export interface StorageSchema {
   }
   [StorageKey.notificationPermissionComplete]: string
   [StorageKey.inviteCode]: string
+  [StorageKey.tutorialRefreshShown]: boolean
+  [StorageKey.checkRewardDialog]: boolean
+  [StorageKey.redirectUrl]: string
 }

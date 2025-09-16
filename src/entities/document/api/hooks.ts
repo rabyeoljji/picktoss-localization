@@ -8,6 +8,8 @@ import {
 } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
+import { MEMBER_KEYS } from '@/entities/member/api/config'
+
 import { DOCUMENT_KEYS } from './config'
 import {
   CreateDocumentPayload,
@@ -220,6 +222,8 @@ export const useGetPublicDocuments = ({
       const nextPage = allPages.length
       return nextPage < lastPage.totalPages ? nextPage : undefined
     },
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   })
 
   return {
@@ -262,7 +266,7 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
     onMutate: async ({ documentId, isBookmarked }) => {
       // 진행 중인 쿼리들 취소
       await Promise.all([
-        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] }),
+        queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments], exact: false }),
         queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] }),
         queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] }),
         queryClient.cancelQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] }),
@@ -413,9 +417,17 @@ export const useDocumentBookmarkMutation = (documentId: number) => {
       }
     },
     onSettled: async () => {
-      // 북마크 목록과 단일 문서만 invalidate
+      // 강제로 refetch도 실행 (enabled: false인 경우를 대비)
+      queryClient.refetchQueries({
+        predicate: (query) => {
+          const key = query.queryKey
+          return key[0] === 'documents' && key[1] === '/documents/bookmarked'
+        },
+      })
+
+      // 다른 관련 쿼리들도 invalidate
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] }),
+        queryClient.invalidateQueries({ queryKey: [...MEMBER_KEYS.getMemberInfo] }),
         queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] }),
         queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] }),
       ])
@@ -430,7 +442,7 @@ export const useCreateDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.createDocumentBookmark(documentId),
     mutationFn: () => createDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments], exact: false })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] })
@@ -445,7 +457,7 @@ export const useDeleteDocumentBookmark = (documentId: number) => {
     mutationKey: DOCUMENT_KEYS.deleteDocumentBookmark(documentId),
     mutationFn: () => deleteDocumentBookmark(documentId),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getBookmarkedDocuments], exact: false })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchPublicDocuments] })

@@ -58,6 +58,7 @@ import imgSymbol from "./img_symbol.png"
 import imgTodayquiz from "./img_todayquiz.png"
 import imgTreasure from "./img_treasure.png"
 import imgTreasurebox from "./img_treasurebox.png"
+import imgTutorialRefresh from "./img_tutorial_refresh.png"
 
 // Type definition for image component props
 type ImageComponentProps = React.ImgHTMLAttributes<HTMLImageElement>;
@@ -288,5 +289,9 @@ export const ImgTreasure: React.FC<ImageComponentProps> = ({ ...props }) => {
 
 export const ImgTreasurebox: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgTreasurebox} alt="treasurebox" {...props} />;
+};
+
+export const ImgTutorialRefresh: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgTutorialRefresh} alt="tutorial_refresh" {...props} />;
 };
 

@@ -8,6 +8,7 @@ import { useLogin } from '@/entities/auth/api/hooks'
 
 import { usePWA } from '@/shared/hooks/use-pwa'
 import { useRouter } from '@/shared/lib/router'
+import { setLocalStorageItem } from '@/shared/lib/storage/lib'
 
 import { useAuthStore } from './auth-store'
 
@@ -16,6 +17,7 @@ export const useGLogin = (onSuccess?: () => void) => {
   const router = useRouter()
   const location = useLocation()
   const setToken = useAuthStore((state) => state.setToken)
+  const setIsSignUp = useAuthStore((state) => state.setIsSignUp)
   const { isPWA } = usePWA()
 
   const { mutateAsync: loginMutation } = useLogin()
@@ -31,6 +33,11 @@ export const useGLogin = (onSuccess?: () => void) => {
           },
         })
         setToken(result.accessToken)
+        setIsSignUp(result.signUp)
+
+        if (result.signUp) {
+          setLocalStorageItem('checkRewardDialog', true)
+        }
 
         const defaultPath = !isPWA && isMobile ? '/explore' : '/'
 

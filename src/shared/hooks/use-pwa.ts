@@ -9,22 +9,39 @@ export const usePWA = () => {
 
   useEffect(() => {
     const checkPWA = () => {
-      const isIOSStandalone =
-        typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
+      try {
+        const isIOSStandalone =
+          typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
 
-      const isStandaloneMedia =
-        typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(display-mode: standalone)').matches
+        let isStandaloneMedia = false
+        if (typeof window !== 'undefined' && window.matchMedia) {
+          try {
+            isStandaloneMedia = window.matchMedia('(display-mode: standalone)').matches
+          } catch (error) {
+            console.warn('matchMedia not supported or failed:', error)
+          }
+        }
 
-      setIsPWA(Boolean(isIOSStandalone || isStandaloneMedia))
+        setIsPWA(Boolean(isIOSStandalone || isStandaloneMedia))
+      } catch (error) {
+        console.error('PWA check failed:', error)
+        setIsPWA(false)
+      }
     }
 
     checkPWA()
 
-    const mediaQuery = window.matchMedia('(display-mode: standalone)')
-    mediaQuery.addEventListener?.('change', checkPWA)
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      try {
+        const mediaQuery = window.matchMedia('(display-mode: standalone)')
+        mediaQuery.addEventListener?.('change', checkPWA)
 
-    return () => {
-      mediaQuery.removeEventListener?.('change', checkPWA)
+        return () => {
+          mediaQuery.removeEventListener?.('change', checkPWA)
+        }
+      } catch (error) {
+        console.warn('Failed to setup mediaQuery listener:', error)
+      }
     }
   }, [])
 

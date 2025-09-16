@@ -44,15 +44,21 @@ const AccountPage = () => {
     setNotificationEnabled(checked)
 
     if (checked) {
-      // 권한 설정을 한 적 없을 경우 권한 요청 drawer open
-      if (!checkNotificationPermission()) {
-        setOpenNotificationPermission(true)
-        return
-      }
+      try {
+        // 권한 설정을 한 적 없을 경우 권한 요청 drawer open
+        if (!checkNotificationPermission()) {
+          setOpenNotificationPermission(true)
+          return
+        }
 
-      // 이전에 거부한 적이 있다면 운영체제나 브라우저 설정에서 먼저 변경할 수 있도록 유도
-      if (Notification.permission === 'denied') {
-        setOpenNotificationSettingInfo(true)
+        // 이전에 거부한 적이 있다면 운영체제나 브라우저 설정에서 먼저 변경할 수 있도록 유도
+        if (typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied') {
+          setOpenNotificationSettingInfo(true)
+          setNotificationEnabled(false)
+          return
+        }
+      } catch (error) {
+        console.error('Notification permission check failed:', error)
         setNotificationEnabled(false)
         return
       }
@@ -70,10 +76,15 @@ const AccountPage = () => {
   useEffect(() => {
     console.log(user?.quizNotificationEnabled)
 
-    // os 알림 권한 설정 자체가 거부되어있으면 서버와도 동기화
-    if ((Notification.permission === 'denied' || !checkNotificationPermission()) && user?.quizNotificationEnabled) {
-      setNotificationEnabled(false)
-      updateNotification({ quizNotificationEnabled: false })
+    try {
+      // os 알림 권한 설정 자체가 거부되어있으면 서버와도 동기화
+      const isNotificationDenied = typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied'
+      if ((isNotificationDenied || !checkNotificationPermission()) && user?.quizNotificationEnabled) {
+        setNotificationEnabled(false)
+        updateNotification({ quizNotificationEnabled: false })
+      }
+    } catch (error) {
+      console.error('Notification permission sync failed:', error)
     }
 
     setNotificationEnabled(user?.quizNotificationEnabled)
