@@ -4,7 +4,12 @@ import { useParams } from 'react-router'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
 
-import { ComplainFormValues, complainFormSchema, complainReasonMap } from '@/features/explore/model/schema'
+import {
+  ComplainFormValues,
+  complainFormSchema,
+  complainReasonMap,
+  complainReasonMapForLocalization,
+} from '@/features/explore/model/schema'
 
 import { useCreateDocumentComplaint } from '@/entities/document/api/hooks'
 
@@ -75,7 +80,7 @@ const ComplainForm = () => {
                           htmlFor={`type-${label}`}
                           selected={field.value === value}
                         >
-                          {label}
+                          {t(complainReasonMapForLocalization[label])}
                         </Selectbox>
                       </FormControl>
                     </FormItem>

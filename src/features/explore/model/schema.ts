@@ -18,6 +18,13 @@ export const complainReasonMap: Record<string, ComplainReason> = {
   '욕설/생명경시/혐오 표현이 사용되었어요': 'PROFANITY_OR_HATE_SPEECH',
 }
 
+export const complainReasonMapForLocalization: Record<string, string> = {
+  '주제와 관련 없는 내용이에요': 'quizDetail.quiz_detail_page.complain.off_topic',
+  '유해한 내용을 포함하고 있어요': 'quizDetail.quiz_detail_page.complain.harmful',
+  '명예훼손 또는 저작권이 침해되었어요': 'quizDetail.quiz_detail_page.complain.defamation_copyright',
+  '욕설/생명경시/혐오 표현이 사용되었어요': 'quizDetail.quiz_detail_page.complain.abusive_hate_speech',
+}
+
 export const complainFormSchema = z.object({
   reason: z.enum(['OFF_TOPIC', 'HARMFUL_CONTENT', 'DEFAMATION_OR_COPYRIGHT', 'PROFANITY_OR_HATE_SPEECH'], {
     invalid_type_error: '올바른 신고 사유가 아닙니다',
