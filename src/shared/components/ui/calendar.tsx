@@ -44,9 +44,9 @@ function Calendar({
           // buttonVariants({ variant: 'mediumIcon' }),
           'h-7 w-7 bg-transparent p-0 disabled:text-icon-disabled disabled:cursor-not-allowed',
         ),
-        nav_button_previous: 'center !translate-x-[calc(50%-85px)] !translate-y-[-12px]',
+        nav_button_previous: 'center !translate-x-[calc(50%-65px)] !translate-y-[-12px]',
         nav_button_next: cn(
-          'center !translate-x-[calc(50%+42px)] !translate-y-[-12px]',
+          'center !translate-x-[calc(50%+22px)] !translate-y-[-12px]',
           selectedMonth &&
             isCurrentMonth(selectedMonth) &&
             'opacity-100 text-icon-disabled cursor-not-allowed pointer-events-none',
