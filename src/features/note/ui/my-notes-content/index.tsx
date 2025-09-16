@@ -380,7 +380,7 @@ const NeedReleaseDialog = ({
 
             <DialogClose>
               <TextButton size={'lg'} className="text-sub">
-                {t('library.my_notes_content.close_button')}
+                {t('common.close')}
               </TextButton>
             </DialogClose>
           </div>
@@ -397,8 +397,8 @@ const NeedReleaseDialog = ({
             {t('library.my_notes_content.description2')}
           </div>
         }
-        cancelLabel={t('library.my_notes_content.cancel_button')}
-        confirmLabel={t('library.my_notes_content.create_button')}
+        cancelLabel={t('common.cancel')}
+        confirmLabel={t('common.generate')}
         onConfirm={() => {
           if (!selectedDocument) return
           router.push('/quiz-detail/:noteId', { params: [String(selectedDocument.id)] })

@@ -236,7 +236,7 @@ const AccountInfoPage = () => {
             open={logoutDialogOpen}
             onOpenChange={setLogoutDialogOpen}
             title={t('profile.account_info_page.confirm_logout')}
-            cancelLabel={t('profile.account_info_page.cancel')}
+            cancelLabel={t('common.cancel')}
             confirmLabel={t('profile.account_info_page.logout')}
             variant="critical"
             onConfirm={handleLogout}

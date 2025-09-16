@@ -47,7 +47,7 @@ const QuizAnalysisPage = () => {
 
   const chartConfig = {
     multiple: {
-      label: t('profile.quiz_analysis_page.multiple_choice'),
+      label: t('common.multiple_choice'),
       color: 'var(--color-orange-400)',
     },
     mixup: {
@@ -68,7 +68,7 @@ const QuizAnalysisPage = () => {
   const superiorQuizType =
     (monthlyAnalysisData?.quizTypes.mixUpQuizCount ?? 0) > (monthlyAnalysisData?.quizTypes.multipleChoiceQuizCount ?? 0)
       ? 'O/X'
-      : t('profile.quiz_analysis_page.multiple_choice')
+      : t('common.multiple_choice')
 
   return (
     <>
@@ -81,7 +81,7 @@ const QuizAnalysisPage = () => {
               <IcDatePrevious className="size-[16px]" />
             </button>
             <Text typo="h4" className="w-fit text-center">
-              {t(`profile.calendar.month.${Number(month.split('-')[1])}`)}
+              {t(`common.month.${Number(month.split('-')[1])}`)}
             </Text>
             <button
               onClick={() => setMonth(format(addMonths(dateMonth, 1), 'yyyy-MM'))}
@@ -295,7 +295,7 @@ const QuizAnalysisPage = () => {
                         color={totalQuizCount === 0 ? 'caption' : 'secondary'}
                         className="w-[72px]"
                       >
-                        {t('profile.quiz_analysis_page.multiple_choice')}
+                        {t('common.multiple_choice')}
                       </Text>
                     </div>
 

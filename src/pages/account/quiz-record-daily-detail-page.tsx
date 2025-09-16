@@ -107,7 +107,7 @@ const QuizRecordDailyDetailPage = () => {
 
       <HeaderOffsetLayout ref={scrollContainerRef} className="h-full overflow-y-auto">
         <div className="p-[16px] flex flex-col items-center gap-[8px]">
-          <Text typo="h4">{t('profile.데일리_퀴즈')}</Text>
+          <Text typo="h4">{t('profile.quiz_record_daily_detail.daily_quiz_title')}</Text>
           <Text typo="subtitle-2-medium" color="sub">
             {solvedDate}
           </Text>
@@ -122,11 +122,11 @@ const QuizRecordDailyDetailPage = () => {
                   right={
                     question.isAnswer ? (
                       <Tag size="md" color="green">
-                        {t('profile.정답')}
+                        {t('common.correct')}
                       </Tag>
                     ) : (
                       <Tag size="md" color="red">
-                        {t('profile.오답')}
+                        {t('common.incorrect')}
                       </Tag>
                     )
                   }

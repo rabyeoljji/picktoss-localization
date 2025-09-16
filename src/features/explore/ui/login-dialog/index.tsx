@@ -44,7 +44,7 @@ const LoginDialog = ({
             {t('explore.login_dialog.login_button')}
           </Button>
           <DialogClose asChild>
-            <button className=" text-sub">{t('explore.login_dialog.close_button')}</button>
+            <button className=" text-sub">{t('common.close')}</button>
           </DialogClose>
         </div>
       </DialogContent>

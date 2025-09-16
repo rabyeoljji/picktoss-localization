@@ -391,7 +391,7 @@ const NoteDetailPage = () => {
               )}
               onClick={() => setShowMultipleChoice(!showMultipleChoice)}
             >
-              {t('quizDetail.quiz_detail_list_page.multiple_choice_label')}
+              {t('common.multiple_choice')}
             </button>
             <button
               className={cn(
@@ -825,9 +825,7 @@ const NoteDetailPage = () => {
             </DialogDescription>
             <div className="flex gap-2.5 mt-[20px]">
               <DialogClose asChild>
-                <button className="h-[48px] flex-1 text-sub">
-                  {t('quizDetail.quiz_detail_list_page.cancel_button')}
-                </button>
+                <button className="h-[48px] flex-1 text-sub">{t('common.cancel')}</button>
               </DialogClose>
               <button
                 className="h-[48px] flex-1 text-red-500"

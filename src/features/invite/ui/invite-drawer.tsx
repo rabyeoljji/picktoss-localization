@@ -152,7 +152,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
                 value={inviteLink}
                 right={
                   <SquareButton size={'sm'} variant={'tertiary'} onClick={handleCopy}>
-                    {t('profile.invite_drawer.copy')}
+                    {t('common.copy')}
                   </SquareButton>
                 }
                 disabled

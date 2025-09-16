@@ -117,9 +117,7 @@ export const QuizResultView = ({
                   order={index + 1}
                   right={
                     <Tag size="md" color={quizWithResult.isCorrect ? 'green' : 'red'}>
-                      {quizWithResult.isCorrect
-                        ? t('progressQuiz.quiz_page.correct_answer')
-                        : t('progressQuiz.quiz_page.incorrect_answer')}
+                      {quizWithResult.isCorrect ? t('common.correct') : t('common.incorrect')}
                     </Tag>
                   }
                 />

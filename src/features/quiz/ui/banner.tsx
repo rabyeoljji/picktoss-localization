@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
 import { useUser } from '@/entities/member/api/hooks'
@@ -11,6 +13,8 @@ import { MultipleChoiceOption } from './multiple-choice-option'
 export const DailyGuide = () => {
   const router = useRouter()
   const { data: user } = useUser()
+
+  const { t } = useTranslation()
 
   const handleOptionClick = (type: string) => {
     if (type === 'file') {
@@ -45,20 +49,20 @@ export const DailyGuide = () => {
         <div className="text-center mb-[26px]">
           <div className="mb-3">
             <Tag size="md" className="mx-auto">
-              데일리 이용 가이드
+              {t('daily.quiz_guide.daily_guide')}
             </Tag>
           </div>
           <Text typo="question">
-            퀴즈를 생성하거나 저장하면
+            {t('daily.quiz_guide.daily_guide_message1')}
             <br />
-            여기에 랜덤으로 문제가 나타나요
+            {t('daily.quiz_guide.daily_guide_message2')}
           </Text>
         </div>
 
         <div className="space-y-2">
           <MultipleChoiceOption
             label="A"
-            option="파일로 퀴즈 생성하기"
+            option={t('daily.quiz_guide.generate_file')}
             selectedOption={null}
             isCorrect={false}
             animationDelay={0}
@@ -66,7 +70,7 @@ export const DailyGuide = () => {
           />
           <MultipleChoiceOption
             label="B"
-            option="텍스트로 퀴즈 생성하기"
+            option={t('daily.quiz_guide.generate_text')}
             selectedOption={null}
             isCorrect={false}
             animationDelay={100}
@@ -74,7 +78,7 @@ export const DailyGuide = () => {
           />
           <MultipleChoiceOption
             label="C"
-            option="내 관심분야 퀴즈 보러가기"
+            option={t('daily.quiz_guide.explore_my_topics')}
             selectedOption={null}
             isCorrect={false}
             animationDelay={200}
@@ -82,7 +86,7 @@ export const DailyGuide = () => {
           />
           <MultipleChoiceOption
             label="D"
-            option="픽토스 전체 퀴즈 보러가기"
+            option={t('daily.quiz_guide.explore_all_quizzes')}
             selectedOption={null}
             isCorrect={false}
             animationDelay={300}

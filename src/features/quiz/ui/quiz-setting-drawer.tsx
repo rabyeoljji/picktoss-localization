@@ -69,7 +69,7 @@ export const QuizSettingDrawer = ({
                       disabled={quizzes?.every((quiz) => quiz.quizType !== 'MULTIPLE_CHOICE')}
                     />
                     <Text typo="subtitle-2-medium" color="primary">
-                      {t('daily.quiz_setting_drawer.multiple_choice')}
+                      {t('common.multiple_choice')}
                     </Text>
                   </Label>
                   <Label className="flex items-center gap-3 w-full py-[10px]">

@@ -132,7 +132,7 @@ const NoteCreateContent = () => {
                     })
                   }}
                 >
-                  {t('createQuiz.note_create_page.create_button')}
+                  {t('common.generate')}
                 </Button>
               </div>
               <LackingStarDrawer

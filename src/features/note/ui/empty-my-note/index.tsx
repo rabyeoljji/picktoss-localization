@@ -33,7 +33,7 @@ const EmptyMyNote = () => {
           })
         }
       >
-        {t('library.empty_my_note.create_button')}
+        {t('common.generate')}
       </Button>
     </div>
   )

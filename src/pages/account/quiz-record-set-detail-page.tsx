@@ -39,7 +39,11 @@ const QuizRecordSetDetailPage = () => {
     const minutes = Math.floor((totalSeconds % 3600) / 60)
     const seconds = Math.floor(totalSeconds % 60)
 
-    return [hours && `${hours}시간`, minutes && `${minutes}분`, seconds && `${seconds}초`]
+    return [
+      hours && `${hours}${t('profile.quiz_record_set_detail.time_hours')}`,
+      minutes && `${minutes}${t('profile.quiz_record_set_detail.time_minutes')}`,
+      seconds && `${seconds}${'profile.quiz_record_set_detail.time_seconds'}`,
+    ]
       .filter((value) => value)
       .join(' ')
   }
@@ -143,10 +147,10 @@ const QuizRecordSetDetailPage = () => {
                 <ImgSpeechbubble className="size-[32px]" />
               </div>
               <Text typo="subtitle-2-bold" className="mb-[2px]">
-                {t('profile.문제', { count: quizSetRecordData?.totalQuizCount })}
+                {t('profile.quiz_record_set_detail.question_count', { count: quizSetRecordData?.totalQuizCount })}
               </Text>
               <Text typo="body-2-medium" color="sub">
-                {t('profile.문제_수')}
+                {t('profile.quiz_record_set_detail.question_count_text')}
               </Text>
             </div>
             <div className="flex-center flex-col border-x border-divider px-[30px]">
@@ -157,7 +161,7 @@ const QuizRecordSetDetailPage = () => {
                 {formatDuration(quizSetRecordData?.totalElapsedTimeMs || 0)}
               </Text>
               <Text typo="body-2-medium" color="sub">
-                {t('profile.소요시간')}
+                {t('profile.quiz_record_set_detail.time_spent')}
               </Text>
             </div>
             <div className="flex-center flex-col px-[30px]">
@@ -168,7 +172,7 @@ const QuizRecordSetDetailPage = () => {
                 {Math.round(quizSetRecordData?.averageCorrectAnswerRate ?? 0)}%
               </Text>
               <Text typo="body-2-medium" color="sub">
-                {t('profile.정답률')}
+                {t('profile.quiz_record_set_detail.accuracy_rate')}
               </Text>
             </div>
           </div>
@@ -183,11 +187,11 @@ const QuizRecordSetDetailPage = () => {
                   right={
                     question.isAnswer ? (
                       <Tag size="md" color="green">
-                        {t('profile.정답')}
+                        {t('common.correct')}
                       </Tag>
                     ) : (
                       <Tag size="md" color="red">
-                        {t('profile.오답')}
+                        {t('common.incorrect')}
                       </Tag>
                     )
                   }

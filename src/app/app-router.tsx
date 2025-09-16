@@ -59,8 +59,6 @@ export const AppRouter = () => {
               {/* Library */}
               <Route path={RoutePath.library}>
                 <Route index element={<LibraryPage />} />
-                <Route path={RoutePath.libraryNoteQuiz} element={<NoteQuizPage />} />
-                <Route path={RoutePath.libraryNoteEdit} element={<NoteEditPage />} />
               </Route>
 
               {/* Account */}

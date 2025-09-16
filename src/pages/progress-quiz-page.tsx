@@ -474,12 +474,12 @@ const ResultPeekingDrawer = ({
             <div className="flex items-center gap-3">
               <ImgRoundCorrect className="size-[48px]" />
               <Text typo="h2" color="correct">
-                {t('progressQuiz.quiz_page.correct_answer')}
+                {t('common.correct')}
               </Text>
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                {t('progressQuiz.quiz_page.correct_answer')}:{' '}
+                {t('common.answer')}:{' '}
                 {currentQuiz.quizType === 'MULTIPLE_CHOICE'
                   ? currentQuiz.answer
                   : currentQuiz.answer === 'correct'
@@ -501,7 +501,7 @@ const ResultPeekingDrawer = ({
             </div>
             <div className="pt-5">
               <Text typo="subtitle-2-bold" color="primary">
-                {t('progressQuiz.quiz_page.correct_answer')}:{' '}
+                {t('common.answer')}:{' '}
                 {currentQuiz.quizType === 'MULTIPLE_CHOICE'
                   ? currentQuiz.answer
                   : currentQuiz.answer === 'correct'

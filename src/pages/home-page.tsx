@@ -491,7 +491,7 @@ const HomePage = () => {
             </Text>
             <div className="mt-2 pb-[32px] border-b border-divider">
               <Text typo="body-1-medium" color="sub" className="text-center">
-                {t('daily.alert_drawer.description1')}
+                {t('daily.home_page.notification_permission_message2')}
                 <br />
                 {t('daily.alert_drawer.description2')}
               </Text>
@@ -645,7 +645,7 @@ const IncorrectAnswerBody = ({
 
       <div className="grid gap-3">
         <Text typo="subtitle-1-bold">
-          {t('daily.home_page.correct_answer')}:{' '}
+          {t('daily.home_page.answer')}:{' '}
           {currQuiz.quizType === 'MULTIPLE_CHOICE' ? currQuiz.answer : currQuiz.answer === 'correct' ? 'O' : 'X'}
         </Text>
         <Text typo="body-1-medium" as="p" color="secondary">
@@ -710,9 +710,9 @@ const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChang
             {t('daily.home_page.notification_permission_guide')}
           </Text>
           <Text typo="subtitle-2-medium" color="sub" className="text-center">
-            {t('daily.home_page.notification_permission_message')}
+            {t('daily.home_page.notification_permission_message1')}
             <br />
-            {t('daily.alert_drawer.description1')}
+            {t('daily.home_page.notification_permission_message2')}
           </Text>
         </DrawerHeader>
 

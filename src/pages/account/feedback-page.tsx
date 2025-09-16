@@ -26,7 +26,7 @@ const FeedbackPage = () => {
             }
             title={t('profile.feedback_form.exit_confirm_title')}
             content={t('profile.feedback_form.exit_confirm_message')}
-            cancelLabel={t('profile.feedback_form.cancel_button')}
+            cancelLabel={t('common.cancel')}
             confirmLabel={t('profile.feedback_form.confirm_button')}
             onConfirm={() => router.back()}
           />
