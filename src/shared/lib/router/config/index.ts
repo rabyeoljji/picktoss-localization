@@ -80,6 +80,9 @@ export const RouteConfig = {
   accountInfo: {
     pathname: '/account/info',
   },
+  accountLanguage: {
+    pathname: '/account/language',
+  },
   accountDailyQuizAttendance: {
     pathname: '/account/daily-quiz-attendance',
   },

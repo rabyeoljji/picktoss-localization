@@ -18,6 +18,7 @@ import {
 } from '@/pages/account'
 import { FeedbackCompletePage } from '@/pages/account/feedback-complete-page'
 import FeedbackPage from '@/pages/account/feedback-page'
+import LanguagePage from '@/pages/account/language-page'
 import MyStarPage from '@/pages/account/my-star-page'
 import StarHistoryPage from '@/pages/account/star-history-page'
 import { LoginPage } from '@/pages/auth'
@@ -65,6 +66,7 @@ export const AppRouter = () => {
               <Route path={RoutePath.account}>
                 <Route index element={<AccountPage />} />
                 <Route path={RoutePath.accountInfo} element={<AccountInfoPage />} />
+                <Route path={RoutePath.accountLanguage} element={<LanguagePage />} />
                 <Route path={RoutePath.accountDailyQuizAttendance} element={<DailyQuizAttendancePage />} />
                 <Route path={RoutePath.accountQuizAnalysis} element={<QuizAnalysisPage />} />
                 <Route path={RoutePath.accountQuizRecord} element={<QuizRecordPage />} />

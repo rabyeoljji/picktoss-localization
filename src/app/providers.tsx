@@ -4,7 +4,6 @@ import { I18nextProvider } from 'react-i18next'
 import { GoogleOAuthProvider } from '@react-oauth/google'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
-import { LanguageSwitcher } from '@/shared/components/ui/language-switcher'
 import { Toaster } from '@/shared/components/ui/sonner'
 import { AmplitudeProvider } from '@/shared/hooks/use-amplitude-context'
 import { i18n, initializeI18next } from '@/shared/locales/i18n'
@@ -40,7 +39,6 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
             {children}
-            <LanguageSwitcher />
             <Toaster expand position="bottom-center" duration={3000} style={{ marginBottom: '40px' }} />
           </GoogleOAuthProvider>
         </QueryClientProvider>

@@ -78,7 +78,8 @@ const AccountPage = () => {
 
     try {
       // os 알림 권한 설정 자체가 거부되어있으면 서버와도 동기화
-      const isNotificationDenied = typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied'
+      const isNotificationDenied =
+        typeof window !== 'undefined' && 'Notification' in window && Notification.permission === 'denied'
       if ((isNotificationDenied || !checkNotificationPermission()) && user?.quizNotificationEnabled) {
         setNotificationEnabled(false)
         updateNotification({ quizNotificationEnabled: false })
@@ -263,6 +264,11 @@ const AccountPage = () => {
             <div className="flex flex-col gap-[20px]">
               <Link to="/account/info" className="flex items-center justify-between">
                 <Text typo="subtitle-2-medium">{t('profile.main_page.account_info')}</Text>
+                <IcChevronRight className="size-[16px] text-icon-sub" />
+              </Link>
+
+              <Link to="/account/language" className="flex items-center justify-between">
+                <Text typo="subtitle-2-medium">{t('profile.main_page.language')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 

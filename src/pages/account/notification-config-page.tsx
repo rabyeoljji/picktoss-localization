@@ -1,5 +1,3 @@
-import { useTranslation } from 'react-i18next'
-
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
 
@@ -10,13 +8,15 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 // import NotificationItem from '@/shared/components/items/notification-item'
 import { Text } from '@/shared/components/ui/text'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const NotificationConfigPage = () => {
   // const { data, isLoading } = useGetNotifications()
+  const { t } = useTranslation()
 
   return (
     <>
-      <Header left={<BackButton />} title="알림" className="px-[8px]" />
+      <Header left={<BackButton />} title={t('profile.notification_config_page.header')} className="px-[8px]" />
 
       <HeaderOffsetLayout className="px-[16px] h-full">
         <EmptyNotification />
