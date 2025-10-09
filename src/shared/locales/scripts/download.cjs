@@ -130,6 +130,24 @@ const fetchAllTranslations = async () => {
   return allTranslations
 }
 
+const setNestedValue = (target, keyPath, value) => {
+  const segments = keyPath.split('.')
+  if (segments.length === 0) return
+
+  const lastIndex = segments.length - 1
+  let cursor = target
+
+  for (let i = 0; i < lastIndex; i++) {
+    const segment = segments[i]
+    if (typeof cursor[segment] !== 'object' || cursor[segment] === null) {
+      cursor[segment] = {}
+    }
+    cursor = cursor[segment]
+  }
+
+  cursor[segments[lastIndex]] = value
+}
+
 // JSON 파일로 저장
 const saveTranslationsToJson = async (translations) => {
   const localesPath = path.join(process.cwd(), 'src/shared/locales')
@@ -174,12 +192,25 @@ const saveTranslationsToJson = async (translations) => {
     return ka.localeCompare(kb)
   })
 
+  // 하위 키가 존재하는 상위 키는 값 저장에서 제외 (객체 계층 구조를 만들기 위해)
+  const parentKeySet = new Set()
+  for (const key of sortedKeys) {
+    const segments = key.split('.')
+    if (segments.length <= 1) continue
+    let prefix = segments[0]
+    for (let i = 1; i < segments.length; i++) {
+      parentKeySet.add(prefix)
+      prefix += `.${segments[i]}`
+    }
+  }
+  const keysToPersist = sortedKeys.filter((key) => !parentKeySet.has(key))
+
   // 언어별로 파일 생성 (en-US가 비어있어도 키 포함, 값은 빈 문자열)
   for (const lng of lngs) {
     const lngData = {}
-    for (const key of sortedKeys) {
+    for (const key of keysToPersist) {
       const v = translations[key] && typeof translations[key][lng] === 'string' ? translations[key][lng] : ''
-      lngData[key] = v
+      setNestedValue(lngData, key, v)
     }
 
     // JSON 파일 저장

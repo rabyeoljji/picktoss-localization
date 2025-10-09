@@ -12,6 +12,24 @@ const {
   extractTranslationKeys,
 } = require('./utils.cjs')
 
+const flattenTranslations = (obj, parentKey = '', result = {}) => {
+  if (!obj || typeof obj !== 'object') {
+    return result
+  }
+
+  for (const [key, value] of Object.entries(obj)) {
+    const combinedKey = parentKey ? `${parentKey}.${key}` : key
+
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+      flattenTranslations(value, combinedKey, result)
+    } else {
+      result[combinedKey] = value == null ? '' : value
+    }
+  }
+
+  return result
+}
+
 // 스프레드시트에 데이터 업로드
 const uploadToSpreadsheet = async (docId, sheetId, data) => {
   if (!docId || docId === 'your_main_doc_id') {
@@ -118,8 +136,11 @@ const main = async () => {
       process.exit(1)
     }
 
-    const koKRData = JSON.parse(fs.readFileSync(koKRPath, 'utf8'))
-    const enUSData = fs.existsSync(enUSPath) ? JSON.parse(fs.readFileSync(enUSPath, 'utf8')) : {}
+    const koKRDataRaw = JSON.parse(fs.readFileSync(koKRPath, 'utf8'))
+    const enUSDataRaw = fs.existsSync(enUSPath) ? JSON.parse(fs.readFileSync(enUSPath, 'utf8')) : {}
+
+    const koKRData = flattenTranslations(koKRDataRaw)
+    const enUSData = flattenTranslations(enUSDataRaw)
 
     // 네임스페이스별로 데이터 분류
     for (const [key, koValue] of Object.entries(koKRData)) {

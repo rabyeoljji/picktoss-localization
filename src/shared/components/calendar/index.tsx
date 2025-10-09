@@ -158,13 +158,13 @@ export const Calendar = ({
           formatCaption: (Date: Date) => t(`common.month.${format(Date, 'M')}`),
           formatWeekdayName: (Date: Date) => {
             const weekdays = [
-              t('common.sunday'),
-              t('common.monday'),
-              t('common.tuesday'),
-              t('common.wednesday'),
-              t('common.thursday'),
-              t('common.friday'),
-              t('common.saturday'),
+              t('common.day.sunday'),
+              t('common.day.monday'),
+              t('common.day.tuesday'),
+              t('common.day.wednesday'),
+              t('common.day.thursday'),
+              t('common.day.friday'),
+              t('common.day.saturday'),
             ]
             return weekdays[Date.getDay()]
           },

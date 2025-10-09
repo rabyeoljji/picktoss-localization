@@ -45,7 +45,6 @@ export const initializeI18next = (lng?: string): void => {
       lng: defaultLanguage, // 기본 언어 설정
       fallbackLng: false, // 기본 언어로 대체되지 않게 설정
       debug: true, // 디버그 모드 활성화
-      keySeparator: false, // 키 분리자 비활성화
       nsSeparator: false, // 네임스페이스 분리자 비활성화
       returnEmptyString: false, // 빈 문자열 반환하지 않음
       postProcess: ['removeEmptyVars'],

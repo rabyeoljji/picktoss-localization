@@ -600,19 +600,31 @@ const HomePage = () => {
 }
 
 const TutorialRefresh = ({ onClose }: { onClose: () => void }) => {
+  const { t } = useTranslation()
+
   return (
     <div className="absolute inset-0 bg-black/70 z-50 flex-center flex-col">
       <Text typo="subtitle-1-bold" color="inverse" className="text-center">
-        문제를 바꾸고 싶다면
+        {/* 문제를 바꾸고 싶다면 */}
+        {t('daily.tutorial.message1')}
         <br />
-        카드를 <span className="text-accent">아래로</span> 당겨보세요
+        {t('daily.tutorial.message2')}
+        {/* 카드를 */}
+        <span className="text-accent">
+          {/* 아래로 */} {t('daily.tutorial.message3')}{' '}
+        </span>
+        {/* 당겨보세요 */}
+        {t('daily.tutorial.message4')}
       </Text>
       <div className="mt-[32px] mb-[40px]">
         <ImgTutorialRefresh className="size-[200px]" />
       </div>
       <button onClick={onClose} className="flex items-center gap-2 text-inverse">
         <IcClose className="size-[20px]" />
-        <Text typo="button-1">닫기</Text>
+        <Text typo="button-1">
+          {/* 닫기 */}
+          {t('common.close')}
+        </Text>
       </button>
     </div>
   )
