@@ -2,6 +2,7 @@ import { IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface Props {
   documentTitle: React.ReactNode
@@ -28,6 +29,8 @@ const SearchQuizItem = ({
   bookmarkCount,
   lastItem,
 }: Props) => {
+  const { t } = useTranslation()
+
   return (
     <div className={cn('border-b border-divider py-[24px] flex flex-col', lastItem && 'border-none')}>
       <div className="mb-[8px] flex items-center justify-between">
@@ -37,7 +40,9 @@ const SearchQuizItem = ({
 
         {(isBookmarked || isOwner) && (
           <Tag size={'md'} color="gray">
-            {isBookmarked ? '저장한 퀴즈' : isOwner && '생성한 퀴즈'}
+            {isBookmarked
+              ? t('explore.explore_search_page.saved')
+              : isOwner && t('explore.explore_search_page.generated')}
           </Tag>
         )}
       </div>
@@ -49,7 +54,7 @@ const SearchQuizItem = ({
       <div className="mt-[8px] flex items-center">
         <Text typo="body-2-medium" color="sub" className="flex w-fit items-center mt-[4px]">
           <div className="inline-flex justify-start items-center gap-[2px]">
-            <span>{quizCount} 문제</span>
+            <span>{t('common.quiz_card.question_count', { count: quizCount })}</span>
           </div>
 
           {isPublic && (
@@ -73,7 +78,7 @@ const SearchQuizItem = ({
           {!isPublic && (
             <>
               <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
-              <span>비공개</span>
+              <span>{t('common.quiz_card.private')}</span>
             </>
           )}
         </Text>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -24,19 +24,26 @@ import { Form, FormField, FormItem } from '@/shared/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
 import { useRouter } from '@/shared/lib/router'
-
-const interestedCategorySchema = z.object({
-  category: z.number({ required_error: '관심 분야를 선택해주세요' }),
-})
-
-type InterestedCategoryValues = z.infer<typeof interestedCategorySchema>
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?: CategoryDto }) => {
+  const { t } = useTranslation()
+
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
   const { data: categories } = useGetCategories()
   const { mutate, isPending } = useUpdateMemberCategory()
+
+  const interestedCategorySchema = useMemo(
+    () =>
+      z.object({
+        category: z.number({ required_error: t('profile.interest.required_select') }),
+      }),
+    [t],
+  )
+
+  type InterestedCategoryValues = z.infer<typeof interestedCategorySchema>
 
   const form = useForm<InterestedCategoryValues>({
     resolver: zodResolver(interestedCategorySchema),
@@ -50,9 +57,9 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
       { categoryId: values.category },
       {
         onSuccess: () => {
-          toast('관심 카테고리가 변경되었어요', {
+          toast(t('profile.interest.toast.update.content'), {
             action: {
-              label: '퀴즈 보러가기',
+              label: t('profile.interest.toast.update.button'),
               onClick: () => router.push('/explore', { search: { category: values.category } }),
             },
           })
@@ -61,6 +68,10 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
       },
     )
   }
+
+  useEffect(() => {
+    console.log(interestedCategory?.id)
+  }, [interestedCategory])
 
   return (
     <>
@@ -77,7 +88,7 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
           <button className="flex w-full items-center justify-between">
             <div className="flex flex-col items-start gap-[4px]">
               <Text typo="body-1-medium" color="sub">
-                관심분야
+                {t('profile.interest.interest')}
               </Text>
 
               {interestedCategory ? (
@@ -86,7 +97,7 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
                 </div>
               ) : (
                 <Text typo="subtitle-2-medium" color="accent">
-                  내가 관심있는 분야를 설정해보세요
+                  {t('profile.interest.set_interests_message')}
                 </Text>
               )}
             </div>
@@ -109,7 +120,7 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
               <div className="h-[calc(100%-114px)] flex flex-col">
                 <DrawerHeader className="shrink-0">
                   <DrawerTitle className="text-h4 flex items-center justify-between">
-                    관심 카테고리 선택
+                    {t('profile.interest.title')}
                     <DrawerClose>
                       <IcClose className="size-[24px] text-icon-secondary" />
                     </DrawerClose>
@@ -129,17 +140,19 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
                           className="flex flex-col"
                         >
                           {Array.isArray(categories) &&
-                            categories.map((category) => (
-                              <label
-                                key={category.id}
-                                className="flex items-center gap-[12px] py-[10px] cursor-pointer"
-                              >
-                                <RadioGroupItem value={String(category.id)} />
-                                <Text typo="subtitle-2-medium">
-                                  {category.emoji} {category.name}
-                                </Text>
-                              </label>
-                            ))}
+                            categories
+                              .sort((a, b) => a.orders - b.orders)
+                              .map((category) => (
+                                <label
+                                  key={category.id}
+                                  className="flex items-center gap-[12px] py-[10px] cursor-pointer"
+                                >
+                                  <RadioGroupItem value={String(category.id)} />
+                                  <Text typo="subtitle-2-medium">
+                                    {category.emoji} {category.name}
+                                  </Text>
+                                </label>
+                              ))}
                         </RadioGroup>
                       </FormItem>
                     </div>
@@ -150,7 +163,7 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
               <DrawerFooter className="justify-self-end flex-center w-full flex-row pt-[14px] pb-[24px] shrink-0">
                 <div className="pb-[24px] w-full">
                   <Button type="submit" disabled={isPending} size={'lg'}>
-                    저장하기
+                    {t('profile.interest.save')}
                   </Button>
                 </div>
               </DrawerFooter>

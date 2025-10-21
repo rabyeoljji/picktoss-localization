@@ -34,7 +34,11 @@
       "label": "month"
     },
     "multiple_choice": "Multiple Choice",
-    "name": "Name"
+    "name": "Name",
+    "quiz_card": {
+      "private": "Private",
+      "question_count": "{{count}} Questions"
+    }
   },
   "daily": {
     "alert_drawer": {
@@ -89,6 +93,12 @@
       "consecutive_days_complete": "{{count}} Day Streak!",
       "question": "",
       "solve_more_message": "more questions to go!"
+    },
+    "tutorial": {
+      "message1": "If you want to change the question",
+      "message2": "Pull",
+      "message3": "The card",
+      "message4": "Down"
     }
   },
   "createQuiz": {
@@ -130,6 +140,7 @@
       "placeholder": "Tap here to start typing"
     },
     "quiz_loading_drawer": {
+      "complete_description": "Check the new Quiz now",
       "complete_title": "Quiz creation complete",
       "edit_note_button": "Go to Edit Contents",
       "error_description": "Check the following tips and try again",
@@ -145,7 +156,7 @@
     }
   },
   "progressQuiz": {
-    "loading": "",
+    "loading": "Loading",
     "quiz_loading_progress_bar": {
       "generating": "Generating Quiz..."
     },
@@ -203,10 +214,10 @@
       "created_count": "Generated",
       "date_added": "Date Added",
       "delete_confirm_count": "{{count}} questions",
-      "delete_confirm_message": "-",
+      "delete_confirm_message": " ",
       "delete_confirm_title": "Delete this quiz?",
       "delete_confirm_warning": "will be permanently removed and cannot be recovered.",
-      "description1": "-",
+      "description1": " ",
       "description2": "You need at least 5 questions to share",
       "make_public_button": "Make Quiz Public",
       "more_questions_title": "Please generate more questions",
@@ -246,10 +257,12 @@
     },
     "explore_search_page": {
       "delete_all": "Delete All",
+      "generated": "Generated",
       "no_results_recent": "There is no recent search history",
       "no_results_title": "No results found",
       "recent_keyword": "Recent Keyword",
       "results_count": "Results",
+      "saved": "Saved",
       "search_placeholder": "Search quiz title or content",
       "try_different_keywords": "Try different keywords"
     },
@@ -302,13 +315,14 @@
       "cancel_button": "Cancel",
       "characters": "characters",
       "check_button": "I got wrong recently",
+      "close": "Close",
       "complete_button": "Complete",
       "daily_available_message": "Quiz Shows up in Daily",
       "delete_question_confirm_message": "Deleted questions cannot be recovered",
       "delete_question_confirm_title": "Delete this question?",
       "delete_quiz_button": "Delete Quiz",
       "delete_quiz_confirm_count": "{{count}} questions",
-      "delete_quiz_confirm_message": "-",
+      "delete_quiz_confirm_message": " ",
       "delete_quiz_confirm_title": "Delete this quiz?",
       "delete_quiz_confirm_warning": "will all be deleted and cannot be recovered",
       "delete_quiz_success_message": "Quiz has been deleted",
@@ -336,7 +350,8 @@
       "review_questions_count_unit": "questions",
       "save_button": "Saving...",
       "show_answer_button": "Show Answer",
-      "understand_button": "I understood"
+      "understand_button": "I understood",
+      "view_explanation": "View Explanation"
     },
     "quiz_detail_page": {
       "all_questions_will_be_asked": "All questions included",
@@ -350,7 +365,7 @@
         "off_topic": "Off-topic"
       },
       "delete_confirm_count": "{{count}} questions",
-      "delete_confirm_message": "-",
+      "delete_confirm_message": " ",
       "delete_confirm_title": "Delete this quiz?",
       "delete_confirm_warning": "will all be deleted and cannot be recovered",
       "delete_quiz_button": "Delete Quiz",
@@ -441,6 +456,19 @@
       "title": "Leave a message for Picktoss",
       "try_again_message": "Please try again later",
       "type_required_message": "Please select an inquiry type"
+    },
+    "interest": {
+      "interest": "Interest",
+      "required_select": "Please select your interests",
+      "save": "Save",
+      "set_interests_message": "Set your interests",
+      "title": "Choose interest categories",
+      "toast": {
+        "update": {
+          "button": "Take the quiz",
+          "content": "Your interest categories have been updated"
+        }
+      }
     },
     "invite_drawer": {
       "both_get_stars": "both of you will receive 50 stars",
@@ -660,9 +688,9 @@
       "welcome_message": "Welcome"
     },
     "side_app_download_popup": {
-      "message1": "Download the Picktoss app in 3 seconds",
-      "message2": "Take quizzes easily every day!",
-      "title": "A definite start to growth"
+      "message1": "Download the App in 3 seconds",
+      "message2": "and easily take daily quizzes!",
+      "title": "Boost up your Growth"
     },
     "tab_navigation": {
       "daily_label": "Daily",

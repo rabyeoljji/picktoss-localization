@@ -60,6 +60,7 @@ export const useCreateDocument = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getAllDocuments] })
       queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
+      queryClient.invalidateQueries({ queryKey: [...MEMBER_KEYS.getMemberInfo] })
     },
   })
 }

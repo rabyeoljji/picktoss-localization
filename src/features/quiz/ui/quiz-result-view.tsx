@@ -36,6 +36,22 @@ export const QuizResultView = ({
   const correctAnswers = quizWithResultData.filter((quiz: QuizResultCardData) => quiz.isCorrect).length
   const correctAnswerRate = totalQuizCount > 0 ? Math.round((correctAnswers / totalQuizCount) * 100) : 0
 
+  // 소요 시간 처리
+  const formatDuration = (ms: number): string => {
+    const totalSeconds = Math.floor(ms / 1000)
+    const hours = Math.floor(totalSeconds / 3600)
+    const minutes = Math.floor((totalSeconds % 3600) / 60)
+    const seconds = Math.floor(totalSeconds % 60)
+
+    return [
+      hours && `${hours}${t('profile.quiz_record_set_detail.time_hours')}`,
+      minutes && `${minutes}${t('profile.quiz_record_set_detail.time_minutes')}`,
+      seconds && `${seconds}${t('profile.quiz_record_set_detail.time_seconds')}`,
+    ]
+      .filter((value) => value)
+      .join(' ')
+  }
+
   return (
     <div className="min-h-screen bg-surface-2">
       <div className="px-4 pb-[162px]">
@@ -55,18 +71,17 @@ export const QuizResultView = ({
             <div className="px-[20px] flex flex-col items-center">
               <ImgSpeechbubble className="w-[32px]" />
               <Text typo="subtitle-2-bold" className="mt-1">
-                {totalQuizCount}
-                {t('progressQuiz.quiz_result_view.question_count')}
+                {t('progressQuiz.quiz_result_view.question_count', { count: totalQuizCount })}
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
-                {t('progressQuiz.quiz_result_view.question_count')}
+                {t('progressQuiz.quiz_result_view.question')}
               </Text>
             </div>
             <div className="h-[80px] w-px bg-[#E3E9EF]" />
             <div className="px-[20px] flex flex-col items-center">
               <ImgStopwatch className="w-[32px]" />
               <Text typo="subtitle-2-bold" className="mt-1">
-                {Math.ceil(totalElapsedTime / 1000 / 60)}분
+                {formatDuration(totalElapsedTime || 0)}
               </Text>
               <Text typo="body-2-medium" color="sub" className="mt-0.5">
                 {t('progressQuiz.quiz_result_view.time_spent')}

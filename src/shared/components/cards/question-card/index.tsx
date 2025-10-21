@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { IcChevronDown, IcChevronUp, IcO, IcX } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 // 1. 내부 컨텍스트 생성
 const QuestionCardContext = createContext<{
@@ -165,6 +166,8 @@ const QuestionCardExplanation = ({
   onOpenChange?: (open: boolean) => void
   className?: string
 }) => {
+  const { t } = useTranslation()
+
   const { isExplanationOpen, setExplanationOpen } = useQuestionCardContext()
 
   // 외부 prop open이 있다면 해당 값을 사용하고, 없으면 내부 상태를 사용
@@ -214,7 +217,9 @@ const QuestionCardExplanation = ({
         <button className="w-full flex-center" onClick={handleToggle}>
           <div className="self-stretch h-11 flex-center gap-[4px]">
             <Text typo="body-2-medium" color="sub">
-              {effectiveOpen ? '닫기' : '해설 보기'}
+              {effectiveOpen
+                ? t('quizDetail.quiz_detail_list_page.close')
+                : t('quizDetail.quiz_detail_list_page.view_explanation')}
             </Text>
             {effectiveOpen ? (
               <IcChevronUp className="size-[12px] text-icon-sub" />

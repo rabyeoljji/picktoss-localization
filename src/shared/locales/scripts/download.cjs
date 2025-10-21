@@ -54,6 +54,13 @@ const fetchTranslationsFromSpreadsheet = async (docId, sheetId, expectedNamespac
       }
     }
 
+    const normalizeCellValue = (cellValue) => {
+      if (cellValue == null) return ''
+      const strValue = String(cellValue)
+      if (strValue.trim() === '-') return ' '
+      return strValue
+    }
+
     // 데이터 행 처리 (헤더 다음 행부터)
     for (let row = 1; row < sheet.rowCount; row++) {
       const keyCell = sheet.getCell(row, keyCol)
@@ -70,16 +77,8 @@ const fetchTranslationsFromSpreadsheet = async (docId, sheetId, expectedNamespac
       processedKeys.add(rawKey)
 
       // 셀 값 그대로 가져오기 (이모지/특수문자 보존)
-      let koVal = koCell?.value
-      let enVal = enCell?.value
-
-      // null/undefined는 빈 문자열로
-      if (koVal == null) koVal = ''
-      if (enVal == null) enVal = ''
-
-      // 문자열로 변환 (이모지/특수문자 유지)
-      koVal = String(koVal)
-      enVal = String(enVal)
+      let koVal = normalizeCellValue(koCell?.value)
+      let enVal = normalizeCellValue(enCell?.value)
 
       // ko-KR 값이 키 문자열과 동일하면(플레이스홀더) 빈 값으로 간주
       if (koVal === rawKey) koVal = ''

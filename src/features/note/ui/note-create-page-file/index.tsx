@@ -122,7 +122,7 @@ const NoteCreatePageFile = () => {
         />
         <label
           htmlFor="uploadFileInput"
-          className="cursor-pointer ml-auto relative gap-0.5 inline-flex items-center rounded-full justify-center border border-gray-100 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 h-[28px] w-[60px] disabled:pointer-events-none shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200"
+          className="cursor-pointer ml-auto relative gap-0.5 inline-flex items-center rounded-full justify-center border border-gray-100 bg-white text-gray-700 hover:bg-gray-50 active:bg-gray-100 h-[28px] w-fit px-[8px] disabled:pointer-events-none shrink-0 outline-none disabled:bg-gray-100 disabled:text-gray-200"
         >
           <IcChange className="size-[16px]" />
           <Text typo="button-5">{t('createQuiz.note_create_page_file.change_button')}</Text>

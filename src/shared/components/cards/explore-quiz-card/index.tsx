@@ -3,6 +3,7 @@ import React from 'react'
 import { IcBookmark, IcBookmarkFilled, IcPlayFilled } from '@/shared/assets/icon'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 export const ExploreQuizCard = ({
   children,
@@ -53,6 +54,8 @@ const ExploreQuizCardHeader = ({
   isBookmarked: boolean
   onClickBookmark: () => void
 }) => {
+  const { t } = useTranslation()
+
   return (
     <div className="flex justify-between px-[16px]">
       <div className="flex gap-[8px]">
@@ -63,7 +66,7 @@ const ExploreQuizCardHeader = ({
           </Text>
 
           <Text typo="body-2-medium" color="sub" className="flex size-fit items-center">
-            <span>{totalQuizCount}문제</span>
+            <span>{t('common.quiz_card.question_count', { count: totalQuizCount })}</span>
 
             <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
 

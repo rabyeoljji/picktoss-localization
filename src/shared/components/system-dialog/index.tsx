@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from '@/shared/components/ui/dialog'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface SystemDialogProps {
   open?: boolean
@@ -33,12 +34,14 @@ export const SystemDialog = ({
   description,
   content,
   variant = 'default',
-  cancelLabel = '취소',
-  confirmLabel = '확인',
+  cancelLabel,
+  confirmLabel,
   onConfirm,
   preventClose = false,
   disabledConfirm = false,
 }: SystemDialogProps) => {
+  const { t } = useTranslation()
+
   const handleOpenChange = (newOpen: boolean) => {
     if (preventClose && !newOpen) {
       return
@@ -58,7 +61,7 @@ export const SystemDialog = ({
         <DialogFooter className="mt-[20px] self-stretch inline-flex justify-between items-center">
           <DialogClose asChild>
             <button className="typo-button-2 text-sub w-28 h-12 text-center justify-center text-base leading-none">
-              {cancelLabel}
+              {cancelLabel ?? t('common.cancel')}
             </button>
           </DialogClose>
           <button
@@ -70,7 +73,7 @@ export const SystemDialog = ({
             onClick={onConfirm}
             disabled={disabledConfirm}
           >
-            {confirmLabel}
+            {confirmLabel ?? t('common.confirm')}
           </button>
         </DialogFooter>
       </DialogContent>

@@ -2,6 +2,7 @@ import { IcBookmarkFilled, IcMy, IcPlayFilled } from '@/shared/assets/icon'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface Props extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
@@ -65,10 +66,12 @@ const BookmarkVerticalCardDetail = ({
   playedCount?: number
   bookmarkCount?: number
 }) => {
+  const { t } = useTranslation()
+
   return (
     <Text typo="body-2-medium" color="sub" className="flex w-fit items-center">
       <div className="inline-flex justify-start items-center gap-[2px]">
-        <span>{quizCount} 문제</span>
+        <span>{t('common.quiz_card.question_count', { count: quizCount })}</span>
       </div>
 
       {isPublic && (
@@ -92,7 +95,7 @@ const BookmarkVerticalCardDetail = ({
       {!isPublic && (
         <>
           <div className="inline-block size-[3px] mx-[4px] bg-[var(--color-gray-100)] rounded-full" />
-          <span>비공개</span>
+          <span>{t('common.quiz_card.private')}</span>
         </>
       )}
     </Text>

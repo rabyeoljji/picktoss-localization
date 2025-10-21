@@ -42,7 +42,7 @@ const QuizRecordSetDetailPage = () => {
     return [
       hours && `${hours}${t('profile.quiz_record_set_detail.time_hours')}`,
       minutes && `${minutes}${t('profile.quiz_record_set_detail.time_minutes')}`,
-      seconds && `${seconds}${'profile.quiz_record_set_detail.time_seconds'}`,
+      seconds && `${seconds}${t('profile.quiz_record_set_detail.time_seconds')}`,
     ]
       .filter((value) => value)
       .join(' ')

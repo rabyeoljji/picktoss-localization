@@ -90,7 +90,7 @@ export const QuizLoadingProgressBar = ({
 
       <div className="flex justify-between mt-2">
         <Text typo="body-2-medium" color="sub">
-          {t(text ?? 'progressQuiz.quiz_loading_progress_bar.generating')}
+          {text ?? t('progressQuiz.quiz_loading_progress_bar.generating')}
         </Text>
         <Text typo="body-2-bold" color="sub">
           {progressText}

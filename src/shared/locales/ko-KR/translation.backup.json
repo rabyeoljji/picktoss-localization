@@ -34,7 +34,11 @@
       "label": "월"
     },
     "multiple_choice": "객관식",
-    "name": "이름"
+    "name": "이름",
+    "quiz_card": {
+      "private": "비공개",
+      "question_count": "{{count}} 문제"
+    }
   },
   "daily": {
     "alert_drawer": {
@@ -89,6 +93,12 @@
       "consecutive_days_complete": "연속 {{count}}일 완료!",
       "question": "문제",
       "solve_more_message": "더 풀면 획득"
+    },
+    "tutorial": {
+      "message1": "문제를 바꾸고 싶다면",
+      "message2": "카드를",
+      "message3": "아래로",
+      "message4": "당겨보세요"
     }
   },
   "createQuiz": {
@@ -130,6 +140,7 @@
       "placeholder": "여기를 탭하여 입력을 시작하세요"
     },
     "quiz_loading_drawer": {
+      "complete_description": "새로 생긴 문제를 지금 확인해보세요",
       "complete_title": "퀴즈 생성 완료",
       "edit_note_button": "노트 수정하러 가기",
       "error_description": "아래 내용을 확인하신 후 다시 시도해보세요",
@@ -246,10 +257,12 @@
     },
     "explore_search_page": {
       "delete_all": "전체 삭제",
+      "generated": "생성한 퀴즈",
       "no_results_recent": "최근 검색 내역이 없어요",
       "no_results_title": "검색 결과가 없어요",
       "recent_keyword": "최근 검색어",
       "results_count": "결과",
+      "saved": "저장한 퀴즈",
       "search_placeholder": "퀴즈 제목 내용 검색",
       "try_different_keywords": "다른 키워드를 입력해보세요"
     },
@@ -302,6 +315,7 @@
       "cancel_button": "취소",
       "characters": "자",
       "check_button": "확인하기",
+      "close": "닫기",
       "complete_button": "완료",
       "daily_available_message": "데일리에서 매일 풀 수 있어요",
       "delete_question_confirm_message": "삭제한 문제는 다시 복구할 수 없어요",
@@ -336,7 +350,8 @@
       "review_questions_count_unit": "{{count}}개",
       "save_button": "저장 중...",
       "show_answer_button": "정답 표시",
-      "understand_button": "이해했어요"
+      "understand_button": "이해했어요",
+      "view_explanation": "해설 보기"
     },
     "quiz_detail_page": {
       "all_questions_will_be_asked": "모든 문제가 출제돼요",
@@ -441,6 +456,19 @@
       "title": "픽토스에 전하고 싶은 말을 남겨주세요",
       "try_again_message": "잠시 후 다시 시도해주세요",
       "type_required_message": "문의 유형을 선택해주세요"
+    },
+    "interest": {
+      "interest": "관심분야",
+      "required_select": "관심 분야를 선택해주세요",
+      "save": "저장하기",
+      "set_interests_message": "내가 관심있는 분야를 설정해보세요",
+      "title": "관심 카테고리 선택",
+      "toast": {
+        "update": {
+          "button": "퀴즈 보러가기",
+          "content": "관심 카테고리가 변경되었어요"
+        }
+      }
     },
     "invite_drawer": {
       "both_get_stars": "두 분 모두에게 별 50개를 드려요",

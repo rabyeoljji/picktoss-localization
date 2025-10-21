@@ -51,6 +51,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/shared/components/ui/dropdown-menu'
+import Loading from '@/shared/components/ui/loading'
 import { Text } from '@/shared/components/ui/text'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useRouter } from '@/shared/lib/router'
@@ -206,7 +207,7 @@ const QuizDetailPage = () => {
     })
   }
 
-  if (isDocumentLoading) return null
+  if (isDocumentLoading) return <Loading center />
 
   if (!isDocumentLoading && !document?.isPublic && !document?.isOwner) {
     return <NotFound />

@@ -302,12 +302,12 @@ const MyNotesContent = ({
             {t('library.my_notes_content.delete_confirm_message')}{' '}
             <Text as="span" typo="body-1-medium" color="incorrect">
               {t('library.my_notes_content.delete_confirm_count', { count: selectedTotalQuizCount })}
-            </Text>
+            </Text>{' '}
             {t('library.my_notes_content.delete_confirm_warning')}
           </Text>
         }
         variant="critical"
-        confirmLabel={t('library.my_notes_content.delete_confirm_button')}
+        confirmLabel={t('common.delete')}
         onConfirm={() => {
           handleDelete(getCheckedIds().map((id) => Number(id)))
           setOpenDelete(false)
