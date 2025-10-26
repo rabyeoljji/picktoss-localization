@@ -57,9 +57,9 @@ const InterestedCategoryDrawer = ({ interestedCategory }: { interestedCategory?:
       { categoryId: values.category },
       {
         onSuccess: () => {
-          toast(t('profile.interest.toast.update.content'), {
+          toast(t('profile.toast.update_interested_category'), {
             action: {
-              label: t('profile.interest.toast.update.button'),
+              label: t('profile.interest.view_quiz'),
               onClick: () => router.push('/explore', { search: { category: values.category } }),
             },
           })

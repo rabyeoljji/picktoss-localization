@@ -172,7 +172,8 @@
     "quiz_result_view": {
       "accuracy_rate": "Accuracy",
       "complete_title": "Quiz Complete!",
-      "question_count": "Tried",
+      "question": "Tried",
+      "question_count": "{{count}} Questions",
       "time_spent": "Elapsed"
     },
     "quiz_settings_drawer": {
@@ -628,13 +629,13 @@
       "record_description": "Your solved quizzes are recorded here"
     },
     "quiz_record_set_detail": {
-      "accuracy_rate": "Accuracy Rate",
+      "accuracy_rate": "Accuracy",
       "question_count": "{{count}} Questions",
-      "question_count_text": "Question Count",
+      "question_count_text": "Tried",
       "time_hours": "h",
       "time_minutes": "m",
       "time_seconds": "sec",
-      "time_spent": "Time Spent"
+      "time_spent": "Elapsed"
     },
     "star_history_page": {
       "all": "All",

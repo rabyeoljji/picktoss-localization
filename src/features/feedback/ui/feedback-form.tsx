@@ -56,7 +56,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       // 첫 번째 에러 메시지 표시
       const firstError = Object.values(formState.errors)[0]
       if (firstError && firstError.message) {
-        toast(firstError.message as string, {
+        toast(t(firstError.message), {
           icon: <IcWarningFilled className="size-4 text-icon-critical" />,
         })
       }
@@ -69,7 +69,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
       const fileArray = Array.from(e.target.files)
       if (images.length + fileArray.length > 3) {
         // 최대 3개 이미지 제한
-        toast(t('profile.feedback_form.max_images_message'), {
+        toast(t('profile.toast.max_images'), {
           icon: <IcWarningFilled className="size-4 text-icon-critical" />,
         })
         return
@@ -108,7 +108,7 @@ export const FeedbackForm = ({ onSuccess, onError }: FeedbackFormProps) => {
           if (onSuccess) onSuccess()
         },
         onError: () => {
-          toast(t('profile.feedback_form.try_again_message'), {
+          toast(t('profile.toast.try_again'), {
             icon: <IcWarningFilled className="size-4 text-icon-critical" />,
           })
           if (onError) onError()

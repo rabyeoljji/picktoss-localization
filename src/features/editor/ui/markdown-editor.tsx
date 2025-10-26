@@ -12,6 +12,7 @@ import { DOCUMENT_CONSTRAINTS } from '@/features/note/config'
 
 import { IcWarningFilled } from '@/shared/assets/icon'
 import { cn } from '@/shared/lib/utils'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 interface MarkdownEditorProps {
   initialMarkdown?: string
@@ -22,14 +23,18 @@ interface MarkdownEditorProps {
   isKeyboardVisible?: boolean
 }
 
-export const MarkdownEditor = ({
-  initialMarkdown = '',
-  onChange,
-  placeholder = '여기를 탭하여 입력을 시작하세요',
-  className,
-  editable,
-  isKeyboardVisible,
-}: MarkdownEditorProps) => {
+export const MarkdownEditor = (props: MarkdownEditorProps) => {
+  const { t } = useTranslation()
+
+  const {
+    initialMarkdown = '',
+    onChange,
+    placeholder = t('createQuiz.note_create_write.placeholder'),
+    className,
+    editable,
+    isKeyboardVisible,
+  } = props
+
   const [isFocused, setIsFocused] = useState(false)
   const editorWrapperRef = useRef<HTMLDivElement>(null)
 
@@ -62,7 +67,7 @@ export const MarkdownEditor = ({
         if (markdown.length <= DOCUMENT_CONSTRAINTS.CONTENT.MAX) {
           onChange(markdown)
         } else {
-          toast('내용은 50,000자까지 작성 가능합니다', {
+          toast(t('createQuiz.toast.content_max_chars'), {
             icon: <IcWarningFilled className="size-4 text-icon-critical" />,
           })
 

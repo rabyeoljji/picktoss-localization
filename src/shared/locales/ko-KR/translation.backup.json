@@ -172,7 +172,8 @@
     "quiz_result_view": {
       "accuracy_rate": "정답률",
       "complete_title": "퀴즈 완료!",
-      "question_count": "문제",
+      "question": "문제",
+      "question_count": "{{count}}문제",
       "time_spent": "소요시간"
     },
     "quiz_settings_drawer": {

@@ -41,7 +41,7 @@ const ExploreReleasePage = () => {
         { isPublic: true },
         {
           onSuccess: () => {
-            toast(t('explore.release_page.public_success_message'))
+            toast(t('explore.toast.public_success_message'))
             router.replace('/quiz-detail/:noteId', { params: [String(selectedId)] })
           },
         },

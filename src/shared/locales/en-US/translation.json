@@ -102,7 +102,7 @@
     }
   },
   "createQuiz": {
-    "document_created_message": "Document has been created",
+    "default_file_name": "New Note",
     "lacking_star_drawer": {
       "description": "You need more stars used to generate quiz",
       "earn_method1": "To get more stars, solve 10 daily quizzes a day, ",
@@ -153,6 +153,19 @@
       "tip_avoid_repeat": "Avoid repeating the same content",
       "tip_check_info": "Contain enough information",
       "tip_title": "Tips for a good quiz"
+    },
+    "toast": {
+      "content_max_chars": "You can enter up to 50,000 characters.",
+      "document_created": "Document has been created",
+      "document_generation_failed": "Failed to generate the document.",
+      "file_content_required": "File content is required.",
+      "file_not_found": "The file does not exist.",
+      "file_processing_error": "An issue occurred while processing the file.",
+      "select_larger_file_size": "Please select a larger file.",
+      "select_smaller_file_size": "Please select a smaller file.",
+      "upload_allowed_types_pdf_docx_txt": "Only PDF, DOCX, and TXT files can be uploaded.",
+      "upload_file_max_chars": "Please upload a file with no more than 50,000 characters.",
+      "upload_file_min_chars": "Please upload a file with at least 1,000 characters."
     }
   },
   "progressQuiz": {
@@ -185,6 +198,9 @@
     "result_error": "Failed to send quiz result"
   },
   "library": {
+    "alert": {
+      "share_not_supported": "Sharing is not supported in this browser"
+    },
     "bookmarked_notes_content": {
       "created_count": "Generated",
       "date_added": "Date Added",
@@ -222,7 +238,6 @@
       "description2": "You need at least 5 questions to share",
       "make_public_button": "Make Quiz Public",
       "more_questions_title": "Please generate more questions",
-      "public_failed_message": "Failed to make quiz public",
       "public_required_action": "to share with others",
       "public_required_message": "Only pubilc quizzes are able ",
       "public_required_title": "Share Quiz",
@@ -233,6 +248,10 @@
     },
     "search_input": {
       "placeholder": "Please enter the keyword"
+    },
+    "toast": {
+      "delete_quiz_success": "Quiz has been deleted",
+      "public_failed": "Failed to make quiz public"
     }
   },
   "explore": {
@@ -241,7 +260,6 @@
       "details_label": "Detailed Information",
       "details_placeholder": "Please describe the content to report",
       "report_button": "Report",
-      "report_complete_message": "Quiz report has been completed.",
       "report_quiz_label": "Quiz to Report",
       "report_quiz_title": "Report Quiz",
       "select_reason_title": "Select reason for report"
@@ -277,8 +295,6 @@
     "quiz_list_container": {
       "available_quizzes_count": "{{count}} quizzes",
       "available_quizzes_message": "There are",
-      "bookmark_removed_message": "Bookmark removed",
-      "bookmark_success_message": "Quiz saved to your library",
       "check_button": "View",
       "exists_message": "available to make public",
       "share_knowledge_message": "Share your knowledge with others",
@@ -286,13 +302,21 @@
     },
     "release_page": {
       "complete_button": "Done",
-      "public_success_message": "Quiz has been made public",
       "select_quiz_message": "Others can take or save the quizzes you generated",
       "select_quiz_title": "Please select a quiz to make public",
       "title": "Make Quiz Public"
+    },
+    "toast": {
+      "bookmark_removed": "Bookmark removed",
+      "bookmark_success": "Quiz saved to your library",
+      "public_success_message": "Quiz has been made public",
+      "report_complete": "Quiz report has been completed."
     }
   },
   "quizDetail": {
+    "alert": {
+      "share_not_supported": "Sharing is not supported in this browser"
+    },
     "quiz_detail_edit_page": {
       "category_label": "Category",
       "change_button": "Change",
@@ -308,8 +332,6 @@
       "quiz_title_label": "Quiz Title",
       "quiz_title_placeholder": "Please enter the quiz title",
       "save_button": "Save",
-      "save_error_message": "An error occurred while saving",
-      "save_success_message": "Quiz info has been saved",
       "saving_message": "Saving"
     },
     "quiz_detail_list_page": {
@@ -326,10 +348,8 @@
       "delete_quiz_confirm_message": " ",
       "delete_quiz_confirm_title": "Delete this quiz?",
       "delete_quiz_confirm_warning": "will all be deleted and cannot be recovered",
-      "delete_quiz_success_message": "Quiz has been deleted",
       "download_questions_button": "Download Questions",
       "edit_button": "Edit",
-      "edit_failed_message": "Failed to edit quiz",
       "edit_question_title": "Edit Question",
       "edit_quiz_info_button": "Edit Quiz Info",
       "explanation_label": "Explanation",
@@ -339,8 +359,6 @@
       "original_document_button": "Original Document",
       "original_note_title": "Original Note",
       "ox_label": "O/X",
-      "pdf_error_message": "An error occurred while exporting",
-      "pdf_success_message": "Quiz has been saved as PDF",
       "question_label": "Question",
       "question_required_error": "Please enter a question",
       "quiz_label": "Question",
@@ -356,8 +374,6 @@
     },
     "quiz_detail_page": {
       "all_questions_will_be_asked": "All questions included",
-      "bookmark_removed_message": "Bookmark removed",
-      "bookmark_success_message": "Quiz has been saved to the library",
       "characters": "characters",
       "complain": {
         "abusive_hate_speech": "Abusive / Hate Speech",
@@ -370,7 +386,6 @@
       "delete_confirm_title": "Delete this quiz?",
       "delete_confirm_warning": "will all be deleted and cannot be recovered",
       "delete_quiz_button": "Delete Quiz",
-      "delete_success_message": "Quiz has been deleted",
       "edit_quiz_info_button": "Edit Quiz Info",
       "make_public_button": "Make quiz public",
       "maximum": "Maximum",
@@ -378,7 +393,6 @@
       "public_confirm_action": "to share with others",
       "public_confirm_message": "The quiz must be public",
       "public_confirm_title": "Make quiz public?",
-      "public_success_message": "Quiz has been made public",
       "question_count": "{{count}} Questions",
       "questions_to_solve": "I will Try",
       "random_questions_will_be_asked": " appear randomly",
@@ -388,11 +402,21 @@
       "select_question_count_title": "Select Amount",
       "selected_questions": " out of ",
       "share_button": "Share",
-      "share_not_supported_message": "Sharing is not supported in this browser",
       "start_quiz_button": "Start Quiz",
       "total_questions": "Total",
       "view_button": "View",
       "view_questions_button": "Questions"
+    },
+    "toast": {
+      "bookmark_removed": "Bookmark removed",
+      "bookmark_success": "Quiz has been saved to the library",
+      "create_pdf_error": "An error occurred while exporting",
+      "create_pdf_success": "Quiz has been saved as PDF",
+      "delete_quiz_success": "Quiz has been deleted",
+      "edit_failed": "Failed to edit quiz",
+      "public_success": "Quiz has been made public",
+      "save_quiz_error": "An error occurred while saving",
+      "save_quiz_success": "Quiz info has been saved"
     }
   },
   "profile": {
@@ -443,7 +467,6 @@
         "other": "Other",
         "partnership": "Partnership"
       },
-      "max_images_message": "You can attach up to 3 images",
       "min_length_helper": "Please enter at least 20 characters",
       "notification_message": "You will be notified by email when your inquiry is answered",
       "photo_label": "Photo",
@@ -455,7 +478,6 @@
       "sending_message": "Submitting...",
       "submit_button": "Send Inquiry",
       "title": "Leave a message for Picktoss",
-      "try_again_message": "Please try again later",
       "type_required_message": "Please select an inquiry type"
     },
     "interest": {
@@ -464,23 +486,16 @@
       "save": "Save",
       "set_interests_message": "Set your interests",
       "title": "Choose interest categories",
-      "toast": {
-        "update": {
-          "button": "Take the quiz",
-          "content": "Your interest categories have been updated"
-        }
-      }
+      "view_quiz": "Take the quiz"
     },
     "invite_drawer": {
       "both_get_stars": "both of you will receive 50 stars",
       "both_reward": "both of you will receive 50 stars",
       "copy": "Copy",
       "copy_button": "Copy",
-      "copy_success_message": "Link copied",
       "description": "Share Picktoss with friends and family.",
       "invite_process": "When they join via this link",
       "kakao_share_button": "Share on KakaoTalk",
-      "link_copied": "Link copied",
       "link_share_button": "Share Link",
       "my_link": "My Link",
       "my_link_label": "My Link",
@@ -642,6 +657,15 @@
       "earned": "Earned",
       "star_count": "{{count}}",
       "used": "Used"
+    },
+    "toast": {
+      "link_copied": "Link copied",
+      "max_images": "You can attach up to 3 images",
+      "nickname_changed": "The Nickname has been changed",
+      "profile_image_changed": "The Avatar has been changed",
+      "profile_image_registered": "The Avatar has been added",
+      "try_again": "Please try again later",
+      "update_interested_category": "Your interest categories have been updated"
     },
     "withdraw_form": {
       "character_limit": "Please enter within 500 characters",

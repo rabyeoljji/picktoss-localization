@@ -94,13 +94,13 @@ const MyNotesContent = ({
         unCheckAll()
       }
     } else {
-      alert('이 브라우저에서는 공유 기능을 지원하지 않습니다.')
+      alert(t('library.alert.share_not_supported'))
     }
   }
 
   const handleDelete = (documentIds: number[]) => {
     deleteDocument({ documentIds })
-    toast.success(t('library.my_notes_content.delete_success_message'))
+    toast.success(t('library.toast.delete_quiz_success'))
   }
 
   useEffect(() => {
@@ -349,7 +349,7 @@ const NeedReleaseDialog = ({
             router.push('/quiz-detail/:noteId', { params: [String(selectedDocument.id)] })
           },
           onError: () => {
-            toast.error(t('library.my_notes_content.public_failed_message'))
+            toast.error(t('library.toast.public_failed'))
           },
           onSettled: () => {
             onOpenChange(false)

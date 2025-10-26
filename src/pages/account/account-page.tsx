@@ -267,10 +267,11 @@ const AccountPage = () => {
                 <IcChevronRight className="size-[16px] text-icon-sub" />
               </Link>
 
-              <Link to="/account/language" className="flex items-center justify-between">
+              {/* 언어 변경 옵션, 추후 필요시 고려 */}
+              {/* <Link to="/account/language" className="flex items-center justify-between">
                 <Text typo="subtitle-2-medium">{t('profile.main_page.language')}</Text>
                 <IcChevronRight className="size-[16px] text-icon-sub" />
-              </Link>
+              </Link> */}
 
               <div className="flex items-center justify-between">
                 <Text typo="subtitle-2-medium">{t('profile.main_page.push_notification')}</Text>

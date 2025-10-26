@@ -83,7 +83,7 @@ export const QuizLoadingDrawer = () => {
       completeAnimation()
       setTimeout(() => {
         setComplete(true)
-        toast.success(`${t('createQuiz.document_created_message')}.`)
+        toast.success(`${t('createQuiz.toast.document_created')}.`)
       }, 500)
     }
   }, [quizSetId])

@@ -65,7 +65,7 @@ const AccountInfoPage = () => {
       { name: newName },
       {
         onSuccess: () => {
-          toast(t('profile.account_info_page.nickname_changed'))
+          toast(t('profile.toast.nickname_changed'))
           setNameDialogOpen(false)
           setNewName(user?.name ?? '')
         },
@@ -97,9 +97,9 @@ const AccountInfoPage = () => {
         {
           onSuccess: () => {
             if (!prevState) {
-              toast(t('profile.account_info_page.profile_image_registered'))
+              toast(t('profile.toast.profile_image_registered'))
             } else {
-              toast(t('profile.account_info_page.profile_image_changed'))
+              toast(t('profile.toast.profile_image_changed'))
             }
           },
           onError: (error) => {

@@ -148,7 +148,7 @@ const QuizDetailPage = () => {
           })
 
           if (optimisticIsBookmarked) {
-            toast(t('quizDetail.quiz_detail_page.bookmark_success_message'), {
+            toast(t('quizDetail.toast.bookmark_success'), {
               icon: <IcBookmarkFilled className="size-4" />,
               action: {
                 label: t('quizDetail.quiz_detail_page.view_button'),
@@ -156,7 +156,7 @@ const QuizDetailPage = () => {
               },
             })
           } else {
-            toast(t('quizDetail.quiz_detail_page.bookmark_removed_message'))
+            toast(t('quizDetail.toast.bookmark_removed'))
           }
         },
         onError: () => {
@@ -189,7 +189,7 @@ const QuizDetailPage = () => {
         console.error('공유 실패', error)
       }
     } else {
-      alert(t('quizDetail.quiz_detail_page.share_not_supported_message'))
+      alert(t('quizDetail.alert.share_not_supported'))
     }
   }
 
@@ -480,7 +480,7 @@ const QuizDetailPage = () => {
                       { isPublic: true },
                       {
                         onSuccess: async () => {
-                          toast(t('quizDetail.quiz_detail_page.public_success_message'))
+                          toast(t('quizDetail.toast.public_success'))
                           await refetchDocument()
                           setIsShareDialogOpen(false)
                         },
@@ -534,7 +534,7 @@ const QuizDetailPage = () => {
         onConfirm={() => {
           deleteDocument({ documentIds: [Number(noteId)] })
           router.replace('/library')
-          toast(t('quizDetail.quiz_detail_page.delete_success_message'))
+          toast(t('quizDetail.toast.delete_quiz_success'))
         }}
       />
 

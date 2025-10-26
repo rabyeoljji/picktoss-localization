@@ -48,7 +48,7 @@ const ComplainForm = () => {
       },
       {
         onSuccess: () => {
-          toast(t('explore.complain_form.report_complete_message'))
+          toast(t('explore.toast.report_complete'))
           router.replace('/quiz-detail/:noteId', {
             params: [String(noteId)],
           })

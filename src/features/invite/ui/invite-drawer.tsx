@@ -102,7 +102,7 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
     try {
       await navigator.clipboard.writeText(inviteLink)
 
-      toast(t('profile.invite_drawer.link_copied'))
+      toast(t('profile.toast.link_copied'))
     } catch (error) {
       console.error(error)
     }

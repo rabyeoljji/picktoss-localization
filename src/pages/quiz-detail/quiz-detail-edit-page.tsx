@@ -165,11 +165,11 @@ const QuizDetailEditPage = () => {
 
     try {
       await Promise.all(promises)
-      toast(t('quizDetail.quiz_detail_edit_page.save_success_message'))
+      toast(t('quizDetail.toast.save_quiz_success'))
       await refetchDocument()
       router.back()
     } catch {
-      toast(t('quizDetail.quiz_detail_edit_page.save_error_message'))
+      toast(t('quizDetail.toast.save_quiz_error'))
     }
   }
 

@@ -17,16 +17,16 @@ export const isValidFileType = (file: File | null): boolean => {
 
 // 파일 정보 스키마
 export const FileInfoSchema = z.object({
-  name: z.string().default('새로운 노트'),
+  name: z.string().default('createQuiz.default_file_name'),
   size: z
     .number()
-    .min(FILE_CONSTRAINTS.MIN_SIZE, '용량이 더 큰 파일을 선택해주세요')
-    .max(FILE_CONSTRAINTS.MAX_SIZE, '용량이 더 작은 파일을 선택해주세요'),
+    .min(FILE_CONSTRAINTS.MIN_SIZE, 'createQuiz.toast.select_larger_file_size')
+    .max(FILE_CONSTRAINTS.MAX_SIZE, 'createQuiz.toast.select_smaller_file_size'),
   charCount: z
     .number()
-    .min(DOCUMENT_CONSTRAINTS.CONTENT.MIN, '1,000자 이상인 파일을 업로드해주세요')
-    .max(DOCUMENT_CONSTRAINTS.CONTENT.MAX, '50,000자 이하인 파일을 업로드해주세요'),
-  content: z.string().min(1, '파일 내용은 필수입니다'),
+    .min(DOCUMENT_CONSTRAINTS.CONTENT.MIN, 'createQuiz.toast.upload_file_min_chars')
+    .max(DOCUMENT_CONSTRAINTS.CONTENT.MAX, 'createQuiz.toast.upload_file_max_chars'),
+  content: z.string().min(1, 'createQuiz.toast.file_content_required'),
 })
 
 export type FileInfo = z.infer<typeof FileInfoSchema>

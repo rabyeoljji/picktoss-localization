@@ -12,6 +12,7 @@ import { useCreateDocument } from '@/entities/document/api/hooks'
 import { IcWarningFilled } from '@/shared/assets/icon'
 import { generateSimpleNonce } from '@/shared/lib/nonce'
 import { useQueryParam } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 export type DocumentType = CreateDocumentPayload['documentType']
 
@@ -56,6 +57,8 @@ const initialNoteState = {
 export const CreateNoteContext = createContext<CreateNoteContextValues | null>(null)
 
 export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) => {
+  const { t } = useTranslation()
+
   const [{ documentType }, setParams] = useQueryParam('/note/create')
   const prevDocumentTypeRef = useRef<DocumentType | null>(null) // 안정성을 위해 ref에 값 저장
 
@@ -115,7 +118,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
   const validateFileInfo = (info: unknown) => {
     const result = FileInfoSchema.safeParse(info)
     if (!result.success) {
-      setValidationError(result.error.errors[0]?.message ?? 'file validation error')
+      setValidationError(t(result.error.errors[0]?.message) ?? 'file validation error')
       return false
     }
     setValidationError(null)
@@ -135,11 +138,11 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
 
     if (!file) {
       setIsProcessing(false)
-      setValidationError('파일이 존재하지 않습니다.')
+      setValidationError(t('createQuiz.toast.file_not_found'))
       return
     }
     if (!isValidFileType(file)) {
-      setValidationError('PDF, DOCX, TXT 파일만 업로드할 수 있습니다.')
+      setValidationError(t('createQuiz.toast.upload_allowed_types_pdf_docx_txt'))
     }
 
     try {
@@ -163,7 +166,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
       }))
     } catch (err) {
       console.error('파일 처리 중 오류 발생:', err)
-      setValidationError('파일 처리 중 문제가 발생했습니다.')
+      setValidationError(t('createQuiz.toast.file_processing_error'))
     } finally {
       setIsProcessing(false)
     }
@@ -216,7 +219,7 @@ export const CreateNoteProvider = ({ children }: { children: React.ReactNode }) 
         onSuccess()
       },
       onError: (error) => {
-        toast.error('문서 생성에 실패했습니다. / errorMessage: ' + error.message, {
+        toast.error(t('createQuiz.toast.document_generation_failed') + ' / errorMessage: ' + error.message, {
           icon: <IcWarningFilled className="size-4 text-icon-critical" />,
         })
       },

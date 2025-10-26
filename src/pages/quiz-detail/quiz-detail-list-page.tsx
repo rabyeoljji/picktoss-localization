@@ -190,12 +190,12 @@ const NoteDetailPage = () => {
         .then(() => {
           // 원래 상태로 복원
           setShowAnswer(originalShowAnswer)
-          toast(t('quizDetail.quiz_detail_list_page.pdf_success_message'))
+          toast(t('quizDetail.toast.create_pdf_success'))
           trackEvent('library_detail_download_click')
         })
         .catch((err: Error) => {
           console.error('PDF 생성 오류:', err)
-          toast(t('quizDetail.quiz_detail_list_page.pdf_error_message'))
+          toast(t('quizDetail.toast.create_pdf_error'))
           setShowAnswer(originalShowAnswer)
         })
     }, 500) // 렌더링에 시간 주기
@@ -261,15 +261,15 @@ const NoteDetailPage = () => {
           })
 
           if (optimisticIsBookmarked) {
-            toast('퀴즈가 도서관에 저장되었어요', {
+            toast(t('quizDetail.toast.bookmark_success'), {
               icon: <IcBookmarkFilled className="size-4" />,
               action: {
-                label: '보러가기',
+                label: t('quizDetail.quiz_detail_page.view_button'),
                 onClick: () => router.push(`/library`, { search: { tab: 'BOOKMARK' } }),
               },
             })
           } else {
-            toast('북마크가 해제되었어요')
+            toast(t('quizDetail.toast.bookmark_removed'))
           }
         },
         onError: () => {
@@ -596,7 +596,7 @@ const NoteDetailPage = () => {
                 // 변경사항이 있을 경우 API 호출
                 updateQuiz(newData, {
                   onError: () => {
-                    toast(t('quizDetail.quiz_detail_list_page.edit_failed_message'))
+                    toast(t('quizDetail.toast.edit_failed'))
                   },
                   onSettled: () => {
                     // 드로어 닫기
@@ -863,7 +863,7 @@ const NoteDetailPage = () => {
         onConfirm={() => {
           deleteDocument({ documentIds: [Number(noteId)] })
           router.replace('/library')
-          toast(t('quizDetail.quiz_detail_list_page.delete_quiz_success_message'))
+          toast(t('quizDetail.toast.delete_quiz_success'))
         }}
       />
 

@@ -202,7 +202,7 @@ const ExploreCard = ({
           })
 
           if (!isCurrentlyBookmarked) {
-            toast(t('explore.quiz_list_container.bookmark_success_message'), {
+            toast(t('explore.toast.bookmark_success'), {
               icon: <IcBookmarkFilled className="size-4" />,
               action: {
                 label: t('explore.quiz_list_container.view_button'),
@@ -210,7 +210,7 @@ const ExploreCard = ({
               },
             })
           } else {
-            toast(t('explore.quiz_list_container.bookmark_removed_message'))
+            toast(t('explore.toast.bookmark_removed'))
           }
         },
       },
