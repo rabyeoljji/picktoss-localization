@@ -37,6 +37,7 @@ import { useQueryParam, useRouter } from '@/shared/lib/router'
 import { StorageKey } from '@/shared/lib/storage'
 import { useLocalStorage } from '@/shared/lib/storage/model/use-storage'
 import { cn } from '@/shared/lib/utils'
+import { SUPPORTED_LOCALE } from '@/shared/locales/i18n'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 type Quiz = GetAllQuizzesResponse['quizzes'][number]
@@ -290,11 +291,14 @@ const HomePage = () => {
             <div className="ml-2">
               <Text typo="subtitle-1-bold" color="secondary">
                 {new Date()
-                  .toLocaleDateString(currentLanguage === 'ko-KR' ? 'ko-KR' : 'en-US', {
-                    month: 'numeric',
-                    day: 'numeric',
-                    weekday: 'short',
-                  })
+                  .toLocaleDateString(
+                    currentLanguage === SUPPORTED_LOCALE.KO ? SUPPORTED_LOCALE.KO : SUPPORTED_LOCALE.EN,
+                    {
+                      month: 'numeric',
+                      day: 'numeric',
+                      weekday: 'short',
+                    },
+                  )
                   .replace(/\s/g, '')}
               </Text>
             </div>

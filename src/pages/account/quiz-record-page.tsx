@@ -11,6 +11,7 @@ import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { Link } from '@/shared/lib/router'
+import { SUPPORTED_LOCALE } from '@/shared/locales/i18n'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 type CombinedRecord =
@@ -52,7 +53,7 @@ const QuizRecordPage = () => {
           <div className="pt-[28px] flex flex-col gap-[40px]">
             {recordData?.quizRecords.map((record) => {
               const date = new Date(record.solvedDate)
-              const formattedDate = format(date, currentLanguage === 'ko-KR' ? 'M월 d일' : 'MMMM do')
+              const formattedDate = format(date, currentLanguage === SUPPORTED_LOCALE.KO ? 'M월 d일' : 'MMMM do')
 
               // record.quizSets과 record.dailyQuizRecords를 CombinedRecord 타입으로 변환
               const combinedRecords: CombinedRecord[] = [

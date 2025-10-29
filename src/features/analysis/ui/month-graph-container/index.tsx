@@ -51,6 +51,7 @@ const MonthGraphContainer = ({ quizDataList, today }: Props) => {
       <div className="relative flex h-[206px] mt-[25px] w-fit gap-[6px]">
         {Array.isArray(quizDataList) &&
           quizDataList.map((data, index) => {
+            const date = new Date(data.date)
             const notSolved = data.totalQuizCount === 0
             const scaleFactor = data.totalQuizCount / maxTotalCount
 
@@ -58,13 +59,13 @@ const MonthGraphContainer = ({ quizDataList, today }: Props) => {
             const rightHeight = notSolved ? 0 : (data.correctAnswerCount / data.totalQuizCount) * 100
 
             const renderDateText =
-              data.date === todayDateString
+              format(date, 'yyyy-MM-dd') === todayDateString
                 ? t('profile.month_graph_container.today')
                 : isAdjacentDate(data.date)
                   ? ''
-                  : format(data.date, 'M.d')
+                  : format(date, 'M.d')
 
-            if (new Date(data.date).getTime() > new Date(todayDateString).getTime()) {
+            if (date.getTime() > new Date(todayDateString).getTime()) {
               return null
             }
 

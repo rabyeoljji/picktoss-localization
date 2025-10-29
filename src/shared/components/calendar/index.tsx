@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { addDays, format, isSameDay, parseISO, startOfDay } from 'date-fns'
+import { addDays, format, isSameDay, startOfDay } from 'date-fns'
 
 import { ShadcnCalendar } from '@/shared/components/ui/calendar'
 import { cn } from '@/shared/lib/utils'
@@ -93,7 +93,7 @@ export const Calendar = ({
     if (dates) {
       const solvedDates = dates
         .filter((record) => record.isDailyQuizComplete)
-        .map((record) => startOfDay(parseISO(record.date)))
+        .map((record) => startOfDay(new Date(record.date)))
 
       const ranges: { start: Date; end: Date }[] = []
       let start: Date | null = null

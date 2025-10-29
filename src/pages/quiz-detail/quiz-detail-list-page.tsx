@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 
+import { format } from 'date-fns'
 import html2pdf from 'html2pdf.js'
 import { toast } from 'sonner'
 import { useStore } from 'zustand'
@@ -65,6 +66,8 @@ const NoteDetailPage = () => {
   const [showMixUp, setShowMixUp] = useState(false)
   const [showAnswer, setShowAnswer] = useQueryParam('/quiz-detail/:noteId/list', 'showAnswer')
   const { data: document, isLoading: isDocumentLoading } = useGetDocument(Number(noteId))
+
+  const createdDate = useMemo(() => new Date(document?.createdAt ?? ''), [document])
 
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
   const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
@@ -795,8 +798,8 @@ const NoteDetailPage = () => {
           <DrawerHeader>
             <DrawerTitle>{t('quizDetail.quiz_detail_list_page.original_note_title')}</DrawerTitle>
             <DrawerDescription>
-              {document?.createdAt.split('T')[0].split('-').join('.')}{' '}
-              {t('quizDetail.quiz_detail_list_page.registered_date')} / {document?.content?.length}
+              {format(createdDate, 'yyyy.MM.dd')} {t('quizDetail.quiz_detail_list_page.registered_date')} /{' '}
+              {document?.content?.length}
               {t('quizDetail.quiz_detail_list_page.characters')}
             </DrawerDescription>
           </DrawerHeader>

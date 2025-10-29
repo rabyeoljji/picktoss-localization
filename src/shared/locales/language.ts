@@ -1,17 +1,17 @@
-export type ServiceLanguage = 'ko-KR' | 'en-US'
+import { SUPPORTED_LOCALE, SUPPORTED_LOCALE_VALUE } from '@/shared/locales/i18n'
 
 export interface LanguageObject {
-  key: ServiceLanguage
+  key: SUPPORTED_LOCALE_VALUE
   label: string
 }
 
 export const LANGUAGE = {
   KOREAN: {
-    key: 'ko-KR',
+    key: SUPPORTED_LOCALE.KO,
     label: '한국어',
   },
   ENGLISH: {
-    key: 'en-US',
+    key: SUPPORTED_LOCALE.EN,
     label: 'English',
   },
 } satisfies Record<string, LanguageObject>

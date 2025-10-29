@@ -6,13 +6,14 @@ import { Header } from '@/shared/components/header'
 import { Label } from '@/shared/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group'
 import { Text } from '@/shared/components/ui/text'
-import { LANGUAGE, ServiceLanguage } from '@/shared/locales/language'
+import { SUPPORTED_LOCALE_VALUE } from '@/shared/locales/i18n'
+import { LANGUAGE } from '@/shared/locales/language'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 const LanguagePage = () => {
   const { t, currentLanguage, changeLanguage } = useTranslation()
 
-  const handleLanguageChange = (value: ServiceLanguage) => {
+  const handleLanguageChange = (value: SUPPORTED_LOCALE_VALUE) => {
     changeLanguage(value)
   }
 
