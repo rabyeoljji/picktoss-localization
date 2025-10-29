@@ -5,6 +5,36 @@ import i18next from 'i18next'
 import en_US from './en-US/translation.json'
 import ko_KR from './ko-KR/translation.json'
 
+export const SUPPORTED_LANGUAGE = {
+  KO: 'ko',
+  EN: 'en',
+} as const
+export type SUPPORTED_LANGUAGE_KEY = keyof typeof SUPPORTED_LANGUAGE
+export type SUPPORTED_LANGUAGE_VALUE = (typeof SUPPORTED_LANGUAGE)[SUPPORTED_LANGUAGE_KEY]
+
+export const SUPPORTED_LOCALE = {
+  KO: 'ko-KR',
+  EN: 'en-US',
+} as const
+export type SUPPORTED_LOCALE_KEY = keyof typeof SUPPORTED_LOCALE
+export type SUPPORTED_LOCALE_VALUE = (typeof SUPPORTED_LOCALE)[SUPPORTED_LOCALE_KEY]
+
+// 지원하는 언어와 해당 리소스 매핑
+const resources = {
+  'ko-KR': { translation: ko_KR },
+  'en-US': { translation: en_US },
+}
+
+// const LANGUAGE_COOKIE_NAME = 'lang'
+// const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365
+
+// const setLanguageCookie = (language: string) => {
+//   if (typeof document === 'undefined') {
+//     return
+//   }
+//   document.cookie = `${LANGUAGE_COOKIE_NAME}=${encodeURIComponent(language)}; path=/; max-age=${ONE_YEAR_IN_SECONDS}; SameSite=Lax`
+// }
+
 // 전달된 옵션이 없거나 빈 객체인 경우 남은 {{var}} 자리표시자를 제거하는 postProcessor
 i18next.use({
   type: 'postProcessor',
@@ -16,23 +46,17 @@ i18next.use({
 })
 
 // 시스템 언어 감지 함수
-const detectSystemLanguage = (): 'ko-KR' | 'en-US' => {
+const detectSystemLanguage = (): SUPPORTED_LOCALE_VALUE => {
   // 브라우저 언어 설정 확인
-  const browserLanguage = navigator.language || navigator.languages?.[0] || 'en-US'
+  const browserLanguage = navigator.language || navigator.languages?.[0] || SUPPORTED_LOCALE.EN
 
   // 한국어 관련 언어 코드인지 확인
-  if (browserLanguage.startsWith('ko') || browserLanguage.startsWith('ko-KR')) {
-    return 'ko-KR'
+  if (browserLanguage.startsWith(SUPPORTED_LANGUAGE.KO) || browserLanguage.startsWith(SUPPORTED_LOCALE.KO)) {
+    return SUPPORTED_LOCALE.KO
   }
 
   // 기본값은 영어
-  return 'en-US'
-}
-
-// 지원하는 언어와 해당 리소스 매핑
-const resources = {
-  'ko-KR': { translation: ko_KR },
-  'en-US': { translation: en_US },
+  return SUPPORTED_LOCALE.EN
 }
 
 export const initializeI18next = (lng?: string): void => {
@@ -59,6 +83,11 @@ export const initializeI18next = (lng?: string): void => {
         return `[${key}]`
       },
     })
+  // setLanguageCookie(defaultLanguage)
 }
 
 export const i18n = i18next
+
+// if (typeof window !== 'undefined') {
+//   i18next.on('languageChanged', setLanguageCookie)
+// }
