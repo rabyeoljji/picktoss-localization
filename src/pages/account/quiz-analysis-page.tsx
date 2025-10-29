@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 
-import { addMonths, format, subMonths } from 'date-fns'
+import { addMonths, format, parse, subMonths } from 'date-fns'
 import { Pie, PieChart } from 'recharts'
 
 import { withHOC } from '@/app/hoc/with-page-config'
@@ -27,10 +27,10 @@ const QuizAnalysisPage = () => {
   const today = useMemo(() => new Date(), [])
 
   const [month, setMonth] = useQueryParam('/account/quiz-analysis', 'month')
-  const dateMonth = new Date(month)
+  const dateMonth = parse(month, 'yyyy-MM', new Date())
   const isPrevMonth = format(today, 'yyyy-MM') !== month
 
-  const requestMonth = useMemo(() => format(new Date(month), 'yyyy-MM-dd'), [month])
+  const requestMonth = useMemo(() => format(dateMonth, 'yyyy-MM-dd'), [dateMonth])
   const { data: monthlyAnalysisData, isLoading } = useGetQuizMonthlyAnalysis(requestMonth)
 
   const totalQuizCount = monthlyAnalysisData?.monthlyTotalQuizCount ?? 0

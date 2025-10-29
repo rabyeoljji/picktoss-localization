@@ -45,7 +45,7 @@ export const DailyGuide = () => {
 
   return (
     <HeaderOffsetLayout className="px-4">
-      <div className="mt-2 shadow-md rounded-[24px] pt-[38px] px-4 bg-surface-1 min-h-[66svh]">
+      <div className="mt-2 shadow-md rounded-[24px] pt-[38px] px-4 bg-surface-1 min-h-[66svh] overflow-hidden">
         <div className="text-center mb-[26px]">
           <div className="mb-3">
             <Tag size="md" className="mx-auto">
