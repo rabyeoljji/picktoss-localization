@@ -38,6 +38,11 @@
     "quiz_card": {
       "private": "비공개",
       "question_count": "{{count}} 문제"
+    },
+    "relative_time": {
+      "justNow": "방금 전",
+      "oneDayAgo": "하루 전",
+      "twoDaysAgo": "이틀 전"
     }
   },
   "daily": {
@@ -156,8 +161,8 @@
     },
     "toast": {
       "content_max_chars": "내용은 50,000자까지 작성 가능합니다",
-      "document_created": "문서가 생성되었습니다",
-      "document_generation_failed": "문서 생성에 실패했습니다.",
+      "document_created": "퀴즈가 생성되었습니다",
+      "document_generation_failed": "퀴즈 생성에 실패했습니다.",
       "file_content_required": "파일 내용은 필수입니다",
       "file_not_found": "파일이 존재하지 않습니다.",
       "file_processing_error": "파일 처리 중 문제가 발생했습니다.",
