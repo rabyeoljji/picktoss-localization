@@ -39,6 +39,7 @@ import SearchPage from '@/pages/search-page'
 import { AuthLayout } from '@/app/layout/auth-layout'
 import { RewardLayout } from '@/app/layout/reward-layout'
 import { RootLayout } from '@/app/layout/root-layout'
+import NetworkErrorFallback from '@/app/network-error'
 import NotFound from '@/app/not-found'
 
 import { RoutePath } from '@/shared/lib/router'
@@ -119,8 +120,12 @@ export const AppRouter = () => {
         </Route>
 
         <Route path="/ads.txt" />
+
         {/* 404 */}
         <Route path="*" element={<NotFound />} />
+
+        {/* network-error */}
+        <Route path="/network-error" element={<NetworkErrorFallback />} />
       </Routes>
     </BrowserRouter>
   )

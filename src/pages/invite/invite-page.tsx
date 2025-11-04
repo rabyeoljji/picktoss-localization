@@ -59,7 +59,7 @@ const InvitePage = () => {
         right={
           <a href="https://picktoss.framer.website" target="_blank" rel="noopener noreferrer" className="p-[8px]">
             <TextButton size={'md'} variant={'sub'}>
-              {t('profile.서비스_소개')}
+              {t('profile.invite_page.service_introduction')}
             </TextButton>
           </a>
         }

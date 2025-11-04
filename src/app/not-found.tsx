@@ -2,8 +2,11 @@ import { ImgPageerror } from '@/shared/assets/images'
 import { Button } from '@/shared/components/ui/button'
 import { Text } from '@/shared/components/ui/text'
 import { useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const NotFound = () => {
+  const { t } = useTranslation()
+
   const router = useRouter()
 
   return (
@@ -13,16 +16,16 @@ const NotFound = () => {
 
         <div className="mt-4 flex flex-col items-center gap-2">
           <Text typo="subtitle-1-bold" className="text-center">
-            페이지를 찾을 수 없어요
+            {t('etc.not_found.title')}
           </Text>
           <Text typo="body-1-medium" color="sub" className="text-center">
-            존재하지 않는 주소거나, 요청하신 페이지의 <br /> 주소가 변경, 삭제되어 찾을 수 없어요
+            {t('etc.not_found.message1')} <br /> {t('etc.not_found.message2')}
           </Text>
         </div>
       </div>
 
-      <Button onClick={() => router.back()} variant={'primary'} size={'md'}>
-        픽토스 홈으로 돌아가기
+      <Button onClick={() => router.replace('/')} variant={'primary'} size={'md'} className="w-fit">
+        {t('etc.not_found.button')}
       </Button>
     </div>
   )

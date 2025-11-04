@@ -30,12 +30,12 @@ const exampleQuestions = [
 
 const InviteLoginPage = () => {
   const router = useRouter()
-  const { t } = useTranslation()
+  const { t, currentLanguage } = useTranslation()
 
   const [searchParams] = useSearchParams()
   const inviteCode = searchParams.get('inviteCode') ?? ''
 
-  const [verifyCode, setVerifyCode] = useState(false)
+  const [verifyCode, setVerifyCode] = useState<boolean | null>(null)
   const { mutate: verifyInviteCode, isPending } = useVerifyInviteCode()
 
   const onLoginSuccess = () => {
@@ -76,14 +76,18 @@ const InviteLoginPage = () => {
     )
   }, [inviteCode])
 
+  useEffect(() => {
+    if (verifyCode === null) return
+
+    if (!verifyCode) {
+      router.replace('/invite/:inviteCode', {
+        params: [inviteCode ?? ''],
+      })
+    }
+  }, [verifyCode])
+
   if (isPending) {
     return <Loading center />
-  }
-
-  if (!verifyCode) {
-    router.replace('/invite/:inviteCode', {
-      params: [inviteCode ?? ''],
-    })
   }
 
   return (
@@ -103,7 +107,7 @@ const InviteLoginPage = () => {
                 <ImgSymbol className="w-[80px]" />
                 <IcLogo className="w-[210px] h-[53.48px] text-icon-inverse" />
               </div>
-              <div className="flex flex-col gap-[10px]">
+              <div className="w-full max-w-xl flex flex-col gap-[10px]">
                 <Marquee gradient={false} speed={20} direction="left">
                   {exampleQuestions.map((item, index) => (
                     <QuestionBox
@@ -131,7 +135,7 @@ const InviteLoginPage = () => {
 
             <div className="w-full flex-center flex-col gap-[16px]">
               <div className="w-full flex flex-col gap-2 px-[32px]">
-                <KakaoLoginButton onClick={() => handleLogin('KAKAO')} />
+                {currentLanguage === 'ko-KR' && <KakaoLoginButton onClick={() => handleLogin('KAKAO')} />}
                 <GoogleLoginButton onClick={() => handleLogin('GOOGLE')} />
               </div>
 

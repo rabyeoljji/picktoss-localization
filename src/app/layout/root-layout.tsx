@@ -5,16 +5,21 @@ import { Outlet } from 'react-router'
 
 import { useSideAppDownloadPopup } from '@/features/download/hook/use-side-app-download-popup'
 
+import { useLastPathTracker } from '@/shared/hooks/use-last-path-tracker'
+import { useOfflineGuard } from '@/shared/hooks/use-offline-guard'
 import { cn } from '@/shared/lib/utils'
 
 export const RootLayout = () => {
+  useOfflineGuard()
+  useLastPathTracker()
+
   const sideAppDownloadPopup = useSideAppDownloadPopup()
 
   const checkPWA = () => {
     try {
       const isIOSStandalone =
         typeof window !== 'undefined' && 'standalone' in window.navigator && window.navigator.standalone
-      
+
       let isStandaloneMedia = false
       if (typeof window !== 'undefined' && window.matchMedia) {
         try {
