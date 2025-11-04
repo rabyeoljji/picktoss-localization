@@ -42,7 +42,8 @@ export const DailyQuizTooltip = ({
         {todaySolvedDailyQuizCount && 10 - todaySolvedDailyQuizCount > 0 ? (
           <Text typo="body-2-medium">
             <span className="text-accent">
-              {t('common.quiz_card.question_count', { count: 10 - todaySolvedDailyQuizCount })}
+              {10 - todaySolvedDailyQuizCount}
+              {t('daily.quiz_tooltip.question')}
             </span>{' '}
             <span>{t('daily.quiz_tooltip.solve_more_message')}!</span>
           </Text>

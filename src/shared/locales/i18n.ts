@@ -75,6 +75,7 @@ export const initializeI18next = (lng?: string): void => {
       interpolation: {
         prefix: '{{',
         suffix: '}}',
+        escapeValue: false, // ← React가 이미 XSS 방지 이스케이프를 해줌
       },
       // 누락된 키 처리 핸들러
       parseMissingKeyHandler: (key) => {

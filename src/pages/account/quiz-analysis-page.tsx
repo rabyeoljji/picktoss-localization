@@ -67,7 +67,7 @@ const QuizAnalysisPage = () => {
 
   const superiorQuizType =
     (monthlyAnalysisData?.quizTypes.mixUpQuizCount ?? 0) > (monthlyAnalysisData?.quizTypes.multipleChoiceQuizCount ?? 0)
-      ? 'O/X'
+      ? `O/X`
       : t('common.multiple_choice')
 
   return (
@@ -272,7 +272,7 @@ const QuizAnalysisPage = () => {
                   </Text>
                 ) : (
                   <Text typo="h4">
-                    {t('profile.quiz_analysis_page.type_problem_mainly', { type: superiorQuizType })}{' '}
+                    {t('profile.quiz_analysis_page.type_problem_mainly', { type: String(superiorQuizType) })}{' '}
                     {isPrevMonth
                       ? t('profile.quiz_analysis_page.solving_type_past')
                       : t('profile.quiz_analysis_page.solving_type_present')}

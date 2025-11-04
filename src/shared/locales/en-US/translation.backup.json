@@ -38,6 +38,11 @@
     "quiz_card": {
       "private": "Private",
       "question_count": "{{count}} Questions"
+    },
+    "relative_time": {
+      "justNow": "Just Now",
+      "oneDayAgo": "One Day Ago",
+      "twoDaysAgo": "Two Days Ago"
     }
   },
   "daily": {
@@ -91,7 +96,7 @@
     },
     "quiz_tooltip": {
       "consecutive_days_complete": "{{count}} Day Streak!",
-      "question": "",
+      "question": " ",
       "solve_more_message": "more questions to go!"
     },
     "tutorial": {
@@ -156,8 +161,8 @@
     },
     "toast": {
       "content_max_chars": "You can enter up to 50,000 characters.",
-      "document_created": "Document has been created",
-      "document_generation_failed": "Failed to generate the document.",
+      "document_created": "Quiz has been created",
+      "document_generation_failed": "Failed to generate the quiz.",
       "file_content_required": "File content is required.",
       "file_not_found": "The file does not exist.",
       "file_processing_error": "An issue occurred while processing the file.",
@@ -703,6 +708,19 @@
       "rawls_question": "What did Rawls argue?",
       "short_strategy_question": "Short strategy is a buying strategy",
       "terms_of_service": "Terms of service"
+    },
+    "network_error": {
+      "button": "Refresh",
+      "message1": "Please check your network connection,",
+      "message2": "then click the refresh button.",
+      "title1": "Due to a network issue,",
+      "title2": "the connection is delayed."
+    },
+    "not_found": {
+      "button": "Go back to Pictos home",
+      "message1": "It may be a non-existent address, or the requested page’s",
+      "message2": "address may have been changed or deleted, so it can’t be found.",
+      "title": "We can’t find the page."
     },
     "onboarding": {
       "complete_button": "Complete",

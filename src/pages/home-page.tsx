@@ -501,7 +501,7 @@ const HomePage = () => {
               </Text>
             </div>
             {dailyQuizRecord?.consecutiveSolvedDailyQuizDays !== 0 && (
-              <div className="mt-[24px] px-[28px] pt-[6px] pb-[9px] flex justify-between">
+              <div className="mt-[24px] px-[28px] pt-[6px] pb-[9px] flex flex-center gap-[20px]">
                 {Array.from({ length: 5 }).map((_, index) => (
                   <div key={index} className="flex flex-col items-center gap-1">
                     <div className="relative">

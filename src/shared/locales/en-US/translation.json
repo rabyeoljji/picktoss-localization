@@ -50,7 +50,7 @@
       "description1": "Solve 10 quizzes daily to earn 5 stars.",
       "description2": "20 stars for every 5-day streak!",
       "star_count": "{{count}}",
-      "title1": "",
+      "title1": " ",
       "title2": "{{count}} Day",
       "title3": "Streak!"
     },
@@ -96,7 +96,7 @@
     },
     "quiz_tooltip": {
       "consecutive_days_complete": "{{count}} Day Streak!",
-      "question": "",
+      "question": " ",
       "solve_more_message": "more questions to go!"
     },
     "tutorial": {
@@ -708,6 +708,19 @@
       "rawls_question": "What did Rawls argue?",
       "short_strategy_question": "Short strategy is a buying strategy",
       "terms_of_service": "Terms of service"
+    },
+    "network_error": {
+      "button": "Refresh",
+      "message1": "Please check your network connection,",
+      "message2": "then click the refresh button.",
+      "title1": "Due to a network issue,",
+      "title2": "the connection is delayed."
+    },
+    "not_found": {
+      "button": "Go back to Pictos home",
+      "message1": "It may be a non-existent address, or the requested page’s",
+      "message2": "address may have been changed or deleted, so it can’t be found.",
+      "title": "We can’t find the page."
     },
     "onboarding": {
       "complete_button": "Complete",

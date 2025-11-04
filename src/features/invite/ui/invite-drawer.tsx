@@ -33,7 +33,7 @@ interface Props {
 
 const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
   const { trackEvent } = useAmplitude()
-  const { t } = useTranslation()
+  const { t, currentLanguage } = useTranslation()
 
   // 외부 제어 여부 확인 (controlled vs uncontrolled)
   const isControlled = open !== undefined
@@ -169,15 +169,17 @@ const InviteDrawer = ({ triggerComponent, open, onOpenChange }: Props) => {
             </div>
 
             <div className="w-full flex flex-col gap-[8px]">
-              <Button
-                onClick={async () => await handleKakaoShare()}
-                variant={'secondary1'}
-                size={'md'}
-                className="w-full bg-[var(--color-yellow)] text-primary hover:bg-[var(--color-yellow)]"
-                left={<ImgRoundKakao width={32} height={32} />}
-              >
-                {t('profile.invite_drawer.share_to_kakao')}
-              </Button>
+              {currentLanguage === 'ko-KR' && (
+                <Button
+                  onClick={async () => await handleKakaoShare()}
+                  variant={'secondary1'}
+                  size={'md'}
+                  className="w-full bg-[var(--color-yellow)] text-primary hover:bg-[var(--color-yellow)]"
+                  left={<ImgRoundKakao width={32} height={32} />}
+                >
+                  {t('profile.invite_drawer.share_to_kakao')}
+                </Button>
+              )}
 
               <Button
                 onClick={handleNativeShare}
