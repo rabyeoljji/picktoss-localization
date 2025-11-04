@@ -661,7 +661,7 @@ const IncorrectAnswerBody = ({
 
       <div className="grid gap-3">
         <Text typo="subtitle-1-bold">
-          {t('daily.home_page.answer')}:{' '}
+          {t('common.answer')}:{' '}
           {currQuiz.quizType === 'MULTIPLE_CHOICE' ? currQuiz.answer : currQuiz.answer === 'correct' ? 'O' : 'X'}
         </Text>
         <Text typo="body-1-medium" as="p" color="secondary">

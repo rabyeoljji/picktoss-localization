@@ -25,7 +25,8 @@ export const useTranslation = () => {
     if (i18n && typeof i18n.changeLanguage === 'function') {
       i18n.changeLanguage(lng)
       // 로컬 스토리지에 언어 설정 저장
-      localStorage.setItem('i18nextLng', lng)
+      // localStorage.setItem('i18nextLng', lng)
+      localStorage.removeItem('i18nextLng')
     } else {
       console.warn('i18n is not properly initialized')
     }
@@ -37,8 +38,8 @@ export const useTranslation = () => {
   React.useEffect(() => {
     if (i18n && typeof i18n.changeLanguage === 'function') {
       // 저장된 언어 설정이 있으면 사용, 없으면 시스템 언어 감지
-      const savedLanguage = localStorage.getItem('i18nextLng') as SUPPORTED_LOCALE_VALUE
-      const defaultLanguage = savedLanguage || detectSystemLanguage()
+      // const savedLanguage = localStorage.getItem('i18nextLng') as SUPPORTED_LOCALE_VALUE
+      const defaultLanguage = detectSystemLanguage()
 
       if (defaultLanguage !== currentLanguage) {
         i18n.changeLanguage(defaultLanguage)
