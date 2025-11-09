@@ -460,7 +460,8 @@ const HomePage = () => {
           <Text typo="subtitle-2-medium" color="sub" className="center">
             {t('daily.home_page.create_quiz_button')}
           </Text>
-          <button
+          <div
+            role="button"
             onClick={(e) => {
               e.stopPropagation()
               router.push('/note/create', {
@@ -476,7 +477,7 @@ const HomePage = () => {
             className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
           >
             <IcFile className="size-5 text-white" />
-          </button>
+          </div>
         </button>
       </div>
       <AlertDrawer

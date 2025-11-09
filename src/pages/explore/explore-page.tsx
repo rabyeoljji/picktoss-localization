@@ -279,7 +279,8 @@ const CreateQuizButton = ({ hide }: { hide: boolean }) => {
       <Text typo="subtitle-2-medium" color="sub" className="center">
         {t('explore.explore_page.create_quiz_button')}
       </Text>
-      <button
+      <div
+        role="button"
         onClick={(e) => {
           e.stopPropagation()
           if (!token) {
@@ -300,7 +301,7 @@ const CreateQuizButton = ({ hide }: { hide: boolean }) => {
         className="flex-center bg-orange-500 rounded-full size-10 absolute right-1 bottom-1/2 translate-y-1/2"
       >
         <IcFile className="size-5 text-white" />
-      </button>
+      </div>
     </button>
   )
 }

@@ -46,7 +46,7 @@ const RewardDialogForInviter = ({
           </div>
 
           <div className="flex flex-col gap-[8px]">
-            <DialogTitle className="typo-h4 text-center">{t('profile.친구_초대_보상_도착')}</DialogTitle>
+            <DialogTitle className="typo-h4 text-center">{t('profile.inviter_reward_dialog.title')}</DialogTitle>
             <DialogDescription className="typo-subtitle-2-medium text-sub text-center">
               {t('profile.inviter_reward_dialog.invite_reward_message1')}{' '}
               {t('profile.invite_reward_dialog.dear_name', { name: userName })} <br />

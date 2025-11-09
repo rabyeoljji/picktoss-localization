@@ -15,6 +15,11 @@ client.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
+    const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    if (timezone) {
+      config.headers = config.headers ?? {}
+      config.headers['X-Timezone'] = timezone
+    }
     return config
   },
   (error) => Promise.reject(error),
