@@ -113,6 +113,7 @@ export const useGetAllDocuments = (options?: {
     queryKey: [...DOCUMENT_KEYS.getAllDocuments, options?.directoryId, options?.sortOption],
     queryFn: () => getAllDocuments(options),
     enabled: options?.enabled ?? true,
+    refetchOnMount: true,
   })
 }
 
@@ -482,6 +483,9 @@ export const useUpdateDocumentIsPublic = (documentId: number) => {
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getDocument(documentId)] })
       await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getPublicDocuments] })
+      await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getIsNotPublicDocuments] })
+      await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.getAllDocuments] })
+      await queryClient.invalidateQueries({ queryKey: [...DOCUMENT_KEYS.searchDocument({ keyword: '' })] })
     },
   })
 }
