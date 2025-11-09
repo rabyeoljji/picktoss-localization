@@ -13,17 +13,17 @@ export const FeedbackCompletePage = () => {
     <div className="center flex-center flex-col">
       <ImgConfirm className="w-[100px]" />
       <Text typo="subtitle-1-bold" color="primary" className="mt-4">
-        {t('profile.feedback_form.inquiry_sent_message')}
+        {t('profile.feedback_complete.title')}
       </Text>
       <Text typo="body-1-medium" color="sub" className="text-center mt-2">
-        {t('profile.조금만_기다려주시면')}
+        {t('profile.feedback_complete.message1')}
         <br />
-        {t('profile.이메일로_답변을_전달드릴게요')}
+        {t('profile.feedback_complete.message2')}
       </Text>
 
       <Link to="/" replace className="mt-[32px]">
         <Button variant="tertiary" size="md">
-          {t('profile.픽토스_홈으로_가기')}
+          {t('profile.feedback_complete.button')}
         </Button>
       </Link>
     </div>

@@ -52,7 +52,7 @@ export const SystemDialog = ({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="max-w-[280px] w-fit rounded-[16px] px-[24px] pt-[24px] pb-[8px] whitespace-nowrap">
+      <DialogContent className="max-w-[280px] w-fit rounded-[16px] px-[24px] pt-[24px] pb-[8px] whitespace-pre-line">
         <DialogHeader className="text-center">
           <DialogTitle className="typo-subtitle-2-bold text-text-primary">{title}</DialogTitle>
           {description && <DialogDescription className="typo-body-1-medium text-sub">{description}</DialogDescription>}

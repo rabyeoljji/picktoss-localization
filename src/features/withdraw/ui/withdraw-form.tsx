@@ -77,7 +77,7 @@ const WithdrawForm = () => {
                         htmlFor={`type-${label}`}
                         selected={field.value === value}
                       >
-                        {label}
+                        {t(label)}
                       </Selectbox>
                     </FormControl>
                   </FormItem>
@@ -89,7 +89,7 @@ const WithdrawForm = () => {
 
         <div className="px-[16px]">
           <Text typo="body-1-bold" color="sub">
-            {t('profile.상세내용')}
+            {t('profile.withdraw_form.details_label')}
           </Text>
 
           {/* 상세 내용 */}
@@ -101,7 +101,7 @@ const WithdrawForm = () => {
                 <FormControl>
                   <Textarea
                     {...field}
-                    placeholder={t('profile.선택하신_이유에_관한_자세한_내용을_남겨주세요')}
+                    placeholder={t('profile.withdraw_form.details_placeholder')}
                     className="input-basic my-[8px] h-[256px] w-full resize-none"
                     maxLength={500}
                   />
@@ -111,7 +111,7 @@ const WithdrawForm = () => {
           />
 
           <Text typo="body-2-medium" color="caption" className="mb-[32px]">
-            {`${t('profile.500자_이내로_입력해주세요')} (${watch('content')?.length || 0}/500)`}
+            {`${t('profile.withdraw_form.character_limit')} (${watch('content')?.length || 0}/500)`}
           </Text>
         </div>
 
@@ -129,7 +129,7 @@ const WithdrawForm = () => {
                 </FormControl>
                 <label htmlFor="checkNotification">
                   <Text typo="body-2-medium" color="primary">
-                    {t('profile.저장한_데이터는_모두_삭제되며_복구할_수_없음을_확인했습니다')}
+                    {t('profile.withdraw_form.confirm_message')}
                   </Text>
                 </label>
               </FormItem>
@@ -140,20 +140,20 @@ const WithdrawForm = () => {
           <SystemDialog
             trigger={
               <Button disabled={isPending || !form.getValues().confirmNotification} className="w-full">
-                {isPending ? t('profile.제출_중') : t('profile.탈퇴하기')}
+                {isPending ? t('profile.withdraw_form.submitting_message') : t('profile.withdraw_form.withdraw_button')}
               </Button>
             }
-            title={t('profile.계정을_삭제하시겠어요')}
+            title={t('profile.withdraw_form.delete_account_confirm_title')}
             content={
-              <Text typo="body-1-medium" color="sub">
-                {t('profile.픽토스에서_만든')}{' '}
+              <Text typo="body-1-medium" color="sub" className="whitespace-pre-line">
+                {t('profile.withdraw_form.delete_account_confirm_message')}{' '}
                 <Text as="span" typo="body-1-medium" color="critical">
-                  {t('profile.개의_문제', { count: user?.totalQuizCount ?? 0 })}
+                  {t('profile.withdraw_form.delete_account_confirm_count', { count: user?.totalQuizCount ?? 0 })}
                 </Text>
-                {t('profile.가')} <br /> {t('profile.모두_삭제됩니다')}
+                {t('profile.withdraw_form.delete_account_confirm_warning')}
               </Text>
             }
-            confirmLabel={t('profile.계정_삭제')}
+            confirmLabel={t('profile.withdraw_form.delete_account_confirm_button')}
             onConfirm={handleSubmit(handleClickDeleteAccount)}
             variant="critical"
           />

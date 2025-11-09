@@ -12,10 +12,10 @@ export type WithdrawReason = z.infer<typeof WithdrawReasonEnum>
 
 // 탈퇴 사유 매핑
 export const withdrawReasonMap: Record<string, WithdrawReason> = {
-  '생성한 결과물이 만족스럽지 않아요': 'UNSATISFACTORY_RESULT',
-  '접속 오류 등 시스템 이용이 불편해요': 'SYSTEM_ISSUE',
-  '기능 등 서비스 이용이 불편해요': 'INCONVENIENT_SERVICE',
-  '위 내용 외에 다른 문제가 있어요': 'OTHER_PROBLEM',
+  'profile.withdraw_form.reason.unsatisfactory_result': 'UNSATISFACTORY_RESULT',
+  'profile.withdraw_form.reason.system_issue': 'SYSTEM_ISSUE',
+  'profile.withdraw_form.reason.inconvenient_service': 'INCONVENIENT_SERVICE',
+  'profile.withdraw_form.reason.other_problem': 'OTHER_PROBLEM',
 }
 
 export const withdrawFormSchema = z.object({

@@ -446,6 +446,12 @@
       "register_email": "Please register your email address",
       "withdraw": "Withdraw"
     },
+    "feedback_complete": {
+      "button": "Go to Pictos home",
+      "message1": "If you wait a moment,",
+      "message2": "we’ll send the reply via email.",
+      "title": "Inquiry has been sent"
+    },
     "feedback_form": {
       "agree_button": "Agree",
       "cancel_button": "Cancel",
@@ -463,7 +469,6 @@
       "exit_confirm_message": "Your draft will be lost",
       "exit_confirm_title": "Leave inquiry?",
       "inquiry_label": "Inquiry",
-      "inquiry_sent_message": "Inquiry has been sent",
       "inquiry_title": "Contact",
       "inquiry_type_label": "Inquiry Type",
       "inquiry_type": {
@@ -675,14 +680,23 @@
     "withdraw_form": {
       "character_limit": "Please enter within 500 characters",
       "confirm_message": "I confirm that all saved data will be deleted and cannot be recovered",
-      "delete_account_confirm_button": "Delete Account",
+      "delete_account_confirm_button": "Delete",
       "delete_account_confirm_count": "{{count}} questions",
       "delete_account_confirm_message": "Made on Picktoss",
       "delete_account_confirm_title": "Do you want to delete your account?",
-      "delete_account_confirm_warning": "will all be deleted",
+      "delete_account_confirm_warning": "\nwill all be deleted",
       "details_label": "Details",
       "details_placeholder": "Please leave detailed content about the reason",
+      "message1": "Please tell us why you’re leaving, {{name}}.",
+      "message2": "We’ll use your feedback to make our service better.",
+      "reason": {
+        "inconvenient_service": "Features or service usage is inconvenient.",
+        "other_problem": "I have other issues not listed above.",
+        "system_issue": "Access errors or system issues make it hard to use.",
+        "unsatisfactory_result": "I’m not satisfied with the generated results."
+      },
       "submitting_message": "Submitting",
+      "title": "Delete account",
       "withdraw_button": "Withdraw"
     }
   },

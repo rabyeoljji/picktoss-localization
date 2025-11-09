@@ -446,6 +446,12 @@
       "register_email": "이메일 주소를 등록해주세요",
       "withdraw": "탈퇴하기"
     },
+    "feedback_complete": {
+      "button": "픽토스 홈으로 가기",
+      "message1": "조금만 기다려주시면",
+      "message2": "이메일로 답변을 전달드릴게요",
+      "title": "문의가 전송되었어요"
+    },
     "feedback_form": {
       "agree_button": "동의하기",
       "cancel_button": "취소",
@@ -463,7 +469,6 @@
       "exit_confirm_message": "작성 중인 내용이 사라집니다",
       "exit_confirm_title": "문의에서 나가시겠어요?",
       "inquiry_label": "문의",
-      "inquiry_sent_message": "문의가 전송되었어요",
       "inquiry_title": "문의하기",
       "inquiry_type_label": "문의 유형",
       "inquiry_type": {
@@ -679,10 +684,19 @@
       "delete_account_confirm_count": "{{count}}개의 문제",
       "delete_account_confirm_message": "픽토스에서 만든",
       "delete_account_confirm_title": "계정을 삭제하시겠어요?",
-      "delete_account_confirm_warning": "가 모두 삭제됩니다",
+      "delete_account_confirm_warning": "가\n모두 삭제됩니다",
       "details_label": "상세내용",
       "details_placeholder": "선택하신 이유에 관한 자세한 내용을 남겨주세요",
+      "message1": "{{name}}님이 떠나시는 이유를 알려주세요",
+      "message2": "주신 의견을 통해 더 나은 서비스를 만들 수 있도록 노력할게요",
+      "reason": {
+        "inconvenient_service": "기능 등 서비스 이용이 불편해요",
+        "other_problem": "위 내용 외에 다른 문제가 있어요",
+        "system_issue": "접속 오류 등 시스템 이용이 불편해요",
+        "unsatisfactory_result": "생성한 결과물이 만족스럽지 않아요"
+      },
       "submitting_message": "제출 중...",
+      "title": "회원탈퇴",
       "withdraw_button": "탈퇴하기"
     }
   },
