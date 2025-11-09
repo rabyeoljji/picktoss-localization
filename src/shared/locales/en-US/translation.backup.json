@@ -675,13 +675,12 @@
       "profile_image_changed": "The Avatar has been changed",
       "profile_image_registered": "The Avatar has been added",
       "try_again": "Please try again later",
-      "update_interested_category": "Your interest categories have been updated",
-      "withdraw_required": "Please agree that you have reviewed the account deletion notice."
+      "update_interested_category": "Your interest categories have been updated"
     },
     "withdraw_form": {
       "character_limit": "Please enter within 500 characters",
       "confirm_message": "I confirm that all saved data will be deleted and cannot be recovered",
-      "delete_account_confirm_button": "Delete Account",
+      "delete_account_confirm_button": "Delete",
       "delete_account_confirm_count": "{{count}} questions",
       "delete_account_confirm_message": "Made on Picktoss",
       "delete_account_confirm_title": "Do you want to delete your account?",

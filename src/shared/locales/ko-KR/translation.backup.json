@@ -675,8 +675,7 @@
       "profile_image_changed": "프로필 사진이 변경되었어요",
       "profile_image_registered": "프로필 사진이 등록되었어요",
       "try_again": "잠시 후 다시 시도해주세요",
-      "update_interested_category": "관심 카테고리가 변경되었어요",
-      "withdraw_required": "탈퇴 안내 확인 여부에 동의해주세요"
+      "update_interested_category": "관심 카테고리가 변경되었어요"
     },
     "withdraw_form": {
       "character_limit": "500자 이내로 입력해주세요",

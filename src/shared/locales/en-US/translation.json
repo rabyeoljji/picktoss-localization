@@ -649,7 +649,7 @@
     },
     "quiz_record_page": {
       "no_solved_quiz": "No quizzes solved yet",
-      "problem": "Question",
+      "problem": " Question",
       "quiz_record": "Quiz Record",
       "record_description": "Your solved quizzes are recorded here"
     },
