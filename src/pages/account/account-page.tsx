@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 
 import { withHOC } from '@/app/hoc/with-page-config'
 import HeaderOffsetLayout from '@/app/layout/header-offset-layout'
@@ -9,7 +8,7 @@ import InviteDrawer from '@/features/invite/ui/invite-drawer'
 import { useUpdateQuizNotification, useUser } from '@/entities/member/api/hooks'
 
 import { IcChevronRight, IcDisclaimer, IcMy, IcNotification, IcRecord } from '@/shared/assets/icon'
-import { ImgAlarm, ImgGraph, ImgInviteStar, ImgPush, ImgStar } from '@/shared/assets/images'
+import { ImgAlarm, ImgGraph, ImgInviteStar, ImgPush, ImgPushEng, ImgStar } from '@/shared/assets/images'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/shared/components/ui/dialog'
@@ -22,6 +21,7 @@ import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { checkNotificationPermission } from '@/shared/lib/notification'
 import { Link, useRouter } from '@/shared/lib/router'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 const AccountPage = () => {
   const { t } = useTranslation()
@@ -381,7 +381,7 @@ const NotificationDrawer = ({
   onOpenChange: (value: boolean) => void
   onServiceNotificationChange: (value: boolean) => void
 }) => {
-  const { t } = useTranslation()
+  const { t, currentLanguage } = useTranslation()
   const { setupMessaging, isReadyNotification } = useMessaging()
   const { mutate: updateNotification } = useUpdateQuizNotification()
 
@@ -411,7 +411,11 @@ const NotificationDrawer = ({
           </Text>
         </DrawerHeader>
 
-        <ImgPush height={200} width={301.25} />
+        {currentLanguage === 'ko-KR' ? (
+          <ImgPush height={200} width={301.25} />
+        ) : (
+          <ImgPushEng height={200} width={301.25} />
+        )}
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
           <Button onClick={clickNotification}>{t('profile.main_page.setup_button')}</Button>

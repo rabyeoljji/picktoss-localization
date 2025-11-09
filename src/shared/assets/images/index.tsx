@@ -30,6 +30,7 @@ import imgOx from "./img_ox.png"
 import imgPageerror from "./img_pageerror.png"
 import imgPencil from "./img_pencil.png"
 import imgPush from "./img_push.png"
+import imgPushEng from "./img_push_eng.png"
 import imgQuizEmpty from "./img_quiz_empty.png"
 import imgQuizcard from "./img_quizcard.png"
 import imgQuizerror from "./img_quizerror.png"
@@ -177,6 +178,10 @@ export const ImgPencil: React.FC<ImageComponentProps> = ({ ...props }) => {
 
 export const ImgPush: React.FC<ImageComponentProps> = ({ ...props }) => {
   return <img src={imgPush} alt="push" {...props} />;
+};
+
+export const ImgPushEng: React.FC<ImageComponentProps> = ({ ...props }) => {
+  return <img src={imgPushEng} alt="push_eng" {...props} />;
 };
 
 export const ImgQuizEmpty: React.FC<ImageComponentProps> = ({ ...props }) => {

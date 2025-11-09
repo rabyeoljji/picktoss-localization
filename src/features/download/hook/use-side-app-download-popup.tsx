@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react'
 import { isDesktop, isMobile } from 'react-device-detect'
-import { useTranslation } from 'react-i18next'
 
 import { IcClose } from '@/shared/assets/icon'
-import { ImgPush } from '@/shared/assets/images'
+import { ImgPush, ImgPushEng } from '@/shared/assets/images'
 import { Text } from '@/shared/components/ui/text'
 import useBreakpoint from '@/shared/hooks/use-breakpoint'
 import { usePWA } from '@/shared/hooks/use-pwa'
+import { useTranslation } from '@/shared/locales/use-translation'
 
 export const useSideAppDownloadPopup = () => {
   const { isPWA } = usePWA()
   const { isDesktopSize } = useBreakpoint()
   const [isSideAppDownloadPopupOpen, setIsSideAppDownloadPopupOpen] = useState(!isPWA && isDesktop && isDesktopSize)
 
-  const { t } = useTranslation()
+  const { t, currentLanguage } = useTranslation()
 
   useEffect(() => {
     if (!isPWA && isDesktop && isDesktopSize) {
@@ -53,7 +53,13 @@ export const useSideAppDownloadPopup = () => {
             </div>
           </div>
 
-          <ImgPush className="w-[232px] h-[154.67px]" />
+          {/* <ImgPush className="w-[232px] h-[154.67px]" /> */}
+
+          {currentLanguage === 'ko-KR' ? (
+            <ImgPush height={154.67} width={232} />
+          ) : (
+            <ImgPushEng height={154.67} width={232} />
+          )}
         </div>
       </div>
     )

@@ -20,7 +20,7 @@ import { CreateDailyQuizRecordResponse, GetAllQuizzesResponse } from '@/entities
 import { useCreateDailyQuizRecord, useGetConsecutiveSolvedDailyQuiz, useGetQuizzes } from '@/entities/quiz/api/hooks'
 
 import { IcClose, IcFile, IcPagelink, IcRefresh } from '@/shared/assets/icon'
-import { ImgPush, ImgRoundIncorrect, ImgStar, ImgTutorialRefresh } from '@/shared/assets/images'
+import { ImgPush, ImgPushEng, ImgRoundIncorrect, ImgStar, ImgTutorialRefresh } from '@/shared/assets/images'
 import { AlertDrawer } from '@/shared/components/drawers/alert-drawer'
 import { Header } from '@/shared/components/header'
 import { Button } from '@/shared/components/ui/button'
@@ -704,7 +704,7 @@ const IncorrectAnswerBody = ({
 const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChange: (value: boolean) => void }) => {
   const { setupMessaging, isReadyNotification } = useMessaging()
   const { mutate: updateNotification } = useUpdateQuizNotification()
-  const { t } = useTranslation()
+  const { t, currentLanguage } = useTranslation()
 
   const clickNotification = async () => {
     const callbackAfterPermission = (permission?: boolean) => {
@@ -732,7 +732,11 @@ const NotificationDrawer = ({ open, onOpenChange }: { open: boolean; onOpenChang
           </Text>
         </DrawerHeader>
 
-        <ImgPush height={200} width={301.25} />
+        {currentLanguage === 'ko-KR' ? (
+          <ImgPush height={200} width={301.25} />
+        ) : (
+          <ImgPushEng height={200} width={301.25} />
+        )}
 
         <DrawerFooter className="w-full pt-[14px] px-[20px] h-[90px] flex flex-col">
           <Button onClick={clickNotification}>{t('daily.home_page.setup_button')}</Button>
