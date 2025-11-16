@@ -366,6 +366,7 @@
       "ox_label": "O/X",
       "question_label": "질문",
       "question_required_error": "질문을 입력해주세요",
+      "quiz_count": "{{count}}문제",
       "quiz_label": "문제",
       "registered_date": "등록",
       "review_pick_description": "내가 틀렸던 문제들을 확인해보세요",

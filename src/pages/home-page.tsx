@@ -496,7 +496,7 @@ const HomePage = () => {
             </Text>
             <div className="mt-2 pb-[32px] border-b border-divider">
               <Text typo="body-1-medium" color="sub" className="text-center">
-                {t('daily.home_page.notification_permission_message2')}
+                {t('daily.alert_drawer.description1')}
                 <br />
                 {t('daily.alert_drawer.description2')}
               </Text>

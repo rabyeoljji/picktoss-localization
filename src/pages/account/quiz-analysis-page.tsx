@@ -244,7 +244,7 @@ const QuizAnalysisPage = () => {
                                 className="mr-[8px] size-[12px] rounded-[4px]"
                                 style={{ backgroundColor: '#' + categoryColor }}
                               />
-                              <Text typo="body-1-bold" className="w-[72px]">
+                              <Text typo="body-1-bold" className="w-[100px]">
                                 {categoryName}
                               </Text>
                             </div>

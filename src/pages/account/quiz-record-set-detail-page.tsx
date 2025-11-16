@@ -141,8 +141,8 @@ const QuizRecordSetDetailPage = () => {
             </div>
           </div>
 
-          <div className="flex">
-            <div className="flex-center flex-col px-[30px]">
+          <div className="flex w-fit">
+            <div className="flex-center flex-col px-[9px] w-[124px] overflow-visible">
               <div className="flex-center mb-[6px] size-[40px]">
                 <ImgSpeechbubble className="size-[32px]" />
               </div>
@@ -153,7 +153,7 @@ const QuizRecordSetDetailPage = () => {
                 {t('profile.quiz_record_set_detail.question_count_text')}
               </Text>
             </div>
-            <div className="flex-center flex-col border-x border-divider px-[30px]">
+            <div className="flex-center flex-col border-x border-divider px-[9px] w-[124px] overflow-visible">
               <div className="flex-center mb-[6px] size-[40px]">
                 <ImgStopwatch className="size-[32px]" />
               </div>
@@ -164,7 +164,7 @@ const QuizRecordSetDetailPage = () => {
                 {t('profile.quiz_record_set_detail.time_spent')}
               </Text>
             </div>
-            <div className="flex-center flex-col px-[30px]">
+            <div className="flex-center flex-col px-[9px] w-[124px] overflow-visible">
               <div className="flex-center mb-[6px] size-[40px]">
                 <ImgCheckbadge className="size-[32px]" />
               </div>

@@ -67,7 +67,8 @@ const NoteDetailPage = () => {
   const [showAnswer, setShowAnswer] = useQueryParam('/quiz-detail/:noteId/list', 'showAnswer')
   const { data: document, isLoading: isDocumentLoading } = useGetDocument(Number(noteId))
 
-  const createdDate = useMemo(() => new Date(document?.createdAt ?? ''), [document])
+  const defaultDateString = useMemo(() => new Date().toUTCString(), [])
+  const createdDate = useMemo(() => new Date(document?.createdAt ?? defaultDateString), [document, defaultDateString])
 
   const [deleteTargetQuizId, setDeleteTargetQuizId] = useState<number | null>(null)
   const [deleteDocumentDialogOpen, setDeleteDocumentDialogOpen] = useState(false)
@@ -299,8 +300,7 @@ const NoteDetailPage = () => {
                 {document?.name}
               </Text>
               <Text typo="body-2-medium" color="sub">
-                {document?.quizzes.length}
-                {t('quizDetail.quiz_detail_list_page.question_label')}
+                {t('quizDetail.quiz_detail_list_page.quiz_count', { count: document?.quizzes.length })}
               </Text>
             </div>
             <div className="ml-auto flex items-center gap-[2px]">

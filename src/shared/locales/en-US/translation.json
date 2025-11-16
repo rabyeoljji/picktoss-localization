@@ -293,8 +293,8 @@
     "login_dialog": {
       "close_button": "Close",
       "login_button": "Log in",
-      "message1": "Picktoss members can create their own quizzes",
-      "message2": "Easily generate and save them",
+      "message1": "Picktoss members can easily create",
+      "message2": "their own quizzes and save them",
       "title": "Log in to access everything"
     },
     "quiz_list_container": {
@@ -366,12 +366,13 @@
       "ox_label": "O/X",
       "question_label": "Question",
       "question_required_error": "Please enter a question",
+      "quiz_count": "{{count}} questions",
       "quiz_label": "Question",
       "registered_date": "Register",
       "review_pick_description": "Check the questions I got wrong",
       "review_pick_title": "Review Pick",
       "review_questions_count": "Check",
-      "review_questions_count_unit": "questions",
+      "review_questions_count_unit": "{{count}} questions",
       "save_button": "Saving...",
       "show_answer_button": "Show Answer",
       "understand_button": "I understood",
@@ -627,10 +628,10 @@
       "check_learning_analysis": "after solving quizzes on Picktoss",
       "daily_problem_count": "{{count}} questions per day ",
       "explore_quiz": "Explore Quizzes",
-      "focused_past": "focused on",
-      "focusing_present": "focusing on",
+      "focused_past": "was my main focus",
+      "focusing_present": "is my main focus",
       "learning_amount": "Study Amount",
-      "most_focused": "most focused on",
+      "most_focused": " ",
       "most_solved_day": "Max Solved",
       "multiple_choice": "Multiple Choice",
       "no_problem_to_analyze": "Nothing to analyze",
@@ -731,7 +732,7 @@
       "title2": "the connection is delayed."
     },
     "not_found": {
-      "button": "Go back to Pictos home",
+      "button": "Go back to Picktoss home",
       "message1": "It may be a non-existent address, or the requested page’s",
       "message2": "address may have been changed or deleted, so it can’t be found.",
       "title": "We can’t find the page."
