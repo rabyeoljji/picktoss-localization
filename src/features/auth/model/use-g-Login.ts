@@ -59,7 +59,6 @@ export const useGLogin = (onSuccess?: () => void) => {
   })
 
   const googleLogin = () => {
-    setIsLoading(true)
     login()
   }
 
