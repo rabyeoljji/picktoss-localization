@@ -22,7 +22,7 @@ export const useGLogin = (onSuccess?: () => void) => {
 
   const { mutateAsync: loginMutation } = useLogin()
 
-  const login = useGoogleLogin({
+  const googleLogin = useGoogleLogin({
     onSuccess: async (tokenResponse: TokenResponse) => {
       setIsLoading(true)
       try {
@@ -57,10 +57,6 @@ export const useGLogin = (onSuccess?: () => void) => {
       setIsLoading(false)
     },
   })
-
-  const googleLogin = () => {
-    login()
-  }
 
   return { googleLogin, isLoading }
 }

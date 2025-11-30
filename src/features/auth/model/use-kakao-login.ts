@@ -32,7 +32,7 @@ export const useKakaoLogin = (onSuccess?: () => void) => {
 
   const { mutateAsync: loginMutation } = useLogin()
 
-  const loginWithKakao = async () => {
+  const kakaoLogin = async () => {
     if (!isKakaoSDKLoaded || kakaoSDKError) {
       console.error('Kakao SDK 로드 실패:', kakaoSDKError)
       return
@@ -84,5 +84,5 @@ export const useKakaoLogin = (onSuccess?: () => void) => {
     }
   }
 
-  return { kakaoLogin: loginWithKakao, isLoading }
+  return { kakaoLogin, isLoading }
 }
