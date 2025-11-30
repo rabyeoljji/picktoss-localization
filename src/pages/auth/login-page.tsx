@@ -15,6 +15,7 @@ import { BackButton } from '@/shared/components/buttons/back-button'
 import { Header } from '@/shared/components/header'
 import QuestionBox from '@/shared/components/items/question-box-item'
 import { Text } from '@/shared/components/ui/text'
+import { TERMS_URL } from '@/shared/constants/terms-url-with-locale'
 import { useRouter } from '@/shared/lib/router'
 import { useTranslation } from '@/shared/locales/use-translation'
 
@@ -120,7 +121,7 @@ const LoginPage = () => {
                 <Text typo="caption-medium" color="caption">
                   {t('etc.login_page.login_message')}{' '}
                   <ReactRouterLink
-                    to="https://picktoss.notion.site/1209d818f56080fbb469e82def758e9c?pvs=4"
+                    to={TERMS_URL.PRIVACY_POLICY[currentLanguage]}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"
@@ -129,7 +130,7 @@ const LoginPage = () => {
                   </ReactRouterLink>{' '}
                   {t('etc.login_page.and')}{' '}
                   <ReactRouterLink
-                    to="https://picktoss.notion.site/1209d818f560809aad11c5b64020d735?pvs=4"
+                    to={TERMS_URL.TERMS_OF_SERVICE[currentLanguage]}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="underline"

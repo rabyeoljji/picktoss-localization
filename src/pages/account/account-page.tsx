@@ -17,6 +17,7 @@ import { Drawer, DrawerContent, DrawerFooter, DrawerHeader } from '@/shared/comp
 import { Switch } from '@/shared/components/ui/switch'
 import { Tag } from '@/shared/components/ui/tag'
 import { Text } from '@/shared/components/ui/text'
+import { TERMS_URL } from '@/shared/constants/terms-url-with-locale'
 import { useAmplitude } from '@/shared/hooks/use-amplitude-context'
 import { useMessaging } from '@/shared/hooks/use-messaging'
 import { checkNotificationPermission } from '@/shared/lib/notification'
@@ -24,7 +25,7 @@ import { Link, useRouter } from '@/shared/lib/router'
 import { useTranslation } from '@/shared/locales/use-translation'
 
 const AccountPage = () => {
-  const { t } = useTranslation()
+  const { t, currentLanguage } = useTranslation()
   const { trackEvent } = useAmplitude()
   const router = useRouter()
 
@@ -333,20 +334,12 @@ const AccountPage = () => {
 
         <footer className="bg-surface-2 pt-[24px] px-[16px] pb-[40px] flex flex-col gap-[20px]">
           <div className="flex items-center gap-[32px]">
-            <a
-              href="https://picktoss.notion.site/1209d818f56080fbb469e82def758e9c"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={TERMS_URL.PRIVACY_POLICY[currentLanguage]} target="_blank" rel="noopener noreferrer">
               <Text typo="body-1-medium" color="sub">
                 {t('profile.main_page.privacy_policy')}
               </Text>
             </a>
-            <a
-              href="https://picktoss.notion.site/1209d818f560809aad11c5b64020d735"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a href={TERMS_URL.TERMS_OF_SERVICE[currentLanguage]} target="_blank" rel="noopener noreferrer">
               <Text typo="body-1-medium" color="sub">
                 {t('profile.main_page.terms_of_service')}
               </Text>
