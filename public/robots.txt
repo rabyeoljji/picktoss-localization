@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /invite/
+Disallow: /progress-quiz/
+Disallow: /account
+Disallow: /account/
+Disallow: /note/create
