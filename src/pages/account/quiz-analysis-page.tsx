@@ -94,8 +94,8 @@ const QuizAnalysisPage = () => {
         }
       />
 
-      <HeaderOffsetLayout className="h-full overflow-y-auto">
-        <div className="p-[16px] pb-[124px]">
+      <HeaderOffsetLayout className="size-full overscroll-none">
+        <div className="size-full overflow-y-auto p-[16px] pb-[124px]">
           <div className="flex flex-col gap-[4px] mb-[32px]">
             <div className="flex items-baseline gap-1.5">
               <Text typo="h1">{totalQuizCount}</Text>

@@ -34,8 +34,10 @@ const FeedbackPage = () => {
         title={t('profile.feedback_form.inquiry_title')}
       />
 
-      <HeaderOffsetLayout>
-        <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
+      <HeaderOffsetLayout className="size-full overscroll-none">
+        <div className="size-full overflow-y-auto">
+          <FeedbackForm onSuccess={() => router.replace('/account/feedback/complete')} />
+        </div>
       </HeaderOffsetLayout>
     </>
   )

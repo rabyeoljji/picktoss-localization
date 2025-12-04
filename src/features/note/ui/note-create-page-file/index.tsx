@@ -50,7 +50,7 @@ const NoteCreatePageFile = () => {
   if (!fileInfo) {
     return (
       <div
-        className="flex-1 flex-center pb-[96px]"
+        className="size-full flex-1 flex-center pb-[96px]"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}

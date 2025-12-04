@@ -99,6 +99,7 @@ export const useGetConsecutiveSolvedQuizSetDates = (solvedDate: string) => {
   return useQuery({
     queryKey: QUIZ_KEYS.getConsecutiveSolvedQuizSetDates(solvedDate),
     queryFn: () => getConsecutiveSolvedQuizSetDates(solvedDate),
+    refetchOnMount: true,
   })
 }
 
